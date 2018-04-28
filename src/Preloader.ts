@@ -11,7 +11,8 @@ module MyGame {
             this.load.setPreloadSprite(this.preloadBar);
             
             console.log("loading");
-            this.load.image("ball", "assets/visual/ball.png");
+			this.load.image("ball", "assets/visual/ball.png");
+			this.load.spritesheet("player", "assets/visual/maincharacter.png", 28, 32);
             console.log("loaded");
 		}
 

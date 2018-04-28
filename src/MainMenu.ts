@@ -1,7 +1,7 @@
 module MyGame {
     export class MainMenu extends Phaser.State {
 
-        private ball: Phaser.Sprite;
+        private player: Phaser.Sprite;
         private inputs: {
             left: Phaser.Key
         };
@@ -10,13 +10,9 @@ module MyGame {
             this.inputs = 
             { left: this.game.input.keyboard.addKey(Phaser.KeyCode.A) };
 
-            this.ball = this.game.add.sprite(this.game.width / 2, this.game.height / 2, "ball");
-        }
-
-        update() {
-            if (this.inputs.left.isDown) {
-                this.ball.alpha -= 0.02;
-            }
+            this.player = this.game.add.sprite(this.game.width / 2, this.game.height / 2, "player");
+            this.player.animations.add("walk", [1, 2, 3, 4], 5, true);
+            this.player.play("walk");
         }
     }
 }
