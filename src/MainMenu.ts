@@ -1,18 +1,22 @@
 module MyGame {
     export class MainMenu extends Phaser.State {
 
-        private player: Phaser.Sprite;
-        private inputs: {
-            left: Phaser.Key
-        };
+        private player: Player;
+        private inputs: Inputs;
 
         create() {
-            this.inputs = 
-            { left: this.game.input.keyboard.addKey(Phaser.KeyCode.A) };
+            this.inputs = {
+                 left: this.game.input.keyboard.addKey(Phaser.KeyCode.A),
+                 right: this.game.input.keyboard.addKey(Phaser.KeyCode.D),
+                 up: this.game.input.keyboard.addKey(Phaser.KeyCode.W),
+                 down: this.game.input.keyboard.addKey(Phaser.KeyCode.S)
+            };
 
-            this.player = this.game.add.sprite(this.game.width / 2, this.game.height / 2, "player");
-            this.player.animations.add("walk", [1, 2, 3, 4], 5, true);
-            this.player.play("walk");
+            this.player = new Player(this.game, this.inputs, this.game.width / 2, this.game.height / 2);
+        }
+
+        update() {
+            this.player.update();
         }
     }
 }

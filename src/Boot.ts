@@ -7,7 +7,7 @@ module MyGame {
 			this.input.maxPointers = 0;
 
 			//  Phaser will automatically pause if the browser tab the game is in loses focus. You can disable that here:
-			this.stage.disableVisibilityChange = true;
+			this.stage.disableVisibilityChange = false;
 
 			// Enable physics
 			this.game.physics.startSystem(Phaser.Physics.ARCADE);
