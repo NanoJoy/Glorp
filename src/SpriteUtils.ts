@@ -12,5 +12,16 @@ module MyGame {
                 sprite.body.position.y = Math.ceil(sprite.body.position.y / 2) * 2;                
             }
         }
+
+        static animationArray(start: number, finish: number): number[] {
+            if (finish < start) {
+                throw new Error("finish must be greater than or equal to start.");
+            }
+            var result = [];
+            for (var i = start; i <= finish; i++) {
+                result.push(i);
+            }
+            return result;
+        }
     }
 }
