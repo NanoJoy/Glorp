@@ -12,12 +12,13 @@ module MyGame {
             
             console.log("loading");
 			this.load.image("ball", "assets/visual/ball.png");
-			this.load.spritesheet("player", "assets/visual/maincharacter.png", 28, 32);
+			this.load.spritesheet("player", "assets/visual/maincharacter.png", Constants.TILE_WIDTH, Constants.TILE_HEIGHT);
+			this.load.spritesheet("grounds", "assets/visual/grounds.png", Constants.TILE_WIDTH, Constants.TILE_HEIGHT);
             console.log("loaded");
 		}
 
 		create() {
-			this.game.state.start("MainMenu");
+			this.game.state.start("Main");
 		}
 	}
 }
