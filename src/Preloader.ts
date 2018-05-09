@@ -10,11 +10,10 @@ module MyGame {
 			this.preloadBar = this.add.sprite(300, 400, "preloadBar");
             this.load.setPreloadSprite(this.preloadBar);
             
-            console.log("loading");
 			this.load.image("ball", "assets/visual/ball.png");
 			this.load.spritesheet("player", "assets/visual/maincharacter.png", Constants.TILE_WIDTH, Constants.TILE_HEIGHT);
 			this.load.spritesheet("grounds", "assets/visual/grounds.png", Constants.TILE_WIDTH, Constants.TILE_HEIGHT);
-            console.log("loaded");
+			this.load.spritesheet("water", "assets/visual/water.png", Constants.TILE_WIDTH, Constants.TILE_HEIGHT);
 		}
 
 		create() {

@@ -1,8 +1,11 @@
 module MyGame {
     export class Main extends Phaser.State {
 
-        private player: Player;
-        private inputs: Inputs;
+        public player: Player;
+        public inputs: Inputs;
+        public groups: {
+            water: Phaser.Group
+        };
 
         create() {
             this.inputs = {
@@ -11,6 +14,10 @@ module MyGame {
                  up: this.game.input.keyboard.addKey(Phaser.KeyCode.W),
                  down: this.game.input.keyboard.addKey(Phaser.KeyCode.S)
             };
+
+            this.groups = {
+                water: this.game.add.group()
+            }
 
             this.setupLevel(island1);
 
@@ -29,12 +36,14 @@ module MyGame {
                 for (let j = 0; j < line.length; j++) {
                     switch (line.charAt(j)) {
                         case " ":
-                            new Ground(this.game, j, i);
+                            new Ground(this, j, i);
                             break;
+                        case "o":
+                            new Water(this, j, i);
                     }
                 }
             }
-            this.player = new Player(this.game, this.inputs, this.game.width / 2, this.game.height / 2);            
+            this.player = new Player(this, this.game.width / 2, this.game.height / 2);            
         }
     }
 }

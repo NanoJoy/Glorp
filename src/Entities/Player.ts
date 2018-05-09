@@ -4,10 +4,11 @@ module MyGame {
         static readonly WALKING_SPEED = 100;
         direction: Direction;
         inputs: Inputs;
+        state: Main;
 
-        constructor(game: Phaser.Game, inputs: Inputs, x: number, y: number) {
-            super(game, x, y, "player", 0);
-            game.physics.arcade.enableBody(this);
+        constructor(state: Main, x: number, y: number) {
+            super(state.game, x, y, "player", 0);
+            state.game.physics.arcade.enableBody(this);
             this.animations.add("walk_back", SpriteUtils.animationArray(1, 4), 5, true);
             this.animations.add("walk_forward", SpriteUtils.animationArray(6, 9), 5, true);
             this.animations.add("walk_right", SpriteUtils.animationArray(10, 13), 5, true);
@@ -17,12 +18,14 @@ module MyGame {
             this.animations.add("idle_right", [10], 5, true);
             this.animations.add("idle_left", [14], 5, true);
             this.play("idle_back");
-            this.inputs = inputs;
+            this.inputs = state.inputs;
             this.direction = Direction.Back;
-            game.add.existing(this);
+            state.game.add.existing(this);
+            this.state = state;
         }
 
         update() {
+            this.game.physics.arcade.collide(this, this.state.groups.water);
             var directionDown = 1;
             if (this.inputs.up.isDown) {
                 directionDown *= 2;
