@@ -1,11 +1,14 @@
 module MyGame {
-    export var island1 = new Island([
+    export var island1 = new Island(0, 0, [
         "oooooooooooooooo",
-        "oooo        oooo",
-        "ooo          ooo",
+        "oooooooooooooooo",
+        "ooo/        \ooo",
+        "oo/          \oo",
         "oo            oo",
-        "ooo          ooo",
-        "oooo        oooo",
+        "oo\          /oo",
+        "ooo\       /oooo",
+        "ooooooo  ooooooo",
+        "ooooooo  ooooooo",
         "oooooooooooooooo",
     ], []);
 }
