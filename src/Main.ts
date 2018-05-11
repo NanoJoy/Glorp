@@ -31,6 +31,7 @@ module MyGame {
         private setupLevel(island: Island) {
             this.game.world.setBounds(0, 0, island.layout[0].length * Constants.TILE_WIDTH,
                 island.layout.length * Constants.TILE_HEIGHT);
+            
             for (let i = 0; i < island.layout.length; i++) {
                 let line = island.layout[i];
                 for (let j = 0; j < line.length; j++) {
@@ -39,7 +40,21 @@ module MyGame {
                             new Ground(this, j, i);
                             break;
                         case "o":
-                            new Water(this, j, i);
+                            new RegularWater(this, j, i);
+                            break;
+                        case "'":
+                            if (island.layout[i - 1][j] === "o") {
+                                new WaterEdge(this, j, i, Diagonals.NE);
+                            } else {
+                                new WaterEdge(this, j, i, Diagonals.SW);
+                            }
+                            break;
+                        case "/":
+                            if (island.layout[i - 1][j] === "o") {
+                                new WaterEdge(this, j, i, Diagonals.NW);
+                            } else {
+                                new WaterEdge(this, j, i, Diagonals.SE);
+                            }
                     }
                 }
             }

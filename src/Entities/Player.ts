@@ -25,7 +25,11 @@ module MyGame {
         }
 
         update() {
-            this.game.physics.arcade.collide(this, this.state.groups.water);
+            var player = this;
+            var game = this.game;
+            this.state.groups.water.forEach(function (water: Water) {
+                game.physics.arcade.collide(player, water, water.collisionCheck);
+            });
             var directionDown = 1;
             if (this.inputs.up.isDown) {
                 directionDown *= 2;
