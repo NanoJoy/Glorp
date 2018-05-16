@@ -44,16 +44,16 @@ module MyGame {
                             break;
                         case "'":
                             if (island.layout[i - 1][j] === "o") {
-                                new WaterEdge(this, j, i, Diagonals.NE);
+                                new WaterEdge(this, j, i, Diagonal.NE);
                             } else {
-                                new WaterEdge(this, j, i, Diagonals.SW);
+                                new WaterEdge(this, j, i, Diagonal.SW);
                             }
                             break;
                         case "/":
                             if (island.layout[i - 1][j] === "o") {
-                                new WaterEdge(this, j, i, Diagonals.NW);
+                                new WaterEdge(this, j, i, Diagonal.NW);
                             } else {
-                                new WaterEdge(this, j, i, Diagonals.SE);
+                                new WaterEdge(this, j, i, Diagonal.SE);
                             }
                     }
                 }

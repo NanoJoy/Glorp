@@ -3,7 +3,7 @@ module MyGame {
         Forward, Back, Left, Right
     }
 
-    export enum Diagonals {
+    export enum Diagonal {
         SW, NE, NW, SE
     }
 }

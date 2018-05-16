@@ -5,6 +5,7 @@ module MyGame {
         direction: Direction;
         inputs: Inputs;
         state: Main;
+        hasCollided: boolean;
 
         constructor(state: Main, x: number, y: number) {
             super(state.game, x, y, "player", 0);
@@ -27,9 +28,11 @@ module MyGame {
         update() {
             var player = this;
             var game = this.game;
+            this.hasCollided = false;
             this.state.groups.water.forEach(function (water: Water) {
-                game.physics.arcade.collide(player, water, water.collisionCheck);
+                game.physics.arcade.collide(player, water, water.collisionBehavior, water.collisionCheck, water);
             });
+
             var directionDown = 1;
             if (this.inputs.up.isDown) {
                 directionDown *= 2;
@@ -90,6 +93,7 @@ module MyGame {
             if (this.animations.currentAnim.name !== animName) {
                 this.play(animName);
             }
+            
             SpriteUtils.snapToPixels(this);
         }
     }
