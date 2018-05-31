@@ -9,13 +9,4 @@ module MyGame {
         }
         throw new Error(`Dialogue with name ${name} not found.`);
     }
-
-    var dialogues = {
-        "sample": [
-            new TextPrompt("Hello. How are you?", [
-                new TextOption("Good", new TextDump("That's good.")),
-                new TextOption("Bad", new TextDump("That's too bad"))
-            ])
-        ]
-    };
 }
