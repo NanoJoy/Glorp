@@ -21,6 +21,8 @@ module MyGame {
 
             this.setupLevel(island1);
 
+            new BottomTextDisplay(this.game, "sample").start();
+
             this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
         }
 
