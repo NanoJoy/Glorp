@@ -6,7 +6,7 @@ module MyGame {
         firstPage: TextPage;
         currentPage: TextPage;
         isDisplaying: boolean;
-        text: Phaser.Text;
+        text: Phaser.BitmapText;
         readonly spriteHeight = 80;
         readonly fontStyle = { font: "14px okeydokey", fill: "#000000" };
 
@@ -21,8 +21,8 @@ module MyGame {
 
         start() {
             this.sprite = this.game.add.sprite(0, Constants.SCREEN_HEIGHT - this.spriteHeight, "bottom_text_background");
-            this.text = this.game.add.text(8, Constants.SCREEN_HEIGHT - this.spriteHeight + 6, this.firstPage.text, this.fontStyle);
-            this.text.smoothed = false;
+            //this.text = this.game.add.text(8, Constants.SCREEN_HEIGHT - this.spriteHeight + 6, this.firstPage.text, this.fontStyle);
+            this.text = this.game.add.bitmapText(8, Constants.SCREEN_HEIGHT - this.spriteHeight + 6, "testbitmap", this.firstPage.text, 14);
             this.isDisplaying = true;
         }
     }
