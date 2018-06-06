@@ -23,6 +23,7 @@ module MyGame {
             this.sprite = this.game.add.sprite(0, Constants.SCREEN_HEIGHT - this.spriteHeight, "bottom_text_background");
             //this.text = this.game.add.text(8, Constants.SCREEN_HEIGHT - this.spriteHeight + 6, this.firstPage.text, this.fontStyle);
             this.text = this.game.add.bitmapText(8, Constants.SCREEN_HEIGHT - this.spriteHeight + 6, "testbitmap", this.firstPage.text, 14);
+            this.text.maxWidth = Constants.SCREEN_WIDTH - 16;
             this.isDisplaying = true;
         }
     }

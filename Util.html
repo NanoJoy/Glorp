@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+	<meta charset="utf-8" />
+	<title>Util</title>
+</head>
+
+<body>
+
+	<p id="content"></p>
+
+</body>
+
+<script>
+
+	window.onload = () => {
+        var characters = " 0123456789.,“”‘’\"'?!@_*#$%&()+-/:;<=>[\\]^`{|}~";
+        var output = "";
+        for (var i = 0; i < characters.length; i++) {
+            output += `<char id="${characters.charCodeAt(i)}" x="${(12 * i) % (13 * 12)}" y="${(Math.floor(i / 13) * 22) + 88}" width="12" height="22" xoffset="0" yoffset="0" xadvance="14" page="0" chnl="15" />\n`
+        }
+    console.log(output);
+        
+    };
+    
+
+</script>
+
+</html>
