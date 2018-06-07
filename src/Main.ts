@@ -12,7 +12,9 @@ module MyGame {
                  left: this.game.input.keyboard.addKey(Phaser.KeyCode.A),
                  right: this.game.input.keyboard.addKey(Phaser.KeyCode.D),
                  up: this.game.input.keyboard.addKey(Phaser.KeyCode.W),
-                 down: this.game.input.keyboard.addKey(Phaser.KeyCode.S)
+                 down: this.game.input.keyboard.addKey(Phaser.KeyCode.S),
+                 O: this.game.input.keyboard.addKey(Phaser.KeyCode.O),
+                 K: this.game.input.keyboard.addKey(Phaser.KeyCode.K)
             };
 
             this.groups = {
@@ -21,7 +23,7 @@ module MyGame {
 
             this.setupLevel(island1);
 
-            new BottomTextDisplay(this.game, "sample").start();
+            new BottomTextDisplay(this, "dump").start();
 
             this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
         }

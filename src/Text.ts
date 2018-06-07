@@ -10,18 +10,18 @@ module MyGame {
     }
 
     export interface TextPage {
-        text: string;
+        text: string[];
         hasOptions: boolean;
         onFinish: (selected: number) => void;
     }
 
     export class TextPrompt implements TextPage {
-        text: string;
+        text: string[];
         hasOptions: boolean;
         onFinish: (selected: number) => void;
         options: TextOption[];
 
-        constructor(text: string, options: TextOption[], onFinish: (selected: number) => void = null) {
+        constructor(text: string[], options: TextOption[], onFinish: (selected: number) => void = null) {
             this.text = text;
             if (options.length < 1) {
                 throw Error("Must be at least 1 option.");
@@ -37,11 +37,11 @@ module MyGame {
     }
 
     export class TextDump implements TextPage {
-        text: string;
+        text: string[];
         hasOptions: boolean;
         onFinish: (selected: number) => void;
         
-        constructor(text: string, onFinish: (selected: number) => void = null) {
+        constructor(text: string[], onFinish: (selected: number) => void = null) {
             this.text = text;
             this.hasOptions = false;
             this.onFinish = onFinish;
@@ -49,7 +49,7 @@ module MyGame {
     }
 
     export interface TextDisplay {
-        game: Phaser.Game;
+        game: Main;
         name: string;
         firstPage: TextPage;
         currentPage: TextPage;
