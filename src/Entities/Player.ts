@@ -26,6 +26,7 @@ module MyGame {
         }
 
         update() {
+            if (this.state.textOnScreen) return;
             var player = this;
             var game = this.game;
             this.hasCollided = false;

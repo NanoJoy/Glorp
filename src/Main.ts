@@ -3,11 +3,13 @@ module MyGame {
 
         public player: Player;
         public inputs: Inputs;
+        public textOnScreen: boolean;
         public groups: {
             water: Phaser.Group
         };
 
         create() {
+            this.textOnScreen = false;
             this.inputs = {
                  left: this.game.input.keyboard.addKey(Phaser.KeyCode.A),
                  right: this.game.input.keyboard.addKey(Phaser.KeyCode.D),
@@ -23,13 +25,13 @@ module MyGame {
 
             this.setupLevel(island1);
 
-            new BottomTextDisplay(this, "dump").start();
+            new BottomTextDisplay(this, "sample").start();
 
             this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
         }
 
         update() {
-            this.player.update();
+                //this.player.update();
         }
 
         private setupLevel(island: Island) {
