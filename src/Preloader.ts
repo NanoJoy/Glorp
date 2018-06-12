@@ -21,7 +21,7 @@ module MyGame {
 		}
 
 		create() {
-			this.game.state.start("Main");
+			this.game.state.start("Battle");
 		}
 	}
 }

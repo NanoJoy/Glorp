@@ -9,6 +9,7 @@ module MyGame {
 			this.state.add('Boot', Boot, false);
 			this.state.add("Preloader", Preloader, false);
 			this.state.add("Main", Main, false);
+			this.state.add("Battle", Battle, false);
 
 			this.state.start('Boot');
 		}
