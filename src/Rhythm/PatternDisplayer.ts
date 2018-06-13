@@ -23,7 +23,7 @@ module MyGame {
             this.patternGenerator = new PatternGenerator(patternLength, beatLength, allowedNotes);
         }
 
-        display() {
+        display(): PatternNote[] {
             if (this.isDisplaying) {
                 return;
             }
@@ -38,6 +38,7 @@ module MyGame {
             this.game.time.events.add((this.patternGenerator.length + 1) * this.tempo, function () {
                 this.isDisplaying = false;
             }, this);
+            return this.currentPattern;
         }
 
         private showNote(position: number) {
@@ -45,12 +46,12 @@ module MyGame {
             var notes = this.currentPattern.filter(function (value) {
                 return value.position === position;
             });
-            var text = notes.length > 0 ? this.getKeyString(notes[0].key) : "-";
+            var text = notes.length > 0 ? PatternDisplayer.getKeyString(notes[0].key) : "-";
             console.log(text);
             this.noteDisplays.push(this.game.add.text(10, 20 * position, text, this.fontStyle))
         }
 
-        private getKeyString(key: Phaser.KeyCode): string {
+        static getKeyString(key: Phaser.KeyCode): string {
             switch (key) {
                 case Phaser.KeyCode.W:
                     return "UP";

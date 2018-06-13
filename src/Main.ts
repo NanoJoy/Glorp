@@ -10,14 +10,7 @@ module MyGame {
 
         create() {
             this.textOnScreen = false;
-            this.inputs = {
-                 left: this.game.input.keyboard.addKey(Phaser.KeyCode.A),
-                 right: this.game.input.keyboard.addKey(Phaser.KeyCode.D),
-                 up: this.game.input.keyboard.addKey(Phaser.KeyCode.W),
-                 down: this.game.input.keyboard.addKey(Phaser.KeyCode.S),
-                 O: this.game.input.keyboard.addKey(Phaser.KeyCode.O),
-                 K: this.game.input.keyboard.addKey(Phaser.KeyCode.K)
-            };
+            this.inputs = new Inputs(this);
 
             this.groups = {
                 water: this.game.add.group()
