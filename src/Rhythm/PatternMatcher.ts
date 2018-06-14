@@ -11,8 +11,10 @@ module MyGame {
         startTime: number;
         inputAllowed: boolean;
         noteDisplays: Phaser.Text[];
+        notesPressed: NotePress[];
 
         readonly fontStyle = { font: "14px okeydokey", fill: "#000000" };
+        readonly redStyle = { font: "14px okeydokey", fill: "#ff0000" };
 
         constructor(game: Battle, tempo: number, patternLength: number, beatLength: number) {
             this.game = game;
@@ -31,6 +33,7 @@ module MyGame {
             this.getFirstNote();
             this.startTime = this.game.time.now + this.tempo;
             this.noteDisplays = [] as Phaser.Text[];
+            this.notesPressed = [] as NotePress[];
             this.inputAllowed = true;
             for (let i = 0; i < this.patternLength; i++) this.noteDisplays.push(null);
 
@@ -53,23 +56,29 @@ module MyGame {
 
         recordKeyPress(key: Phaser.Key) {
             var keyCode = key.keyCode;
-            console.log(this.currentPattern[this.nextNote]);
             if (!this.inputAllowed) return;
 
-            if (this.currentPattern[this.nextNote] !== keyCode) {
-                this.inputAllowed = false;
-                return;
-            }
-            this.getNextNote();
-
-            var timeElapsed = this.game.time.now - this.startTime;
+            var timePressed = this.game.time.now;
+            var timeElapsed = timePressed - this.startTime;
             var closestSubBeat = Math.round(timeElapsed / this.tempo);
+
             var text = PatternDisplayer.getKeyString(keyCode);
             if (this.noteDisplays[closestSubBeat] === null) {
                 this.noteDisplays[closestSubBeat] = this.game.add.text(100, 20 * closestSubBeat, text, this.fontStyle);
             } else {
                 this.noteDisplays[closestSubBeat].text = text;
             }
+            if (this.currentPattern[this.nextNote] !== keyCode) {
+                this.inputAllowed = false;
+                this.noteDisplays[closestSubBeat].setStyle(this.redStyle);
+                return;
+            }
+            this.getNextNote();
+
+            var distance = Math.round(Math.abs(timePressed - (closestSubBeat * this.tempo + this.startTime)));
+            distance = distance < 10 ? 0 : distance;
+            this.noteDisplays[closestSubBeat].alpha = (this.tempo / 2 - distance) / (this.tempo / 2);
+            this.notesPressed.push({note: keyCode, position: closestSubBeat, distance: distance});
         }
 
         private getFirstNote() {
@@ -85,5 +94,27 @@ module MyGame {
                 this.nextNote++;
             }
         }
+
+        reset() {
+            this.active = false;
+            this.inputAllowed = false;
+            this.currentPattern = null;
+            this.notesPressed = null;
+
+            var inputs = this.game.inputs.asArray();
+            for (let i = 0; i < inputs.length; i++) {
+                inputs[i].onDown.removeAll();
+            }
+
+            if (this.noteDisplays !== undefined) {
+                this.noteDisplays.forEach(function (disp) { disp.destroy(); });
+            }
+        }
+    }
+
+    export class NotePress {
+        note: Phaser.KeyCode;
+        position: number;
+        distance: number;
     }
 }

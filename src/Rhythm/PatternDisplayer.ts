@@ -41,13 +41,21 @@ module MyGame {
             return this.currentPattern;
         }
 
+        reset() {
+            this.currentPattern = null;
+            this.isDisplaying = false;
+            if (this.noteDisplays !== undefined) {
+                this.noteDisplays.forEach(function (disp) {
+                    disp.destroy();
+                });
+            }
+        }
+
         private showNote(position: number) {
-            console.log(position);
             var notes = this.currentPattern.filter(function (value) {
                 return value.position === position;
             });
             var text = notes.length > 0 ? PatternDisplayer.getKeyString(notes[0].key) : "-";
-            console.log(text);
             this.noteDisplays.push(this.game.add.text(10, 20 * position, text, this.fontStyle))
         }
 
