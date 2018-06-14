@@ -5,10 +5,10 @@ module MyGame {
 
         create () {
             this.inputs = new Inputs(this);
-
-           var patternDisplayer = new PatternDisplayer(this, 4, 4, 8, 8, 500);
-           this.currentPattern = patternDisplayer.display();
-           this.time.events.add(8 * 500, this.startChecker, this);
+            var tempo = 500;
+            var patternDisplayer = new PatternDisplayer(this, 4, 4, 8, 8, tempo);
+            this.currentPattern = patternDisplayer.display();
+            this.time.events.add(7 * tempo, this.startChecker, this);
         }
 
         startChecker() {

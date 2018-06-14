@@ -26,9 +26,10 @@ module MyGame {
 
         begin(pattern: PatternNote[]) {
             this.currentPattern = PatternUtil.convertPatternNotesToArray(pattern, this.patternLength);
+            console.log(this.currentPattern);
             this.active = true;
-            this.nextNote = 0;
-            this.startTime = this.game.time.now;
+            this.getFirstNote();
+            this.startTime = this.game.time.now + this.tempo;
             this.noteDisplays = [] as Phaser.Text[];
             this.inputAllowed = true;
             for (let i = 0; i < this.patternLength; i++) this.noteDisplays.push(null);
@@ -40,7 +41,7 @@ module MyGame {
             }
 
             for (let i = 0; i < this.patternLength; i++) {
-                this.game.time.events.add(this.tempo * i, this.checkOnSubBeat, this, i);
+                this.game.time.events.add(this.tempo * (i + 1), this.checkOnSubBeat, this, i);
             }
         }
 
@@ -52,7 +53,7 @@ module MyGame {
 
         recordKeyPress(key: Phaser.Key) {
             var keyCode = key.keyCode;
-            console.log(keyCode);
+            console.log(this.currentPattern[this.nextNote]);
             if (!this.inputAllowed) return;
 
             if (this.currentPattern[this.nextNote] !== keyCode) {
@@ -71,7 +72,15 @@ module MyGame {
             }
         }
 
+        private getFirstNote() {
+            this.nextNote = 0;
+            while (this.currentPattern[this.nextNote] === null && this.nextNote < this.currentPattern.length) {
+                this.nextNote++;
+            }
+        }
+
         private getNextNote() {
+            this.nextNote++;
             while (this.currentPattern[this.nextNote] === null && this.nextNote < this.currentPattern.length) {
                 this.nextNote++;
             }
