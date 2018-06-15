@@ -18,6 +18,7 @@ module MyGame {
 			this.load.spritesheet("grounds", "assets/visual/grounds.png", Constants.TILE_WIDTH, Constants.TILE_HEIGHT);
 			this.load.spritesheet("water", "assets/visual/water.png", Constants.TILE_WIDTH, Constants.TILE_HEIGHT);
 			this.load.spritesheet("arrow", "assets/visual/arrow.png", 12, 12);
+			this.load.spritesheet("rhythm_symbols", "assets/visual/rhythm_symbols.png", 24, 24);
 		}
 
 		create() {

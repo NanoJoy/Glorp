@@ -7,7 +7,7 @@ module MyGame {
         minNumNotes: number;
         isDisplaying: boolean;
         currentPattern: PatternNote[];
-        noteDisplays: Phaser.Text[];
+        noteDisplays: Phaser.Image[];
         
         readonly fontStyle = { font: "14px okeydokey", fill: "#000000" };
 
@@ -55,26 +55,30 @@ module MyGame {
             var notes = this.currentPattern.filter(function (value) {
                 return value.position === position;
             });
-            var text = notes.length > 0 ? PatternDisplayer.getKeyString(notes[0].key) : "-";
-            this.noteDisplays.push(this.game.add.text(10, 20 * position, text, this.fontStyle))
+            var noteOrNull = notes.length > 0 ? notes[0].key : null
+            var frame = PatternDisplayer.getKeyFrame(noteOrNull, position % this.patternGenerator.beatLength === 0);
+            //10 padding on each side plus 24 for sprite width.
+            var width = Constants.SCREEN_WIDTH - 44;
+            var xPosition = (width / this.patternGenerator.length) * position + 10;
+            this.noteDisplays.push(this.game.add.image(xPosition, 10, "rhythm_symbols", frame));
         }
 
-        static getKeyString(key: Phaser.KeyCode): string {
+        static getKeyFrame(key: Phaser.KeyCode, isBeat: boolean): number {
             switch (key) {
                 case Phaser.KeyCode.W:
-                    return "UP";
+                    return 0;
                 case Phaser.KeyCode.A:
-                    return "LEFT";
+                    return 1;
                 case Phaser.KeyCode.S:
-                    return "DOWN";
+                    return 2;
                 case Phaser.KeyCode.D:
-                    return "RIGHT";
+                    return 3;
                 case Phaser.KeyCode.O:
-                    return "O";
+                    return 4;
                 case Phaser.KeyCode.K:
-                    return "K";
+                    return 5;
             }
-            return "-";
+            return isBeat ? 7 : 6;
         }
     }
 }

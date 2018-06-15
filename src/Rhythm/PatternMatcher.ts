@@ -10,7 +10,7 @@ module MyGame {
         numMils: number;
         startTime: number;
         inputAllowed: boolean;
-        noteDisplays: Phaser.Text[];
+        noteDisplays: Phaser.Image[];
         notesPressed: NotePress[];
 
         readonly fontStyle = { font: "14px okeydokey", fill: "#000000" };
@@ -49,8 +49,11 @@ module MyGame {
         }
 
         checkOnSubBeat(position: number) {
+            var width = Constants.SCREEN_WIDTH - 44;
+            var xPosition = (width / this.patternLength) * position + 10;
+            var frame = position % this.beatLength === 0 ? 7 : 6;
             if (this.noteDisplays[position] === null) {
-                this.noteDisplays[position] = this.game.add.text(100, 20 * position, "-", this.fontStyle);
+                this.noteDisplays[position] = this.game.add.image(xPosition, 44, "rhythm_symbols", frame);
             }
         }
 
@@ -62,15 +65,17 @@ module MyGame {
             var timeElapsed = timePressed - this.startTime;
             var closestSubBeat = Math.round(timeElapsed / this.tempo);
 
-            var text = PatternDisplayer.getKeyString(keyCode);
+            var frame = PatternDisplayer.getKeyFrame(keyCode, closestSubBeat % this.beatLength === 0);
             if (this.noteDisplays[closestSubBeat] === null) {
-                this.noteDisplays[closestSubBeat] = this.game.add.text(100, 20 * closestSubBeat, text, this.fontStyle);
+                var width = Constants.SCREEN_WIDTH - 44;
+                var xPosition = (width / this.patternLength) * closestSubBeat + 10;
+                this.noteDisplays[closestSubBeat] = this.game.add.image(xPosition, 44, "rhythm_symbols", frame);
             } else {
-                this.noteDisplays[closestSubBeat].text = text;
+                this.noteDisplays[closestSubBeat].frame = frame;
             }
             if (this.currentPattern[this.nextNote] !== keyCode) {
                 this.inputAllowed = false;
-                this.noteDisplays[closestSubBeat].setStyle(this.redStyle);
+                this.noteDisplays[closestSubBeat].tint = 0xFF0000;
                 return;
             }
             this.getNextNote();
