@@ -16,19 +16,18 @@ module MyGame {
         readonly fontStyle = { font: "14px okeydokey", fill: "#000000" };
         readonly redStyle = { font: "14px okeydokey", fill: "#ff0000" };
 
-        constructor(game: Battle, tempo: number, patternLength: number, beatLength: number) {
+        constructor(game: Battle, enemy: Enemy) {
             this.game = game;
-            this.tempo = tempo;
-            this.patternLength = patternLength;
-            this.beatLength = beatLength;
+            this.tempo = enemy.tempo;
+            this.patternLength = enemy.patternLength;
+            this.beatLength = enemy.beatLength;
             this.active = false;
             this.inputAllowed = false;
-            this.numMils = patternLength * tempo;
+            this.numMils = enemy.patternLength * enemy.tempo;
         }
 
         begin(pattern: PatternNote[]) {
             this.currentPattern = PatternUtil.convertPatternNotesToArray(pattern, this.patternLength);
-            console.log(this.currentPattern);
             this.active = true;
             this.getFirstNote();
             this.startTime = this.game.time.now + this.tempo;
@@ -64,6 +63,7 @@ module MyGame {
             var timePressed = this.game.time.now;
             var timeElapsed = timePressed - this.startTime;
             var closestSubBeat = Math.round(timeElapsed / this.tempo);
+            console.log(closestSubBeat); console.log(this.beatLength);
 
             var frame = PatternDisplayer.getKeyFrame(keyCode, closestSubBeat % this.beatLength === 0);
             if (this.noteDisplays[closestSubBeat] === null) {

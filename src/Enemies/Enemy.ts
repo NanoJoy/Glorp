@@ -1,9 +1,12 @@
 module MyGame {
-    interface Enemy {
+    export interface Enemy {
+        minNumNotes: number;
+        maxNumNotes: number;
         patternLength: number;
         beatLength: number;
+        tempo: number;
         spriteKey: string;
         hitPoints: number;
-        calculateDamage: (notePresses: NotePress[]) => number;
+        calculateDamage: (pattern: PatternNote[], notePresses: NotePress[]) => number;
     }
 }

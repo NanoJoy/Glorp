@@ -23,5 +23,9 @@ module MyGame {
             }
             return result;
         }
+        
+        static isAThing(thing: object): boolean {
+            return thing !== undefined && thing !== null;
+        }
     }
 }

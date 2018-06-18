@@ -11,16 +11,15 @@ module MyGame {
         
         readonly fontStyle = { font: "14px okeydokey", fill: "#000000" };
 
-        constructor(game: Battle, minNumNotes: number, maxNumNotes: number, patternLength: number,
-            beatLength: number, tempo: number) {
+        constructor(game: Battle, enemy: Enemy) {
             this.game = game;
             this.isDisplaying = false;
-            this.tempo = tempo;
-            this.minNumNotes = minNumNotes;
-            this.maxNumNotes = maxNumNotes;
+            this.tempo = enemy.tempo;
+            this.minNumNotes = enemy.minNumNotes;
+            this.maxNumNotes = enemy.maxNumNotes;
             var allowedNotes = [Phaser.KeyCode.W, Phaser.KeyCode.A,
             Phaser.KeyCode.S, Phaser.KeyCode.D, Phaser.KeyCode.O, Phaser.KeyCode.K];
-            this.patternGenerator = new PatternGenerator(patternLength, beatLength, allowedNotes);
+            this.patternGenerator = new PatternGenerator(enemy.patternLength, enemy.beatLength, allowedNotes);
         }
 
         display(): PatternNote[] {
@@ -31,7 +30,6 @@ module MyGame {
             this.noteDisplays = [];
             var numNotes = Math.floor(Math.random() + (this.maxNumNotes - this.minNumNotes)) + this.minNumNotes;
             this.currentPattern = this.patternGenerator.generate(numNotes);
-            console.log(this.currentPattern);
             for (let i = 0; i < this.patternGenerator.length; i++) {
                 this.game.time.events.add(this.tempo * i, this.showNote, this, i);
             }

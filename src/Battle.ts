@@ -4,15 +4,16 @@ module MyGame {
         currentPattern: PatternNote[];
         patternDisplayer: PatternDisplayer;
         patternChecker: PatternMatcher;
-        tempo: number;
+        enemy: Enemy;
 
         create () {
+            this.enemy = new JamBot();
+
             this.inputs = new Inputs(this);
-            this.tempo = 500;
-            this.patternDisplayer = new PatternDisplayer(this, 4, 4, 8, 8, this.tempo);
-            this.patternChecker = new PatternMatcher(this, 500, 8, 1);
+            this.patternDisplayer = new PatternDisplayer(this, this.enemy);
+            this.patternChecker = new PatternMatcher(this, this.enemy);
             this.startPattern();
-            this.time.events.loop(this.tempo * 16, this.startPattern, this);
+            this.time.events.loop(this.enemy.tempo * this.enemy.patternLength * 2, this.startPattern, this);
         }
 
         startChecker() {
@@ -20,11 +21,13 @@ module MyGame {
         }
 
         startPattern() {
-            console.log("here");
+            if (SpriteUtils.isAThing(this.patternChecker.notesPressed)) {
+                console.log(this.enemy.calculateDamage(this.currentPattern, this.patternChecker.notesPressed));
+            }
             this.patternDisplayer.reset();
             this.patternChecker.reset();
             this.currentPattern = this.patternDisplayer.display();
-            this.time.events.add(7 * this.tempo, this.startChecker, this);
+            this.time.events.add((this.enemy.patternLength - 1) * this.enemy.tempo, this.startChecker, this);
         }
     }
 }
