@@ -43,7 +43,6 @@ module MyGame {
                 while (usedPositions.indexOf(position) !== -1) {
                     position = Math.floor(Math.random() * this.length);
                 }
-                console.log(position);
                 usedPositions.push(position);
                 pattern.push({
                     position: position,

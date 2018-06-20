@@ -6,19 +6,27 @@ module MyGame {
 		background: Phaser.Sprite;
 		ready: boolean = false;
 
+		readonly asset = "assets";
+		readonly visual = "visual";
+		readonly png = "png";
+
 		preload() {
 			this.preloadBar = this.add.sprite(300, 400, "preloadBar");
 			this.load.setPreloadSprite(this.preloadBar);
-			
+
+			var spriteAssets = Object.getOwnPropertyNames(Assets.Sprites)
+			for (let i = 0; i < spriteAssets.length; i++) {
+				let a = Assets.Sprites[spriteAssets[i]];
+				this.load.spritesheet(a.key, `${VISUAL_ASSETS_PATH}/${a.key}.${PNG}`, a.width, a.height);
+			}
+
+			var imageAssets = Object.getOwnPropertyNames(Assets.Images);
+			for (let i = 0; i < imageAssets.length; i++) {
+				let a = Assets.Images[imageAssets[i]];
+				this.load.image(`${VISUAL_ASSETS_PATH}/${a}`);
+			}
+
 			this.load.bitmapFont("testbitmap", "assets/fonts/okeydokey_0.png", "assets/fonts/okeydokey.xml");
-			this.load.image("ball", "assets/visual/ball.png");
-			this.load.image("bottom_text_background", "assets/visual/bottom_text_background.png");
-			this.load.image("options_background", "assets/visual/options_background.png");
-			this.load.spritesheet("player", "assets/visual/maincharacter.png", Constants.TILE_WIDTH, Constants.TILE_HEIGHT);
-			this.load.spritesheet("grounds", "assets/visual/grounds.png", Constants.TILE_WIDTH, Constants.TILE_HEIGHT);
-			this.load.spritesheet("water", "assets/visual/water.png", Constants.TILE_WIDTH, Constants.TILE_HEIGHT);
-			this.load.spritesheet("arrow", "assets/visual/arrow.png", 12, 12);
-			this.load.spritesheet("rhythm_symbols", "assets/visual/rhythm_symbols.png", 24, 24);
 		}
 
 		create() {
