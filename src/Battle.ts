@@ -43,9 +43,10 @@ module MyGame {
         private afterRound() {
             var damage = this.enemy.calculateDamage(this.currentPattern, this.patternChecker.notesPressed);
             if (damage === 0) {
-                this.playerHealth = Math.max(this.enemy.getAttackPoints(this.currentPattern), 0);
+                var playerDamage = this.playerHealth - this.enemy.getAttackPoints(this.currentPattern);
+                this.playerHealth = Math.max(playerDamage, 0);
                 this.playerHealthDisplay.text = this.playerHealth.toString();
-                if (this.enemy.health === 0) {
+                if (this.playerHealth === 0) {
                     this.game.time.events.stop(true);
                 }
                 return;

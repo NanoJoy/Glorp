@@ -1,13 +1,13 @@
 module MyGame {
     export class PatternDisplayer {
         game: Battle;
-        patternGenerator: PatternGenerator;
+        generator: PatternGenerator;
         tempo: number;
         maxNumNotes: number;
         minNumNotes: number;
         isDisplaying: boolean;
         currentPattern: PatternNote[];
-        noteDisplays: Phaser.Image[];
+        noteDisplays: NoteDisplay[];
         
         readonly fontStyle = { font: "14px okeydokey", fill: "#000000" };
 
@@ -19,7 +19,7 @@ module MyGame {
             this.maxNumNotes = enemy.maxNumNotes;
             var allowedNotes = [Phaser.KeyCode.W, Phaser.KeyCode.A,
             Phaser.KeyCode.S, Phaser.KeyCode.D, Phaser.KeyCode.O, Phaser.KeyCode.K];
-            this.patternGenerator = new PatternGenerator(enemy.patternLength, enemy.beatLength, allowedNotes);
+            this.generator = new PatternGenerator(enemy.patternLength, enemy.beatLength, allowedNotes);
         }
 
         display(): PatternNote[] {
@@ -29,11 +29,11 @@ module MyGame {
             this.isDisplaying = true;
             this.noteDisplays = [];
             var numNotes = Math.floor(Math.random() + (this.maxNumNotes - this.minNumNotes)) + this.minNumNotes;
-            this.currentPattern = this.patternGenerator.generate(numNotes);
-            for (let i = 0; i < this.patternGenerator.length; i++) {
+            this.currentPattern = this.generator.generate(numNotes);
+            for (let i = 0; i < this.generator.length; i++) {
                 this.game.time.events.add(this.tempo * i, this.showNote, this, i);
             }
-            this.game.time.events.add((this.patternGenerator.length + 1) * this.tempo, function () {
+            this.game.time.events.add((this.generator.length + 1) * this.tempo, function () {
                 this.isDisplaying = false;
             }, this);
             return this.currentPattern;
@@ -54,11 +54,28 @@ module MyGame {
                 return value.position === position;
             });
             var noteOrNull = notes.length > 0 ? notes[0].key : null
-            var frame = PatternDisplayer.getKeyFrame(noteOrNull, position % this.patternGenerator.beatLength === 0);
+            this.noteDisplays.push(
+                new NoteDisplay(this.game, noteOrNull, position % this.generator.beatLength === 0,
+                     true, position, this.generator.length)
+            );
+        }
+    }
+
+    export class NoteDisplay extends Phaser.Image {
+        constructor(state: Phaser.State, note: Phaser.KeyCode, isBeat: boolean, isTop: boolean
+            , position: number, patternLength: number) {
+            var frame = NoteDisplay.getKeyFrame(note, isBeat);
             //10 padding on each side plus 24 for sprite width.
             var width = Constants.SCREEN_WIDTH - 44;
-            var xPosition = (width / this.patternGenerator.length) * position + 10;
-            this.noteDisplays.push(this.game.add.image(xPosition, 10, "rhythm_symbols", frame));
+            var xPosition = (width / patternLength) * position + 22;
+            var yPosition = isTop ? 22 : 56;
+            super(state.game, xPosition, yPosition, "rhythm_symbols", frame);
+            this.anchor.set(0.5, 0.5);
+            state.add.existing(this);
+        }
+
+        updateFrame(key: Phaser.KeyCode, isBeat: boolean) {
+            this.frame = NoteDisplay.getKeyFrame(key, isBeat);
         }
 
         static getKeyFrame(key: Phaser.KeyCode, isBeat: boolean): number {

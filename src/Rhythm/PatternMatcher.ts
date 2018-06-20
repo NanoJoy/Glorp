@@ -10,7 +10,7 @@ module MyGame {
         numMils: number;
         startTime: number;
         inputAllowed: boolean;
-        noteDisplays: Phaser.Image[];
+        noteDisplays: NoteDisplay[];
         notesPressed: NotePress[];
 
         readonly fontStyle = { font: "14px okeydokey", fill: "#000000" };
@@ -31,7 +31,7 @@ module MyGame {
             this.active = true;
             this.getFirstNote();
             this.startTime = this.game.time.now + this.tempo;
-            this.noteDisplays = [] as Phaser.Text[];
+            this.noteDisplays = [] as NoteDisplay[];
             this.notesPressed = [] as NotePress[];
             this.inputAllowed = true;
             for (let i = 0; i < this.patternLength; i++) this.noteDisplays.push(null);
@@ -48,11 +48,10 @@ module MyGame {
         }
 
         checkOnSubBeat(position: number) {
-            var width = Constants.SCREEN_WIDTH - 44;
-            var xPosition = (width / this.patternLength) * position + 10;
-            var frame = position % this.beatLength === 0 ? 7 : 6;
             if (this.noteDisplays[position] === null) {
-                this.noteDisplays[position] = this.game.add.image(xPosition, 44, "rhythm_symbols", frame);
+                var isBeat = position % this.beatLength === 0;
+                var noteDisplay = new NoteDisplay(this.game, null, isBeat, false, position, this.patternLength);
+                this.noteDisplays[position] = noteDisplay;
             }
         }
 
@@ -62,28 +61,26 @@ module MyGame {
 
             var timePressed = this.game.time.now;
             var timeElapsed = timePressed - this.startTime;
-            var closestSubBeat = Math.round(timeElapsed / this.tempo);
-            console.log(closestSubBeat); console.log(this.beatLength);
+            var position = Math.round(timeElapsed / this.tempo);
 
-            var frame = PatternDisplayer.getKeyFrame(keyCode, closestSubBeat % this.beatLength === 0);
-            if (this.noteDisplays[closestSubBeat] === null) {
-                var width = Constants.SCREEN_WIDTH - 44;
-                var xPosition = (width / this.patternLength) * closestSubBeat + 10;
-                this.noteDisplays[closestSubBeat] = this.game.add.image(xPosition, 44, "rhythm_symbols", frame);
+            var isBeat = position % this.beatLength === 0;
+            if (this.noteDisplays[position] === null) {
+                var noteDisplay = new NoteDisplay(this.game, keyCode, isBeat, false, position, this.patternLength);
+                this.noteDisplays[position] = noteDisplay;
             } else {
-                this.noteDisplays[closestSubBeat].frame = frame;
+                this.noteDisplays[position].updateFrame(keyCode, isBeat);
             }
             if (this.currentPattern[this.nextNote] !== keyCode) {
                 this.inputAllowed = false;
-                this.noteDisplays[closestSubBeat].tint = 0xFF0000;
+                this.noteDisplays[position].tint = 0xFF0000;
                 return;
             }
             this.getNextNote();
 
-            var distance = Math.round(Math.abs(timePressed - (closestSubBeat * this.tempo + this.startTime)));
+            var distance = Math.round(Math.abs(timePressed - (position * this.tempo + this.startTime)));
             distance = distance < 10 ? 0 : distance;
-            this.noteDisplays[closestSubBeat].alpha = (this.tempo / 2 - distance) / (this.tempo / 2);
-            this.notesPressed.push({note: keyCode, position: closestSubBeat, distance: distance});
+            this.noteDisplays[position].alpha = (this.tempo / 2 - distance) / (this.tempo / 2);
+            this.notesPressed.push({note: keyCode, position: position, distance: distance});
         }
 
         private getFirstNote() {
@@ -98,6 +95,10 @@ module MyGame {
             while (this.currentPattern[this.nextNote] === null && this.nextNote < this.currentPattern.length) {
                 this.nextNote++;
             }
+        }
+
+        private makeNoteImage() {
+
         }
 
         reset() {

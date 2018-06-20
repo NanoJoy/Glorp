@@ -21,7 +21,7 @@ module MyGame {
             this.play("idle_back");
             this.inputs = state.inputs;
             this.direction = Direction.Back;
-            state.game.add.existing(this);
+            state.add.existing(this);
             this.state = state;
         }
 
