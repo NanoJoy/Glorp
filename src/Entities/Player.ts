@@ -8,7 +8,7 @@ module MyGame {
         hasCollided: boolean;
 
         constructor(state: Main, x: number, y: number) {
-            super(state.game, x, y, "player", 0);
+            super(state.game, x, y, Assets.Sprites.Player.key, 0);
             state.game.physics.arcade.enableBody(this);
             this.animations.add("walk_back", SpriteUtils.animationArray(1, 4), 5, true);
             this.animations.add("walk_forward", SpriteUtils.animationArray(6, 9), 5, true);

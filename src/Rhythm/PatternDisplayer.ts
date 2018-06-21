@@ -69,7 +69,7 @@ module MyGame {
             var width = Constants.SCREEN_WIDTH - 44;
             var xPosition = (width / patternLength) * position + 22;
             var yPosition = isTop ? 22 : 56;
-            super(state.game, xPosition, yPosition, "rhythm_symbols", frame);
+            super(state.game, xPosition, yPosition, Assets.Sprites.RhythmSymbols.key, frame);
             this.anchor.set(0.5, 0.5);
             state.add.existing(this);
         }

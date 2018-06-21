@@ -29,14 +29,14 @@ module MyGame {
 
     class ImageAssets {
         [key: string]: string;
-        Ball = "ball";
         BottomTextBackground = "bottom_text_background";
         OptionsBackground = "options_background";
     }
 
     export var Assets = {
         Sprites: new SpriteAssets(),
-        Images: new ImageAssets()
+        Images: new ImageAssets(),
+        FontName: "testbitmap"
     }
 
     export var VISUAL_ASSETS_PATH = "assets/visual";

@@ -140,13 +140,13 @@ module MyGame {
             this.game.physics.arcade.isPaused = true;
             this.game.textOnScreen = true;
 
-            this.textBackground = this.game.add.image(0, 0, "bottom_text_background");
-            this.upArrow = this.game.add.image(Constants.SCREEN_WIDTH - 22, 8, "arrow", 0);
+            this.textBackground = this.game.add.image(0, 0, Assets.Images.BottomTextBackground);
+            this.upArrow = this.game.add.image(Constants.SCREEN_WIDTH - 22, 8, Assets.Sprites.Arrow.key, 0);
             this.upArrow.visible = false;
-            this.downArrow = this.game.add.image(Constants.SCREEN_WIDTH - 22, this.textBackground.height - 20, "arrow", 1);
+            this.downArrow = this.game.add.image(Constants.SCREEN_WIDTH - 22, this.textBackground.height - 20, Assets.Sprites.Arrow.key, 1);
             this.downArrow.visible = this.firstPage.text.length > 1;
 
-            this.text = this.game.add.bitmapText(8, this.textBackground.y + 8, "testbitmap", this.firstPage.text[0], 14);
+            this.text = this.game.add.bitmapText(8, this.textBackground.y + 8, Assets.FontName, this.firstPage.text[0], 14);
             this.text.maxWidth = Constants.SCREEN_WIDTH - 24;
             this.pageNumber = 0;
             this.isDisplaying = true;
@@ -157,13 +157,13 @@ module MyGame {
             if (this.firstPage.hasOptions) {
                 var textPrompt = this.currentPage as TextPrompt;
                 this.currentOption = 0;
-                this.optionsBackground = this.game.add.image(0, this.textBackground.height, "options_background");
-                this.leftArrow = this.game.add.image(6, this.textBackground.height + 12, "arrow", 3);
+                this.optionsBackground = this.game.add.image(0, this.textBackground.height, Assets.Images.OptionsBackground);
+                this.leftArrow = this.game.add.image(6, this.textBackground.height + 12, Assets.Sprites.Arrow, 3);
                 this.leftArrow.visible = false;
-                this.rightArrow = this.game.add.image(Constants.SCREEN_WIDTH - 18, this.textBackground.height + 12, "arrow", 2);
+                this.rightArrow = this.game.add.image(Constants.SCREEN_WIDTH - 18, this.textBackground.height + 12, Assets.Sprites.Arrow, 2);
                 this.rightArrow.visible = textPrompt.options.length > 0;
 
-                this.currentOptionText = this.game.add.bitmapText(18, this.optionsBackground.y + 8, "testbitmap", textPrompt.options[0].text, 14);
+                this.currentOptionText = this.game.add.bitmapText(18, this.optionsBackground.y + 8, Assets.FontName, textPrompt.options[0].text, 14);
                 this.options = textPrompt.options;
                 this.game.inputs.left.onUp.add(this.scrollLeft, this);
                 this.game.inputs.right.onUp.add(this.scrollRight, this);
