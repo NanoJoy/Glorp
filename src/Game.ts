@@ -6,12 +6,12 @@ module MyGame {
 
 			super(288, 320, Phaser.AUTO, 'content', null);
 
-			this.state.add('Boot', Boot, false);
-			this.state.add("Preloader", Preloader, false);
-			this.state.add("Main", Main, false);
-			this.state.add("Battle", Battle, false);
+			this.state.add(States.Boot, Boot, false);
+			this.state.add(States.Preloader, Preloader, false);
+			this.state.add(States.Main, Main, false);
+			this.state.add(States.Battle, Battle, false);
 
-			this.state.start('Boot');
+			this.state.start(States.Boot);
 		}
 
 	}

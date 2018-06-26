@@ -6,7 +6,14 @@ module MyGame {
         TILE_HEIGHT: 32
     }
 
-    export class SpriteAsset {
+    export var States = {
+        Boot: "Boot",
+        Preloader: "Preloader",
+        Main: "Main",
+        Battle: "Battle"
+    };
+
+    class SpriteAsset {
         readonly key: string;
         readonly width: number;
         readonly height: number;
@@ -30,6 +37,7 @@ module MyGame {
     class ImageAssets {
         [key: string]: string;
         BottomTextBackground = "bottom_text_background";
+        HealthBarContainer = "healthbar_container";
         OptionsBackground = "options_background";
     }
 

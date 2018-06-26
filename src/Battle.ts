@@ -5,21 +5,20 @@ module MyGame {
         patternDisplayer: PatternDisplayer;
         patternChecker: PatternMatcher;
         playerHealth: number;
-        playerHealthDisplay: Phaser.Text;
-        hitPointsDisplay: Phaser.Text;
+        playerHealthDisplay: HealthDisplay;
+        enemyHealthDisplay: HealthDisplay;
         enemy: Enemy;
 
         create() {
             this.playerHealth = 100;
 
-            this.playerHealthDisplay = this.game.add.text(Constants.SCREEN_HEIGHT / 3,
-                Constants.SCREEN_WIDTH / 2, this.playerHealth.toString(), { font: "28px okeydokey", fill: "#000000" });
-            this.playerHealthDisplay.anchor.set(0.5, 0.5);
-            this.enemy = new JamBot();
+            this.playerHealthDisplay = new HealthDisplay(this, 10, 100, "You", this.playerHealth);
+            if (!SpriteUtils.isAThing(stateTransfer.enemy)) {
+                throw new Error("enemy is not set for battle.");
+            }
+            this.enemy = stateTransfer.enemy;
             this.inputs = new Inputs(this);
-            this.hitPointsDisplay = this.game.add.text(Constants.SCREEN_HEIGHT * 2 / 3,
-                Constants.SCREEN_WIDTH /2, this.enemy.hitPoints.toString(), { font: "28px okeydokey", fill: "#000000" });
-            this.hitPointsDisplay.anchor.set(0.5, 0.5);
+            this.enemyHealthDisplay = new HealthDisplay(this, 10, 200, this.enemy.name, this.enemy.hitPoints);
             this.patternDisplayer = new PatternDisplayer(this, this.enemy);
             this.patternChecker = new PatternMatcher(this, this.enemy);
             this.startPattern();
@@ -45,7 +44,7 @@ module MyGame {
             if (damage === 0) {
                 var playerDamage = this.playerHealth - this.enemy.getAttackPoints(this.currentPattern);
                 this.playerHealth = Math.max(playerDamage, 0);
-                this.playerHealthDisplay.text = this.playerHealth.toString();
+                this.playerHealthDisplay.updateHitPoints(this.playerHealth);
                 if (this.playerHealth === 0) {
                     this.game.time.events.stop(true);
                 }
@@ -53,13 +52,50 @@ module MyGame {
             }
 
             this.enemy.health = Math.max(this.enemy.health - damage, 0);
-            this.hitPointsDisplay.text = this.enemy.health.toString();
-            if (this.enemy.health <= this.enemy.hitPoints / 4) {
-                this.hitPointsDisplay.tint = 0xFF0000;
-            }
+            this.enemyHealthDisplay.updateHitPoints(this.enemy.health);
             if (this.enemy.health === 0) {
                 this.game.time.events.stop(true);
             }
+        }
+    }
+
+    class HealthDisplay {
+        battle: Battle;
+        x: number;
+        y: number;
+        text: Phaser.Text;
+        healthBarContainer: Phaser.Image;
+        healthBar: Phaser.Sprite;
+        hitPoints: number;
+
+        constructor(battle: Battle, x: number, y: number, name: string, hitPoints: number) {
+            this.battle = battle;
+            this.x = x;
+            this.y = y;
+            this.hitPoints = hitPoints;
+            this.text = battle.add.text(x, y, name, { font: "16px okeydokey", fill: "#000000" });
+            this.healthBarContainer = battle.add.image(x, y + 18, Assets.Images.HealthBarContainer);
+            this.healthBar = null;
+            this.updateHitPoints(hitPoints);
+        }
+
+        updateHitPoints(hp: number) {
+            if (hp > this.hitPoints || hp < 0) {
+                throw new Error(`Hit points not in valid range: ${hp}.`);
+            }
+            if (this.healthBar !== null) {
+                this.healthBar.destroy();
+                this.healthBar = null;
+            }
+            var width = Math.round((hp / this.hitPoints) * ((this.healthBarContainer.width - 4) / 2)) * 2;
+            var bmd = this.battle.add.bitmapData(width, this.healthBarContainer.height - 4);
+            bmd.ctx.beginPath();
+            bmd.ctx.rect(0, 0, width, this.healthBarContainer.height - 4);
+            bmd.ctx.fillStyle = "#606060";
+            bmd.ctx.fill();
+            this.healthBar = this.battle.add.sprite(this.healthBarContainer.x + 2, this.healthBarContainer.y + 2, bmd);
+
+
         }
     }
 }

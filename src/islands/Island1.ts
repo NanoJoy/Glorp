@@ -3,7 +3,7 @@ module MyGame {
         "oooooooooooooooo",
         "oooooooooooooooo",
         "ooo/        'ooo",
-        "oo/          'oo",
+        "oo/      j   'oo",
         "oo            oo",
         "oo'          /oo",
         "ooo'       /oooo",

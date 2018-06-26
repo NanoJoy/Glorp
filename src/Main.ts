@@ -5,6 +5,7 @@ module MyGame {
         public inputs: Inputs;
         public textOnScreen: boolean;
         public groups: {
+            enemies: Enemy[],
             water: Phaser.Group
         };
 
@@ -13,6 +14,7 @@ module MyGame {
             this.inputs = new Inputs(this);
 
             this.groups = {
+                enemies: [],
                 water: this.game.add.group()
             }
 
@@ -24,7 +26,11 @@ module MyGame {
         }
 
         update() {
-                //this.player.update();
+            if (!this.textOnScreen) {
+                for (let i = 0; i < this.groups.enemies.length; i++) {
+                    this.groups.enemies[i].update();
+                }
+            }
         }
 
         private setupLevel(island: Island) {
@@ -37,6 +43,9 @@ module MyGame {
                     switch (line.charAt(j)) {
                         case " ":
                             new Ground(this, j, i);
+                            break;
+                        case "j":
+                            this.groups.enemies.push(new JamBot(this, j, i));
                             break;
                         case "o":
                             new RegularWater(this, j, i);
@@ -60,4 +69,16 @@ module MyGame {
             this.player = new Player(this, this.game.width / 2, this.game.height / 2);            
         }
     }
+
+    class StateTransfer {
+        enemy: Enemy;
+        position: Phaser.Point;
+        health: number;
+    }
+
+    export var stateTransfer = {
+        enemy: null,
+        position: new Phaser.Point(0, 0),
+        health: 0
+    } as StateTransfer;
 }

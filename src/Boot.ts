@@ -36,7 +36,7 @@ module MyGame {
 		create() {
 			//  By this point the preloader assets have loaded to the cache, we've set the game settings
 			//  So now let's start the real preloader going
-			this.game.state.start("Preloader");
+			this.game.state.start(States.Preloader);
 		}
 	}
 }

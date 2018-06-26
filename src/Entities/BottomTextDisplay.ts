@@ -24,7 +24,7 @@ module MyGame {
         constructor(game: Main, name: string) {
             this.game = game;
             this.name = name;
-            this.firstPage = getDialogue(name);
+            this.firstPage = Dialogs[name];
             this.currentPage = this.firstPage;
         }
 
@@ -158,9 +158,9 @@ module MyGame {
                 var textPrompt = this.currentPage as TextPrompt;
                 this.currentOption = 0;
                 this.optionsBackground = this.game.add.image(0, this.textBackground.height, Assets.Images.OptionsBackground);
-                this.leftArrow = this.game.add.image(6, this.textBackground.height + 12, Assets.Sprites.Arrow, 3);
+                this.leftArrow = this.game.add.image(6, this.textBackground.height + 12, Assets.Sprites.Arrow.key, 3);
                 this.leftArrow.visible = false;
-                this.rightArrow = this.game.add.image(Constants.SCREEN_WIDTH - 18, this.textBackground.height + 12, Assets.Sprites.Arrow, 2);
+                this.rightArrow = this.game.add.image(Constants.SCREEN_WIDTH - 18, this.textBackground.height + 12, Assets.Sprites.Arrow.key, 2);
                 this.rightArrow.visible = textPrompt.options.length > 0;
 
                 this.currentOptionText = this.game.add.bitmapText(18, this.optionsBackground.y + 8, Assets.FontName, textPrompt.options[0].text, 14);

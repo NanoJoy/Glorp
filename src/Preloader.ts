@@ -6,10 +6,6 @@ module MyGame {
 		background: Phaser.Sprite;
 		ready: boolean = false;
 
-		readonly asset = "assets";
-		readonly visual = "visual";
-		readonly png = "png";
-
 		preload() {
 			this.preloadBar = this.add.sprite(300, 400, "preloadBar");
 			this.load.setPreloadSprite(this.preloadBar);
@@ -23,14 +19,14 @@ module MyGame {
 			var imageAssets = Object.getOwnPropertyNames(Assets.Images);
 			for (let i = 0; i < imageAssets.length; i++) {
 				let a = Assets.Images[imageAssets[i]];
-				this.load.image(`${VISUAL_ASSETS_PATH}/${a}`);
+				this.load.image(a, `${VISUAL_ASSETS_PATH}/${a}.${PNG}`);
 			}
 
 			this.load.bitmapFont("testbitmap", "assets/fonts/okeydokey_0.png", "assets/fonts/okeydokey.xml");
 		}
 
 		create() {
-			this.game.state.start("Battle");
+			this.game.state.start(States.Main);
 		}
 	}
 }

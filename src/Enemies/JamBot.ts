@@ -1,16 +1,27 @@
 module MyGame {
     export class JamBot implements Enemy {
+        name = "JamBot";
         minNumNotes = 4;
         maxNumNotes = 4;
         patternLength = 8;
         beatLength = 2;
         tempo = 500;
-        spriteKey = "jambot";
+        battleSpriteKey = "jambot";
+        worldSpriteKey = Assets.Sprites.RhythmSymbols.key;
         hitPoints = 200;
+        main: Main;
+        x: number;
+        y: number;
         health: number;
+        worldSprite: Phaser.Sprite;
 
-        constructor() {
+        constructor(main: Main, x: number, y: number) {
+            this.main = main;
+            this.x = x;
+            this.y = y;
             this.health = this.hitPoints;
+            this.worldSprite = this.main.add.sprite(x * Constants.TILE_WIDTH, y * Constants.TILE_HEIGHT, this.worldSpriteKey);
+            this.main.physics.arcade.enable(this.worldSprite);
         }
 
         calculateDamage(pattern: PatternNote[], notePresses: NotePress[]): number {
@@ -35,6 +46,16 @@ module MyGame {
 
         getAttackPoints(pattern: PatternNote[]) {
             return pattern.length * 20;
+        }
+
+        playerOverlap(sp: Phaser.Sprite, pl: Player) {
+            console.log("overlap");
+            stateTransfer.enemy = this;
+            this.main.state.start(States.Battle);
+        }
+
+        update() {
+            this.main.physics.arcade.overlap(this.worldSprite, this.main.player, this.playerOverlap, null, this);
         }
     }
 }
