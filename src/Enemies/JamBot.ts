@@ -7,7 +7,7 @@ module MyGame {
         beatLength = 2;
         tempo = 500;
         battleSpriteKey = "jambot";
-        worldSpriteKey = Assets.Sprites.RhythmSymbols.key;
+        worldSpriteKey = Assets.Sprites.JamBotWorld.key;
         hitPoints = 200;
         main: Main;
         x: number;
@@ -22,6 +22,8 @@ module MyGame {
             this.health = this.hitPoints;
             this.worldSprite = this.main.add.sprite(x * Constants.TILE_WIDTH, y * Constants.TILE_HEIGHT, this.worldSpriteKey);
             this.main.physics.arcade.enable(this.worldSprite);
+            this.worldSprite.animations.add("walk", SpriteUtils.animationArray(0, 7), 5, true);
+            this.worldSprite.play("walk");
         }
 
         calculateDamage(pattern: PatternNote[], notePresses: NotePress[]): number {

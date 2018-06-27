@@ -29,6 +29,7 @@ module MyGame {
         [key: string]: SpriteAsset;
         Player = new SpriteAsset("player");
         Grounds = new SpriteAsset("grounds");
+        JamBotWorld = new SpriteAsset("jambot_world");
         Water = new SpriteAsset("water");
         Arrow = new SpriteAsset("arrow", 12, 12);
         RhythmSymbols = new SpriteAsset("rhythm_symbols", 24, 24);
