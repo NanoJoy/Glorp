@@ -14,11 +14,13 @@ module MyGame {
         y: number;
         health: number;
         worldSprite: Phaser.Sprite;
+        movementScript: MovementScript;
 
-        constructor(main: Main, x: number, y: number) {
+        constructor(main: Main, x: number, y: number, movementScript: MovementScript) {
             this.main = main;
             this.x = x;
             this.y = y;
+            this.movementScript = movementScript;
             this.health = this.hitPoints;
             this.worldSprite = this.main.add.sprite(x * Constants.TILE_WIDTH, y * Constants.TILE_HEIGHT, this.worldSpriteKey);
             this.main.physics.arcade.enable(this.worldSprite);

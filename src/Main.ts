@@ -45,7 +45,8 @@ module MyGame {
                             new Ground(this, j, i);
                             break;
                         case "j":
-                            this.groups.enemies.push(new JamBot(this, j, i));
+                            let script = island.getMovementScript(j, i);
+                            this.groups.enemies.push(new JamBot(this, j, i, script));
                             break;
                         case "o":
                             new RegularWater(this, j, i);
