@@ -14,18 +14,19 @@ module MyGame {
         y: number;
         health: number;
         worldSprite: Phaser.Sprite;
-        movementScript: MovementScript;
+        movementManager: MovementManager;
 
         constructor(main: Main, x: number, y: number, movementScript: MovementScript) {
             this.main = main;
             this.x = x;
             this.y = y;
-            this.movementScript = movementScript;
             this.health = this.hitPoints;
             this.worldSprite = this.main.add.sprite(x * Constants.TILE_WIDTH, y * Constants.TILE_HEIGHT, this.worldSpriteKey);
             this.main.physics.arcade.enable(this.worldSprite);
             this.worldSprite.animations.add("walk", SpriteUtils.animationArray(0, 7), 5, true);
             this.worldSprite.play("walk");
+            this.movementManager = new MovementManager(this.main.game, movementScript, this.worldSprite);
+            this.movementManager.start();
         }
 
         calculateDamage(pattern: PatternNote[], notePresses: NotePress[]): number {
@@ -59,6 +60,7 @@ module MyGame {
         }
 
         update() {
+            this.movementManager.playNext();
             this.main.physics.arcade.overlap(this.worldSprite, this.main.player, this.playerOverlap, null, this);
         }
     }

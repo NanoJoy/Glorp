@@ -20,7 +20,7 @@ module MyGame {
 
             this.setupLevel(island1);
 
-            new BottomTextDisplay(this, "sample").start();
+            //new BottomTextDisplay(this, "sample").start();
 
             this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
         }
@@ -67,7 +67,12 @@ module MyGame {
                     }
                 }
             }
-            this.player = new Player(this, this.game.width / 2, this.game.height / 2);            
+            this.player = new Player(this, this.game.width / 2, this.game.height / 2);  
+            
+            this.groups.enemies.forEach (function (en) {
+                console.log(this.game);
+                this.game.world.bringToTop(en.worldSprite);
+            }, this);
         }
     }
 

@@ -41,10 +41,10 @@ module MyGame {
             "oooooooooooooooo",
         ],
         [],
-        [{
-            start: new Phaser.Point(9, 4),
-            directions: [Direction.Right, Direction.Right, Direction.Back, Direction.Back, Direction.Left, Direction.Left, Direction.Forward, Direction.Forward],
-            speed: 500
-        }]
-     );
+        [new MovementScript(
+            new Phaser.Point(9, 3),
+            [Direction.Back, Direction.Back, Direction.Forward, Direction.Forward],
+            500
+        )]
+    );
 }
