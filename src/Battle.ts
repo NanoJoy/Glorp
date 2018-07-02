@@ -11,6 +11,7 @@ module MyGame {
 
         create() {
             this.playerHealth = 100;
+            var stateTransfer = StateTransfer.getInstance();
 
             this.playerHealthDisplay = new HealthDisplay(this, 10, 100, "You", this.playerHealth);
             if (!SpriteUtils.isAThing(stateTransfer.enemy)) {
@@ -54,8 +55,16 @@ module MyGame {
             this.enemy.health = Math.max(this.enemy.health - damage, 0);
             this.enemyHealthDisplay.updateHitPoints(this.enemy.health);
             if (this.enemy.health === 0) {
-                this.game.time.events.stop(true);
+                this.enemyDeath();
             }
+        }
+
+        private enemyDeath() {
+            this.game.time.events.stop(true);
+            var stateTransfer = StateTransfer.getInstance();
+            stateTransfer.enemy = null;
+            stateTransfer.position = new Phaser.Point(Math.floor(this.enemy.worldSprite.position.x / TILE_WIDTH), Math.floor(this.enemy.worldSprite.position.y / TILE_HEIGHT));
+            this.state.start(States.Main);
         }
     }
 

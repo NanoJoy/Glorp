@@ -8,7 +8,7 @@ module MyGame {
         tempo = 500;
         battleSpriteKey = "jambot";
         worldSpriteKey = Assets.Sprites.JamBotWorld.key;
-        hitPoints = 200;
+        hitPoints = 50//200;
         main: Main;
         x: number;
         y: number;
@@ -21,7 +21,7 @@ module MyGame {
             this.x = x;
             this.y = y;
             this.health = this.hitPoints;
-            this.worldSprite = this.main.add.sprite(x * Constants.TILE_WIDTH, y * Constants.TILE_HEIGHT, this.worldSpriteKey);
+            this.worldSprite = this.main.add.sprite(x * TILE_WIDTH, y * TILE_HEIGHT, this.worldSpriteKey);
             this.main.physics.arcade.enable(this.worldSprite);
             this.worldSprite.animations.add("walk", SpriteUtils.animationArray(0, 7), 5, true);
             this.worldSprite.play("walk");
@@ -54,7 +54,7 @@ module MyGame {
         }
 
         playerOverlap(sp: Phaser.Sprite, pl: Player) {
-            console.log("overlap");
+            var stateTransfer = StateTransfer.getInstance();
             stateTransfer.enemy = this;
             this.main.state.start(States.Battle);
         }

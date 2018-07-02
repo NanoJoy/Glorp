@@ -1,9 +1,30 @@
 module MyGame {
+    
+    export class StateTransfer {
+        enemy: Enemy;
+        island: number;
+        position: Phaser.Point;
+        health: number;
+        private static instance: StateTransfer;
+
+        private constructor () {
+            this.enemy = null;
+            this.island = -1;
+            this.position = null;
+            this.health = -1;
+        }
+
+        static getInstance() {
+            return StateTransfer.instance || (StateTransfer.instance = new StateTransfer);
+        }
+    }
+
     export class Main extends Phaser.State {
 
         public player: Player;
         public inputs: Inputs;
         public textOnScreen: boolean;
+        public island: Island;
         public groups: {
             enemies: Enemy[],
             water: Phaser.Group
@@ -18,7 +39,10 @@ module MyGame {
                 water: this.game.add.group()
             }
 
-            this.setupLevel(island1);
+            var worldManager = WorldManager.getInstance();
+            var stateTransfer = StateTransfer.getInstance();
+            this.island = worldManager.getIsland(stateTransfer.island === -1 ? 0 : stateTransfer.island);
+            this.setupLevel(this.island);
 
             //new BottomTextDisplay(this, "sample").start();
 
@@ -34,8 +58,8 @@ module MyGame {
         }
 
         private setupLevel(island: Island) {
-            this.game.world.setBounds(0, 0, island.layout[0].length * Constants.TILE_WIDTH,
-                island.layout.length * Constants.TILE_HEIGHT);
+            this.game.world.setBounds(0, 0, island.layout[0].length * TILE_WIDTH,
+                island.layout.length * TILE_HEIGHT);
             
             for (let i = 0; i < island.layout.length; i++) {
                 let line = island.layout[i];
@@ -67,24 +91,12 @@ module MyGame {
                     }
                 }
             }
-            this.player = new Player(this, this.game.width / 2, this.game.height / 2);  
+            var playerPosition = StateTransfer.getInstance().position || island.playerStart;
+            this.player = new Player(this, playerPosition);  
             
             this.groups.enemies.forEach (function (en) {
-                console.log(this.game);
                 this.game.world.bringToTop(en.worldSprite);
             }, this);
         }
     }
-
-    class StateTransfer {
-        enemy: Enemy;
-        position: Phaser.Point;
-        health: number;
-    }
-
-    export var stateTransfer = {
-        enemy: null,
-        position: new Phaser.Point(0, 0),
-        health: 0
-    } as StateTransfer;
 }

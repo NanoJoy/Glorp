@@ -1,10 +1,8 @@
 module MyGame {
-    export var Constants = {
-        SCREEN_WIDTH: 288,
-        SCREEN_HEIGHT: 320,
-        TILE_WIDTH: 28,
-        TILE_HEIGHT: 32
-    }
+    export var SCREEN_WIDTH = 288;
+    export var SCREEN_HEIGHT = 320;
+    export var TILE_WIDTH = 28;
+    export var TILE_HEIGHT = 32;
 
     export var States = {
         Boot: "Boot",
@@ -20,8 +18,8 @@ module MyGame {
 
         constructor(key: string, width?: number, height?: number) {
             this.key = key;
-            this.width = width === undefined ? Constants.TILE_WIDTH : width;
-            this.height = height === undefined ? Constants.TILE_HEIGHT : height;
+            this.width = width === undefined ? TILE_WIDTH : width;
+            this.height = height === undefined ? TILE_HEIGHT : height;
         }
     }
 
