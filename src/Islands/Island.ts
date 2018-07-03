@@ -7,13 +7,15 @@ module MyGame {
     }
 
     export class Island {
+        num: number;
         position: Phaser.Point;
         layout: string[];
         additions: LayoutAddition[];
         movementScripts: MovementScript[];
         playerStart: Phaser.Point;
 
-        constructor(position: Phaser.Point, layout: string[], additions: LayoutAddition[], movementScripts: MovementScript[], playerStart: Phaser.Point) {
+        constructor(num: number, position: Phaser.Point, layout: string[], additions: LayoutAddition[], movementScripts: MovementScript[], playerStart: Phaser.Point) {
+            this.num = num;
             this.position = position;
             this.layout = layout;
             this.additions = additions;

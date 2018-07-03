@@ -1,5 +1,5 @@
 module MyGame {
-    class Dialogz {
+    export class Dialogz {
         [key: string]: TextPage;
         dump = new TextDump(["Just one page this time..."]);
         sample = new TextPrompt(["I must ask one question.", "Hello. How are you?"], [
@@ -7,6 +7,4 @@ module MyGame {
             new TextOption("Bad", new TextDump(["That's too bad"]))
         ]);
     }
-
-    export var Dialogs = new Dialogz();
 }

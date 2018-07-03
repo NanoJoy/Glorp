@@ -66,7 +66,7 @@ module MyGame {
             , position: number, patternLength: number) {
             var frame = NoteDisplay.getKeyFrame(note, isBeat);
             //10 padding on each side plus 24 for sprite width.
-            var width = Constants.SCREEN_WIDTH - 44;
+            var width = SCREEN_WIDTH - 44;
             var xPosition = (width / (patternLength - 1)) * position + 22;
             var yPosition = isTop ? 22 : 56;
             super(state.game, xPosition, yPosition, Assets.Sprites.RhythmSymbols.key, frame);

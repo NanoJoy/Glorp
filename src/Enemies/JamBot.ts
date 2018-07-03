@@ -8,20 +8,20 @@ module MyGame {
         tempo = 500;
         battleSpriteKey = "jambot";
         worldSpriteKey = Assets.Sprites.JamBotWorld.key;
-        hitPoints = 50//200;
+        hitPoints = 50;//200;
         main: Main;
-        x: number;
-        y: number;
+        position: Phaser.Point;
         health: number;
         worldSprite: Phaser.Sprite;
         movementManager: MovementManager;
+        alive: boolean;
 
-        constructor(main: Main, x: number, y: number, movementScript: MovementScript) {
+        constructor(main: Main, position: Phaser.Point, movementScript: MovementScript) {
+            this.alive = true;
             this.main = main;
-            this.x = x;
-            this.y = y;
+            this.position = position;
             this.health = this.hitPoints;
-            this.worldSprite = this.main.add.sprite(x * TILE_WIDTH, y * TILE_HEIGHT, this.worldSpriteKey);
+            this.worldSprite = this.main.add.sprite(position.x * TILE_WIDTH, position.y * TILE_HEIGHT, this.worldSpriteKey);
             this.main.physics.arcade.enable(this.worldSprite);
             this.worldSprite.animations.add("walk", SpriteUtils.animationArray(0, 7), 5, true);
             this.worldSprite.play("walk");
@@ -55,13 +55,22 @@ module MyGame {
 
         playerOverlap(sp: Phaser.Sprite, pl: Player) {
             var stateTransfer = StateTransfer.getInstance();
+            stateTransfer.island = this.main.island.num;
             stateTransfer.enemy = this;
             this.main.state.start(States.Battle);
         }
 
         update() {
+            if (!this.alive) {
+                return;
+            }
             this.movementManager.playNext();
             this.main.physics.arcade.overlap(this.worldSprite, this.main.player, this.playerOverlap, null, this);
+        }
+
+        die() {
+            this.alive = false;
+            WorldManager.getInstance().changeLayout(StateTransfer.getInstance().island, this.position, "J");
         }
     }
 }

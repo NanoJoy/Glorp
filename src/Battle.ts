@@ -63,6 +63,7 @@ module MyGame {
             this.game.time.events.stop(true);
             var stateTransfer = StateTransfer.getInstance();
             stateTransfer.enemy = null;
+            this.enemy.die();
             stateTransfer.position = new Phaser.Point(Math.floor(this.enemy.worldSprite.position.x / TILE_WIDTH), Math.floor(this.enemy.worldSprite.position.y / TILE_HEIGHT));
             this.state.start(States.Main);
         }

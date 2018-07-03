@@ -14,5 +14,6 @@ module MyGame {
         calculateDamage: (pattern: PatternNote[], notePresses: NotePress[]) => number;
         getAttackPoints: (pattern: PatternNote[]) => number;
         update: () => void;
+        die: () => void;
     }
 }

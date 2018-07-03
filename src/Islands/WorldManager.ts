@@ -3,7 +3,7 @@ module MyGame {
     function loadIsland(num: number): Island {
         switch (num) {
             case 0:
-                return new Island(
+                return new Island(0,
                     new Phaser.Point(0, 0),
                     [
                         "oooooooooooooooo",
@@ -49,6 +49,16 @@ module MyGame {
                 this.islands.push(null);
             }
             return this.islands[num] || (this.islands[num] = loadIsland(num));
+        }
+
+        changeLayout(islandNum: number, position: Phaser.Point, symbol: string) {
+            this.getIsland(islandNum);
+            if (symbol.length > 1) {
+                throw new Error("symbol must be a single character.");
+            }
+            var oldRow = this.islands[islandNum].layout[position.y]
+            this.islands[islandNum].layout[position.y] = `${oldRow.substring(0, position.x)}${symbol}${oldRow.substring(position.x + 1)}`;
+            console.log(this.islands[islandNum].layout);
         }
     }
 }

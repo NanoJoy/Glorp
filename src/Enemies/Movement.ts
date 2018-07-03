@@ -31,25 +31,25 @@ module MyGame {
 
         start(resetToOriginalPosition = false) {
             if (resetToOriginalPosition) {
-                this.sprite.position.setTo(this.script.start.x * Constants.TILE_WIDTH, this.script.start.y * Constants.TILE_HEIGHT);
+                this.sprite.position.setTo(this.script.start.x * TILE_WIDTH, this.script.start.y * TILE_HEIGHT);
             }
             let destinations = [] as Phaser.Point[];
             for (let i = 0; i < this.script.directions.length; i++) {
                 let lastPosition = i === 0 ? this.sprite.position : destinations[i - 1];
                 switch (this.script.directions[i]) {
                     case Direction.Left:
-                        destinations.push(new Phaser.Point(lastPosition.x - Constants.TILE_WIDTH, lastPosition.y));
+                        destinations.push(new Phaser.Point(lastPosition.x - TILE_WIDTH, lastPosition.y));
                         break;
                     case Direction.Right:
-                        destinations.push(new Phaser.Point(lastPosition.x + Constants.TILE_WIDTH, lastPosition.y));
+                        destinations.push(new Phaser.Point(lastPosition.x + TILE_WIDTH, lastPosition.y));
                         break;
                     case Direction.Forward:
                     case Direction.Up:
-                        destinations.push(new Phaser.Point(lastPosition.x, lastPosition.y - Constants.TILE_HEIGHT));
+                        destinations.push(new Phaser.Point(lastPosition.x, lastPosition.y - TILE_HEIGHT));
                         break;
                     case Direction.Back:
                     case Direction.Down:
-                        destinations.push(new Phaser.Point(lastPosition.x, lastPosition.y + Constants.TILE_HEIGHT));
+                        destinations.push(new Phaser.Point(lastPosition.x, lastPosition.y + TILE_HEIGHT));
                         break;
                 }
             }

@@ -70,7 +70,7 @@ module MyGame {
                             break;
                         case "j":
                             let script = island.getMovementScript(j, i);
-                            this.groups.enemies.push(new JamBot(this, j, i, script));
+                            this.groups.enemies.push(new JamBot(this, new Phaser.Point(j, i), script));
                             break;
                         case "o":
                             new RegularWater(this, j, i);

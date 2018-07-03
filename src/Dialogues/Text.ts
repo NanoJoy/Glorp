@@ -41,10 +41,10 @@ module MyGame {
         hasOptions: boolean;
         onFinish: (selected: number) => void;
         
-        constructor(text: string[], onFinish: (selected: number) => void = null) {
+        constructor(text: string[]/*, onFinish: (selected: number) => void = null*/) {
             this.text = text;
             this.hasOptions = false;
-            this.onFinish = onFinish;
+            //this.onFinish = onFinish;
         }
     }
 
@@ -57,4 +57,6 @@ module MyGame {
         scrollPage: (direction: Direction) => void;
         start: () => void;
     }
+    
+    export var Dialogs = new Dialogz();
 }

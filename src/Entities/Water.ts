@@ -6,7 +6,7 @@ module MyGame {
         collisionBehavior: (player: Phaser.Sprite, water: Phaser.Sprite) => void;
 
         constructor(state: Main, x: number, y: number, animStart: number) {
-            super(state.game, x * Constants.TILE_WIDTH, y * Constants.TILE_HEIGHT, Assets.Sprites.Water.key);
+            super(state.game, x * TILE_WIDTH, y * TILE_HEIGHT, Assets.Sprites.Water.key);
             state.game.physics.arcade.enable(this);
             this.body.moves = false;
             this.body.immoveable = true;
