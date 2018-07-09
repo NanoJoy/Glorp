@@ -7,4 +7,6 @@ module MyGame {
             new TextOption("Bad", new TextDump(["That's too bad"]))
         ]);
     }
+    
+    export var Dialogs = new Dialogz();
 }

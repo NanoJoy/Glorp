@@ -12,14 +12,15 @@ module MyGame {
         create() {
             this.playerHealth = 100;
             var stateTransfer = StateTransfer.getInstance();
-
-            this.playerHealthDisplay = new HealthDisplay(this, 10, 100, "You", this.playerHealth);
+            this.game.add.image(10, SCREEN_HEIGHT - 146, Assets.Images.PlayerBattle);
+            this.playerHealthDisplay = new HealthDisplay(this, 146, SCREEN_HEIGHT - 50, "You", this.playerHealth);
             if (!SpriteUtils.isAThing(stateTransfer.enemy)) {
                 throw new Error("enemy is not set for battle.");
             }
             this.enemy = stateTransfer.enemy;
             this.inputs = new Inputs(this);
-            this.enemyHealthDisplay = new HealthDisplay(this, 10, 200, this.enemy.name, this.enemy.hitPoints);
+            var topY = Assets.Sprites.RhythmSymbols.height * 2 + 20;
+            this.enemyHealthDisplay = new HealthDisplay(this, 10, topY, this.enemy.name, this.enemy.hitPoints);
             this.patternDisplayer = new PatternDisplayer(this, this.enemy);
             this.patternChecker = new PatternMatcher(this, this.enemy);
             this.startPattern();

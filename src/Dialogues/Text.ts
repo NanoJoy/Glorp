@@ -57,6 +57,4 @@ module MyGame {
         scrollPage: (direction: Direction) => void;
         start: () => void;
     }
-    
-    export var Dialogs = new Dialogz();
 }

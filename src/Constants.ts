@@ -38,6 +38,8 @@ module MyGame {
         BottomTextBackground = "bottom_text_background";
         HealthBarContainer = "healthbar_container";
         OptionsBackground = "options_background";
+        PlayerBattle = "player_battle";
+        Sign = "sign";
     }
 
     export var Assets = {
