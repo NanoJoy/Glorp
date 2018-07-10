@@ -1,5 +1,5 @@
 module MyGame {
-    
+
     export class StateTransfer {
         enemy: Enemy;
         island: number;
@@ -7,7 +7,7 @@ module MyGame {
         health: number;
         private static instance: StateTransfer;
 
-        private constructor () {
+        private constructor() {
             this.enemy = null;
             this.island = -1;
             this.position = null;
@@ -27,6 +27,8 @@ module MyGame {
         public island: Island;
         public groups: {
             enemies: Enemy[],
+            grounds: Ground[],
+            houses: House[],
             water: Phaser.Group
         };
 
@@ -36,6 +38,8 @@ module MyGame {
 
             this.groups = {
                 enemies: [],
+                grounds: [],
+                houses: [],
                 water: this.game.add.group()
             }
 
@@ -44,15 +48,17 @@ module MyGame {
             this.island = worldManager.getIsland(stateTransfer.island === -1 ? 0 : stateTransfer.island);
             this.setupLevel(this.island);
 
-            //new BottomTextDisplay(this, "sample").start();
-
             this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
         }
 
         update() {
             if (!this.textOnScreen) {
-                for (let i = 0; i < this.groups.enemies.length; i++) {
-                    this.groups.enemies[i].update();
+                let groupsToUpdate = [this.groups.enemies, this.groups.houses];
+                for (let i = 0; i < groupsToUpdate.length; i++) {
+                    let grp = groupsToUpdate[i];
+                    for (let j = 0; j < grp.length; j++) {
+                        grp[j].update();
+                    }
                 }
             }
         }
@@ -60,13 +66,16 @@ module MyGame {
         private setupLevel(island: Island) {
             this.game.world.setBounds(0, 0, island.layout[0].length * TILE_WIDTH,
                 island.layout.length * TILE_HEIGHT);
-            
+
             for (let i = 0; i < island.layout.length; i++) {
                 let line = island.layout[i];
                 for (let j = 0; j < line.length; j++) {
                     switch (line.charAt(j)) {
                         case " ":
-                            new Ground(this, j, i);
+                            this.groups.grounds.push(new Ground(this, j, i));
+                            break;
+                        case "h":
+                            this.groups.houses.push(new House(this, new Phaser.Point(j, i)));
                             break;
                         case "j":
                             let script = island.getMovementScript(j, i);
@@ -92,11 +101,17 @@ module MyGame {
                 }
             }
             var playerPosition = StateTransfer.getInstance().position || island.playerStart;
-            this.player = new Player(this, playerPosition);  
-            
-            this.groups.enemies.forEach (function (en) {
-                this.game.world.bringToTop(en.worldSprite);
-            }, this);
+            this.player = new Player(this, playerPosition);
+
+            this.setDepths();
+        }
+
+        setDepths() {
+            this.groups.grounds.forEach(function (gr) { this.game.world.bringToTop(gr); }, this);
+            this.game.world.bringToTop(this.groups.water);
+            this.groups.houses.forEach(function (ho) { this.game.world.bringToTop(ho.sprite); }, this);
+            this.groups.enemies.forEach(function (en) { this.game.world.bringToTop(en.worldSprite); }, this);
+            this.game.world.bringToTop(this.player);
         }
     }
 }

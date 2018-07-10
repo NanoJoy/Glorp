@@ -37,6 +37,8 @@ module MyGame {
         [key: string]: string;
         BottomTextBackground = "bottom_text_background";
         HealthBarContainer = "healthbar_container";
+        House = "house";
+        JamBotBattle = "jambot_battle";
         OptionsBackground = "options_background";
         PlayerBattle = "player_battle";
         Sign = "sign";

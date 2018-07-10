@@ -6,16 +6,30 @@ module MyGame {
                 return new Island(0,
                     new Phaser.Point(0, 0),
                     [
-                        "oooooooooooooooo",
-                        "oooooooooooooooo",
-                        "ooo/        'ooo",
-                        "oo/      j   'oo",
-                        "oo            oo",
-                        "oo'          /oo",
-                        "ooo'       /oooo",
-                        "ooooooo  ooooooo",
-                        "ooooooo  ooooooo",
-                        "oooooooooooooooo",
+                        "ooooooooooooooooooooooooo",
+                        "o                       o",
+                        "o                       o",
+                        "o                       o",
+                        "o          h            o",
+                        "o                       o",
+                        "o                       o",
+                        "o                       o",
+                        "o                       o",
+                        "o                       o",
+                        "o                       o",
+                        "o                       o",
+                        "o                       o",
+                        "o                       o",
+                        "o                       o",
+                        "o                       o",
+                        "o                       o",
+                        "o                       o",
+                        "o                       o",
+                        "o                       o",
+                        "o                       o",
+                        "o                       o",
+                        "o                       o",
+                        "ooooooooooooooooooooooooo"
                     ],
                     [],
                     [new MovementScript(
@@ -23,7 +37,7 @@ module MyGame {
                         [Direction.Back, Direction.Back, Direction.Forward, Direction.Forward],
                         500
                     )],
-                    new Phaser.Point(5, 6)
+                    new Phaser.Point(13, 13)
                 );
         }
         throw new Error(`No island defined for number ${num}.`);
