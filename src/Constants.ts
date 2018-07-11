@@ -36,6 +36,7 @@ module MyGame {
     class ImageAssets {
         [key: string]: string;
         BottomTextBackground = "bottom_text_background";
+        ButtonPrompt = "button_prompt";
         HealthBarContainer = "healthbar_container";
         House = "house";
         JamBotBattle = "jambot_battle";

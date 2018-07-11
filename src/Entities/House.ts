@@ -1,10 +1,12 @@
 module MyGame {
-    export class House {
+    export class House implements Entity {
         main: Main;
         sprite: Phaser.Sprite;
+        position: Phaser.Point;
 
         constructor(main: Main, position: Phaser.Point) {
             this.main = main;
+            this.position = position;
             this.sprite = main.add.sprite(position.x * TILE_WIDTH, position.y * TILE_HEIGHT, Assets.Images.House);
             this.sprite.scale.setTo(2, 2);
             this.sprite.smoothed = false;

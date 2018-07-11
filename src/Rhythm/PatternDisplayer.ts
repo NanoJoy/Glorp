@@ -78,7 +78,7 @@ module MyGame {
             this.frame = NoteDisplay.getKeyFrame(key, isBeat);
         }
 
-        static getKeyFrame(key: Phaser.KeyCode, isBeat: boolean): number {
+        static getKeyFrame(key: Phaser.KeyCode, isBeat = false): number {
             switch (key) {
                 case Phaser.KeyCode.W:
                     return 0;

@@ -29,6 +29,7 @@ module MyGame {
             enemies: Enemy[],
             grounds: Ground[],
             houses: House[],
+            signs: Sign[],
             water: Phaser.Group
         };
 
@@ -40,6 +41,7 @@ module MyGame {
                 enemies: [],
                 grounds: [],
                 houses: [],
+                signs: [],
                 water: this.game.add.group()
             }
 
@@ -53,7 +55,7 @@ module MyGame {
 
         update() {
             if (!this.textOnScreen) {
-                let groupsToUpdate = [this.groups.enemies, this.groups.houses];
+                let groupsToUpdate = [this.groups.enemies, this.groups.houses, this.groups.signs];
                 for (let i = 0; i < groupsToUpdate.length; i++) {
                     let grp = groupsToUpdate[i];
                     for (let j = 0; j < grp.length; j++) {
@@ -72,7 +74,7 @@ module MyGame {
                 for (let j = 0; j < line.length; j++) {
                     switch (line.charAt(j)) {
                         case " ":
-                            this.groups.grounds.push(new Ground(this, j, i));
+                            this.groups.grounds.push(new Ground(this, new Phaser.Point(j, i)));
                             break;
                         case "h":
                             this.groups.houses.push(new House(this, new Phaser.Point(j, i)));
@@ -83,6 +85,9 @@ module MyGame {
                             break;
                         case "o":
                             new RegularWater(this, j, i);
+                            break;
+                        case "s":
+                            this.groups.signs.push(new Sign(this, new Phaser.Point(j, i), island.getTextKey(j, i)));
                             break;
                         case "'":
                             if (island.layout[i - 1][j] === "o") {
