@@ -11,6 +11,7 @@ module MyGame {
         pageNumber: number;
         isDisplaying: boolean;
         text: Phaser.BitmapText;
+        oPressed: boolean;
 
         options: TextOption[];
         currentOption: number;
@@ -24,6 +25,7 @@ module MyGame {
         constructor(game: Main, name: string) {
             this.game = game;
             this.name = name;
+            this.oPressed = false;
             this.firstPage = Dialogs[name];
             this.currentPage = this.firstPage;
         }
@@ -81,6 +83,10 @@ module MyGame {
         }
 
         makeChoice() {
+            if (!this.oPressed) {
+                this.oPressed = true;
+                return;
+            }
             var textPrompt = this.currentPage as TextPrompt;
             var next = textPrompt.getNext(this.currentOption);
             if (next == null) {
@@ -111,6 +117,7 @@ module MyGame {
                 this.downArrow.visible = this.currentPage.text.length > 1;
                 this.game.inputs.O.onUp.removeAll();
                 this.game.inputs.O.onUp.add(this.endDump, this);
+                this.oPressed = false;
                 return;
             }
             this.currentPage = next;
@@ -126,10 +133,15 @@ module MyGame {
         }
 
         endDump() {
+            if (!this.oPressed) {
+                this.oPressed = true;
+                return;
+            }
             this.textBackground.destroy();
             this.text.destroy();
             this.game.physics.arcade.isPaused = false;
             this.game.textOnScreen = false;
+            this.oPressed = false;
             
             if (this.currentPage.onFinish != undefined) {
                 this.currentPage.onFinish(this.currentOption);
@@ -137,17 +149,22 @@ module MyGame {
         }
 
         start() {
+            console.log(this.firstPage);
             this.game.physics.arcade.isPaused = true;
             this.game.textOnScreen = true;
 
             this.textBackground = this.game.add.image(0, 0, Assets.Images.BottomTextBackground);
             this.upArrow = this.game.add.image(SCREEN_WIDTH - 22, 8, Assets.Sprites.Arrow.key, 0);
+            this.textBackground.fixedToCamera = true;
             this.upArrow.visible = false;
             this.downArrow = this.game.add.image(SCREEN_WIDTH - 22, this.textBackground.height - 20, Assets.Sprites.Arrow.key, 1);
             this.downArrow.visible = this.firstPage.text.length > 1;
+            this.upArrow.fixedToCamera = true;
+            this.downArrow.fixedToCamera = true;
 
             this.text = this.game.add.bitmapText(8, this.textBackground.y + 8, Assets.FontName, this.firstPage.text[0], 14);
             this.text.maxWidth = SCREEN_WIDTH - 24;
+            this.text.fixedToCamera = true;
             this.pageNumber = 0;
             this.isDisplaying = true;
             
@@ -158,12 +175,16 @@ module MyGame {
                 var textPrompt = this.currentPage as TextPrompt;
                 this.currentOption = 0;
                 this.optionsBackground = this.game.add.image(0, this.textBackground.height, Assets.Images.OptionsBackground);
+                this.optionsBackground.fixedToCamera = true;
                 this.leftArrow = this.game.add.image(6, this.textBackground.height + 12, Assets.Sprites.Arrow.key, 3);
                 this.leftArrow.visible = false;
+                this.leftArrow.fixedToCamera = true;
                 this.rightArrow = this.game.add.image(SCREEN_WIDTH - 18, this.textBackground.height + 12, Assets.Sprites.Arrow.key, 2);
                 this.rightArrow.visible = textPrompt.options.length > 0;
+                this.rightArrow.fixedToCamera = true;
 
                 this.currentOptionText = this.game.add.bitmapText(18, this.optionsBackground.y + 8, Assets.FontName, textPrompt.options[0].text, 14);
+                this.currentOptionText.fixedToCamera = true;
                 this.options = textPrompt.options;
                 this.game.inputs.left.onUp.add(this.scrollLeft, this);
                 this.game.inputs.right.onUp.add(this.scrollRight, this);

@@ -9,7 +9,6 @@ module MyGame {
 
         constructor(state: Main, position: Phaser.Point) {
             super(state.game, position.x * TILE_WIDTH, position.y * TILE_HEIGHT, Assets.Sprites.Player.key, 0);
-            console.log(this);
             state.game.physics.arcade.enableBody(this);
             this.animations.add("walk_back", SpriteUtils.animationArray(1, 4), 5, true);
             this.animations.add("walk_forward", SpriteUtils.animationArray(6, 9), 5, true);

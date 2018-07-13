@@ -37,7 +37,7 @@ module MyGame {
                         [Direction.Back, Direction.Back, Direction.Forward, Direction.Forward],
                         500
                     )],
-                    [{position: new Phaser.Point(13, 11), key: "mrDorpnersHouse"}],
+                    [{position: new Phaser.Point(11, 11), key: "mrDorpnersHouse"}],
                     new Phaser.Point(13, 13)
                 );
         }

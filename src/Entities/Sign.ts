@@ -14,20 +14,25 @@ module MyGame {
             this.sprite.body.moves = false;
             this.sprite.body.immovable = true;
             this.textDisplay = new BottomTextDisplay(main, textKey);
-            this.buttonPrompt = new ButtonPrompt(this, main.inputs.O);
+            this.buttonPrompt = new ButtonPrompt(this, main.inputs.O, -4);
         }
 
         update() {
-            this.main.physics.arcade.overlap(this.sprite, this.main.player, this.playerOverlap, null, this);
-        }
-
-        playerOverlap(signSprite: Phaser.Sprite, playerSprite: Phaser.Sprite) {
-            console.log("hi");
-            if (!this.buttonPrompt.displayed) {
-                this.buttonPrompt.show();
-            }
-            if (this.buttonPrompt.buttonIsDown()) {
-                this.textDisplay.start();
+            var overlapping = false;
+            this.main.physics.arcade.overlap(this.sprite, this.main.player, function (s: Phaser.Sprite, p: Phaser.Sprite) {
+                overlapping = true;
+            }, null, this);
+            if (overlapping) {
+                if (!this.buttonPrompt.displayed) {
+                    this.buttonPrompt.show();
+                }
+                if (this.buttonPrompt.buttonIsDown()) {
+                    this.textDisplay.start();
+                }
+            } else {
+                if (this.buttonPrompt.displayed) {
+                    this.buttonPrompt.hide();
+                }
             }
         }
     }

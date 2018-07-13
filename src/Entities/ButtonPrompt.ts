@@ -11,13 +11,15 @@ module MyGame {
 
         constructor(parent: Entity, input: Phaser.Key, leftOffset = 0) {
             this.parent = parent;
-            this.bubbleImage = parent.main.add.image(0, 0, Assets.Images.BottomTextBackground);
-            this.position = new Phaser.Point(parent.position.x + leftOffset, parent.position.y - this.bubbleImage.height - 2);
+            this.bubbleImage = parent.main.add.image(0, 0, Assets.Images.ButtonPrompt);
+            var parentPosition = parent.position.multiply(TILE_WIDTH, TILE_HEIGHT);
+            this.position = new Phaser.Point(parentPosition.x + leftOffset, parentPosition.y - this.bubbleImage.height - 2);
             this.bubbleImage.position.setTo(this.position.x, this.position.y);
 
             this.input = input;
             this.buttonImage = parent.main.add.image(this.position.x + this.PADDING, this.position.y + this.PADDING, Assets.Sprites.RhythmSymbols.key);
             this.buttonImage.frame = NoteDisplay.getKeyFrame(input.keyCode);
+            console.log(this.bubbleImage.position);
             this.hide();
         }
 
