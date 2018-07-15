@@ -19,7 +19,6 @@ module MyGame {
             this.input = input;
             this.buttonImage = parent.main.add.image(this.position.x + this.PADDING, this.position.y + this.PADDING, Assets.Sprites.RhythmSymbols.key);
             this.buttonImage.frame = NoteDisplay.getKeyFrame(input.keyCode);
-            console.log(this.bubbleImage.position);
             this.hide();
         }
 

@@ -21,12 +21,14 @@ module MyGame {
         currentNum: number;
         currentTween: Phaser.Tween;
         readyForNext: boolean;
+        paused: boolean;
 
         constructor(game: Phaser.Game, script: MovementScript, sprite: Phaser.Sprite) {
             this.game = game;
             this.script = script;
             this.sprite = sprite;
             this.readyForNext = false;
+            this.paused = false;
         }
 
         start(resetToOriginalPosition = false) {
@@ -78,6 +80,19 @@ module MyGame {
             this.readyForNext = true;
             this.currentNum++;
             this.playNext(true);
+        }
+
+        pause() {
+            this.currentTween.pause();
+            this.paused = true;
+        }
+
+        resume() {
+            if (!this.paused) {
+                return;
+            }
+            this.currentTween.resume();
+            this.paused = false;
         }
     }
 }

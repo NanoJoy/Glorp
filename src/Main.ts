@@ -29,6 +29,7 @@ module MyGame {
             enemies: Enemy[],
             grounds: Ground[],
             houses: House[],
+            npcs: NPC[],
             signs: Sign[],
             water: Phaser.Group
         };
@@ -41,6 +42,7 @@ module MyGame {
                 enemies: [],
                 grounds: [],
                 houses: [],
+                npcs: [],
                 signs: [],
                 water: this.game.add.group()
             }
@@ -49,13 +51,22 @@ module MyGame {
             var stateTransfer = StateTransfer.getInstance();
             this.island = worldManager.getIsland(stateTransfer.island === -1 ? 0 : stateTransfer.island);
             this.setupLevel(this.island);
+            this.groups.enemies.forEach(function (value: Enemy) {
+                value.onStageBuilt();
+            }, this)
+            
+            this.groups.npcs.forEach(function (value: NPC) {
+                value.onStageBuilt();
+            }, this)
+
+            this.player.onStageBuilt();
 
             this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
         }
 
         update() {
             if (!this.textOnScreen) {
-                let groupsToUpdate = [this.groups.enemies, this.groups.houses, this.groups.signs];
+                let groupsToUpdate = [this.groups.enemies, this.groups.houses, this.groups.npcs, this.groups.signs];
                 for (let i = 0; i < groupsToUpdate.length; i++) {
                     let grp = groupsToUpdate[i];
                     for (let j = 0; j < grp.length; j++) {
@@ -80,8 +91,14 @@ module MyGame {
                             this.groups.houses.push(new House(this, new Phaser.Point(j, i)));
                             break;
                         case "j":
-                            let script = island.getMovementScript(j, i);
-                            this.groups.enemies.push(new JamBot(this, new Phaser.Point(j, i), script));
+                            this.groups.enemies.push(new JamBot(this, new Phaser.Point(j, i), island.getMovementScript(j, i)));
+                            break;
+                        case "n":
+                            this.groups.npcs.push(new NPC(this,
+                                 new Phaser.Point(j, i),
+                                  Assets.Sprites.OldMan.key,
+                                  island.getTextKey(j, i),
+                                island.getMovementScript(j, i)));
                             break;
                         case "o":
                             new RegularWater(this, j, i);
@@ -109,6 +126,8 @@ module MyGame {
             this.player = new Player(this, playerPosition);
 
             this.setDepths();
+
+
         }
 
         setDepths() {

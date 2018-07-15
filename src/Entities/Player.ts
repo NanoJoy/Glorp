@@ -10,23 +10,22 @@ module MyGame {
         constructor(state: Main, position: Phaser.Point) {
             super(state.game, position.x * TILE_WIDTH, position.y * TILE_HEIGHT, Assets.Sprites.Player.key, 0);
             state.game.physics.arcade.enableBody(this);
-            this.animations.add("walk_back", SpriteUtils.animationArray(1, 4), 5, true);
-            this.animations.add("walk_forward", SpriteUtils.animationArray(6, 9), 5, true);
-            this.animations.add("walk_right", SpriteUtils.animationArray(10, 13), 5, true);
-            this.animations.add("walk_left", SpriteUtils.animationArray(14, 17), 5, true);
-            this.animations.add("idle_back", [0], 5, true);
-            this.animations.add("idle_forward", [5], 5, true);
-            this.animations.add("idle_right", [10], 5, true);
-            this.animations.add("idle_left", [14], 5, true);
-            this.play("idle_back");
+            SpriteUtils.addPersonAnimations(this);
             this.inputs = state.inputs;
             this.direction = Direction.Back;
             state.add.existing(this);
             this.state = state;
         }
 
+        onStageBuilt() {
+            this.play("idle_back");
+        }
+
         update() {
-            if (this.state.textOnScreen) return;
+            if (this.state.textOnScreen) {
+                this.play(this.getIdleAnimName());
+                return;
+            }
             var player = this;
             var game = this.game;
             this.hasCollided = false;
@@ -74,28 +73,34 @@ module MyGame {
                     break;
             }
             if (directionDown === 1) {
-                switch (this.direction) {
-                    case Direction.Back:
-                        animName = "idle_back";
-                        break;
-                    case Direction.Forward:
-                        animName = "idle_forward";
-                        break;
-                    case Direction.Right:
-                        animName = "idle_right";
-                        break;
-                    case Direction.Left:
-                        animName = "idle_left";
-                        break;
-                    default:
-                        animName = this.animations.currentAnim.name;
-                }
+                animName = this.getIdleAnimName();
             }
             if (this.animations.currentAnim.name !== animName) {
                 this.play(animName);
             }
             
             SpriteUtils.snapToPixels(this);
+        }
+
+        private getIdleAnimName() {
+            let animName = "";
+            switch (this.direction) {
+                case Direction.Back:
+                    animName = "idle_back";
+                    break;
+                case Direction.Forward:
+                    animName = "idle_forward";
+                    break;
+                case Direction.Right:
+                    animName = "idle_right";
+                    break;
+                case Direction.Left:
+                    animName = "idle_left";
+                    break;
+                default:
+                    animName = this.animations.currentAnim.name;
+            }
+            return animName;
         }
     }
 }

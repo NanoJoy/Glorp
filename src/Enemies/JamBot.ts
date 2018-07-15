@@ -26,6 +26,9 @@ module MyGame {
             this.worldSprite.animations.add("walk", SpriteUtils.animationArray(0, 7), 5, true);
             this.worldSprite.play("walk");
             this.movementManager = new MovementManager(this.main.game, movementScript, this.worldSprite);
+        }
+
+        onStageBuilt() {
             this.movementManager.start();
         }
 

@@ -13,6 +13,7 @@ module MyGame {
         health: number;
         calculateDamage: (pattern: PatternNote[], notePresses: NotePress[]) => number;
         getAttackPoints: (pattern: PatternNote[]) => number;
+        onStageBuilt: () => void;
         update: () => void;
         die: () => void;
     }

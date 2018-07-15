@@ -9,7 +9,7 @@ module MyGame {
             if (sprite.body.velocity.y < 0) {
                 sprite.body.position.y = Math.floor(sprite.body.position.y / 2) * 2;
             } else {
-                sprite.body.position.y = Math.ceil(sprite.body.position.y / 2) * 2;                
+                sprite.body.position.y = Math.ceil(sprite.body.position.y / 2) * 2;
             }
         }
 
@@ -23,9 +23,20 @@ module MyGame {
             }
             return result;
         }
-        
+
         static isAThing(thing: object): boolean {
             return thing !== undefined && thing !== null;
+        }
+
+        static addPersonAnimations(sprite: Phaser.Sprite) {
+            sprite.animations.add("walk_back", SpriteUtils.animationArray(1, 4), 5, true);
+            sprite.animations.add("walk_forward", SpriteUtils.animationArray(6, 9), 5, true);
+            sprite.animations.add("walk_right", SpriteUtils.animationArray(10, 13), 5, true);
+            sprite.animations.add("walk_left", SpriteUtils.animationArray(14, 17), 5, true);
+            sprite.animations.add("idle_back", [0], 5, true);
+            sprite.animations.add("idle_forward", [5], 5, true);
+            sprite.animations.add("idle_right", [10], 5, true);
+            sprite.animations.add("idle_left", [14], 5, true);
         }
     }
 }

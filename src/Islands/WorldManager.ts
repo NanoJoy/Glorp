@@ -22,9 +22,9 @@ module MyGame {
                         "o                       o",
                         "o                       o",
                         "o                       o",
+                        "o      j                o",
                         "o                       o",
-                        "o                       o",
-                        "o                       o",
+                        "o                   n   o",
                         "o                       o",
                         "o                       o",
                         "o                       o",
@@ -33,11 +33,13 @@ module MyGame {
                     ],
                     [],
                     [new MovementScript(
-                        new Phaser.Point(9, 3),
+                        new Phaser.Point(7, 16),
                         [Direction.Back, Direction.Back, Direction.Forward, Direction.Forward],
                         500
                     )],
-                    [{position: new Phaser.Point(11, 11), key: "mrDorpnersHouse"}],
+                    [{ position: new Phaser.Point(11, 11), key: "mrDorpnersHouse" },
+                    { position: new Phaser.Point(20, 18), key: "sample" }
+                    ],
                     new Phaser.Point(13, 13)
                 );
         }

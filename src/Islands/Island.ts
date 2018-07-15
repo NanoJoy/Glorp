@@ -37,8 +37,6 @@ module MyGame {
 
         getTextKey(x: number, y: number): string {
             var matching =  this.textKeys.filter(key => key.position.x === x && key.position.y === y);
-            console.log(this.textKeys);
-            console.log(x); console.log(y);
             return matching.length > 0 ? matching[0].key : null;
         }
     }

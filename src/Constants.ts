@@ -11,7 +11,7 @@ module MyGame {
         Battle: "Battle"
     };
 
-    class SpriteAsset {
+    export class SpriteAsset {
         readonly key: string;
         readonly width: number;
         readonly height: number;
@@ -25,12 +25,13 @@ module MyGame {
 
     class SpriteAssets {
         [key: string]: SpriteAsset;
-        Player = new SpriteAsset("player");
+        Arrow = new SpriteAsset("arrow", 12, 12);
         Grounds = new SpriteAsset("grounds");
         JamBotWorld = new SpriteAsset("jambot_world");
-        Water = new SpriteAsset("water");
-        Arrow = new SpriteAsset("arrow", 12, 12);
+        OldMan = new SpriteAsset("old_man");
+        Player = new SpriteAsset("player");
         RhythmSymbols = new SpriteAsset("rhythm_symbols", 24, 24);
+        Water = new SpriteAsset("water");
     }
 
     class ImageAssets {

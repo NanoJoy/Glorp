@@ -1,7 +1,6 @@
 module MyGame {
     export class Dialogz {
         [key: string]: TextPage;
-        dump = new TextDump(["Just one page this time..."]);
         mrDorpnersHouse = new TextDump(["Mr. Dorpner's House."]);
         sample = new TextPrompt(["I must ask one question.", "Hello. How are you?"], [
             new TextOption("Good", new TextDump(["That's good."])),
