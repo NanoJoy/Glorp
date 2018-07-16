@@ -12,7 +12,7 @@ module MyGame {
         isDisplaying: boolean;
         text: Phaser.BitmapText;
         oPressed: boolean;
-
+        npcParent: NPC;
         options: TextOption[];
         currentOption: number;
         currentOptionText: Phaser.BitmapText;

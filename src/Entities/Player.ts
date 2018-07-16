@@ -23,7 +23,7 @@ module MyGame {
 
         update() {
             if (this.state.textOnScreen) {
-                this.play(this.getIdleAnimName());
+                this.play(SpriteUtils.getIdleAnimName(this.direction));
                 return;
             }
             var player = this;
@@ -73,34 +73,13 @@ module MyGame {
                     break;
             }
             if (directionDown === 1) {
-                animName = this.getIdleAnimName();
+                animName = SpriteUtils.getIdleAnimName(this.direction);
             }
             if (this.animations.currentAnim.name !== animName) {
                 this.play(animName);
             }
             
             SpriteUtils.snapToPixels(this);
-        }
-
-        private getIdleAnimName() {
-            let animName = "";
-            switch (this.direction) {
-                case Direction.Back:
-                    animName = "idle_back";
-                    break;
-                case Direction.Forward:
-                    animName = "idle_forward";
-                    break;
-                case Direction.Right:
-                    animName = "idle_right";
-                    break;
-                case Direction.Left:
-                    animName = "idle_left";
-                    break;
-                default:
-                    animName = this.animations.currentAnim.name;
-            }
-            return animName;
         }
     }
 }

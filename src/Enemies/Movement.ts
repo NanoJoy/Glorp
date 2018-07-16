@@ -1,4 +1,9 @@
 module MyGame {
+    export interface Moveable {
+        sprite: Phaser.Sprite;
+        direction: Direction;
+    }
+
     export class MovementScript {
         start: Phaser.Point;
         directions: Direction[];
@@ -22,11 +27,13 @@ module MyGame {
         currentTween: Phaser.Tween;
         readyForNext: boolean;
         paused: boolean;
+        private obj: Moveable;
 
-        constructor(game: Phaser.Game, script: MovementScript, sprite: Phaser.Sprite) {
+        constructor(game: Phaser.Game, script: MovementScript, obj: Moveable) {
             this.game = game;
             this.script = script;
-            this.sprite = sprite;
+            this.obj = obj;
+            this.sprite = obj.sprite;
             this.readyForNext = false;
             this.paused = false;
         }
@@ -71,6 +78,7 @@ module MyGame {
                     return;
                 }
             }
+            this.obj.direction = this.script.directions[this.currentNum];
             let nextDest = this.destinations[this.currentNum];
             this.currentTween = this.game.add.tween(this.sprite.body.position).to({x: nextDest.x, y: nextDest.y}, this.script.speed, Phaser.Easing.Linear.None, true);
             this.currentTween.onComplete.add(this.onTweenComplete, this);

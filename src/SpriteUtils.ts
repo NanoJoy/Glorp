@@ -38,5 +38,30 @@ module MyGame {
             sprite.animations.add("idle_right", [10], 5, true);
             sprite.animations.add("idle_left", [14], 5, true);
         }
+
+        static getIdleAnimName(direction: Direction): string {
+            return `idle_${SpriteUtils.getDirectionName(direction)}`;
+        }
+
+        static getWalkingAnimName(direction: Direction): string {
+            return `walk_${SpriteUtils.getDirectionName(direction)}`;
+        }
+
+        static getDirectionName(direction: Direction): string {
+            switch (direction) {
+                case Direction.Down:
+                case Direction.Back:
+                    return "back";
+                case Direction.Up:
+                case Direction.Forward:
+                    return "forward";
+                case Direction.Right:
+                    return "right";
+                case Direction.Left:
+                    return "left";
+                default:
+                    throw new Error(`Direction ${direction} not supported.`);
+            }
+        }
     }
 }

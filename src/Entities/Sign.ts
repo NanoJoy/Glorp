@@ -23,16 +23,12 @@ module MyGame {
                 overlapping = true;
             }, null, this);
             if (overlapping) {
-                if (!this.buttonPrompt.displayed) {
-                    this.buttonPrompt.show();
-                }
+                this.buttonPrompt.show();
                 if (this.buttonPrompt.buttonIsDown()) {
                     this.textDisplay.start();
                 }
             } else {
-                if (this.buttonPrompt.displayed) {
-                    this.buttonPrompt.hide();
-                }
+                this.buttonPrompt.hide();
             }
         }
     }

@@ -36,7 +36,8 @@ module MyGame {
                         new Phaser.Point(7, 16),
                         [Direction.Back, Direction.Back, Direction.Forward, Direction.Forward],
                         500
-                    )],
+                    ),
+                    new MovementScript(new Phaser.Point(20, 18), [Direction.Left, Direction.Left, Direction.Up, Direction.Up, Direction.Right, Direction.Right, Direction.Down, Direction.Down], 500)],
                     [{ position: new Phaser.Point(11, 11), key: "mrDorpnersHouse" },
                     { position: new Phaser.Point(20, 18), key: "sample" }
                     ],

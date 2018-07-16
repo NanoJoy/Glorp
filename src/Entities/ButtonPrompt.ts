@@ -7,7 +7,7 @@ module MyGame {
         input: Phaser.Key;
         bubbleImage: Phaser.Image;
         buttonImage: Phaser.Image;
-        displayed: boolean;
+        private displayed: boolean;
 
         constructor(parent: Entity, input: Phaser.Key, leftOffset = 0) {
             this.parent = parent;
@@ -19,10 +19,12 @@ module MyGame {
             this.input = input;
             this.buttonImage = parent.main.add.image(this.position.x + this.PADDING, this.position.y + this.PADDING, Assets.Sprites.RhythmSymbols.key);
             this.buttonImage.frame = NoteDisplay.getKeyFrame(input.keyCode);
+            this.displayed = true;
             this.hide();
         }
 
         show() {
+            if (this.displayed) return;
             this.displayed = true;
             this.bubbleImage.visible = true;
             this.buttonImage.visible = true;
@@ -31,6 +33,7 @@ module MyGame {
         }
 
         hide() {
+            if (!this.displayed) return;
             this.displayed = false;
             this.bubbleImage.visible = false;
             this.buttonImage.visible = false;

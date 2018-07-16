@@ -1,11 +1,13 @@
 module MyGame {
-    export class NPC implements Entity {
+    export class NPC implements Entity, Moveable {
         main: Main;
         position: Phaser.Point;
         sprite: Phaser.Sprite;
-        movementManager: MovementManager;
         direction: Direction;
-        textDisplay: BottomTextDisplay;
+        private movementManager: MovementManager;
+        private textDisplay: BottomTextDisplay;
+        private buttonPrompt: ButtonPrompt;
+        private touchingPlayer: boolean;
 
         constructor(main: Main, position: Phaser.Point, spriteKey: string, dialogKey: string, movementScript: MovementScript) {
             this.main = main;
@@ -15,10 +17,15 @@ module MyGame {
             SpriteUtils.addPersonAnimations(this.sprite);
 
             this.textDisplay = new BottomTextDisplay(main, dialogKey);
+            this.buttonPrompt = new ButtonPrompt(this, main.inputs.O);
 
             if (movementScript) {
-                this.movementManager = new MovementManager(main.game, movementScript, this.sprite);
+                this.movementManager = new MovementManager(main.game, movementScript, this);
+            } else {
+                this.sprite.body.moves = false;
+                this.sprite.body.immovable = true;
             }
+            this.direction = Direction.Back;
         }
 
         onStageBuilt() {
@@ -28,14 +35,40 @@ module MyGame {
         }
 
         update() {
-            this.main.physics.arcade.collide(this.sprite, this.main.player, this.playerCollide, null, this);
-        }
-
-        playerCollide(ns: Phaser.Sprite, ps: Phaser.Sprite) {
-            if (this.movementManager) {
-                this.movementManager.pause();
+            let player = this.main.player;
+            if (Phaser.Math.distance(this.sprite.centerX, this.sprite.centerY, player.centerX, player.centerY) < TILE_HEIGHT * 1.5) {
+                this.buttonPrompt.show();
+                if (this.movementManager) {
+                    this.movementManager.pause();
+                }
+                if (player.centerY < this.sprite.y) {
+                    this.direction = Direction.Forward;
+                } else if (player.centerY > this.sprite.bottom) {
+                    this.direction = Direction.Back;
+                } else if (player.centerX < this.sprite.left) {
+                    this.direction = Direction.Left;
+                } else {
+                    this.direction = Direction.Right;
+                }
+                this.sprite.play(SpriteUtils.getIdleAnimName(this.direction));
+            } else {
+                this.buttonPrompt.hide();
+                if (this.movementManager) {
+                    this.movementManager.resume();
+                }
             }
-            this.textDisplay.start();
+
+            if (this.movementManager && !this.movementManager.paused) {
+                let walkingAnim = SpriteUtils.getWalkingAnimName(this.direction);
+                if (walkingAnim !== this.sprite.animations.currentAnim.name) {
+                    this.sprite.play(walkingAnim);
+                }
+            }
+
+            if (this.buttonPrompt.buttonIsDown()) {
+                this.textDisplay.start();
+            }
+            this.main.physics.arcade.collide(this.sprite, this.main.player);
         }
     }
 }

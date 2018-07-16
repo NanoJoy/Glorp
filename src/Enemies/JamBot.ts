@@ -1,5 +1,5 @@
 module MyGame {
-    export class JamBot implements Enemy {
+    export class JamBot implements Enemy,  Moveable {
         name = "JamBot";
         minNumNotes = 4;
         maxNumNotes = 4;
@@ -13,6 +13,8 @@ module MyGame {
         position: Phaser.Point;
         health: number;
         worldSprite: Phaser.Sprite;
+        sprite: Phaser.Sprite;
+        direction: Direction;
         movementManager: MovementManager;
         alive: boolean;
 
@@ -25,7 +27,8 @@ module MyGame {
             this.main.physics.arcade.enable(this.worldSprite);
             this.worldSprite.animations.add("walk", SpriteUtils.animationArray(0, 7), 5, true);
             this.worldSprite.play("walk");
-            this.movementManager = new MovementManager(this.main.game, movementScript, this.worldSprite);
+            this.sprite = this.worldSprite;
+            this.movementManager = new MovementManager(this.main.game, movementScript, this);
         }
 
         onStageBuilt() {
