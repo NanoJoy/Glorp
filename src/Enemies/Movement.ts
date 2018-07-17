@@ -91,6 +91,9 @@ module MyGame {
         }
 
         pause() {
+            if (this.paused) {
+                return;
+            }
             this.currentTween.pause();
             this.paused = true;
         }

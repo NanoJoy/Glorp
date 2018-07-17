@@ -23,8 +23,8 @@ module MyGame {
                 this.movementManager = new MovementManager(main.game, movementScript, this);
             } else {
                 this.sprite.body.moves = false;
-                this.sprite.body.immovable = true;
             }
+            this.sprite.body.immovable = true;
             this.direction = Direction.Back;
         }
 
@@ -37,6 +37,7 @@ module MyGame {
         update() {
             let player = this.main.player;
             if (Phaser.Math.distance(this.sprite.centerX, this.sprite.centerY, player.centerX, player.centerY) < TILE_HEIGHT * 1.5) {
+                this.buttonPrompt.reposition(this.sprite.x, this.sprite.y);
                 this.buttonPrompt.show();
                 if (this.movementManager) {
                     this.movementManager.pause();

@@ -13,14 +13,21 @@ module MyGame {
             this.parent = parent;
             this.bubbleImage = parent.main.add.image(0, 0, Assets.Images.ButtonPrompt);
             var parentPosition = parent.position.multiply(TILE_WIDTH, TILE_HEIGHT);
-            this.position = new Phaser.Point(parentPosition.x + leftOffset, parentPosition.y - this.bubbleImage.height - 2);
-            this.bubbleImage.position.setTo(this.position.x, this.position.y);
 
             this.input = input;
-            this.buttonImage = parent.main.add.image(this.position.x + this.PADDING, this.position.y + this.PADDING, Assets.Sprites.RhythmSymbols.key);
+            this.buttonImage = parent.main.add.image(0, 0, Assets.Sprites.RhythmSymbols.key);
             this.buttonImage.frame = NoteDisplay.getKeyFrame(input.keyCode);
+            this.position = new Phaser.Point(0, 0);
+            this.reposition(parentPosition.x * TILE_WIDTH, parentPosition.y * TILE_HEIGHT, leftOffset);
+
             this.displayed = true;
             this.hide();
+        }
+
+        reposition(x: number, y: number, leftOffset = 0) {
+            this.position.set(x + leftOffset, y - this.bubbleImage.height - 2);
+            this.bubbleImage.position.setTo(this.position.x, this.position.y);
+            this.buttonImage.position.setTo(this.position.x + this.PADDING, this.position.y + this.PADDING);
         }
 
         show() {
