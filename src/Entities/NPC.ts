@@ -1,20 +1,22 @@
 module MyGame {
-    export class NPC implements Entity, Moveable {
+    export abstract class NPC implements Entity, Moveable {
         main: Main;
         position: Phaser.Point;
         sprite: Phaser.Sprite;
         direction: Direction;
+        speed: number;
         private movementManager: MovementManager;
         private textDisplay: BottomTextDisplay;
         private buttonPrompt: ButtonPrompt;
-        private touchingPlayer: boolean;
 
-        constructor(main: Main, position: Phaser.Point, spriteKey: string, dialogKey: string, movementScript: MovementScript) {
+        constructor(main: Main, position: Phaser.Point, dialogKey: string, movementScript: MovementScript,
+        speed: number, animationSpeed: number, spriteKey: string) {
             this.main = main;
             this.position = position;
+            this.speed = speed;
             this.sprite = main.add.sprite(position.x * TILE_WIDTH, position.y * TILE_HEIGHT, spriteKey);
             main.physics.arcade.enable(this.sprite);
-            SpriteUtils.addPersonAnimations(this.sprite);
+            SpriteUtils.addPersonAnimations(this.sprite, animationSpeed);
 
             this.textDisplay = new BottomTextDisplay(main, dialogKey);
             this.buttonPrompt = new ButtonPrompt(this, main.inputs.O);
@@ -70,6 +72,12 @@ module MyGame {
                 this.textDisplay.start();
             }
             this.main.physics.arcade.collide(this.sprite, this.main.player);
+        }
+    }
+
+    export class OldMan extends NPC {
+        constructor(main: Main, position: Phaser.Point, dialogKey: string, movementScript: MovementScript) {
+            super(main, position, dialogKey, movementScript, 1000, 3, Assets.Sprites.OldMan.key);
         }
     }
 }

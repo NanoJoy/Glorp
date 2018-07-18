@@ -8,13 +8,14 @@ module MyGame {
         tempo = 500;
         battleSpriteKey = "jambot";
         worldSpriteKey = Assets.Sprites.JamBotWorld.key;
-        hitPoints = 50;//200;
+        hitPoints = 100;
         main: Main;
         position: Phaser.Point;
         health: number;
         worldSprite: Phaser.Sprite;
         sprite: Phaser.Sprite;
         direction: Direction;
+        speed: number;
         movementManager: MovementManager;
         alive: boolean;
 

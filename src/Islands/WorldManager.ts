@@ -22,7 +22,7 @@ module MyGame {
                         "o                       o",
                         "o                       o",
                         "o                       o",
-                        "o      j                o",
+                        "o      e                o",
                         "o                       o",
                         "o                   n   o",
                         "o                       o",
@@ -32,16 +32,17 @@ module MyGame {
                         "ooooooooooooooooooooooooo"
                     ],
                     [],
-                    [new MovementScript(
-                        new Phaser.Point(7, 16),
-                        [Direction.Back, Direction.Back, Direction.Forward, Direction.Forward],
-                        500
-                    ),
-                    new MovementScript(new Phaser.Point(20, 18), [Direction.Left, Direction.Left, Direction.Up, Direction.Up, Direction.Right, Direction.Right, Direction.Down, Direction.Down], 500)],
-                    [{ position: new Phaser.Point(11, 11), key: "mrDorpnersHouse" },
-                    { position: new Phaser.Point(20, 18), key: "sample" }
+                    [
+                        { position: new Phaser.Point(11, 11), key: "mrDorpnersHouse" },
+                        { position: new Phaser.Point(20, 18), key: "sample" }
                     ],
-                    new Phaser.Point(13, 13)
+                    [
+                        { type: Assets.Sprites.JamBotWorld.key, position: pof(7, 16), script: "bbff" }
+                    ],
+                    [
+                        { type: Assets.Sprites.OldMan.key, position: pof(20, 18), textKey: "sample", script: "lluurrbb" }
+                    ],
+                    pof(13, 13)
                 );
         }
         throw new Error(`No island defined for number ${num}.`);

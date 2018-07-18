@@ -2,8 +2,7 @@ module MyGame {
 
     class LayoutAddition {
         public tile: string;
-        public x: number;
-        public y: number;
+        position: Phaser.Point;
     }
 
     class TextKey {
@@ -11,33 +10,96 @@ module MyGame {
         position: Phaser.Point;
     }
 
+    class MapNPC {
+        position: Phaser.Point;
+        type: string;
+        textKey: string;
+        script: string;
+    }
+
+    class MapEnemy {
+        position: Phaser.Point;
+        type: string;
+        script: string;
+    }
+
     export class Island {
         num: number;
         position: Phaser.Point;
         layout: string[];
         additions: LayoutAddition[];
-        movementScripts: MovementScript[];
         textKeys: TextKey[];
+        enemies: MapEnemy[];
+        npcs: MapNPC[];
         playerStart: Phaser.Point;
 
-        constructor(num: number, position: Phaser.Point, layout: string[], additions: LayoutAddition[], movementScripts: MovementScript[], textKeys: TextKey[], playerStart: Phaser.Point) {
+        constructor(num: number, position: Phaser.Point, layout: string[], additions: LayoutAddition[], textKeys: TextKey[], enemies: MapEnemy[], npcs: MapNPC[], playerStart: Phaser.Point) {
             this.num = num;
             this.position = position;
             this.layout = layout;
-            this.additions = additions;
-            this.movementScripts = movementScripts;
             this.textKeys = textKeys;
+            this.additions = additions;
+            this.enemies = enemies;
+            this.npcs = npcs;
             this.playerStart = playerStart;
         }
 
-        getMovementScript(x: number, y: number): MovementScript {
-            var matching =  this.movementScripts.filter(script => script.start.x === x && script.start.y === y);
-            return matching.length > 0 ? matching[0] : null;
+        getTextKey(pos: Phaser.Point): string {
+            var matching =  this.textKeys.filter(key => key.position.equals(pos));
+            if (matching.length === 0) {
+                throw new Error(`Could not find text key at x: ${pos.x}, y: ${pos.y}.`)
+            }
+            return matching[0].key;
         }
 
-        getTextKey(x: number, y: number): string {
-            var matching =  this.textKeys.filter(key => key.position.x === x && key.position.y === y);
-            return matching.length > 0 ? matching[0].key : null;
+        getEnemy(main: Main, pos: Phaser.Point): Enemy {
+            var matching = this.enemies.filter(key => key.position.equals(pos));
+            if (matching.length === 0) {
+                console.log(this.enemies);
+                throw new Error(`Could not find enemy information at x: ${pos.x}, y: ${pos.y}.`);
+            }
+            var enemy = matching[0];
+            var directions = enemy.script.toLocaleLowerCase().split("").map(c => this.getDirectionFromLetter(c));
+            var movementScript = new MovementScript(enemy.position, directions);
+            switch (enemy.type) {
+                case Assets.Sprites.JamBotWorld.key:
+                    return new JamBot(main, enemy.position, movementScript);
+            }
+            throw new Error(`${enemy.type} is not a valid enemy type.`);
+        }
+
+        getNPC(main: Main, pos: Phaser.Point): NPC {
+            var matching = this.npcs.filter(n => n.position.equals(pos));
+            if (matching.length === 0) {
+                console.log(this.enemies);
+                throw new Error(`Could not find NPC information at x: ${pos.x}, y: ${pos.y}.`);
+            }
+            var npc = matching[0];
+            var directions = npc.script.toLocaleLowerCase().split("").map(c => this.getDirectionFromLetter(c));
+            var movementScript = new MovementScript(npc.position, directions);
+            switch (npc.type) {
+                case Assets.Sprites.OldMan.key:
+                    return new OldMan(main, npc.position, npc.textKey, movementScript);
+            }
+            throw new Error(`${npc.type} is not a valid enemy type.`);
+        }
+
+        private getDirectionFromLetter(letter: string): Direction {
+            switch (letter) {
+                case "u":
+                    return Direction.Up;
+                case "d":
+                return Direction.Down;
+                case "l":
+                return Direction.Left;
+                case "r":
+                return Direction.Right;
+                case "f":
+                return Direction.Forward;
+                case "b":
+                return Direction.Back;
+            }
+            throw new Error(`${letter} is not a valid direction char.`);
         }
     }
 }

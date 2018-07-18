@@ -2,18 +2,17 @@ module MyGame {
     export interface Moveable {
         sprite: Phaser.Sprite;
         direction: Direction;
+        speed: number;
     }
 
     export class MovementScript {
         start: Phaser.Point;
         directions: Direction[];
-        speed: number;
         loop: boolean;
 
-        constructor(start: Phaser.Point, directions: Direction[], speed: number, loop = true) {
+        constructor(start: Phaser.Point, directions: Direction[], loop = true) {
             this.start = start;
             this.directions = directions;
-            this.speed = speed;
             this.loop = loop;
         }
     }
@@ -80,7 +79,7 @@ module MyGame {
             }
             this.obj.direction = this.script.directions[this.currentNum];
             let nextDest = this.destinations[this.currentNum];
-            this.currentTween = this.game.add.tween(this.sprite.body.position).to({x: nextDest.x, y: nextDest.y}, this.script.speed, Phaser.Easing.Linear.None, true);
+            this.currentTween = this.game.add.tween(this.sprite.body.position).to({x: nextDest.x, y: nextDest.y}, this.obj.speed, Phaser.Easing.Linear.None, true);
             this.currentTween.onComplete.add(this.onTweenComplete, this);
         }
 
@@ -102,6 +101,7 @@ module MyGame {
             if (!this.paused) {
                 return;
             }
+            this.obj.direction = this.script.directions[this.currentNum];
             this.currentTween.resume();
             this.paused = false;
         }

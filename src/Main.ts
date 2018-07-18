@@ -1,5 +1,4 @@
 module MyGame {
-
     export class StateTransfer {
         enemy: Enemy;
         island: number;
@@ -54,7 +53,7 @@ module MyGame {
             this.groups.enemies.forEach(function (value: Enemy) {
                 value.onStageBuilt();
             }, this)
-            
+
             this.groups.npcs.forEach(function (value: NPC) {
                 value.onStageBuilt();
             }, this)
@@ -85,26 +84,22 @@ module MyGame {
                 for (let j = 0; j < line.length; j++) {
                     switch (line.charAt(j)) {
                         case " ":
-                            this.groups.grounds.push(new Ground(this, new Phaser.Point(j, i)));
+                            this.groups.grounds.push(new Ground(this, pof(j, i)));
+                            break;
+                        case "e":
+                            this.groups.enemies.push(island.getEnemy(this, pof(j, i)));
                             break;
                         case "h":
-                            this.groups.houses.push(new House(this, new Phaser.Point(j, i)));
-                            break;
-                        case "j":
-                            this.groups.enemies.push(new JamBot(this, new Phaser.Point(j, i), island.getMovementScript(j, i)));
+                            this.groups.houses.push(new House(this, pof(j, i)));
                             break;
                         case "n":
-                            this.groups.npcs.push(new NPC(this,
-                                 new Phaser.Point(j, i),
-                                  Assets.Sprites.OldMan.key,
-                                  island.getTextKey(j, i),
-                                island.getMovementScript(j, i)));
+                            this.groups.npcs.push(island.getNPC(this, pof(j, i)));
                             break;
                         case "o":
                             new RegularWater(this, j, i);
                             break;
                         case "s":
-                            this.groups.signs.push(new Sign(this, new Phaser.Point(j, i), island.getTextKey(j, i)));
+                            this.groups.signs.push(new Sign(this, pof(j, i), island.getTextKey(pof(j, i))));
                             break;
                         case "'":
                             if (island.layout[i - 1][j] === "o") {
@@ -126,8 +121,6 @@ module MyGame {
             this.player = new Player(this, playerPosition);
 
             this.setDepths();
-
-
         }
 
         setDepths() {
