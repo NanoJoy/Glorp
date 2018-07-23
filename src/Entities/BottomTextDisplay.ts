@@ -6,13 +6,11 @@ module MyGame {
         upArrow: Phaser.Image;
         downArrow: Phaser.Image;
         name: string;
-        firstPage: TextPage;
-        currentPage: TextPage;
+        textEncounter: ITextEncounter;
         pageNumber: number;
         isDisplaying: boolean;
         text: Phaser.BitmapText;
-        oPressed: boolean;
-        npcParent: NPC;
+        parent: Entity;
         options: TextOption[];
         currentOption: number;
         currentOptionText: Phaser.BitmapText;
@@ -22,12 +20,10 @@ module MyGame {
         readonly spriteHeight = 80;
         readonly fontStyle = { font: "14px okeydokey", fill: "#000000" };
 
-        constructor(game: Main, name: string) {
+        constructor(game: Main, parent: Entity) {
             this.game = game;
+            this.parent = parent;
             this.name = name;
-            this.oPressed = false;
-            this.firstPage = Dialogs[name];
-            this.currentPage = this.firstPage;
         }
 
         scrollPage(direction: Direction) {
@@ -49,7 +45,7 @@ module MyGame {
         scrollUp() {
             if (this.upArrow.visible) {
                 this.pageNumber -= 1;
-                this.text.text = this.currentPage.text[this.pageNumber];
+                this.text.text = this.textEncounter.getCurrentPage().text[this.pageNumber];
                 this.downArrow.visible = true;
                 this.upArrow.visible = this.pageNumber > 0;
             }
@@ -58,9 +54,9 @@ module MyGame {
         scrollDown() {
             if (this.downArrow.visible) {
                 this.pageNumber += 1;
-                this.text.text = this.currentPage.text[this.pageNumber];
+                this.text.text = this.textEncounter.getCurrentPage().text[this.pageNumber];
                 this.upArrow.visible = true;
-                this.downArrow.visible = this.pageNumber < this.currentPage.text.length - 1;
+                this.downArrow.visible = this.pageNumber < this.textEncounter.getCurrentPage().text.length - 1;
             }
         }
 
@@ -83,73 +79,59 @@ module MyGame {
         }
 
         makeChoice() {
-            if (!this.oPressed) {
-                this.oPressed = true;
-                return;
-            }
-            var textPrompt = this.currentPage as TextPrompt;
-            var next = textPrompt.getNext(this.currentOption);
-            if (next == null) {
+            var next = this.textEncounter.getResponse(this.currentOption);
+            if (!next) {
                 this.textBackground.destroy();
                 this.text.destroy();
-                this.optionsBackground.destroy();
-                this.currentOptionText.destroy();
+                if (this.optionsBackground) {
+                    this.optionsBackground.destroy();
+                    this.currentOptionText.destroy();
+                }
                 this.game.physics.arcade.isPaused = false;
                 this.game.textOnScreen = false;
-                
-                if (this.currentPage.onFinish != undefined) {
-                    this.currentPage.onFinish(this.currentOption);
-                }
+                this.textEncounter.onFinish(this.game, this.parent);
+                this.textEncounter.reset();
+                this.game.inputs.O.onUp.addOnce(function () {this.isDisplaying  = false;}, this);
                 return;
             }
             if (!next.hasOptions) {
-                this.optionsBackground.destroy();
-                this.currentOptionText.destroy();
-                this.rightArrow.destroy();
-                this.leftArrow.destroy();
+                if (this.optionsBackground) {
+                    this.optionsBackground.destroy();
+                    this.currentOptionText.destroy();
+                }
+                if (this.rightArrow) {
+                    this.rightArrow.destroy();
+                    this.leftArrow.destroy();
+                }
                 this.options = null;
-                this.game.inputs.right.onUp.removeAll();
-                this.game.inputs.left.onUp.removeAll();
-                this.currentPage = next;
+                this.game.inputs.right.onDown.removeAll();
+                this.game.inputs.left.onDown.removeAll();
                 this.text.text = next.text[0];
                 this.pageNumber = 0;
                 this.upArrow.visible = false;
-                this.downArrow.visible = this.currentPage.text.length > 1;
-                this.game.inputs.O.onUp.removeAll();
-                this.game.inputs.O.onUp.add(this.endDump, this);
-                this.oPressed = false;
+                this.downArrow.visible = this.textEncounter.getCurrentPage().text.length > 1;
+                this.game.inputs.O.onDown.addOnce(this.makeChoice, this);
                 return;
             }
-            this.currentPage = next;
-            this.options = (next as TextPrompt).options;
+            var nextPrompt = (next as TextPrompt);
+            this.options = nextPrompt.options;
             this.currentOption = 0;
             this.pageNumber = 0;
             this.currentOptionText.text = this.options[0].text;
             this.text.text = next.text[0];
             this.upArrow.visible = false;
-            this.downArrow.visible = this.firstPage.text.length > 1;
+            this.downArrow.visible = nextPrompt.text.length > 1;
             this.leftArrow.visible = false;
-            this.rightArrow.visible = textPrompt.options.length > 0;
+            this.rightArrow.visible = nextPrompt.options.length > 0;
+            this.game.inputs.O.onDown.addOnce(this.makeChoice, this);
         }
 
-        endDump() {
-            if (!this.oPressed) {
-                this.oPressed = true;
+        start(textEncounter: ITextEncounter) {
+            if (this.isDisplaying) {
                 return;
             }
-            this.textBackground.destroy();
-            this.text.destroy();
-            this.game.physics.arcade.isPaused = false;
-            this.game.textOnScreen = false;
-            this.oPressed = false;
-            
-            if (this.currentPage.onFinish != undefined) {
-                this.currentPage.onFinish(this.currentOption);
-            }
-        }
-
-        start() {
-            console.log(this.firstPage);
+            this.textEncounter = textEncounter;
+            console.log(this.textEncounter);
             this.game.physics.arcade.isPaused = true;
             this.game.textOnScreen = true;
 
@@ -158,21 +140,21 @@ module MyGame {
             this.textBackground.fixedToCamera = true;
             this.upArrow.visible = false;
             this.downArrow = this.game.add.image(SCREEN_WIDTH - 22, this.textBackground.height - 20, Assets.Sprites.Arrow.key, 1);
-            this.downArrow.visible = this.firstPage.text.length > 1;
+            this.downArrow.visible = this.textEncounter.getCurrentPage().text.length > 1;
             this.upArrow.fixedToCamera = true;
             this.downArrow.fixedToCamera = true;
 
-            this.text = this.game.add.bitmapText(8, this.textBackground.y + 8, Assets.FontName, this.firstPage.text[0], 14);
+            this.text = this.game.add.bitmapText(8, this.textBackground.y + 8, Assets.FontName, this.textEncounter.getCurrentPage().text[0], 14);
             this.text.maxWidth = SCREEN_WIDTH - 24;
             this.text.fixedToCamera = true;
             this.pageNumber = 0;
             this.isDisplaying = true;
             
-            this.game.inputs.down.onUp.add(this.scrollDown, this);
-            this.game.inputs.up.onUp.add(this.scrollUp, this);
+            this.game.inputs.down.onDown.add(this.scrollDown, this);
+            this.game.inputs.up.onDown.add(this.scrollUp, this);
 
-            if (this.firstPage.hasOptions) {
-                var textPrompt = this.currentPage as TextPrompt;
+            if (this.textEncounter.getCurrentPage().hasOptions) {
+                var textPrompt = this.textEncounter.getCurrentPage() as TextPrompt;
                 this.currentOption = 0;
                 this.optionsBackground = this.game.add.image(0, this.textBackground.height, Assets.Images.OptionsBackground);
                 this.optionsBackground.fixedToCamera = true;
@@ -186,13 +168,10 @@ module MyGame {
                 this.currentOptionText = this.game.add.bitmapText(18, this.optionsBackground.y + 8, Assets.FontName, textPrompt.options[0].text, 14);
                 this.currentOptionText.fixedToCamera = true;
                 this.options = textPrompt.options;
-                this.game.inputs.left.onUp.add(this.scrollLeft, this);
-                this.game.inputs.right.onUp.add(this.scrollRight, this);
-
-                this.game.inputs.O.onUp.add(this.makeChoice, this);
-            } else {
-                this.game.inputs.O.onUp.add(this.endDump, this);
+                this.game.inputs.left.onDown.add(this.scrollLeft, this);
+                this.game.inputs.right.onDown.add(this.scrollRight, this);
             }
+            this.game.inputs.O.onDown.addOnce(this.makeChoice, this);
         }
     }
 }

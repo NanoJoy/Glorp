@@ -12,49 +12,84 @@ module MyGame {
     export interface TextPage {
         text: string[];
         hasOptions: boolean;
-        onFinish: (selected: number) => void;
     }
 
     export class TextPrompt implements TextPage {
         text: string[];
         hasOptions: boolean;
-        onFinish: (selected: number) => void;
         options: TextOption[];
 
-        constructor(text: string[], options: TextOption[], onFinish: (selected: number) => void = null) {
+        constructor(text: string[], options: TextOption[]) {
             this.text = text;
             if (options.length < 1) {
                 throw Error("Must be at least 1 option.");
             }
             this.hasOptions = true;
             this.options = options;
-            this.onFinish = onFinish;
-        }
-
-        getNext(selected: number): TextPage {
-            return this.options[selected].response;
         }
     }
 
     export class TextDump implements TextPage {
         text: string[];
         hasOptions: boolean;
-        onFinish: (selected: number) => void;
+        next: TextPage;
         
-        constructor(text: string[]/*, onFinish: (selected: number) => void = null*/) {
+        constructor(text: string[], next = null as TextPage) {
             this.text = text;
             this.hasOptions = false;
-            //this.onFinish = onFinish;
+            this.next = next;
+        }
+    }
+
+    export interface ITextEncounter {
+        autoStart: boolean;
+        getCurrentPage: () => TextPage;
+        onFinish: (main: Main, parent: Entity) => void;
+        getResponse: (selected: number) => TextPage;
+        isFinished: () => boolean;
+        reset: () => void;
+    }
+
+    export class TextEncounter implements ITextEncounter {
+        autoStart: boolean;
+        private currentPage: TextPage;
+        private startPage: TextPage;
+        onFinish: (main: Main, parent: Entity) => void;
+
+        constructor(startPage: TextPage, autoStart = false, onFinish = function (main: Main, parent: Entity) {}) {
+            this.currentPage = startPage;
+            this.startPage = startPage;
+            this.autoStart = autoStart;
+            this.onFinish = onFinish.bind(this);
+        }
+
+        getCurrentPage() {
+            return this.currentPage;
+        }
+
+        getResponse(selected: number) {
+            console.log(this.currentPage);
+            if (!this.currentPage.hasOptions) {
+                return (this.currentPage = (this.currentPage as TextDump).next);
+            }
+            return (this.currentPage = (this.currentPage as TextPrompt).options[selected].response);
+        }
+
+        isFinished() {
+            return this.currentPage === null;
+        }
+
+        reset() {
+            this.currentPage = this.startPage;
         }
     }
 
     export interface TextDisplay {
         game: Main;
         name: string;
-        firstPage: TextPage;
-        currentPage: TextPage;
+        textEncounter: ITextEncounter;
         isDisplaying: boolean;
         scrollPage: (direction: Direction) => void;
-        start: () => void;
+        start: (textEncounter: ITextEncounter) => void;
     }
 }

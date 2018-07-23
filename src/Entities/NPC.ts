@@ -6,7 +6,8 @@ module MyGame {
         direction: Direction;
         speed: number;
         private movementManager: MovementManager;
-        private textDisplay: BottomTextDisplay;
+        private textManager: TextManager;
+        private textDisplay: TextDisplay;
         private buttonPrompt: ButtonPrompt;
 
         constructor(main: Main, position: Phaser.Point, dialogKey: string, movementScript: MovementScript,
@@ -18,7 +19,8 @@ module MyGame {
             main.physics.arcade.enable(this.sprite);
             SpriteUtils.addPersonAnimations(this.sprite, animationSpeed);
 
-            this.textDisplay = new BottomTextDisplay(main, dialogKey);
+            this.textManager = Dialogs[dialogKey];
+            this.textDisplay = new BottomTextDisplay(main, this);
             this.buttonPrompt = new ButtonPrompt(this, main.inputs.O);
 
             if (movementScript) {
@@ -68,8 +70,8 @@ module MyGame {
                 }
             }
 
-            if (this.buttonPrompt.buttonIsDown()) {
-                this.textDisplay.start();
+            if (this.textManager.getNext(this.main, this).autoStart || this.buttonPrompt.buttonIsDown()) {
+                this.textDisplay.start(this.textManager.useNext(this.main, this));
             }
             this.main.physics.arcade.collide(this.sprite, this.main.player);
         }

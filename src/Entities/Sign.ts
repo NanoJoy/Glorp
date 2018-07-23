@@ -3,7 +3,8 @@ module MyGame {
         main: Main;
         sprite: Phaser.Sprite;
         position: Phaser.Point;
-        textDisplay: BottomTextDisplay;
+        textDisplay: TextDisplay;
+        textManager: TextManager;
         buttonPrompt: ButtonPrompt;
 
         constructor (main: Main, position: Phaser.Point, textKey: string) {
@@ -13,7 +14,8 @@ module MyGame {
             main.physics.arcade.enable(this.sprite);
             this.sprite.body.moves = false;
             this.sprite.body.immovable = true;
-            this.textDisplay = new BottomTextDisplay(main, textKey);
+            this.textManager = Dialogs[textKey];
+            this.textDisplay = new BottomTextDisplay(main, this);
             this.buttonPrompt = new ButtonPrompt(this, main.inputs.O, -4);
         }
 
@@ -24,8 +26,8 @@ module MyGame {
             }, null, this);
             if (overlapping) {
                 this.buttonPrompt.show();
-                if (this.buttonPrompt.buttonIsDown()) {
-                    this.textDisplay.start();
+                if (this.textManager.getNext(this.main, this).autoStart || this.buttonPrompt.buttonIsDown()) {
+                    this.textDisplay.start(this.textManager.useNext(this.main, this));
                 }
             } else {
                 this.buttonPrompt.hide();
