@@ -68,7 +68,6 @@ module MyGame {
         }
 
         getResponse(selected: number) {
-            console.log(this.currentPage);
             if (!this.currentPage.hasOptions) {
                 return (this.currentPage = (this.currentPage as TextDump).next);
             }

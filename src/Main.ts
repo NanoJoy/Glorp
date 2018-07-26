@@ -98,9 +98,6 @@ module MyGame {
                         case "o":
                             new RegularWater(this, j, i);
                             break;
-                        case "s":
-                            this.groups.signs.push(new Sign(this, pof(j, i), island.getTextKey(pof(j, i))));
-                            break;
                         case "'":
                             if (island.layout[i - 1][j] === "o") {
                                 new WaterEdge(this, j, i, Diagonal.NE);

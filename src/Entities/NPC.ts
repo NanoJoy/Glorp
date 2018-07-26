@@ -17,11 +17,11 @@ module MyGame {
             this.speed = speed;
             this.sprite = main.add.sprite(position.x * TILE_WIDTH, position.y * TILE_HEIGHT, spriteKey);
             main.physics.arcade.enable(this.sprite);
-            SpriteUtils.addPersonAnimations(this.sprite, animationSpeed);
+            Utils.addPersonAnimations(this.sprite, animationSpeed);
 
             this.textManager = Dialogs[dialogKey];
             this.textDisplay = new BottomTextDisplay(main, this);
-            this.buttonPrompt = new ButtonPrompt(this, main.inputs.O);
+            this.buttonPrompt = new ButtonPrompt(this, main.inputs.O, -4);
 
             if (movementScript) {
                 this.movementManager = new MovementManager(main.game, movementScript, this);
@@ -41,7 +41,9 @@ module MyGame {
         update() {
             let player = this.main.player;
             if (Phaser.Math.distance(this.sprite.centerX, this.sprite.centerY, player.centerX, player.centerY) < TILE_HEIGHT * 1.5) {
-                this.buttonPrompt.reposition(this.sprite.x, this.sprite.y);
+                if (this.movementManager) {
+                    this.buttonPrompt.reposition(this.sprite.x, this.sprite.y, -4);
+                }
                 this.buttonPrompt.show();
                 if (this.movementManager) {
                     this.movementManager.pause();
@@ -55,7 +57,7 @@ module MyGame {
                 } else {
                     this.direction = Direction.Right;
                 }
-                this.sprite.play(SpriteUtils.getIdleAnimName(this.direction));
+                this.sprite.play(Utils.getIdleAnimName(this.direction));
             } else {
                 this.buttonPrompt.hide();
                 if (this.movementManager) {
@@ -64,7 +66,7 @@ module MyGame {
             }
 
             if (this.movementManager && !this.movementManager.paused) {
-                let walkingAnim = SpriteUtils.getWalkingAnimName(this.direction);
+                let walkingAnim = Utils.getWalkingAnimName(this.direction);
                 if (walkingAnim !== this.sprite.animations.currentAnim.name) {
                     this.sprite.play(walkingAnim);
                 }
@@ -80,6 +82,12 @@ module MyGame {
     export class OldMan extends NPC {
         constructor(main: Main, position: Phaser.Point, dialogKey: string, movementScript: MovementScript) {
             super(main, position, dialogKey, movementScript, 1000, 3, Assets.Sprites.OldMan.key);
+        }
+    }
+
+    export class Sign extends NPC {
+        constructor(main: Main, position: Phaser.Point, dialogKey: string) {
+            super (main, position, dialogKey, null, 0, 0, Assets.Images.Sign);
         }
     }
 }

@@ -3,7 +3,7 @@ module MyGame {
         return new Phaser.Point(x, y);
     }
 
-    export class SpriteUtils {
+    export class Utils {
         static snapToPixels(sprite: Phaser.Sprite) {
             if (sprite.body.velocity.x < 0) {
                 sprite.body.position.x = Math.floor(sprite.body.position.x / 2) * 2;
@@ -33,10 +33,10 @@ module MyGame {
         }
 
         static addPersonAnimations(sprite: Phaser.Sprite, speed = 5) {
-            sprite.animations.add("walk_back", SpriteUtils.animationArray(1, 4), speed, true);
-            sprite.animations.add("walk_forward", SpriteUtils.animationArray(6, 9), speed, true);
-            sprite.animations.add("walk_right", SpriteUtils.animationArray(10, 13), speed, true);
-            sprite.animations.add("walk_left", SpriteUtils.animationArray(14, 17), speed, true);
+            sprite.animations.add("walk_back", Utils.animationArray(1, 4), speed, true);
+            sprite.animations.add("walk_forward", Utils.animationArray(6, 9), speed, true);
+            sprite.animations.add("walk_right", Utils.animationArray(10, 13), speed, true);
+            sprite.animations.add("walk_left", Utils.animationArray(14, 17), speed, true);
             sprite.animations.add("idle_back", [0], speed, true);
             sprite.animations.add("idle_forward", [5], speed, true);
             sprite.animations.add("idle_right", [10], speed, true);
@@ -44,11 +44,11 @@ module MyGame {
         }
 
         static getIdleAnimName(direction: Direction): string {
-            return `idle_${SpriteUtils.getDirectionName(direction)}`;
+            return `idle_${Utils.getDirectionName(direction)}`;
         }
 
         static getWalkingAnimName(direction: Direction): string {
-            return `walk_${SpriteUtils.getDirectionName(direction)}`;
+            return `walk_${Utils.getDirectionName(direction)}`;
         }
 
         static getDirectionName(direction: Direction): string {
@@ -67,5 +67,9 @@ module MyGame {
                     throw new Error(`Direction ${direction} not supported.`);
             }
         }
+
+        /*static splitTextIntoPages(text: string): string[] {
+
+        }*/
     }
 }

@@ -17,7 +17,7 @@ module MyGame {
                         "o                       o",
                         "o                       o",
                         "o                       o",
-                        "o          s            o",
+                        "o          n            o",
                         "o                       o",
                         "o                       o",
                         "o                       o",
@@ -33,14 +33,14 @@ module MyGame {
                     ],
                     [],
                     [
-                        { position: new Phaser.Point(11, 11), key: "mrDorpnersHouse" },
-                        { position: new Phaser.Point(20, 18), key: "sample" }
+                        { position: new Phaser.Point(11, 11), key: "mrDorpnersHouse" }
                     ],
                     [
                         { type: Assets.Sprites.JamBotWorld.key, position: pof(7, 16), script: "bbff" }
                     ],
                     [
-                        { type: Assets.Sprites.OldMan.key, position: pof(20, 18), textKey: "sample", script: "lluurrbb" }
+                        { type: Assets.Sprites.OldMan.key, position: pof(20, 18), textKey: "sample", script: "lluurrbb" },
+                        { type: Assets.Images.Sign, position: pof(11, 11), textKey: "mrDorpnersHouse", script: "" }
                     ],
                     pof(13, 13)
                 );

@@ -110,7 +110,8 @@ module MyGame {
                 this.pageNumber = 0;
                 this.upArrow.visible = false;
                 this.downArrow.visible = this.textEncounter.getCurrentPage().text.length > 1;
-                this.game.inputs.O.onDown.addOnce(this.makeChoice, this);
+                this.game.inputs.O.onUp.addOnce(this.addOnDownListener, this);
+                
                 return;
             }
             var nextPrompt = (next as TextPrompt);
@@ -123,6 +124,10 @@ module MyGame {
             this.downArrow.visible = nextPrompt.text.length > 1;
             this.leftArrow.visible = false;
             this.rightArrow.visible = nextPrompt.options.length > 0;
+            this.game.inputs.O.onUp.addOnce(this.addOnDownListener, this);
+        }
+
+        addOnDownListener() {
             this.game.inputs.O.onDown.addOnce(this.makeChoice, this);
         }
 
@@ -131,7 +136,6 @@ module MyGame {
                 return;
             }
             this.textEncounter = textEncounter;
-            console.log(this.textEncounter);
             this.game.physics.arcade.isPaused = true;
             this.game.textOnScreen = true;
 

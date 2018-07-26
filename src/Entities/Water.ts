@@ -10,7 +10,7 @@ module MyGame {
             state.game.physics.arcade.enable(this);
             this.body.moves = false;
             this.body.immoveable = true;
-            this.animations.add("wave", SpriteUtils.animationArray(animStart, animStart + 4), 2, true);
+            this.animations.add("wave", Utils.animationArray(animStart, animStart + 4), 2, true);
             this.play("wave");
             state.groups.water.add(this);
         }

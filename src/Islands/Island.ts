@@ -80,8 +80,10 @@ module MyGame {
             switch (npc.type) {
                 case Assets.Sprites.OldMan.key:
                     return new OldMan(main, npc.position, npc.textKey, movementScript);
+                case Assets.Images.Sign:
+                    return new Sign(main, npc.position, npc.textKey);
             }
-            throw new Error(`${npc.type} is not a valid enemy type.`);
+            throw new Error(`${npc.type} is not a valid NPC type.`);
         }
 
         private getDirectionFromLetter(letter: string): Direction {

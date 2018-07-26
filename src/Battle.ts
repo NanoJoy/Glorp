@@ -14,7 +14,7 @@ module MyGame {
             var stateTransfer = StateTransfer.getInstance();
             this.game.add.image(10, SCREEN_HEIGHT - 146, Assets.Images.PlayerBattle);
             this.playerHealthDisplay = new HealthDisplay(this, 146, SCREEN_HEIGHT - 50, "You", this.playerHealth);
-            if (!SpriteUtils.isAThing(stateTransfer.enemy)) {
+            if (!Utils.isAThing(stateTransfer.enemy)) {
                 throw new Error("enemy is not set for battle.");
             }
             this.enemy = stateTransfer.enemy;
@@ -33,7 +33,7 @@ module MyGame {
         }
 
         private startPattern() {
-            if (SpriteUtils.isAThing(this.patternChecker.notesPressed)) {
+            if (Utils.isAThing(this.patternChecker.notesPressed)) {
                 this.afterRound();
             }
             this.patternDisplayer.reset();

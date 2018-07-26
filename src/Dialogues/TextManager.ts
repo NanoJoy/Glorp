@@ -23,7 +23,6 @@ module MyGame {
 
         useNext(main: Main, parent: Entity) {
             this.lastViewed = this.decisionFunction(main, parent);
-            console.log(this.lastViewed);
             return this.textEncounters[this.lastViewed];
         }
     }

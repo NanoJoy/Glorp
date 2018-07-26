@@ -18,7 +18,7 @@ module MyGame {
             this.buttonImage = parent.main.add.image(0, 0, Assets.Sprites.RhythmSymbols.key);
             this.buttonImage.frame = NoteDisplay.getKeyFrame(input.keyCode);
             this.position = new Phaser.Point(0, 0);
-            this.reposition(parentPosition.x * TILE_WIDTH, parentPosition.y * TILE_HEIGHT, leftOffset);
+            this.reposition(parentPosition.x, parentPosition.y, leftOffset);
 
             this.displayed = true;
             this.hide();

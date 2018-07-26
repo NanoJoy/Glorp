@@ -26,7 +26,7 @@ module MyGame {
             this.health = this.hitPoints;
             this.worldSprite = this.main.add.sprite(position.x * TILE_WIDTH, position.y * TILE_HEIGHT, this.worldSpriteKey);
             this.main.physics.arcade.enable(this.worldSprite);
-            this.worldSprite.animations.add("walk", SpriteUtils.animationArray(0, 7), 5, true);
+            this.worldSprite.animations.add("walk", Utils.animationArray(0, 7), 5, true);
             this.worldSprite.play("walk");
             this.sprite = this.worldSprite;
             this.movementManager = new MovementManager(this.main.game, movementScript, this);

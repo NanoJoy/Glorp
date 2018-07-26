@@ -10,7 +10,7 @@ module MyGame {
         constructor(state: Main, position: Phaser.Point) {
             super(state.game, position.x * TILE_WIDTH, position.y * TILE_HEIGHT, Assets.Sprites.Player.key, 0);
             state.game.physics.arcade.enableBody(this);
-            SpriteUtils.addPersonAnimations(this);
+            Utils.addPersonAnimations(this);
             this.inputs = state.inputs;
             this.direction = Direction.Back;
             state.add.existing(this);
@@ -23,7 +23,7 @@ module MyGame {
 
         update() {
             if (this.state.textOnScreen) {
-                this.play(SpriteUtils.getIdleAnimName(this.direction));
+                this.play(Utils.getIdleAnimName(this.direction));
                 return;
             }
             var player = this;
@@ -73,13 +73,13 @@ module MyGame {
                     break;
             }
             if (directionDown === 1) {
-                animName = SpriteUtils.getIdleAnimName(this.direction);
+                animName = Utils.getIdleAnimName(this.direction);
             }
             if (this.animations.currentAnim.name !== animName) {
                 this.play(animName);
             }
             
-            SpriteUtils.snapToPixels(this);
+            Utils.snapToPixels(this);
         }
     }
 }
