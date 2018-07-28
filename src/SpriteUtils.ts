@@ -68,8 +68,32 @@ module MyGame {
             }
         }
 
-        /*static splitTextIntoPages(text: string): string[] {
-
-        }*/
+        static splitTextIntoPages(text: string): string[] {
+            let lettersInRow = 18;
+            let rowsInPage = 3;
+            let words = text.split(" ");
+            let pages = [] as string[];
+            let workingPage = "";
+            for (let i = 0; i < lettersInRow * rowsInPage; i++) {
+                workingPage += "a";
+            }
+            for (let i = 0; i < words.length; i++) {
+                let word = words[i];
+                if (word.length > lettersInRow) {
+                    throw new Error(`Word ${word} has more letters than allowed in row.`);
+                }
+                if (workingPage.length + word.length + 1 > lettersInRow * rowsInPage) {
+                    pages.push(workingPage);
+                    workingPage = word;
+                } else {
+                    workingPage = workingPage + " " + word;
+                }
+            }
+            pages.push(workingPage);
+            console.log(pages);
+            pages.shift();
+            console.log(pages);
+            return pages;
+        }
     }
 }

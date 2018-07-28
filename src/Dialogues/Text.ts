@@ -19,8 +19,8 @@ module MyGame {
         hasOptions: boolean;
         options: TextOption[];
 
-        constructor(text: string[], options: TextOption[]) {
-            this.text = text;
+        constructor(text: string, options: TextOption[]) {
+            this.text = Utils.splitTextIntoPages(text);
             if (options.length < 1) {
                 throw Error("Must be at least 1 option.");
             }
@@ -34,8 +34,8 @@ module MyGame {
         hasOptions: boolean;
         next: TextPage;
         
-        constructor(text: string[], next = null as TextPage) {
-            this.text = text;
+        constructor(text: string, next = null as TextPage) {
+            this.text = Utils.splitTextIntoPages(text);
             this.hasOptions = false;
             this.next = next;
         }
