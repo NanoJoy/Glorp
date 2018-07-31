@@ -4,6 +4,20 @@ module MyGame {
     }
 
     export class Utils {
+        static fillString(s: string, len: number) {
+            if (!s || s.length === 0) {
+                throw new Error("s must be a non-empty string.");
+            }
+            if (len < 0) {
+                throw new Error("len must be a non-negative number.");
+            }
+            var result = "";
+            while (result.length < len) {
+                result += s;
+            }
+            return result.substr(0, len);
+        }
+
         static snapToPixels(sprite: Phaser.Sprite) {
             if (sprite.body.velocity.x < 0) {
                 sprite.body.position.x = Math.floor(sprite.body.position.x / 2) * 2;

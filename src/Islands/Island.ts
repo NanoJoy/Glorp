@@ -1,5 +1,9 @@
 module MyGame {
 
+    export enum IslandType {
+        WATER, INSIDE, OUTSIDE
+    }
+
     class LayoutAddition {
         public tile: string;
         position: Phaser.Point;
@@ -25,31 +29,40 @@ module MyGame {
 
     export class Island {
         num: number;
+        type: IslandType;
         position: Phaser.Point;
         layout: string[];
         additions: LayoutAddition[];
-        textKeys: TextKey[];
         enemies: MapEnemy[];
         npcs: MapNPC[];
         playerStart: Phaser.Point;
 
-        constructor(num: number, position: Phaser.Point, layout: string[], additions: LayoutAddition[], textKeys: TextKey[], enemies: MapEnemy[], npcs: MapNPC[], playerStart: Phaser.Point) {
+        constructor(num: number, type: IslandType, layout: string[], additions: LayoutAddition[], enemies: MapEnemy[], npcs: MapNPC[], playerStart: Phaser.Point) {
             this.num = num;
-            this.position = position;
+            this.type = type;
             this.layout = layout;
-            this.textKeys = textKeys;
             this.additions = additions;
             this.enemies = enemies;
             this.npcs = npcs;
             this.playerStart = playerStart;
-        }
 
-        getTextKey(pos: Phaser.Point): string {
-            var matching = this.textKeys.filter(key => key.position.equals(pos));
-            if (matching.length === 0) {
-                throw new Error(`Could not find text key at x: ${pos.x}, y: ${pos.y}.`)
+            let padChar = this.getPadChar(type);
+            let minWidth = SCREEN_WIDTH / TILE_WIDTH + 1;
+            if (this.layout[0].length < minWidth) {
+                for (let i = 0; i < this.layout.length; i++) {
+                    while (this.layout[i].length < minWidth) {
+                        this.layout[i] = padChar + this.layout[i] + padChar;
+                    }
+                }
             }
-            return matching[0].key;
+            let minHeight = SCREEN_HEIGHT / TILE_HEIGHT + 1;
+            if (this.layout.length < minHeight) {
+                let padRow = Utils.fillString(padChar, this.layout[0].length);
+                while (this.layout.length < minHeight) {
+                    this.layout.push(padRow);
+                    this.layout.unshift(padRow);
+                }
+            }
         }
 
         getEnemy(main: Main, pos: Phaser.Point): Enemy {
@@ -108,6 +121,17 @@ module MyGame {
                     return Direction.Back;
             }
             throw new Error(`${letter} is not a valid direction char.`);
+        }
+
+        private getPadChar(type: IslandType): string {
+            switch (type) {
+                case IslandType.INSIDE:
+                    return "b";
+                case IslandType.OUTSIDE:
+                    return " ";
+                case IslandType.WATER:
+                    return "o";
+            }
         }
     }
 }

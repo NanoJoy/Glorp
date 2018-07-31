@@ -3,21 +3,15 @@ module MyGame {
     function loadIsland(num: number): Island {
         switch (num) {
             case 0:
-                return new Island(0, pof(0, 0),
+                return new Island(0,
+                    IslandType.WATER,
                     [
                         "oooooooooooooo",
                         "o            o",
                         "o   n        o",
                         "o            o",
-                        "o            o",
-                        "o            o",
-                        "o            o",
-                        "o            o",
-                        "o            o",
-                        "o            o",
                         "oooooooooooooo"
                     ],
-                    [],
                     [],
                     [],
                     [
@@ -27,7 +21,7 @@ module MyGame {
                 );
             case 1:
                 return new Island(0,
-                    new Phaser.Point(0, 0),
+                    IslandType.WATER,
                     [
                         "ooooooooooooooooooooooooo",
                         "o                       o",
@@ -55,9 +49,6 @@ module MyGame {
                         "ooooooooooooooooooooooooo"
                     ],
                     [],
-                    [
-                        { position: new Phaser.Point(11, 11), key: "mrDorpnersHouse" }
-                    ],
                     [
                         { type: Assets.Sprites.JamBotWorld.key, position: pof(7, 16), script: "bbff" }
                     ],
