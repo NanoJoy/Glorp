@@ -3,6 +3,29 @@ module MyGame {
     function loadIsland(num: number): Island {
         switch (num) {
             case 0:
+                return new Island(0, pof(0, 0),
+                    [
+                        "oooooooooooooo",
+                        "o            o",
+                        "o   n        o",
+                        "o            o",
+                        "o            o",
+                        "o            o",
+                        "o            o",
+                        "o            o",
+                        "o            o",
+                        "o            o",
+                        "oooooooooooooo"
+                    ],
+                    [],
+                    [],
+                    [],
+                    [
+                        { position: pof(4, 2), type: Assets.Sprites.OldMan.key, textKey: "oldman", script: "rr   ll   " }
+                    ],
+                    pof(1, 1)
+                );
+            case 1:
                 return new Island(0,
                     new Phaser.Point(0, 0),
                     [

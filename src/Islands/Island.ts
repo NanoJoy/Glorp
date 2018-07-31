@@ -45,7 +45,7 @@ module MyGame {
         }
 
         getTextKey(pos: Phaser.Point): string {
-            var matching =  this.textKeys.filter(key => key.position.equals(pos));
+            var matching = this.textKeys.filter(key => key.position.equals(pos));
             if (matching.length === 0) {
                 throw new Error(`Could not find text key at x: ${pos.x}, y: ${pos.y}.`)
             }
@@ -59,11 +59,9 @@ module MyGame {
                 throw new Error(`Could not find enemy information at x: ${pos.x}, y: ${pos.y}.`);
             }
             var enemy = matching[0];
-            var directions = enemy.script.toLocaleLowerCase().split("").map(c => this.getDirectionFromLetter(c));
-            var movementScript = new MovementScript(enemy.position, directions);
             switch (enemy.type) {
                 case Assets.Sprites.JamBotWorld.key:
-                    return new JamBot(main, enemy.position, movementScript);
+                    return new JamBot(main, enemy.position, this.makeMovementScript(enemy.position, enemy.script));
             }
             throw new Error(`${enemy.type} is not a valid enemy type.`);
         }
@@ -75,31 +73,39 @@ module MyGame {
                 throw new Error(`Could not find NPC information at x: ${pos.x}, y: ${pos.y}.`);
             }
             var npc = matching[0];
-            var directions = npc.script.toLocaleLowerCase().split("").map(c => this.getDirectionFromLetter(c));
-            var movementScript = new MovementScript(npc.position, directions);
             switch (npc.type) {
                 case Assets.Sprites.OldMan.key:
-                    return new OldMan(main, npc.position, npc.textKey, movementScript);
+                    return new OldMan(main, npc.position, npc.textKey, this.makeMovementScript(npc.position, npc.script));
                 case Assets.Images.Sign:
                     return new Sign(main, npc.position, npc.textKey);
             }
             throw new Error(`${npc.type} is not a valid NPC type.`);
         }
 
+        private makeMovementScript(position: Phaser.Point, script: string): MovementScript {
+            if (!script) {
+                return null;
+            }
+            var directions = script.toLocaleLowerCase().split("").map(c => this.getDirectionFromLetter(c));
+            return new MovementScript(position, directions);
+        }
+
         private getDirectionFromLetter(letter: string): Direction {
             switch (letter) {
+                case " ":
+                    return null;
                 case "u":
                     return Direction.Up;
                 case "d":
-                return Direction.Down;
+                    return Direction.Down;
                 case "l":
-                return Direction.Left;
+                    return Direction.Left;
                 case "r":
-                return Direction.Right;
+                    return Direction.Right;
                 case "f":
-                return Direction.Forward;
+                    return Direction.Forward;
                 case "b":
-                return Direction.Back;
+                    return Direction.Back;
             }
             throw new Error(`${letter} is not a valid direction char.`);
         }

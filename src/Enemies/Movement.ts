@@ -45,19 +45,22 @@ module MyGame {
             for (let i = 0; i < this.script.directions.length; i++) {
                 let lastPosition = i === 0 ? this.sprite.position : destinations[i - 1];
                 switch (this.script.directions[i]) {
+                    case null:
+                        destinations.push(pof(lastPosition.x, lastPosition.y));
+                        break;
                     case Direction.Left:
-                        destinations.push(new Phaser.Point(lastPosition.x - TILE_WIDTH, lastPosition.y));
+                        destinations.push(pof(lastPosition.x - TILE_WIDTH, lastPosition.y));
                         break;
                     case Direction.Right:
-                        destinations.push(new Phaser.Point(lastPosition.x + TILE_WIDTH, lastPosition.y));
+                        destinations.push(pof(lastPosition.x + TILE_WIDTH, lastPosition.y));
                         break;
                     case Direction.Forward:
                     case Direction.Up:
-                        destinations.push(new Phaser.Point(lastPosition.x, lastPosition.y - TILE_HEIGHT));
+                        destinations.push(pof(lastPosition.x, lastPosition.y - TILE_HEIGHT));
                         break;
                     case Direction.Back:
                     case Direction.Down:
-                        destinations.push(new Phaser.Point(lastPosition.x, lastPosition.y + TILE_HEIGHT));
+                        destinations.push(pof(lastPosition.x, lastPosition.y + TILE_HEIGHT));
                         break;
                 }
             }
@@ -77,11 +80,13 @@ module MyGame {
                     return;
                 }
             }
-            this.obj.direction = this.script.directions[this.currentNum];
+            this.obj.direction = this.script.directions[this.currentNum] ? this.script.directions[this.currentNum] : this.obj.direction;
             let nextDest = this.destinations[this.currentNum];
             this.currentTween = this.game.add.tween(this.sprite.body.position).to({x: nextDest.x, y: nextDest.y}, this.obj.speed, Phaser.Easing.Linear.None, true);
             this.currentTween.onComplete.add(this.onTweenComplete, this);
         }
+
+
 
         onTweenComplete() {
             this.readyForNext = true;
@@ -104,6 +109,10 @@ module MyGame {
             this.obj.direction = this.script.directions[this.currentNum];
             this.currentTween.resume();
             this.paused = false;
+        }
+
+        currentlyStationary() {
+            return this.script.directions[this.currentNum] === null;
         }
     }
 }

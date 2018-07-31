@@ -1,6 +1,8 @@
 module MyGame {
     export class Dialogz {
         [key: string]: TextManager;
+
+        oldman = new TextManager([new TextEncounter(new TextDump("Go away"))]);
         
         mrDorpnersHouse = new TextManager([new TextEncounter(new TextDump("Mr. Dorpner's House."))]);
 

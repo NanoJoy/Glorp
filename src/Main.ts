@@ -124,6 +124,7 @@ module MyGame {
             this.groups.grounds.forEach(function (gr) { this.game.world.bringToTop(gr); }, this);
             this.game.world.bringToTop(this.groups.water);
             this.groups.houses.forEach(function (ho) { this.game.world.bringToTop(ho.sprite); }, this);
+            this.groups.npcs.forEach(function (n) { this.game.world.bringToTop(n.sprite); }, this);
             this.groups.enemies.forEach(function (en) { this.game.world.bringToTop(en.worldSprite); }, this);
             this.game.world.bringToTop(this.player);
         }

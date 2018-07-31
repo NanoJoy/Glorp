@@ -66,9 +66,10 @@ module MyGame {
             }
 
             if (this.movementManager && !this.movementManager.paused) {
-                let walkingAnim = Utils.getWalkingAnimName(this.direction);
-                if (walkingAnim !== this.sprite.animations.currentAnim.name) {
-                    this.sprite.play(walkingAnim);
+                
+                let anim = this.movementManager.currentlyStationary() ? Utils.getIdleAnimName(this.direction) : Utils.getWalkingAnimName(this.direction);
+                if (anim && anim !== this.sprite.animations.currentAnim.name) {
+                    this.sprite.play(anim);
                 }
             }
 

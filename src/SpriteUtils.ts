@@ -53,6 +53,8 @@ module MyGame {
 
         static getDirectionName(direction: Direction): string {
             switch (direction) {
+                case null:
+                    return null;
                 case Direction.Down:
                 case Direction.Back:
                     return "back";
@@ -90,9 +92,7 @@ module MyGame {
                 }
             }
             pages.push(workingPage);
-            console.log(pages);
             pages.shift();
-            console.log(pages);
             return pages;
         }
     }
