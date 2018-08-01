@@ -1,0 +1,32 @@
+module MyGame {
+    export abstract class Barrier implements Entity {
+        main: Main;
+        position: Phaser.Point;
+        sprite: Phaser.Sprite;
+
+        onCollision: (playerSprite: Phaser.Sprite, barrierSprite: Phaser.Sprite) => void;
+
+        constructor(main: Main, position: Phaser.Point, key: string) {
+            this.main = main;
+            this.position = position;
+            this.sprite = main.add.sprite(position.x * TILE_WIDTH, position.y * TILE_HEIGHT, key);
+            main.physics.arcade.enable(this.sprite);
+            this.sprite.body.moves = false;
+            this.sprite.body.immovable = true;
+        }
+    }
+
+    export class Blackness extends Barrier {
+        constructor(main: Main, position: Phaser.Point) {
+            super(main, position, Assets.Sprites.Blackness.key);
+        }
+    }
+
+    export class Water extends Barrier {
+        constructor(main: Main, position: Phaser.Point) {
+            super(main, position, Assets.Sprites.Water.key);
+            this.sprite.animations.add("wave", Utils.animationArray(0, 4), 2, true);
+            this.sprite.play("wave");
+        }
+    }
+}

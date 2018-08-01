@@ -46,23 +46,27 @@ module MyGame {
             this.npcs = npcs;
             this.playerStart = playerStart;
 
+            let paddingOffset = pof(0, 0);
             let padChar = this.getPadChar(type);
             let minWidth = SCREEN_WIDTH / TILE_WIDTH + 1;
-            if (this.layout[0].length < minWidth) {
-                for (let i = 0; i < this.layout.length; i++) {
-                    while (this.layout[i].length < minWidth) {
-                        this.layout[i] = padChar + this.layout[i] + padChar;
+            for (let i = 0; i < this.layout.length; i++) {
+                do {
+                    this.layout[i] = padChar + this.layout[i] + padChar;
+                    if (i === 0) {
+                        paddingOffset.x += 1;
                     }
-                }
+                } while (this.layout[i].length < minWidth)
             }
             let minHeight = SCREEN_HEIGHT / TILE_HEIGHT + 1;
-            if (this.layout.length < minHeight) {
-                let padRow = Utils.fillString(padChar, this.layout[0].length);
-                while (this.layout.length < minHeight) {
-                    this.layout.push(padRow);
-                    this.layout.unshift(padRow);
-                }
-            }
+            let padRow = Utils.fillString(padChar, this.layout[0].length);
+            do {
+                this.layout.push(padRow);
+                this.layout.unshift(padRow);
+                paddingOffset.y += 1;
+            } while (this.layout.length < minHeight)
+            enemies.forEach(function (e) { e.position.add(paddingOffset.x, paddingOffset.y); });
+            npcs.forEach(function (n) { n.position.add(paddingOffset.x, paddingOffset.y); });
+            playerStart.add(paddingOffset.x, paddingOffset.y);
         }
 
         getEnemy(main: Main, pos: Phaser.Point): Enemy {

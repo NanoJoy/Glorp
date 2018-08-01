@@ -30,7 +30,7 @@ module MyGame {
             houses: House[],
             npcs: NPC[],
             signs: Sign[],
-            water: Phaser.Group
+            barriers: Barrier[]
         };
 
         create() {
@@ -43,7 +43,7 @@ module MyGame {
                 houses: [],
                 npcs: [],
                 signs: [],
-                water: this.game.add.group()
+                barriers: []
             }
 
             var worldManager = WorldManager.getInstance();
@@ -86,6 +86,9 @@ module MyGame {
                         case " ":
                             this.groups.grounds.push(new Ground(this, pof(j, i)));
                             break;
+                        case "b":
+                            this.groups.barriers.push(new Blackness(this, pof(j, i)));
+                            break;
                         case "e":
                             this.groups.enemies.push(island.getEnemy(this, pof(j, i)));
                             break;
@@ -96,21 +99,7 @@ module MyGame {
                             this.groups.npcs.push(island.getNPC(this, pof(j, i)));
                             break;
                         case "o":
-                            new RegularWater(this, j, i);
-                            break;
-                        case "'":
-                            if (island.layout[i - 1][j] === "o") {
-                                new WaterEdge(this, j, i, Diagonal.NE);
-                            } else {
-                                new WaterEdge(this, j, i, Diagonal.SW);
-                            }
-                            break;
-                        case "/":
-                            if (island.layout[i - 1][j] === "o") {
-                                new WaterEdge(this, j, i, Diagonal.NW);
-                            } else {
-                                new WaterEdge(this, j, i, Diagonal.SE);
-                            }
+                            this.groups.barriers.push(new Water(this, pof(j, i)));
                     }
                 }
             }
@@ -122,7 +111,7 @@ module MyGame {
 
         setDepths() {
             this.groups.grounds.forEach(function (gr) { this.game.world.bringToTop(gr); }, this);
-            this.game.world.bringToTop(this.groups.water);
+            this.groups.barriers.forEach(function (b) { this.game.world.bringToTop(b); }, this);
             this.groups.houses.forEach(function (ho) { this.game.world.bringToTop(ho.sprite); }, this);
             this.groups.npcs.forEach(function (n) { this.game.world.bringToTop(n.sprite); }, this);
             this.groups.enemies.forEach(function (en) { this.game.world.bringToTop(en.worldSprite); }, this);

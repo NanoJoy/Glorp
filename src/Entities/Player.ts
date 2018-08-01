@@ -29,8 +29,8 @@ module MyGame {
             var player = this;
             var game = this.game;
             this.hasCollided = false;
-            this.state.groups.water.forEach(function (water: Water) {
-                game.physics.arcade.collide(player, water, water.collisionBehavior, water.collisionCheck, water);
+            this.state.groups.barriers.forEach(function (barrier) {
+                game.physics.arcade.collide(player, barrier.sprite, barrier.onCollision, null, barrier);
             });
 
             var directionDown = 1;
