@@ -76,6 +76,7 @@ module MyGame {
         }
 
         private setupLevel(island: Island) {
+            
             this.game.world.setBounds(0, 0, island.layout[0].length * TILE_WIDTH,
                 island.layout.length * TILE_HEIGHT);
 
@@ -84,7 +85,7 @@ module MyGame {
                 for (let j = 0; j < line.length; j++) {
                     switch (line.charAt(j)) {
                         case " ":
-                            this.groups.grounds.push(new Ground(this, pof(j, i)));
+                            this.groups.grounds.push(island.makeGround(this, pof(j, i)));
                             break;
                         case "b":
                             this.groups.barriers.push(new Blackness(this, pof(j, i)));

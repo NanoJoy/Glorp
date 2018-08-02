@@ -69,6 +69,15 @@ module MyGame {
             playerStart.add(paddingOffset.x, paddingOffset.y);
         }
 
+        makeGround(main: Main, position: Phaser.Point) {
+            switch (this.type) {
+                case IslandType.INSIDE:
+                    return new TileFloor(main, position);
+                default:
+                    return new Grass(main, position);
+            }
+        }
+
         getEnemy(main: Main, pos: Phaser.Point): Enemy {
             var matching = this.enemies.filter(key => key.position.equals(pos));
             if (matching.length === 0) {

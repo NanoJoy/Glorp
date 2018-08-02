@@ -45,6 +45,7 @@ module MyGame {
         OptionsBackground = "options_background";
         PlayerBattle = "player_battle";
         Sign = "sign";
+        TileFloor = "tile_floor";
     }
 
     export var Assets = {
