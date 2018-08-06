@@ -4,16 +4,19 @@ module MyGame {
         switch (num) {
             case 0:
                 return new Island(0,
-                    IslandType.INSIDE,
+                    IslandType.OUTSIDE,
                     [
-                        "            ",
-                        "   n        ",
-                        "            "
+                        "wwwwwwwwwwwwww",
+                        "w            w",
+                        "w   n        w",
+                        "w            w",
+                        "w            w",
+                        "wwwwwwwwwwwwww"
                     ],
                     [],
                     [],
                     [
-                        { position: pof(3, 1), type: Assets.Sprites.OldMan.key, textKey: "oldman", script: "rr   ll   " }
+                        { position: pof(4, 2), type: Assets.Sprites.OldMan.key, textKey: "oldman", script: "rr   ll   " }
                     ],
                     pof(1, 1)
                 );

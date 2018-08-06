@@ -50,30 +50,40 @@ module MyGame {
             let padChar = this.getPadChar(type);
             let minWidth = SCREEN_WIDTH / TILE_WIDTH + 1;
             for (let i = 0; i < this.layout.length; i++) {
-                do {
+                for (let j = 0; j < minWidth; j++) {
                     this.layout[i] = padChar + this.layout[i] + padChar;
                     if (i === 0) {
                         paddingOffset.x += 1;
                     }
-                } while (this.layout[i].length < minWidth)
+                }
             }
             let minHeight = SCREEN_HEIGHT / TILE_HEIGHT + 1;
             let padRow = Utils.fillString(padChar, this.layout[0].length);
-            do {
+            for (let i = 0; i < minHeight; i++) {
                 this.layout.push(padRow);
                 this.layout.unshift(padRow);
                 paddingOffset.y += 1;
-            } while (this.layout.length < minHeight)
+            }
             enemies.forEach(function (e) { e.position.add(paddingOffset.x, paddingOffset.y); });
             npcs.forEach(function (n) { n.position.add(paddingOffset.x, paddingOffset.y); });
             playerStart.add(paddingOffset.x, paddingOffset.y);
+        }
+
+        getNeighborhood(position: Phaser.Point): Neighborhood {
+            return {
+                above: position.y === 0 ? null : this.layout[position.y - 1][position.x],
+                left: position.x === 0 ? null : this.layout[position.y][position.x - 1],
+                right: position.x === this.layout[0].length - 1 ? null : this.layout[position.y][position.x + 1],
+                below: position.y === this.layout.length - 1 ? null : this.layout[position.y + 1][position.x]
+            };
         }
 
         makeGround(main: Main, position: Phaser.Point) {
             switch (this.type) {
                 case IslandType.INSIDE:
                     return new TileFloor(main, position);
-                default:
+                case IslandType.WATER:
+                case IslandType.OUTSIDE:
                     return new Grass(main, position);
             }
         }

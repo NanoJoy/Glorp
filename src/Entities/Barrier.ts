@@ -29,4 +29,30 @@ module MyGame {
             this.sprite.play("wave");
         }
     }
+
+    export class StoneWall extends Barrier {
+        static frames = [
+            "wnnw",
+            "nnnw",
+            "wnnn",
+            "nnnn",
+            "nnwn",
+            "nwnn",
+            "nwwn",
+            "nnww",
+            "nwnw",
+            "wnwn",
+            "wwnn",
+        ];
+
+        constructor(main: Main, position: Phaser.Point, neighborhood: Neighborhood) {
+            super(main, position, Assets.Sprites.StoneWall.key);
+            let frameString = "";
+            frameString += neighborhood.above === "w" ? "w" : "n";
+            frameString += neighborhood.left === "w" ? "w" : "n";
+            frameString += neighborhood.right === "w" ? "w" : "n";
+            frameString += neighborhood.below === "w" ? "w" : "n";
+            this.sprite.frame = StoneWall.frames.indexOf(frameString);
+        }
+    }
 }

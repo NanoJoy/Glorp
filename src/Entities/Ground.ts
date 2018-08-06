@@ -16,7 +16,7 @@ module MyGame {
 
         constructor (main: Main, position: Phaser.Point) {
             super(main, position, Assets.Sprites.Grounds.key);
-            this.image.frame = Grass.frames[Math.floor(Math.random() * frames.length)];
+            this.image.frame = Grass.frames[Math.floor(Math.random() * Grass.frames.length)];
         }
     }
 

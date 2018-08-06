@@ -32,6 +32,7 @@ module MyGame {
         OldMan = new SpriteAsset("old_man");
         Player = new SpriteAsset("player");
         RhythmSymbols = new SpriteAsset("rhythm_symbols", 24, 24);
+        StoneWall = new SpriteAsset("stone_wall");
         Water = new SpriteAsset("water");
     }
 

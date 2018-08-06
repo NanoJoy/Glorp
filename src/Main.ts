@@ -1,4 +1,11 @@
 module MyGame {
+    export class Neighborhood {
+        above: string;
+        left: string;
+        right: string;
+        below: string;
+    }
+
     export class StateTransfer {
         enemy: Enemy;
         island: number;
@@ -76,7 +83,7 @@ module MyGame {
         }
 
         private setupLevel(island: Island) {
-            
+
             this.game.world.setBounds(0, 0, island.layout[0].length * TILE_WIDTH,
                 island.layout.length * TILE_HEIGHT);
 
@@ -91,16 +98,21 @@ module MyGame {
                             this.groups.barriers.push(new Blackness(this, pof(j, i)));
                             break;
                         case "e":
+                            this.groups.grounds.push(island.makeGround(this, pof(j, i)));
                             this.groups.enemies.push(island.getEnemy(this, pof(j, i)));
                             break;
                         case "h":
                             this.groups.houses.push(new House(this, pof(j, i)));
                             break;
                         case "n":
+                            this.groups.grounds.push(island.makeGround(this, pof(j, i)));
                             this.groups.npcs.push(island.getNPC(this, pof(j, i)));
                             break;
                         case "o":
                             this.groups.barriers.push(new Water(this, pof(j, i)));
+                            break;
+                        case "w":
+                            this.groups.barriers.push(new StoneWall(this, pof(j, i), island.getNeighborhood(pof(j, i))));
                     }
                 }
             }
