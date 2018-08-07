@@ -3,64 +3,31 @@ module MyGame {
     function loadIsland(num: number): Island {
         switch (num) {
             case 0:
-                return new Island(0,
-                    IslandType.OUTSIDE,
-                    [
-                        "wwwwwwwwwwwwww",
-                        "w            w",
-                        "w   n        w",
-                        "w            w",
-                        "w            w",
-                        "wwwwwwwwwwwwww"
-                    ],
-                    [],
-                    [],
-                    [
-                        { position: pof(4, 2), type: Assets.Sprites.OldMan.key, textKey: "oldman", script: "rr   ll   " }
-                    ],
-                    pof(1, 1)
-                );
-            case 1:
-                return new Island(0,
-                    IslandType.WATER,
-                    [
-                        "ooooooooooooooooooooooooo",
-                        "o                       o",
-                        "o                       o",
-                        "o                       o",
-                        "o          h            o",
-                        "o                       o",
-                        "o                       o",
-                        "o                       o",
-                        "o                       o",
-                        "o                       o",
-                        "o                       o",
-                        "o          n            o",
-                        "o                       o",
-                        "o                       o",
-                        "o                       o",
-                        "o                       o",
-                        "o      e                o",
-                        "o                       o",
-                        "o                   n   o",
-                        "o                       o",
-                        "o                       o",
-                        "o                       o",
-                        "o                       o",
-                        "ooooooooooooooooooooooooo"
-                    ],
-                    [],
-                    [
-                        { type: Assets.Sprites.JamBotWorld.key, position: pof(7, 16), script: "bbff" }
-                    ],
-                    [
-                        { type: Assets.Sprites.OldMan.key, position: pof(20, 18), textKey: "sample", script: "lluurrbb" },
-                        { type: Assets.Images.Sign, position: pof(11, 11), textKey: "mrDorpnersHouse", script: "" }
-                    ],
-                    pof(13, 13)
-                );
+                return new IslandBuilder(0, IslandType.INSIDE)
+                    .setLayout([
+                        "              ",
+                        "              ",
+                        "       w      ",
+                        "    wwwwwwww  ",
+                        "       w n w  ",
+                        "       w   w  ",
+                        "       w   w  ",
+                        "           w  ",
+                        "  wwwwwwwwww  ",
+                        "              ",
+                        "              "
+                    ])
+                    .setNPCs([
+                        { position: pof(9, 4), type: Assets.Sprites.OldMan.key, textKey: "oldman", script: "rr   ll   " }
+                    ])
+                    .setPlayerStart(pof(1, 1))
+                    .setOutsideBoundsPortals([
+                        { side: Direction.Up, start: 0, end: 14, link: 0 }
+                    ])
+                    .build();
+            default:
+                throw new Error(`No island defined for number ${num}.`);
         }
-        throw new Error(`No island defined for number ${num}.`);
     }
 
     export class WorldManager {

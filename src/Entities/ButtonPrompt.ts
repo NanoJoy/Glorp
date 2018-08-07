@@ -7,11 +7,13 @@ module MyGame {
         input: Phaser.Key;
         bubbleImage: Phaser.Image;
         buttonImage: Phaser.Image;
+        sprite: Phaser.Image;
         private displayed: boolean;
 
         constructor(parent: Entity, input: Phaser.Key, leftOffset = 0) {
             this.parent = parent;
             this.bubbleImage = parent.main.add.image(0, 0, Assets.Images.ButtonPrompt);
+            this.sprite = this.bubbleImage;
             var parentPosition = parent.position.multiply(TILE_WIDTH, TILE_HEIGHT);
 
             this.input = input;

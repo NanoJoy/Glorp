@@ -2,12 +2,12 @@ module MyGame {
     export abstract class Ground implements Entity {
         main: Main;
         position: Phaser.Point;
-        image: Phaser.Image;
+        sprite: Phaser.Image;
 
         constructor(main: Main, position: Phaser.Point, imageKey: string) {
             this.main = main;
             this.position = position;
-            this.image = main.add.image(position.x * TILE_WIDTH, position.y * TILE_HEIGHT, imageKey);
+            this.sprite = main.add.image(position.x * TILE_WIDTH, position.y * TILE_HEIGHT, imageKey);
         }
     }
 
@@ -16,7 +16,7 @@ module MyGame {
 
         constructor (main: Main, position: Phaser.Point) {
             super(main, position, Assets.Sprites.Grounds.key);
-            this.image.frame = Grass.frames[Math.floor(Math.random() * Grass.frames.length)];
+            this.sprite.frame = Grass.frames[Math.floor(Math.random() * Grass.frames.length)];
         }
     }
 

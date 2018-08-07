@@ -12,7 +12,7 @@ module MyGame {
 			// Enable physics
 			this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
-			this.stage.setBackgroundColor(0xeaeaea)
+			this.stage.setBackgroundColor(0x000000)
 
 			if (this.game.device.desktop) {
 				//  If you have any desktop specific settings, they can go in here

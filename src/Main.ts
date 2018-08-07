@@ -32,12 +32,13 @@ module MyGame {
         public textOnScreen: boolean;
         public island: Island;
         public groups: {
+            barriers: Barrier[]
             enemies: Enemy[],
             grounds: Ground[],
             houses: House[],
             npcs: NPC[],
-            signs: Sign[],
-            barriers: Barrier[]
+            portals: Portal[],
+            signs: Sign[]
         };
 
         create() {
@@ -49,6 +50,7 @@ module MyGame {
                 grounds: [],
                 houses: [],
                 npcs: [],
+                portals: [],
                 signs: [],
                 barriers: []
             }
@@ -72,7 +74,7 @@ module MyGame {
 
         update() {
             if (!this.textOnScreen) {
-                let groupsToUpdate = [this.groups.enemies, this.groups.houses, this.groups.npcs, this.groups.signs];
+                let groupsToUpdate = [this.groups.enemies, this.groups.houses, this.groups.npcs, this.groups.portals, this.groups.signs];
                 for (let i = 0; i < groupsToUpdate.length; i++) {
                     let grp = groupsToUpdate[i];
                     for (let j = 0; j < grp.length; j++) {
@@ -116,6 +118,9 @@ module MyGame {
                     }
                 }
             }
+
+            this.groups.portals = this.groups.portals.concat(island.getPortals(this));
+
             var playerPosition = StateTransfer.getInstance().position || island.playerStart;
             this.player = new Player(this, playerPosition);
 

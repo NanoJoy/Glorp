@@ -32,17 +32,10 @@ module MyGame {
 
     export class StoneWall extends Barrier {
         static frames = [
-            "wnnw",
-            "nnnw",
-            "wnnn",
-            "nnnn",
-            "nnwn",
-            "nwnn",
-            "nwwn",
-            "nnww",
-            "nwnw",
-            "wnwn",
-            "wwnn",
+            "wnnw", "nnnw", "wnnn", "nnnn",
+            "nnwn", "nwnn", "nwwn", "nnww",
+            "nwnw", "wnwn", "wwnn", "nnnw",
+            "wwnw", "wnww", "nwww", "wwww"
         ];
 
         constructor(main: Main, position: Phaser.Point, neighborhood: Neighborhood) {
