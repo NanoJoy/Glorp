@@ -42,7 +42,13 @@ module MyGame {
         };
 
         create() {
-            this.textOnScreen = false;
+            if (StateTransfer.getInstance().island !== -1) {
+                var tween = this.add.tween(this.world).to({alpha: 1}, 500, Phaser.Easing.Linear.None, true);
+                tween.onComplete.add(function () {
+                    this.physics.arcade.isPaused = false;
+                    this.textOnScreen = false;
+                }, this);
+            }
             this.inputs = new Inputs(this);
 
             this.groups = {
@@ -85,7 +91,6 @@ module MyGame {
         }
 
         private setupLevel(island: Island) {
-
             this.game.world.setBounds(0, 0, island.layout[0].length * TILE_WIDTH,
                 island.layout.length * TILE_HEIGHT);
 

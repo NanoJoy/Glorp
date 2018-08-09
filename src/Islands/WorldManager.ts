@@ -3,7 +3,7 @@ module MyGame {
     function loadIsland(num: number): Island {
         switch (num) {
             case 0:
-                return new IslandBuilder(0, IslandType.INSIDE)
+                return new IslandBuilder(0, IslandType.OUTSIDE)
                     .setLayout([
                         "              ",
                         "              ",
@@ -22,8 +22,23 @@ module MyGame {
                     ])
                     .setPlayerStart(pof(1, 1))
                     .setOutsideBoundsPortals([
-                        { side: Direction.Up, start: 0, end: 14, link: 0 }
+                        { side: Direction.Up, start: 0, end: 14, link: 1 }
                     ])
+                    .build();
+            case 1:
+                return new IslandBuilder(1, IslandType.INSIDE)
+                    .setLayout([
+                        "     ",
+                        "     ",
+                        "     ",
+                        "     ",
+                        "     ",
+                        "     ",
+                        "     ",
+                        "     ",
+                        "     "
+                    ])
+                    .setPlayerStart(pof(2, 8))
                     .build();
             default:
                 throw new Error(`No island defined for number ${num}.`);
@@ -49,6 +64,7 @@ module MyGame {
             while (this.islands.length < num - 1) {
                 this.islands.push(null);
             }
+            console.log(this.islands);
             return this.islands[num] || (this.islands[num] = loadIsland(num));
         }
 

@@ -135,6 +135,7 @@ module MyGame {
                     paddingOffset.y += 1;
                 }
                 enemies.forEach(function (e) { e.position.add(paddingOffset.x, paddingOffset.y); });
+                console.log("here");
                 npcs.forEach(function (n) { n.position.add(paddingOffset.x, paddingOffset.y); });
                 outsideBoundsPortals.forEach(function (o) {
                     if (o.side === Direction.Up || o.side === Direction.Down) {
@@ -176,7 +177,7 @@ module MyGame {
             var enemy = matching[0];
             switch (enemy.type) {
                 case Assets.Sprites.JamBotWorld.key:
-                    return new JamBot(main, enemy.position, this.makeMovementScript(enemy.position, enemy.script));
+                    return new JamBot(main, pof(enemy.position.x, enemy.position.y), this.makeMovementScript(enemy.position, enemy.script));
             }
             throw new Error(`${enemy.type} is not a valid enemy type.`);
         }
@@ -184,15 +185,15 @@ module MyGame {
         getNPC(main: Main, pos: Phaser.Point): NPC {
             var matching = this.npcs.filter(n => n.position.equals(pos));
             if (matching.length === 0) {
-                console.log(this.enemies);
+                console.log(this.npcs);
                 throw new Error(`Could not find NPC information at x: ${pos.x}, y: ${pos.y}.`);
             }
             var npc = matching[0];
             switch (npc.type) {
                 case Assets.Sprites.OldMan.key:
-                    return new OldMan(main, npc.position, npc.textKey, this.makeMovementScript(npc.position, npc.script));
+                    return new OldMan(main, pof(npc.position.x, npc.position.y), npc.textKey, this.makeMovementScript(npc.position, npc.script));
                 case Assets.Images.Sign:
-                    return new Sign(main, npc.position, npc.textKey);
+                    return new Sign(main, pof(npc.position.x, npc.position.y), npc.textKey);
             }
             throw new Error(`${npc.type} is not a valid NPC type.`);
         }

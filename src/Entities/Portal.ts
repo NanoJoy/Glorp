@@ -10,7 +10,6 @@ module MyGame {
             this.position = position;
             this.link = link;
             this.sprite = main.add.sprite(position.x * TILE_WIDTH, position.y * TILE_HEIGHT, key);
-            console.log(this.sprite.position);
 
             this.main.physics.arcade.enable(this.sprite);
             this.sprite.body.moves = false;
@@ -24,8 +23,13 @@ module MyGame {
         onCollide(portalSprite: Phaser.Sprite, playerSprite: Phaser.Sprite) {
             this.main.textOnScreen = true;
             this.main.physics.arcade.isPaused = true;
-            this.main.add.tween(this.main.game.world).to({alpha: 0}, 2000, Phaser.Easing.Linear.None, true);
+            var tween = this.main.add.tween(this.main.game.world).to({alpha: 0}, 500, Phaser.Easing.Linear.None, true);
+            tween.onComplete.add(this.changeIsland, this);
+        }
 
+        changeIsland() {
+            StateTransfer.getInstance().island = this.link;
+            this.main.state.restart();
         }
     }
 
