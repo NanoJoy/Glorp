@@ -32,6 +32,7 @@ module MyGame {
         start: number;
         end: number;
         link: number;
+        playerStart: Phaser.Point;
     }
 
     export class IslandBuilder {
@@ -102,6 +103,7 @@ module MyGame {
         npcs: MapNPC[];
         outsideBoundsPortals: MapOutsideBoundsPortal[];
         playerStart: Phaser.Point;
+        private paddingOffset: Phaser.Point;
 
         constructor(num: number, type: IslandType, layout: string[], additions: LayoutAddition[],
             enemies: MapEnemy[], npcs: MapNPC[], playerStart: Phaser.Point, outsideBoundsPortals: MapOutsideBoundsPortal[]) {
@@ -141,11 +143,12 @@ module MyGame {
                     if (o.side === Direction.Up || o.side === Direction.Down) {
                         o.start += paddingOffset.x;
                         o.end += paddingOffset.x;
+                    } else {
+                        o.start += paddingOffset.y;
+                        o.end += paddingOffset.y;
                     }
-                    o.start += paddingOffset.y;
-                    o.end += paddingOffset.y;
                 });
-                playerStart.add(paddingOffset.x, paddingOffset.y);
+                this.paddingOffset = paddingOffset;
             }
         }
 
@@ -177,7 +180,7 @@ module MyGame {
             var enemy = matching[0];
             switch (enemy.type) {
                 case Assets.Sprites.JamBotWorld.key:
-                    return new JamBot(main, pof(enemy.position.x, enemy.position.y), this.makeMovementScript(enemy.position, enemy.script));
+                    return new JamBot(main, pcop(enemy.position), this.makeMovementScript(enemy.position, enemy.script));
             }
             throw new Error(`${enemy.type} is not a valid enemy type.`);
         }
@@ -191,9 +194,9 @@ module MyGame {
             var npc = matching[0];
             switch (npc.type) {
                 case Assets.Sprites.OldMan.key:
-                    return new OldMan(main, pof(npc.position.x, npc.position.y), npc.textKey, this.makeMovementScript(npc.position, npc.script));
+                    return new OldMan(main, pcop(npc.position), npc.textKey, this.makeMovementScript(npc.position, npc.script));
                 case Assets.Images.Sign:
-                    return new Sign(main, pof(npc.position.x, npc.position.y), npc.textKey);
+                    return new Sign(main, pcop(npc.position), npc.textKey);
             }
             throw new Error(`${npc.type} is not a valid NPC type.`);
         }
@@ -209,20 +212,24 @@ module MyGame {
                 for (let i = portalGroup.start; i < portalGroup.end; i++) {
                     switch (portalGroup.side) {
                         case Direction.Up:
-                            portals.push(new OutsideBoundsPortal(main, pof(i, -2), portalGroup.link));
+                            portals.push(new OutsideBoundsPortal(main, pof(i, -2), portalGroup.link, pcop(portalGroup.playerStart)));
                             break;
                         case Direction.Left:
-                            portals.push(new OutsideBoundsPortal(main, pof(-2, i), portalGroup.link));
+                            portals.push(new OutsideBoundsPortal(main, pof(-2, i), portalGroup.link, pcop(portalGroup.playerStart)));
                             break;
                         case Direction.Right:
-                            portals.push(new OutsideBoundsPortal(main, pof(this.layout[0].length + 2, i), portalGroup.link));
+                            portals.push(new OutsideBoundsPortal(main, pof(this.layout[0].length + 2, i), portalGroup.link, pcop(portalGroup.playerStart)));
                             break;
                         case Direction.Down:
-                            portals.push(new OutsideBoundsPortal(main, pof(i, this.layout.length + 2), portalGroup.link));
+                            portals.push(new OutsideBoundsPortal(main, pof(i, this.layout.length + 2), portalGroup.link, pcop(portalGroup.playerStart)));
                     }
                 }
             }
             return portals;
+        }
+
+        getAdjustedPosition(point: Phaser.Point): Phaser.Point {
+            return point.add(this.paddingOffset.x, this.paddingOffset.y);
         }
 
         private makeMovementScript(position: Phaser.Point, script: string): MovementScript {

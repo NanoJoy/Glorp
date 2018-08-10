@@ -3,6 +3,13 @@ module MyGame {
         return new Phaser.Point(x, y);
     }
 
+    export function pcop(point: Phaser.Point): Phaser.Point {
+        if (!point) {
+            return point;
+        }
+        return pof(point.x, point.y);
+    }
+
     export class Utils {
         static fillString(s: string, len: number) {
             if (!s || s.length === 0) {

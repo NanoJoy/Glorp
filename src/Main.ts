@@ -11,6 +11,7 @@ module MyGame {
         island: number;
         position: Phaser.Point;
         health: number;
+        fromLink: boolean;
         private static instance: StateTransfer;
 
         private constructor() {
@@ -18,6 +19,7 @@ module MyGame {
             this.island = -1;
             this.position = null;
             this.health = -1;
+            this.fromLink = false;
         }
 
         static getInstance() {
@@ -126,7 +128,13 @@ module MyGame {
 
             this.groups.portals = this.groups.portals.concat(island.getPortals(this));
 
-            var playerPosition = StateTransfer.getInstance().position || island.playerStart;
+            var playerPosition = null as Phaser.Point;
+            var stateTransfer = StateTransfer.getInstance();
+            if (stateTransfer.position) {
+                playerPosition = stateTransfer.fromLink ? island.getAdjustedPosition(stateTransfer.position.clone()) : stateTransfer.position.clone();
+            } else {
+                playerPosition = island.playerStart.clone();
+            }
             this.player = new Player(this, playerPosition);
 
             this.setDepths();

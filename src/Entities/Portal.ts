@@ -4,10 +4,12 @@ module MyGame {
         position: Phaser.Point;
         sprite: Phaser.Sprite;
         link: number;
+        playerStart: Phaser.Point;
 
-        constructor(main: Main, position: Phaser.Point, key: string, link: number) {
+        constructor(main: Main, position: Phaser.Point, key: string, link: number, playerStart?: Phaser.Point) {
             this.main = main;
-            this.position = position;
+            this.position = pcop(position);
+            this.playerStart = pcop(playerStart);
             this.link = link;
             this.sprite = main.add.sprite(position.x * TILE_WIDTH, position.y * TILE_HEIGHT, key);
 
@@ -28,14 +30,17 @@ module MyGame {
         }
 
         changeIsland() {
-            StateTransfer.getInstance().island = this.link;
+            var stateTransfer = StateTransfer.getInstance();
+            stateTransfer.island = this.link;
+            stateTransfer.position = this.playerStart;
+            stateTransfer.fromLink = true;
             this.main.state.restart();
         }
     }
 
     export class OutsideBoundsPortal extends Portal {
-        constructor(main: Main, position: Phaser.Point, link: number) {
-            super(main, position, Assets.Sprites.Blackness.key, link);
+        constructor(main: Main, position: Phaser.Point, link: number, playerStart?: Phaser.Point) {
+            super(main, position, Assets.Sprites.Blackness.key, link, playerStart);
         }
     }
 }
