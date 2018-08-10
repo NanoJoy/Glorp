@@ -57,4 +57,5 @@ module MyGame {
 
     export var VISUAL_ASSETS_PATH = "assets/visual";
     export var PNG = "png";
+    export var SAVE_FILE_NAME = "GlorpGlorpGlorp";
 }			

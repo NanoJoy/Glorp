@@ -45,6 +45,11 @@ module MyGame {
         }
     }
 
+    export class Layout {
+        num: number;
+        layout: string[];
+    }
+
     export class WorldManager {
         private islands: Island[];
         private static instance: WorldManager;
@@ -75,7 +80,17 @@ module MyGame {
             }
             var oldRow = this.islands[islandNum].layout[position.y]
             this.islands[islandNum].layout[position.y] = `${oldRow.substring(0, position.x)}${symbol}${oldRow.substring(position.x + 1)}`;
-            console.log(this.islands[islandNum].layout);
+        }
+
+        exportLayouts() {
+            let layouts = [] as Layout[];
+            for (let i = 0; i < this.islands.length; i++) {
+                if (this.islands[i]) {
+                    let copy = JSON.parse(JSON.stringify(this.islands[i].layout));
+                    layouts.push({ num: i, layout: copy })
+                }
+            }
+            return layouts;
         }
     }
 }
