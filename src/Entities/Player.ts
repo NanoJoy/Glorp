@@ -29,7 +29,7 @@ module MyGame {
             var player = this;
             var game = this.game;
             this.hasCollided = false;
-            this.state.groups.barriers.forEach(function (barrier) {
+            this.state.groups.barriers.filter(b => b.hasBody).forEach(function (barrier) {
                 game.physics.arcade.collide(player, barrier.sprite, barrier.onCollision, null, barrier);
             });
 

@@ -116,5 +116,15 @@ module MyGame {
             pages.shift();
             return pages;
         }
+
+        static surroundedByChar(layout: string[], x: number, y: number, char: string) {
+            if (char.length !== 1) {
+                throw new Error("char must be a single character.");
+            }
+            return (y === 0 || layout[y - 1][x] === char) &&
+                (y === layout.length - 1 || layout[y + 1][x] === char) &&
+                (x === 0 || layout[y][x - 1] === char) &&
+                (x === layout[y].length || layout[y][x + 1] === char);
+        }
     }
 }

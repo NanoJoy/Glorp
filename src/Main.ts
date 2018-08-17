@@ -33,6 +33,7 @@ module MyGame {
         public inputs: Inputs;
         public textOnScreen: boolean;
         public island: Island;
+        pauseMenu: IPauseMenu;
         public groups: {
             barriers: Barrier[]
             enemies: Enemy[],
@@ -78,6 +79,8 @@ module MyGame {
             this.player.onStageBuilt();
 
             this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
+
+            this.inputs.spacebar.onDown.add(this.spacebarDown, this);
         }
 
         update() {
@@ -105,6 +108,10 @@ module MyGame {
                             break;
                         case "b":
                             this.groups.barriers.push(new Blackness(this, pof(j, i)));
+                            break;
+                        case "d":
+                            this.groups.portals.push(island.makeDoorway(this, pof(j, i)));
+                            this.groups.grounds.push(island.makeGround(this, pof(j, i)));
                             break;
                         case "e":
                             this.groups.grounds.push(island.makeGround(this, pof(j, i)));
@@ -142,11 +149,27 @@ module MyGame {
 
         setDepths() {
             this.groups.grounds.forEach(function (gr) { this.game.world.bringToTop(gr); }, this);
+            this.groups.portals.forEach(function (p) { this.game.world.bringToTop(p.sprite); }, this);
             this.groups.barriers.forEach(function (b) { this.game.world.bringToTop(b); }, this);
             this.groups.houses.forEach(function (ho) { this.game.world.bringToTop(ho.sprite); }, this);
             this.groups.npcs.forEach(function (n) { this.game.world.bringToTop(n.sprite); }, this);
             this.groups.enemies.forEach(function (en) { this.game.world.bringToTop(en.worldSprite); }, this);
             this.game.world.bringToTop(this.player);
+        }
+
+        paused() {
+            
+        }
+
+        spacebarDown() {
+            this.game.paused = !this.game.paused;
+            if (this.game.paused) {
+                this.pauseMenu = new PauseMenu(this);
+                this.inputs.down.onDown.add(this.pauseMenu.changeSelection, this.pauseMenu);
+                this.inputs.up.onDown.add(this.pauseMenu.changeSelection, this.pauseMenu);
+                return;
+            }
+            this.pauseMenu.exit();
         }
     }
 }

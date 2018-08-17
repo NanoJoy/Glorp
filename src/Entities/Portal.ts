@@ -25,7 +25,7 @@ module MyGame {
         onCollide(portalSprite: Phaser.Sprite, playerSprite: Phaser.Sprite) {
             this.main.textOnScreen = true;
             this.main.physics.arcade.isPaused = true;
-            var tween = this.main.add.tween(this.main.game.world).to({alpha: 0}, 500, Phaser.Easing.Linear.None, true);
+            var tween = this.main.add.tween(this.main.game.world).to({ alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
             tween.onComplete.add(this.changeIsland, this);
         }
 
@@ -41,6 +41,22 @@ module MyGame {
     export class OutsideBoundsPortal extends Portal {
         constructor(main: Main, position: Phaser.Point, link: number, playerStart?: Phaser.Point) {
             super(main, position, Assets.Sprites.Blackness.key, link, playerStart);
+        }
+    }
+
+    export class Doorway extends Portal {
+        constructor(main: Main, position: Phaser.Point, link: number, direction: Direction, playerStart?: Phaser.Point) {
+            super(main, position, Assets.Sprites.DoorWay.key, link, playerStart);
+
+            let asset = Assets.Sprites.DoorWay;
+
+            if (direction === Direction.Down) {
+                this.sprite.y += (TILE_HEIGHT - (Assets.Sprites.DoorWay.height / 2));
+            } else {
+                this.sprite.y -= (TILE_HEIGHT - (Assets.Sprites.DoorWay.height / 2));
+            }
+
+            this.sprite.body.setSize(asset.width, asset.height / 2, 0, asset.height / 2);
         }
     }
 }

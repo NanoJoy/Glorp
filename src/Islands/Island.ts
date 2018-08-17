@@ -35,6 +35,12 @@ module MyGame {
         playerStart: Phaser.Point;
     }
 
+    class MapLink {
+        pos: Phaser.Point;
+        link: number;
+        playerStart: Phaser.Point;
+    }
+
     export class IslandBuilder {
         private num: number;
         private type: IslandType;
@@ -45,6 +51,7 @@ module MyGame {
         private npcs: MapNPC[];
         private outsideBoundsPortals: MapOutsideBoundsPortal[];
         private playerStart: Phaser.Point;
+        private links: MapLink[];
 
         constructor(num: number, type: IslandType) {
             this.num = num;
@@ -55,6 +62,7 @@ module MyGame {
             this.npcs = [];
             this.outsideBoundsPortals = [];
             this.playerStart = pof(0, 0);
+            this.links = [];
         }
 
         setLayout(layout: string[]): IslandBuilder {
@@ -87,9 +95,14 @@ module MyGame {
             return this;
         }
 
+        setLinks(links: MapLink[]): IslandBuilder {
+            this.links = links;
+            return this;
+        }
+
         build(): Island {
             return new Island(this.num, this.type, this.layout, this.additions, this.enemies, this.npcs,
-                this.playerStart, this.outsideBoundsPortals);
+                this.playerStart, this.outsideBoundsPortals, this.links);
         }
     }
 
@@ -104,9 +117,11 @@ module MyGame {
         outsideBoundsPortals: MapOutsideBoundsPortal[];
         playerStart: Phaser.Point;
         private paddingOffset: Phaser.Point;
+        private links: MapLink[];
 
         constructor(num: number, type: IslandType, layout: string[], additions: LayoutAddition[],
-            enemies: MapEnemy[], npcs: MapNPC[], playerStart: Phaser.Point, outsideBoundsPortals: MapOutsideBoundsPortal[]) {
+            enemies: MapEnemy[], npcs: MapNPC[], playerStart: Phaser.Point, outsideBoundsPortals: MapOutsideBoundsPortal[],
+            links: MapLink[]) {
             this.num = num;
             this.type = type;
             this.layout = layout;
@@ -115,6 +130,7 @@ module MyGame {
             this.npcs = npcs;
             this.playerStart = playerStart;
             this.outsideBoundsPortals = outsideBoundsPortals;
+            this.links = links;
 
             if (this.type !== IslandType.OUTSIDE) {
                 let paddingOffset = pof(0, 0);
@@ -137,8 +153,8 @@ module MyGame {
                     paddingOffset.y += 1;
                 }
                 enemies.forEach(function (e) { e.position.add(paddingOffset.x, paddingOffset.y); });
-                console.log("here");
                 npcs.forEach(function (n) { n.position.add(paddingOffset.x, paddingOffset.y); });
+                links.forEach(function (l) { l.pos.add(paddingOffset.x, paddingOffset.y); });
                 outsideBoundsPortals.forEach(function (o) {
                     if (o.side === Direction.Up || o.side === Direction.Down) {
                         o.start += paddingOffset.x;
@@ -169,6 +185,20 @@ module MyGame {
                 case IslandType.OUTSIDE:
                     return new Grass(main, position);
             }
+        }
+
+        makeDoorway(main: Main, pos: Phaser.Point): Doorway {
+            if (this.type !== IslandType.INSIDE) {
+                throw new Error("Doorways can only exist inside.");
+            }
+            let matching = this.links.filter(key => key.pos.equals(pos));
+            if (matching.length === 0) {
+                console.log(this.links);
+                throw new Error(`Could not find link information at x: ${pos.x}, y: ${pos.y}.`);
+            }
+
+            let direction = this.layout[pos.y + 1][pos.x] === "b" ? Direction.Down : Direction.Up;
+            return new Doorway(main, pos.clone(), matching[0].link, direction, matching[0].playerStart);
         }
 
         getEnemy(main: Main, pos: Phaser.Point): Enemy {
@@ -212,16 +242,16 @@ module MyGame {
                 for (let i = portalGroup.start; i < portalGroup.end; i++) {
                     switch (portalGroup.side) {
                         case Direction.Up:
-                            portals.push(new OutsideBoundsPortal(main, pof(i, -2), portalGroup.link, pcop(portalGroup.playerStart)));
+                            portals.push(new OutsideBoundsPortal(main, pof(i, -1), portalGroup.link, pcop(portalGroup.playerStart)));
                             break;
                         case Direction.Left:
-                            portals.push(new OutsideBoundsPortal(main, pof(-2, i), portalGroup.link, pcop(portalGroup.playerStart)));
+                            portals.push(new OutsideBoundsPortal(main, pof(-1, i), portalGroup.link, pcop(portalGroup.playerStart)));
                             break;
                         case Direction.Right:
-                            portals.push(new OutsideBoundsPortal(main, pof(this.layout[0].length + 2, i), portalGroup.link, pcop(portalGroup.playerStart)));
+                            portals.push(new OutsideBoundsPortal(main, pof(this.layout[0].length + 1, i), portalGroup.link, pcop(portalGroup.playerStart)));
                             break;
                         case Direction.Down:
-                            portals.push(new OutsideBoundsPortal(main, pof(i, this.layout.length + 2), portalGroup.link, pcop(portalGroup.playerStart)));
+                            portals.push(new OutsideBoundsPortal(main, pof(i, this.layout.length + 1), portalGroup.link, pcop(portalGroup.playerStart)));
                     }
                 }
             }

@@ -36,9 +36,10 @@ module MyGame {
                         "     ",
                         "     ",
                         "     ",
-                        "     "
+                        "  d  "
                     ])
-                    .setPlayerStart(pof(2, 8))
+                    .setLinks([{ pos: pof(2, 8), link: 0, playerStart: undefined }])
+                    .setPlayerStart(pof(2, 5))
                     .build();
             default:
                 throw new Error(`No island defined for number ${num}.`);
