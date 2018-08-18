@@ -45,7 +45,15 @@ module MyGame {
         };
 
         create() {
-            if (StateTransfer.getInstance().island !== -1) {
+            let gameSaver = new GameSaver();
+            let worldManager = WorldManager.getInstance();
+            let stateTransfer = StateTransfer.getInstance();
+            let saveState = gameSaver.loadGame();
+            if (saveState) {
+                stateTransfer.island = saveState.islandNum;
+                stateTransfer.position = pof(saveState.playerPosition.x, saveState.playerPosition.y);
+                worldManager.importLayouts(saveState.layouts);
+            } else if (stateTransfer.island !== -1) {
                 var tween = this.add.tween(this.world).to({alpha: 1}, 500, Phaser.Easing.Linear.None, true);
                 tween.onComplete.add(function () {
                     this.physics.arcade.isPaused = false;
@@ -64,8 +72,6 @@ module MyGame {
                 barriers: []
             }
 
-            var worldManager = WorldManager.getInstance();
-            var stateTransfer = StateTransfer.getInstance();
             this.island = worldManager.getIsland(stateTransfer.island === -1 ? 0 : stateTransfer.island);
             this.setupLevel(this.island);
             this.groups.enemies.forEach(function (value: Enemy) {
@@ -167,9 +173,18 @@ module MyGame {
                 this.pauseMenu = new PauseMenu(this);
                 this.inputs.down.onDown.add(this.pauseMenu.changeSelection, this.pauseMenu);
                 this.inputs.up.onDown.add(this.pauseMenu.changeSelection, this.pauseMenu);
+                this.inputs.O.onDown.add(this.pauseMenu.select, this.pauseMenu);
                 return;
             }
             this.pauseMenu.exit();
+            this.inputs.down.onDown.remove(this.pauseMenu.changeSelection, this.pauseMenu);
+            this.inputs.up.onDown.remove(this.pauseMenu.changeSelection, this.pauseMenu);
+            this.inputs.O.onDown.remove(this.pauseMenu.select, this.pauseMenu);
+        }
+
+        saveGame() {
+            var gameSaver = new GameSaver();
+            gameSaver.saveGame(this, WorldManager.getInstance());
         }
     }
 }

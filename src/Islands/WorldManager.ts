@@ -93,5 +93,11 @@ module MyGame {
             }
             return layouts;
         }
+
+        importLayouts(layouts: Layout[]) {
+            layouts.forEach(l => {
+                this.getIsland(l.num).layout = l.layout;
+            });
+        }
     }
 }
