@@ -28,17 +28,18 @@ module MyGame {
             case 1:
                 return new IslandBuilder(1, IslandType.INSIDE)
                     .setLayout([
-                        "     ",
-                        "     ",
-                        "     ",
-                        "     ",
-                        "     ",
-                        "     ",
-                        "     ",
-                        "     ",
-                        "  d  "
+                        "      d       ",
+                        "              ",
+                        "              ",
+                        "              ",
+                        "              ",
+                        "              ",
+                        "      d       ",
                     ])
-                    .setLinks([{ pos: pof(2, 8), link: 0, playerStart: undefined }])
+                    .setLinks([
+                        { pos: pof(6, 0), link: 2, playerStart: undefined },
+                        { pos: pof(6, 6), link: 0, playerStart: undefined }
+                    ])
                     .setPlayerStart(pof(2, 5))
                     .build();
             default:
@@ -96,8 +97,10 @@ module MyGame {
 
         importLayouts(layouts: Layout[]) {
             layouts.forEach(l => {
+                console.log(l);
                 this.getIsland(l.num).layout = l.layout;
             });
+            console.log(this.islands);
         }
     }
 }

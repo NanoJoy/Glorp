@@ -49,6 +49,7 @@ module MyGame {
         PlayerBattle = "player_battle";
         Sign = "sign";
         TileFloor = "tile_floor";
+        Wall = "wall";
     }
 
     export var Assets = {

@@ -15,10 +15,15 @@ module MyGame {
     }
 
     export class GameSaver implements IGameSaver {
+        private static instance: IGameSaver;
         private alreadyLoaded: boolean;
 
-        constructor() {
+        private constructor() {
             this.alreadyLoaded = false;
+        }
+
+        static getInstance(): IGameSaver {
+            return this.instance || (this.instance = new GameSaver());
         }
 
         saveGame(main: Main, worldManager: WorldManager) {

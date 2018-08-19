@@ -45,10 +45,11 @@ module MyGame {
         };
 
         create() {
-            let gameSaver = new GameSaver();
+            let gameSaver = GameSaver.getInstance();
             let worldManager = WorldManager.getInstance();
             let stateTransfer = StateTransfer.getInstance();
             let saveState = gameSaver.loadGame();
+            console.log(saveState);
             if (saveState) {
                 stateTransfer.island = saveState.islandNum;
                 stateTransfer.position = pof(saveState.playerPosition.x, saveState.playerPosition.y);
@@ -117,7 +118,8 @@ module MyGame {
                             break;
                         case "d":
                             this.groups.portals.push(island.makeDoorway(this, pof(j, i)));
-                            this.groups.grounds.push(island.makeGround(this, pof(j, i)));
+                            console.log("making door");
+                            this.groups.grounds.push(island.makeGround(this, pof(j, i), true));
                             break;
                         case "e":
                             this.groups.grounds.push(island.makeGround(this, pof(j, i)));
@@ -183,7 +185,7 @@ module MyGame {
         }
 
         saveGame() {
-            var gameSaver = new GameSaver();
+            var gameSaver = GameSaver.getInstance();
             gameSaver.saveGame(this, WorldManager.getInstance());
         }
     }

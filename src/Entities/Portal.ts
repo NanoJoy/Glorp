@@ -53,10 +53,8 @@ module MyGame {
             if (direction === Direction.Down) {
                 this.sprite.y += (TILE_HEIGHT - (Assets.Sprites.DoorWay.height / 2));
             } else {
-                this.sprite.y -= (TILE_HEIGHT - (Assets.Sprites.DoorWay.height / 2));
+                this.sprite.y -= Assets.Sprites.DoorWay.height / 2;
             }
-
-            this.sprite.body.setSize(asset.width, asset.height / 2, 0, asset.height / 2);
         }
     }
 }
