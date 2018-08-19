@@ -25,7 +25,6 @@ module MyGame {
 
         constructor(main: Main, position: Phaser.Point, fromDoor = false) {
             super(main, position, Assets.Images.TileFloor);
-            console.log(fromDoor);
             if (!fromDoor && position.y > 0 && main.island.layout[position.y - 1][position.x] === "b") {
                 this.wall = main.add.image(position.x * TILE_WIDTH, (position.y - 1) * TILE_HEIGHT, Assets.Images.Wall);
             }

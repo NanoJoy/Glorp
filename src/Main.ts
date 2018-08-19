@@ -113,12 +113,15 @@ module MyGame {
                         case " ":
                             this.groups.grounds.push(island.makeGround(this, pof(j, i)));
                             break;
+                        case "*":
+                            this.groups.barriers.push(new Bush(this, pof(j, i)));
+                            this.groups.grounds.push(island.makeGround(this, pof(j, i)));
+                            break;
                         case "b":
                             this.groups.barriers.push(new Blackness(this, pof(j, i)));
                             break;
                         case "d":
                             this.groups.portals.push(island.makeDoorway(this, pof(j, i)));
-                            console.log("making door");
                             this.groups.grounds.push(island.makeGround(this, pof(j, i), true));
                             break;
                         case "e":
@@ -134,6 +137,10 @@ module MyGame {
                             break;
                         case "o":
                             this.groups.barriers.push(new Water(this, pof(j, i)));
+                            break;
+                        case "t":
+                            this.groups.barriers.push(new Tree(this, pof(j, i)));
+                            this.groups.grounds.push(island.makeGround(this, pof(j, i)));
                             break;
                         case "w":
                             this.groups.barriers.push(new StoneWall(this, pof(j, i), island.getNeighborhood(pof(j, i))));
@@ -158,7 +165,7 @@ module MyGame {
         setDepths() {
             this.groups.grounds.forEach(function (gr) { this.game.world.bringToTop(gr); }, this);
             this.groups.portals.forEach(function (p) { this.game.world.bringToTop(p.sprite); }, this);
-            this.groups.barriers.forEach(function (b) { this.game.world.bringToTop(b); }, this);
+            this.groups.barriers.forEach(function (b) { this.game.world.bringToTop(b.sprite); }, this);
             this.groups.houses.forEach(function (ho) { this.game.world.bringToTop(ho.sprite); }, this);
             this.groups.npcs.forEach(function (n) { this.game.world.bringToTop(n.sprite); }, this);
             this.groups.enemies.forEach(function (en) { this.game.world.bringToTop(en.worldSprite); }, this);

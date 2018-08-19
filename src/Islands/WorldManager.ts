@@ -42,6 +42,20 @@ module MyGame {
                     ])
                     .setPlayerStart(pof(2, 5))
                     .build();
+            case 2:
+                return new IslandBuilder(2, IslandType.OUTSIDE)
+                    .setLayout([
+                        "wwwwwwww",
+                        "w      w",
+                        "w  ****w",
+                        "w      w",
+                        "w****  w",
+                        "w      w",
+                        "w      w",
+                        "wwwwwwww"
+                    ])
+                    .setPlayerStart(pof(3, 6))
+                    .build();
             default:
                 throw new Error(`No island defined for number ${num}.`);
         }

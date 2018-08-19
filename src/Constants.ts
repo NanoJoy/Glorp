@@ -27,6 +27,7 @@ module MyGame {
         [key: string]: SpriteAsset;
         Arrow = new SpriteAsset("arrow", 12, 12);
         Blackness = new SpriteAsset("blackness");
+        Bush = new SpriteAsset("bush");
         DoorWay = new SpriteAsset("doorway", 26, 8);
         Grounds = new SpriteAsset("grounds");
         JamBotWorld = new SpriteAsset("jambot_world");
@@ -34,6 +35,7 @@ module MyGame {
         Player = new SpriteAsset("player");
         RhythmSymbols = new SpriteAsset("rhythm_symbols", 24, 24);
         StoneWall = new SpriteAsset("stone_wall");
+        Tree = new SpriteAsset("tree", 56, 64);
         Water = new SpriteAsset("water");
     }
 

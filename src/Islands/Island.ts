@@ -177,8 +177,7 @@ module MyGame {
             };
         }
 
-        makeGround(main: Main, position: Phaser.Point, fromDoor = false) {
-            console.log(fromDoor);
+        makeGround(main: Main, position: Phaser.Point, fromDoor = false): Ground {
             switch (this.type) {
                 case IslandType.INSIDE:
                     return new TileFloor(main, position, fromDoor);

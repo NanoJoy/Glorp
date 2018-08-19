@@ -54,4 +54,30 @@ module MyGame {
             this.sprite.frame = StoneWall.frames.indexOf(frameString);
         }
     }
+
+    export class Tree extends Barrier {
+        constructor(main: Main, position: Phaser.Point) {
+            super(main, position, Assets.Sprites.Tree.key, "t");
+        }
+    }
+
+    export class Bush extends Barrier {
+        constructor(main: Main, position: Phaser.Point) {
+            super(main, position, Assets.Sprites.Bush.key, "*");
+            let row = main.island.layout[position.y];
+            let connectLeft = position.x === 0 || row[position.x - 1] === "*";
+            let connectRight = position.x === row.length - 1 || row[position.x + 1] === "*";
+            if (connectLeft) {
+                if (connectRight) {
+                    this.sprite.frame = 2;
+                } else {
+                    this.sprite.frame = 3;
+                }
+            } else if (connectRight) {
+                this.sprite.frame = 1;
+            } else {
+                this.sprite.frame = 0;
+            }
+        }
+    }
 }
