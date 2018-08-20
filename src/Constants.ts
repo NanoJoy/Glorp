@@ -28,7 +28,7 @@ module MyGame {
         Arrow = new SpriteAsset("arrow", 12, 12);
         Blackness = new SpriteAsset("blackness");
         Bush = new SpriteAsset("bush");
-        DoorWay = new SpriteAsset("doorway", 26, 8);
+        DoorWay = new SpriteAsset("doorway", 36, 8);
         Grounds = new SpriteAsset("grounds");
         JamBotWorld = new SpriteAsset("jambot_world");
         OldMan = new SpriteAsset("old_man");
@@ -43,6 +43,7 @@ module MyGame {
         [key: string]: string;
         BottomTextBackground = "bottom_text_background";
         ButtonPrompt = "button_prompt";
+        Door = "door";
         HealthBarContainer = "healthbar_container";
         House = "house";
         JamBotBattle = "jambot_battle";

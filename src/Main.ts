@@ -152,10 +152,11 @@ module MyGame {
 
             var playerPosition = null as Phaser.Point;
             var stateTransfer = StateTransfer.getInstance();
+            console.log(stateTransfer);
             if (stateTransfer.position) {
                 playerPosition = stateTransfer.fromLink ? island.getAdjustedPosition(stateTransfer.position.clone()) : stateTransfer.position.clone();
             } else {
-                playerPosition = island.playerStart.clone();
+                playerPosition = island.getAdjustedPosition(island.playerStart.clone());
             }
             this.player = new Player(this, playerPosition);
 
@@ -165,7 +166,11 @@ module MyGame {
         setDepths() {
             this.groups.grounds.forEach(function (gr) { this.game.world.bringToTop(gr); }, this);
             this.groups.portals.forEach(function (p) { this.game.world.bringToTop(p.sprite); }, this);
-            this.groups.barriers.forEach(function (b) { this.game.world.bringToTop(b.sprite); }, this);
+            this.groups.barriers.forEach(b => {
+                if (b.sprite.key !== "blackness") {
+                    this.game.world.bringToTop(b.sprite); 
+                }
+            }, this);
             this.groups.houses.forEach(function (ho) { this.game.world.bringToTop(ho.sprite); }, this);
             this.groups.npcs.forEach(function (n) { this.game.world.bringToTop(n.sprite); }, this);
             this.groups.enemies.forEach(function (en) { this.game.world.bringToTop(en.worldSprite); }, this);

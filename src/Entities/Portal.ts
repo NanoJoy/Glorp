@@ -46,14 +46,13 @@ module MyGame {
 
     export class Doorway extends Portal {
         constructor(main: Main, position: Phaser.Point, link: number, direction: Direction, playerStart?: Phaser.Point) {
-            super(main, position, Assets.Sprites.DoorWay.key, link, playerStart);
-
-            let asset = Assets.Sprites.DoorWay;
+            super(main, position, direction === Direction.Down ? Assets.Sprites.DoorWay.key : Assets.Images.Door, link, playerStart);
 
             if (direction === Direction.Down) {
                 this.sprite.y += (TILE_HEIGHT - (Assets.Sprites.DoorWay.height / 2));
+                this.sprite.x -= (Assets.Sprites.DoorWay.width - TILE_WIDTH) / 2;
             } else {
-                this.sprite.y -= Assets.Sprites.DoorWay.height / 2;
+                this.sprite.y -= TILE_HEIGHT;
             }
         }
     }

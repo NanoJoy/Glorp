@@ -52,7 +52,10 @@ module MyGame {
                         "w****  w",
                         "w      w",
                         "w      w",
-                        "wwwwwwww"
+                        "w  wwwww"
+                    ])
+                    .setOutsideBoundsPortals([
+                        { side: Direction.Down, start: 1, end: 3, link: 1, playerStart: undefined }
                     ])
                     .setPlayerStart(pof(3, 6))
                     .build();

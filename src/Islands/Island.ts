@@ -248,17 +248,21 @@ module MyGame {
                             portals.push(new OutsideBoundsPortal(main, pof(-1, i), portalGroup.link, pcop(portalGroup.playerStart)));
                             break;
                         case Direction.Right:
-                            portals.push(new OutsideBoundsPortal(main, pof(this.layout[0].length + 1, i), portalGroup.link, pcop(portalGroup.playerStart)));
+                            portals.push(new OutsideBoundsPortal(main, pof(this.layout[0].length, i), portalGroup.link, pcop(portalGroup.playerStart)));
                             break;
                         case Direction.Down:
-                            portals.push(new OutsideBoundsPortal(main, pof(i, this.layout.length + 1), portalGroup.link, pcop(portalGroup.playerStart)));
+                            portals.push(new OutsideBoundsPortal(main, pof(i, this.layout.length), portalGroup.link, pcop(portalGroup.playerStart)));
                     }
                 }
             }
+            console.log(portals);
             return portals;
         }
 
         getAdjustedPosition(point: Phaser.Point): Phaser.Point {
+            if (!this.paddingOffset) {
+                return point.clone();
+            }
             return point.add(this.paddingOffset.x, this.paddingOffset.y);
         }
 
