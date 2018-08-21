@@ -19,7 +19,7 @@ module MyGame {
             main.physics.arcade.enable(this.sprite);
             Utils.addPersonAnimations(this.sprite, animationSpeed);
 
-            this.textManager = Dialogs[dialogKey];
+            this.textManager = getDialog(dialogKey);
             this.textDisplay = new BottomTextDisplay(main, this);
             this.buttonPrompt = new ButtonPrompt(this, main.inputs.O, -4);
 

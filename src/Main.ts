@@ -55,7 +55,7 @@ module MyGame {
                 stateTransfer.position = pof(saveState.playerPosition.x, saveState.playerPosition.y);
                 worldManager.importLayouts(saveState.layouts);
             } else if (stateTransfer.island !== -1) {
-                var tween = this.add.tween(this.world).to({alpha: 1}, 500, Phaser.Easing.Linear.None, true);
+                var tween = this.add.tween(this.world).to({ alpha: 1 }, 500, Phaser.Easing.Linear.None, true);
                 tween.onComplete.add(function () {
                     this.physics.arcade.isPaused = false;
                     this.textOnScreen = false;
@@ -168,7 +168,7 @@ module MyGame {
             this.groups.portals.forEach(function (p) { this.game.world.bringToTop(p.sprite); }, this);
             this.groups.barriers.forEach(b => {
                 if (b.sprite.key !== "blackness") {
-                    this.game.world.bringToTop(b.sprite); 
+                    this.game.world.bringToTop(b.sprite);
                 }
             }, this);
             this.groups.houses.forEach(function (ho) { this.game.world.bringToTop(ho.sprite); }, this);
@@ -178,7 +178,7 @@ module MyGame {
         }
 
         paused() {
-            
+
         }
 
         spacebarDown() {

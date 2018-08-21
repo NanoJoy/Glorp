@@ -34,6 +34,7 @@ module MyGame {
             stateTransfer.island = this.link;
             stateTransfer.position = this.playerStart;
             stateTransfer.fromLink = true;
+
             this.main.state.restart();
         }
     }

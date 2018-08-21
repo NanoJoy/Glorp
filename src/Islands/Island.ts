@@ -118,6 +118,7 @@ module MyGame {
         playerStart: Phaser.Point;
         private paddingOffset: Phaser.Point;
         private links: MapLink[];
+        private dialogStates: { x: number, y: number, lastViewed: number }[]
 
         constructor(num: number, type: IslandType, layout: string[], additions: LayoutAddition[],
             enemies: MapEnemy[], npcs: MapNPC[], playerStart: Phaser.Point, outsideBoundsPortals: MapOutsideBoundsPortal[],
@@ -131,6 +132,7 @@ module MyGame {
             this.playerStart = playerStart;
             this.outsideBoundsPortals = outsideBoundsPortals;
             this.links = links;
+            this.dialogStates = [];
 
             if (this.type !== IslandType.OUTSIDE) {
                 let paddingOffset = pof(0, 0);
@@ -216,19 +218,25 @@ module MyGame {
         }
 
         getNPC(main: Main, pos: Phaser.Point): NPC {
-            var matching = this.npcs.filter(n => n.position.equals(pos));
+            let matching = this.npcs.filter(n => n.position.equals(pos));
             if (matching.length === 0) {
                 console.log(this.npcs);
                 throw new Error(`Could not find NPC information at x: ${pos.x}, y: ${pos.y}.`);
             }
-            var npc = matching[0];
-            switch (npc.type) {
+            let mapNPC = matching[0];
+            let npc = null as NPC;
+            switch (mapNPC.type) {
                 case Assets.Sprites.OldMan.key:
-                    return new OldMan(main, pcop(npc.position), npc.textKey, this.makeMovementScript(npc.position, npc.script));
+                    npc = new OldMan(main, pcop(mapNPC.position), mapNPC.textKey, this.makeMovementScript(mapNPC.position, mapNPC.script));
+                    break;
                 case Assets.Images.Sign:
-                    return new Sign(main, pcop(npc.position), npc.textKey);
+                    npc = new Sign(main, pcop(mapNPC.position), mapNPC.textKey);
+                    break;
+                default:
+                    throw new Error(`${mapNPC.type} is not a valid NPC type.`);
             }
-            throw new Error(`${npc.type} is not a valid NPC type.`);
+            this.dialogStates.push({ x: pos.x, y: pos.y, lastViewed: -1 });
+            return npc;
         }
 
         getPortals(main: Main): OutsideBoundsPortal[] {
@@ -264,6 +272,15 @@ module MyGame {
                 return point.clone();
             }
             return point.add(this.paddingOffset.x, this.paddingOffset.y);
+        }
+
+        saveDialogState(x: number, y: number, lastViewed: number) {
+            let matching = this.dialogStates.filter(d => d.x === x && d.y === y);
+            if (matching.length > 0) {
+                matching[0].lastViewed = lastViewed;
+            } else {
+                this.dialogStates.push({ x: x, y: y, lastViewed: lastViewed });
+            }
         }
 
         private makeMovementScript(position: Phaser.Point, script: string): MovementScript {
