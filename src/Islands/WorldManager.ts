@@ -1,67 +1,15 @@
 module MyGame {
 
     function loadIsland(num: number): Island {
-        switch (num) {
-            case 0:
-                return new IslandBuilder(0, IslandType.OUTSIDE)
-                    .setLayout([
-                        "              ",
-                        "              ",
-                        "       w      ",
-                        "    wwwwwwww  ",
-                        "       w n w  ",
-                        "       w   w  ",
-                        "       w   w  ",
-                        "           w  ",
-                        "  wwwwwwwwww  ",
-                        "              ",
-                        "              "
-                    ])
-                    .setNPCs([
-                        { position: pof(9, 4), type: Assets.Sprites.OldMan.key, textKey: "oldman", script: "rr   ll   " }
-                    ])
-                    .setPlayerStart(pof(1, 1))
-                    .setOutsideBoundsPortals([
-                        { side: Direction.Up, start: 0, end: 14, link: 1, playerStart: pof(2, 2) }
-                    ])
-                    .build();
-            case 1:
-                return new IslandBuilder(1, IslandType.INSIDE)
-                    .setLayout([
-                        "      d       ",
-                        "              ",
-                        "              ",
-                        "              ",
-                        "              ",
-                        "              ",
-                        "      d       ",
-                    ])
-                    .setLinks([
-                        { pos: pof(6, 0), link: 2, playerStart: undefined },
-                        { pos: pof(6, 6), link: 0, playerStart: undefined }
-                    ])
-                    .setPlayerStart(pof(2, 5))
-                    .build();
-            case 2:
-                return new IslandBuilder(2, IslandType.OUTSIDE)
-                    .setLayout([
-                        "wwwwwwww",
-                        "w      w",
-                        "w  ****w",
-                        "w      w",
-                        "w****  w",
-                        "w      w",
-                        "w      w",
-                        "w  wwwww"
-                    ])
-                    .setOutsideBoundsPortals([
-                        { side: Direction.Down, start: 1, end: 3, link: 1, playerStart: undefined }
-                    ])
-                    .setPlayerStart(pof(3, 6))
-                    .build();
-            default:
-                throw new Error(`No island defined for number ${num}.`);
+        if (!islandGetters[num]) {
+            throw new Error(`No island defined for number ${num}.`);
         }
+        return islandGetters[num]();
+    }
+
+    export class Dialogs {
+        num: number;
+        dialogs: DialogState[];
     }
 
     export class Layout {
@@ -101,11 +49,11 @@ module MyGame {
             this.islands[islandNum].layout[position.y] = `${oldRow.substring(0, position.x)}${symbol}${oldRow.substring(position.x + 1)}`;
         }
 
-        exportLayouts() {
+        exportLayouts(): Layout[] {
             let layouts = [] as Layout[];
             for (let i = 0; i < this.islands.length; i++) {
                 if (this.islands[i]) {
-                    let copy = JSON.parse(JSON.stringify(this.islands[i].layout));
+                    let copy = this.islands[i].layout.slice();
                     layouts.push({ num: i, layout: copy })
                 }
             }
@@ -114,10 +62,31 @@ module MyGame {
 
         importLayouts(layouts: Layout[]) {
             layouts.forEach(l => {
-                console.log(l);
                 this.getIsland(l.num).layout = l.layout;
             });
-            console.log(this.islands);
+        }
+
+        exportDialogs(): Dialogs[] {
+            let dialogs = [] as Dialogs[];
+            for (let i = 0; i < this.islands.length; i++) {
+                if (this.islands[i]) {
+                    dialogs.push({ num: i, dialogs: this.islands[i].getDialogStates() });
+                }
+            }
+            return dialogs;
+        }
+
+        importDialogs(main: Main, dialogs: Dialogs[]) {
+            dialogs.forEach(ds => {
+                let island = this.getIsland(ds.num);
+                ds.dialogs.forEach(d => {
+                    island.saveDialogState(d.x, d.y, d.lastViewed);
+                    if (main.island.num === ds.num) {
+                        main.groups.npcs.filter(n => n.position.x === d.x && n.position.y === d.y)[0]
+                            .setDialogState(d.lastViewed);
+                    }
+                });
+            });
         }
     }
 }

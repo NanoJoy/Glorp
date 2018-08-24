@@ -10,7 +10,7 @@ module MyGame {
         private textDisplay: TextDisplay;
         private buttonPrompt: ButtonPrompt;
 
-        constructor(main: Main, position: Phaser.Point, dialogKey: string, movementScript: MovementScript,
+        constructor(main: Main, position: Phaser.Point, dialogKey: Texts, movementScript: MovementScript,
         speed: number, animationSpeed: number, spriteKey: string) {
             this.main = main;
             this.position = position;
@@ -78,16 +78,20 @@ module MyGame {
             }
             this.main.physics.arcade.collide(this.sprite, this.main.player);
         }
+
+        setDialogState(lastViewed: number) {
+            this.textManager.setLastViewed(lastViewed);
+        }
     }
 
     export class OldMan extends NPC {
-        constructor(main: Main, position: Phaser.Point, dialogKey: string, movementScript: MovementScript) {
+        constructor(main: Main, position: Phaser.Point, dialogKey: Texts, movementScript: MovementScript) {
             super(main, position, dialogKey, movementScript, 1000, 3, Assets.Sprites.OldMan.key);
         }
     }
 
     export class Sign extends NPC {
-        constructor(main: Main, position: Phaser.Point, dialogKey: string) {
+        constructor(main: Main, position: Phaser.Point, dialogKey: Texts) {
             super (main, position, dialogKey, null, 0, 0, Assets.Images.Sign);
         }
     }

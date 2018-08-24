@@ -1,15 +1,12 @@
 module MyGame {
-    export function getDialog(key: string): TextManager {
+    export enum Texts {
+        GRANDPA
+    }
+
+    export function getDialog(key: Texts): TextManager {
         switch (key) {
-            case "oldman":
-                return new TextManager([new TextEncounter(new TextDump("Go away"))]);
-            case "mrDorpnersHouse":
-                return new TextManager([new TextEncounter(new TextDump("Mr. Dorpner's House."))]);
-            case "sample":
-                return new TextManager([new TextEncounter(new TextPrompt("I must ask one question. Hello. How are you?", [
-                    new TextOption("Good", new TextDump("That's good.")),
-                    new TextOption("Bad", new TextDump("That's too bad"))
-                ]))]);
+            case Texts.GRANDPA:
+                return getGrandpaText();
             default:
                 throw new Error(`Cannot find dialog for key '${key}'.`);
         }

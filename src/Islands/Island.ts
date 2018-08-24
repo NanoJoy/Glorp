@@ -17,7 +17,7 @@ module MyGame {
     class MapNPC {
         position: Phaser.Point;
         type: string;
-        textKey: string;
+        textKey: Texts;
         script: string;
     }
 
@@ -39,6 +39,12 @@ module MyGame {
         pos: Phaser.Point;
         link: number;
         playerStart: Phaser.Point;
+    }
+
+    export class DialogState {
+        x: number;
+        y: number;
+        lastViewed: number;
     }
 
     export class IslandBuilder {
@@ -118,7 +124,7 @@ module MyGame {
         playerStart: Phaser.Point;
         private paddingOffset: Phaser.Point;
         private links: MapLink[];
-        private dialogStates: { x: number, y: number, lastViewed: number }[]
+        private dialogStates: DialogState[];
 
         constructor(num: number, type: IslandType, layout: string[], additions: LayoutAddition[],
             enemies: MapEnemy[], npcs: MapNPC[], playerStart: Phaser.Point, outsideBoundsPortals: MapOutsideBoundsPortal[],
@@ -272,6 +278,10 @@ module MyGame {
                 return point.clone();
             }
             return point.add(this.paddingOffset.x, this.paddingOffset.y);
+        }
+
+        getDialogStates() {
+            return this.dialogStates.slice();
         }
 
         saveDialogState(x: number, y: number, lastViewed: number) {

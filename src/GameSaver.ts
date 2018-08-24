@@ -2,10 +2,8 @@ module MyGame {
     export class SaveState {
         islandNum: number;
         layouts: Layout[];
-        playerPosition: {
-            x: number,
-            y: number
-        }
+        playerPosition: { x: number, y: number };
+        dialogs: Dialogs[];
     }
 
     export interface IGameSaver {
@@ -30,10 +28,11 @@ module MyGame {
             let saveState = {
                 islandNum: main.island.num,
                 layouts: worldManager.exportLayouts(),
-                playerPosition: { 
+                playerPosition: {
                     x: Math.round(main.player.x / TILE_WIDTH),
                     y: Math.round(main.player.y / TILE_HEIGHT)
-                }
+                },
+                dialogs: worldManager.exportDialogs()
             } as SaveState
             localStorage.setItem(SAVE_FILE_NAME, JSON.stringify(saveState));
         }

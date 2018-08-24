@@ -27,6 +27,8 @@ module MyGame {
             return this.textEncounters[this.lastViewed];
         }
 
-        
+        setLastViewed(lastViewed: number) {
+            this.lastViewed = lastViewed;
+        }
     }
 }
