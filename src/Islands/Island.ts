@@ -241,7 +241,12 @@ module MyGame {
                 default:
                     throw new Error(`${mapNPC.type} is not a valid NPC type.`);
             }
-            this.dialogStates.push({ x: pos.x, y: pos.y, lastViewed: -1 });
+            var matchingStates = this.dialogStates.filter(d => d.x === pos.x && d.y === pos.y);
+            if (matchingStates.length === 0) {
+                this.dialogStates.push({ x: pos.x, y: pos.y, lastViewed: -1 });
+            } else {
+                npc.setDialogState(matchingStates[0].lastViewed);
+            }
             return npc;
         }
 
@@ -274,6 +279,7 @@ module MyGame {
         }
 
         getAdjustedPosition(point: Phaser.Point): Phaser.Point {
+            console.log(this.paddingOffset);
             if (!this.paddingOffset) {
                 return point.clone();
             }
@@ -281,6 +287,7 @@ module MyGame {
         }
 
         getDialogStates() {
+            console.log(this.dialogStates);
             return this.dialogStates.slice();
         }
 

@@ -12,8 +12,8 @@ module MyGame {
         
         function getDreamResponse(): TextPage {
             return new TextPrompt("What happened in your dream?", [
-                new TextOption("The Giants attacked!", new TextDump("I was a little scared before my first Feast too.", getAfterNap())),
-                new TextOption("None of the food was ready.", new TextDump("I see. You are feeling guilty because you are napping instead of helping your brother prepare your family's portion. " + 
+                new TextOption("Giants attacked!", new TextDump("I was a little scared before my first Feast too.", getAfterNap())),
+                new TextOption("Food wasn't ready.", new TextDump("I see. You are feeling guilty because you are napping instead of helping your brother prepare your family's portion. " + 
                     "But there is nothing wrong with resting so you can really enjoy your first Feast.", getAfterNap()))
             ]);
         }
@@ -22,9 +22,9 @@ module MyGame {
             new TextEncounter(new TextPrompt("Hello Rosie. Did you enjoy your nap?", [
                 new TextOption("Yes.",
                     new TextPrompt("That's good. I hope you are well rested for your first Feast of the Giants.", [
-                        new TextOption("I am pretty excited.",
+                        new TextOption("I'm pretty excited.",
                             new TextDump("Well, you are braver than I was at your age.", getAfterNap())),
-                        new TextOption("I'm a little nervous.",
+                        new TextOption("I'm kinda nervous.",
                             new TextDump("I was a little scared at my first Feast too.", getAfterNap()))
                     ]
                     )
@@ -34,8 +34,14 @@ module MyGame {
                         new TextOption("I had bad dreams.", new TextPrompt("About what? The Feast of the Giants?", [
                             new TextOption("Yeah...", getDreamResponse()),
                             new TextOption("More or less.", getDreamResponse())
-                        ]))
+                        ])),
+                        new TextOption("Should be working.", new TextDump("I see. You are feeling guilty because you are napping instead of helping your brother prepare your family's portion. " + 
+                        "But there is nothing wrong with resting so you can really enjoy your first Feast.", getAfterNap()))
                     ]))
-            ]))]);
+            ]), true),
+            new TextEncounter(new TextPrompt("You should really get into town now.", [
+                new TextOption("Okay Grandpa")
+            ]))
+        ]);
     }
 }

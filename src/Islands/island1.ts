@@ -15,7 +15,7 @@ module MyGame {
                     ])
                     .setPlayerStart(pof(1, 0))
                     .setOutsideBoundsPortals([
-                        { side: Direction.Up, start: 1, end: 4, playerStart: undefined, link: 0 }
+                        { side: Direction.Up, start: 1, end: 4, playerStart: pof(4, 9), link: 0 }
                     ])
                     .build();
     }

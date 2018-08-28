@@ -84,6 +84,7 @@ module MyGame {
         exit() {
             this.background.destroy();
             this.texts.forEach(t => t.destroy());
+            this.infoText.text = "";
         }
 
         private displayOptions(options: Option[]) {

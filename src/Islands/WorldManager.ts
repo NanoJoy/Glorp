@@ -81,10 +81,6 @@ module MyGame {
                 let island = this.getIsland(ds.num);
                 ds.dialogs.forEach(d => {
                     island.saveDialogState(d.x, d.y, d.lastViewed);
-                    if (main.island.num === ds.num) {
-                        main.groups.npcs.filter(n => n.position.x === d.x && n.position.y === d.y)[0]
-                            .setDialogState(d.lastViewed);
-                    }
                 });
             });
         }

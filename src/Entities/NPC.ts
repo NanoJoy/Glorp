@@ -13,7 +13,7 @@ module MyGame {
         constructor(main: Main, position: Phaser.Point, dialogKey: Texts, movementScript: MovementScript,
         speed: number, animationSpeed: number, spriteKey: string) {
             this.main = main;
-            this.position = position;
+            this.position = position.clone();
             this.speed = speed;
             this.sprite = main.add.sprite(position.x * TILE_WIDTH, position.y * TILE_HEIGHT, spriteKey);
             main.physics.arcade.enable(this.sprite);
@@ -73,7 +73,8 @@ module MyGame {
                 }
             }
 
-            if (this.textManager.getNext(this.main, this).autoStart || this.buttonPrompt.buttonIsDown()) {
+            if (this.shouldShowText()) {
+                this.buttonPrompt.hide();
                 this.textDisplay.start(this.textManager.useNext(this.main, this));
             }
             this.main.physics.arcade.collide(this.sprite, this.main.player);
@@ -81,6 +82,10 @@ module MyGame {
 
         setDialogState(lastViewed: number) {
             this.textManager.setLastViewed(lastViewed);
+        }
+
+        private shouldShowText(): boolean {
+            return this.buttonPrompt.isShowing() && (this.textManager.getNext(this.main, this).autoStart || this.buttonPrompt.buttonIsDown());
         }
     }
 

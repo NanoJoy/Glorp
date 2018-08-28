@@ -34,7 +34,7 @@ module MyGame {
             stateTransfer.island = this.link;
             stateTransfer.position = this.playerStart;
             stateTransfer.fromLink = true;
-
+            stateTransfer.dialogs = WorldManager.getInstance().exportDialogs();
             this.main.state.restart();
         }
     }

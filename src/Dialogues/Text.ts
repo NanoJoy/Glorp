@@ -4,6 +4,10 @@ module MyGame {
         response: TextPage;
 
         constructor(text: string, response: TextPage = null) {
+            let maxLength = 19;
+            if (text.length > maxLength) {
+                throw new Error(`Option '${text}' has more than ${maxLength} characters.`);
+            }
             this.text = text;
             this.response = response;
         }

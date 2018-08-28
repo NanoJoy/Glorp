@@ -14,7 +14,7 @@ module MyGame {
             this.parent = parent;
             this.bubbleImage = parent.main.add.image(0, 0, Assets.Images.ButtonPrompt);
             this.sprite = this.bubbleImage;
-            var parentPosition = parent.position.multiply(TILE_WIDTH, TILE_HEIGHT);
+            var parentPosition = parent.position.clone().multiply(TILE_WIDTH, TILE_HEIGHT);
 
             this.input = input;
             this.buttonImage = parent.main.add.image(0, 0, Assets.Sprites.RhythmSymbols.key);
@@ -50,6 +50,10 @@ module MyGame {
 
         buttonIsDown() {
             return this.displayed && this.input.isDown;
+        }
+
+        isShowing(): boolean {
+            return this.displayed;
         }
     }
 }

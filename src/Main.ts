@@ -12,6 +12,7 @@ module MyGame {
         position: Phaser.Point;
         health: number;
         fromLink: boolean;
+        dialogs: Dialogs[];
         private static instance: StateTransfer;
 
         private constructor() {
@@ -20,6 +21,7 @@ module MyGame {
             this.position = null;
             this.health = -1;
             this.fromLink = false;
+            this.dialogs = [];
         }
 
         static getInstance() {
@@ -49,8 +51,7 @@ module MyGame {
             let worldManager = WorldManager.getInstance();
             let stateTransfer = StateTransfer.getInstance();
             let saveState = gameSaver.loadGame();
-            console.log(saveState);
-            if (saveState) {
+            if (!stateTransfer.fromLink && saveState) {
                 stateTransfer.island = saveState.islandNum;
                 stateTransfer.position = pof(saveState.playerPosition.x, saveState.playerPosition.y);
                 worldManager.importLayouts(saveState.layouts);

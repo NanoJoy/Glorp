@@ -91,6 +91,8 @@ module MyGame {
                 this.game.textOnScreen = false;
                 this.textEncounter.onFinish(this.game, this.parent);
                 this.textEncounter.reset();
+                this.game.inputs.down.onDown.remove(this.scrollDown, this);
+                this.game.inputs.up.onDown.remove(this.scrollUp, this);
                 this.game.inputs.O.onUp.addOnce(function () {this.isDisplaying  = false;}, this);
                 return;
             }
@@ -166,7 +168,7 @@ module MyGame {
                 this.leftArrow.visible = false;
                 this.leftArrow.fixedToCamera = true;
                 this.rightArrow = this.game.add.image(SCREEN_WIDTH - 18, this.textBackground.height + 12, Assets.Sprites.Arrow.key, 2);
-                this.rightArrow.visible = textPrompt.options.length > 0;
+                this.rightArrow.visible = textPrompt.options.length > 1;
                 this.rightArrow.fixedToCamera = true;
 
                 this.currentOptionText = this.game.add.bitmapText(18, this.optionsBackground.y + 8, Assets.FontName, textPrompt.options[0].text, 14);

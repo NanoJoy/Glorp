@@ -23,6 +23,7 @@ module MyGame {
 
         useNext(main: Main, parent: Entity) {
             this.lastViewed = this.decisionFunction(main, parent);
+            console.log(parent.position);
             main.island.saveDialogState(parent.position.x, parent.position.y, this.lastViewed);
             return this.textEncounters[this.lastViewed];
         }
