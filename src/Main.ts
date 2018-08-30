@@ -132,6 +132,7 @@ module MyGame {
                             break;
                         case "h":
                             this.groups.houses.push(new House(this, pof(j, i)));
+                            this.groups.grounds.push(island.makeGround(this, pof(j, i)));
                             break;
                         case "n":
                             this.groups.grounds.push(island.makeGround(this, pof(j, i)));

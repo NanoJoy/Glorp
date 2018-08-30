@@ -17,7 +17,9 @@ module MyGame {
             this.speed = speed;
             this.sprite = main.add.sprite(position.x * TILE_WIDTH, position.y * TILE_HEIGHT, spriteKey);
             main.physics.arcade.enable(this.sprite);
-            Utils.addPersonAnimations(this.sprite, animationSpeed);
+            if (spriteKey !== Assets.Images.Sign) {
+                Utils.addPersonAnimations(this.sprite, animationSpeed);
+            }
 
             this.textManager = getDialog(dialogKey);
             this.textDisplay = new BottomTextDisplay(main, this);
@@ -57,7 +59,9 @@ module MyGame {
                 } else {
                     this.direction = Direction.Right;
                 }
-                this.sprite.play(Utils.getIdleAnimName(this.direction));
+                if (!(this instanceof Sign)) {
+                    this.sprite.play(Utils.getIdleAnimName(this.direction));
+                }
             } else {
                 this.buttonPrompt.hide();
                 if (this.movementManager) {
