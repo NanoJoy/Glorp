@@ -1,42 +1,21 @@
 module MyGame {
-    islandGetters[3] = function () {
+    islandGetters[3] = function() {
         return new IslandBuilder(3, IslandType.OUTSIDE)
             .setLayout([
-                "             w     w             ",
-                "**************     **************",
-                "*                               *",
-                "*                               *",
-                "*    h                  h       *",
-                "*                               *",
-                "*                               *",
-                "*                               *",
-                "*                               *",
-                "*                               *",
-                "*                               *",
-                "*                               *",
-                "*                               *",
-                "*                               *",
-                "*          h                    *",
-                "*                               *",
-                "*                               *",
-                "*                               *",
-                "*                               *",
-                "*                               *",
-                "*                               *",
-                "*                               *",
-                "*                               *",
-                "*                               *",
-                "*                               *",
-                "*                               *",
-                "*                               *",
-                "*                               *",
-                "*                               *",
-                "*********************************"
+                "   w   w   ",
+                "  ww   ww  ",
+                "  w     w  ",
+                "  w     w  ",
+                "           ",
+                "           ",
+                "           ",
+                "           ",
+                "           ",
+                "           ",
             ])
             .setOutsideBoundsPortals([
-                { side: Direction.Up, start: 14, end: 20, playerStart: pof(21, 8), link: 1 }
+                { side: Direction.Up, start: 4, end: 8, link: 1, playerStart: pof(21, 8) }
             ])
-            .setPlayerStart(pof(17, 1))
             .build();
     }
 }

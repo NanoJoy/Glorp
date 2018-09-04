@@ -58,6 +58,7 @@ module MyGame {
     export class Tree extends Barrier {
         constructor(main: Main, position: Phaser.Point) {
             super(main, position, Assets.Sprites.Tree.key, "t");
+            this.sprite.body.setSize(Assets.Sprites.Tree.width, Assets.Sprites.Tree.height * 0.5, 0, Assets.Sprites.Tree.height * 0.5);
         }
     }
 

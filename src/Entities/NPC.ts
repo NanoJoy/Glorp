@@ -93,6 +93,12 @@ module MyGame {
         }
     }
 
+    export class Albert extends NPC {
+        constructor(main: Main, position: Phaser.Point, dialogKey: Texts, movementScript: MovementScript) {
+            super(main, position, dialogKey, movementScript, 750, 5, Assets.Sprites.Albert.key);
+        }
+    }
+
     export class OldMan extends NPC {
         constructor(main: Main, position: Phaser.Point, dialogKey: Texts, movementScript: MovementScript) {
             super(main, position, dialogKey, movementScript, 1000, 3, Assets.Sprites.OldMan.key);

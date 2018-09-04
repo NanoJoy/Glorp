@@ -232,6 +232,9 @@ module MyGame {
             let mapNPC = matching[0];
             let npc = null as NPC;
             switch (mapNPC.type) {
+                case Assets.Sprites.Albert.key:
+                    npc = new Albert(main, pcop(mapNPC.position), mapNPC.textKey, this.makeMovementScript(mapNPC.position, mapNPC.script));
+                    break;
                 case Assets.Sprites.OldMan.key:
                     npc = new OldMan(main, pcop(mapNPC.position), mapNPC.textKey, this.makeMovementScript(mapNPC.position, mapNPC.script));
                     break;

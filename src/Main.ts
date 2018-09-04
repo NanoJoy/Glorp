@@ -44,6 +44,7 @@ module MyGame {
             npcs: NPC[],
             portals: Portal[],
             signs: Sign[]
+            frontOfPlayer: Entity[] 
         };
 
         create() {
@@ -72,7 +73,8 @@ module MyGame {
                 npcs: [],
                 portals: [],
                 signs: [],
-                barriers: []
+                barriers: [],
+                frontOfPlayer: []
             }
 
             this.island = worldManager.getIsland(stateTransfer.island === -1 ? 0 : stateTransfer.island);
@@ -142,8 +144,10 @@ module MyGame {
                             this.groups.barriers.push(new Water(this, pof(j, i)));
                             break;
                         case "t":
-                            this.groups.barriers.push(new Tree(this, pof(j, i)));
+                            let tree = new Tree(this, pof(j, i));
+                            this.groups.barriers.push(tree);
                             this.groups.grounds.push(island.makeGround(this, pof(j, i)));
+                            this.groups.frontOfPlayer.push(tree)
                             break;
                         case "w":
                             this.groups.barriers.push(new StoneWall(this, pof(j, i), island.getNeighborhood(pof(j, i))));
@@ -178,6 +182,7 @@ module MyGame {
             this.groups.npcs.forEach(function (n) { this.game.world.bringToTop(n.sprite); }, this);
             this.groups.enemies.forEach(function (en) { this.game.world.bringToTop(en.worldSprite); }, this);
             this.game.world.bringToTop(this.player);
+            this.groups.frontOfPlayer.forEach(f => this.game.world.bringToTop(f.sprite));
         }
 
         paused() {

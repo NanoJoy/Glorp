@@ -25,6 +25,7 @@ module MyGame {
 
     class SpriteAssets {
         [key: string]: SpriteAsset;
+        Albert = new SpriteAsset("albert");
         Arrow = new SpriteAsset("arrow", 12, 12);
         Blackness = new SpriteAsset("blackness");
         Bush = new SpriteAsset("bush");
