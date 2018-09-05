@@ -16,6 +16,7 @@ module MyGame {
         currentOptionText: Phaser.BitmapText;
         leftArrow: Phaser.Image;
         rightArrow: Phaser.Image;
+        currentRead: Boolean;
 
         readonly spriteHeight = 80;
         readonly fontStyle = { font: "14px okeydokey", fill: "#000000" };
@@ -57,6 +58,7 @@ module MyGame {
                 this.text.text = this.textEncounter.getCurrentPage().text[this.pageNumber];
                 this.upArrow.visible = true;
                 this.downArrow.visible = this.pageNumber < this.textEncounter.getCurrentPage().text.length - 1;
+                this.currentRead = !this.downArrow.visible;
             }
         }
 
@@ -79,6 +81,9 @@ module MyGame {
         }
 
         makeChoice() {
+            if (!this.currentRead) {
+                return;
+            }
             var next = this.textEncounter.getResponse(this.currentOption);
             if (!next) {
                 this.textBackground.destroy();
@@ -91,6 +96,8 @@ module MyGame {
                 this.game.textOnScreen = false;
                 this.textEncounter.onFinish(this.game, this.parent);
                 this.textEncounter.reset();
+                this.game.inputs.O.onUp.remove(this.addOnDownListener, this);
+                this.game.inputs.O.onUp.remove(this.makeChoice, this);
                 this.game.inputs.down.onDown.remove(this.scrollDown, this);
                 this.game.inputs.up.onDown.remove(this.scrollUp, this);
                 this.game.inputs.O.onUp.addOnce(function () {this.isDisplaying  = false;}, this);
@@ -112,8 +119,7 @@ module MyGame {
                 this.pageNumber = 0;
                 this.upArrow.visible = false;
                 this.downArrow.visible = this.textEncounter.getCurrentPage().text.length > 1;
-                this.game.inputs.O.onUp.addOnce(this.addOnDownListener, this);
-                
+                this.game.inputs.O.onUp.add(this.addOnDownListener, this);
                 return;
             }
             var nextPrompt = (next as TextPrompt);
@@ -126,11 +132,12 @@ module MyGame {
             this.downArrow.visible = nextPrompt.text.length > 1;
             this.leftArrow.visible = false;
             this.rightArrow.visible = nextPrompt.options.length > 0;
-            this.game.inputs.O.onUp.addOnce(this.addOnDownListener, this);
+            
+            this.game.inputs.O.onUp.add(this.addOnDownListener, this);
         }
 
         addOnDownListener() {
-            this.game.inputs.O.onDown.addOnce(this.makeChoice, this);
+            this.game.inputs.O.onDown.add(this.makeChoice, this);
         }
 
         start(textEncounter: ITextEncounter) {
@@ -147,6 +154,7 @@ module MyGame {
             this.upArrow.visible = false;
             this.downArrow = this.game.add.image(SCREEN_WIDTH - 22, this.textBackground.height - 20, Assets.Sprites.Arrow.key, 1);
             this.downArrow.visible = this.textEncounter.getCurrentPage().text.length > 1;
+            this.currentRead = !this.downArrow.visible;
             this.upArrow.fixedToCamera = true;
             this.downArrow.fixedToCamera = true;
 
@@ -177,7 +185,8 @@ module MyGame {
                 this.game.inputs.left.onDown.add(this.scrollLeft, this);
                 this.game.inputs.right.onDown.add(this.scrollRight, this);
             }
-            this.game.inputs.O.onDown.addOnce(this.makeChoice, this);
+            
+            this.game.inputs.O.onDown.add(this.makeChoice, this);
         }
     }
 }
