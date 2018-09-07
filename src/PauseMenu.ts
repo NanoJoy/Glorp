@@ -15,8 +15,8 @@ module MyGame {
         private main: Main;
         private background: Phaser.Image;
         private options: Option[];
-        private texts: Phaser.Text[];
-        private infoText: Phaser.Text;
+        private texts: Phaser.BitmapText[];
+        private infoText: Phaser.BitmapText;
         private cursor: number;
 
         constructor(main: Main) {
@@ -38,7 +38,7 @@ module MyGame {
             this.texts = [];
 
             this.displayOptions(this.options);
-            this.infoText = this.main.add.text(0, SCREEN_HEIGHT - 38, "", { font: "28px okeydokey", fill: "#000000" });
+            this.infoText = this.main.add.bitmapText(0, SCREEN_HEIGHT - 38, Assets.FontName, "buttz", 28);
         }
 
         changeSelection(key: Phaser.Key) {
@@ -47,20 +47,16 @@ module MyGame {
                 case Phaser.KeyCode.W:
                     if (this.cursor !== 0) {
                         this.texts[this.cursor].x -= 10;
-                        this.texts[this.cursor].fill = "#888888";
                         this.cursor -= 1;
                         this.texts[this.cursor].x += 10;
-                        this.texts[this.cursor].fill = "#000000";
                     }
                     break;
                 case Phaser.KeyCode.S:
                     if (this.cursor !== this.texts.length - 1) {
                         console.log("here");
                         this.texts[this.cursor].x -= 10;
-                        this.texts[this.cursor].fill = "#888888";
                         this.cursor += 1;
                         this.texts[this.cursor].x += 10;
-                        this.texts[this.cursor].fill = "#000000";
                     }
             }
         }
@@ -90,13 +86,11 @@ module MyGame {
         private displayOptions(options: Option[]) {
             this.texts.forEach(t => t.destroy());
             for (let i = 0; i < options.length; i++) {
-                this.texts.push(this.main.add.text(20, 40 * i + 30, options[i].text,
-                    { font: "28px okeydokey", fill: "#888888" }));
+                this.texts.push(this.main.add.bitmapText(20, 40 * i + 30, Assets.FontName, options[i].text, 14));
                 this.texts[i].position.add(this.main.camera.x, this.main.camera.y);
             }
 
             this.texts[0].x += 10;
-            this.texts[0].fill = "#000000";
             this.cursor = 0;
         }
 

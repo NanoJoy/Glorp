@@ -41,6 +41,14 @@ module MyGame {
         playerStart: Phaser.Point;
     }
 
+    class MapTrigger {
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+        action: (main: Main, trigger: Trigger) => void;
+    }
+
     export class DialogState {
         x: number;
         y: number;
@@ -58,6 +66,7 @@ module MyGame {
         private outsideBoundsPortals: MapOutsideBoundsPortal[];
         private playerStart: Phaser.Point;
         private links: MapLink[];
+        private triggers: MapTrigger[];
 
         constructor(num: number, type: IslandType) {
             this.num = num;
@@ -69,6 +78,7 @@ module MyGame {
             this.outsideBoundsPortals = [];
             this.playerStart = pof(0, 0);
             this.links = [];
+            this.triggers = [];
         }
 
         setLayout(layout: string[]): IslandBuilder {
@@ -106,9 +116,14 @@ module MyGame {
             return this;
         }
 
+        setTriggers(triggers: MapTrigger[]): IslandBuilder {
+            this.triggers = triggers;
+            return this;
+        }
+
         build(): Island {
             return new Island(this.num, this.type, this.layout, this.additions, this.enemies, this.npcs,
-                this.playerStart, this.outsideBoundsPortals, this.links);
+                this.playerStart, this.outsideBoundsPortals, this.links, this.triggers);
         }
     }
 
@@ -124,11 +139,12 @@ module MyGame {
         playerStart: Phaser.Point;
         private paddingOffset: Phaser.Point;
         private links: MapLink[];
+        private triggers: MapTrigger[];
         private dialogStates: DialogState[];
 
         constructor(num: number, type: IslandType, layout: string[], additions: LayoutAddition[],
             enemies: MapEnemy[], npcs: MapNPC[], playerStart: Phaser.Point, outsideBoundsPortals: MapOutsideBoundsPortal[],
-            links: MapLink[]) {
+            links: MapLink[], triggers: MapTrigger[]) {
             this.num = num;
             this.type = type;
             this.layout = layout;
@@ -138,6 +154,7 @@ module MyGame {
             this.playerStart = playerStart;
             this.outsideBoundsPortals = outsideBoundsPortals;
             this.links = links;
+            this.triggers = triggers;
             this.dialogStates = [];
 
             if (this.type !== IslandType.OUTSIDE) {
@@ -282,7 +299,6 @@ module MyGame {
         }
 
         getAdjustedPosition(point: Phaser.Point): Phaser.Point {
-            console.log(this.paddingOffset);
             if (!this.paddingOffset) {
                 return point.clone();
             }
@@ -301,6 +317,10 @@ module MyGame {
             } else {
                 this.dialogStates.push({ x: x, y: y, lastViewed: lastViewed });
             }
+        }
+
+        public makeTriggers(main: Main): Trigger[] {
+            return this.triggers.map(t => new Trigger(main, t.x, t.y, t.width, t.height, t.action));
         }
 
         private makeMovementScript(position: Phaser.Point, script: string): MovementScript {

@@ -36,7 +36,6 @@ module MyGame {
             while (this.islands.length < num - 1) {
                 this.islands.push(null);
             }
-            console.log(this.islands);
             return this.islands[num] || (this.islands[num] = loadIsland(num));
         }
 

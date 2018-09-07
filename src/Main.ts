@@ -31,12 +31,13 @@ module MyGame {
 
     export class Main extends Phaser.State {
 
-        public player: Player;
-        public inputs: Inputs;
-        public textOnScreen: boolean;
-        public island: Island;
+        player: Player;
+        inputs: Inputs;
+        textOnScreen: boolean;
+        island: Island;
         pauseMenu: IPauseMenu;
-        public groups: {
+        triggers: Trigger[];
+        groups: {
             barriers: Barrier[]
             enemies: Enemy[],
             grounds: Ground[],
@@ -96,6 +97,8 @@ module MyGame {
 
         update() {
             if (!this.textOnScreen) {
+                this.triggers.forEach(t => t.checkPlayerOverlap());
+
                 let groupsToUpdate = [this.groups.enemies, this.groups.houses, this.groups.npcs, this.groups.portals, this.groups.signs];
                 for (let i = 0; i < groupsToUpdate.length; i++) {
                     let grp = groupsToUpdate[i];
@@ -156,6 +159,7 @@ module MyGame {
             }
 
             this.groups.portals = this.groups.portals.concat(island.getPortals(this));
+            this.triggers = island.makeTriggers(this);
 
             var playerPosition = null as Phaser.Point;
             var stateTransfer = StateTransfer.getInstance();
