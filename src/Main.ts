@@ -33,7 +33,7 @@ module MyGame {
 
         player: Player;
         inputs: Inputs;
-        textOnScreen: boolean;
+        playerStopped: boolean;
         island: Island;
         pauseMenu: IPauseMenu;
         triggers: Trigger[];
@@ -96,7 +96,7 @@ module MyGame {
         }
 
         update() {
-            if (!this.textOnScreen) {
+            if (!this.playerStopped) {
                 this.triggers.forEach(t => t.checkPlayerOverlap());
 
                 let groupsToUpdate = [this.groups.enemies, this.groups.houses, this.groups.npcs, this.groups.portals, this.groups.signs];

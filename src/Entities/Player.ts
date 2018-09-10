@@ -22,7 +22,7 @@ module MyGame {
         }
 
         update() {
-            if (this.state.textOnScreen) {
+            if (this.state.playerStopped) {
                 this.play(Utils.getIdleAnimName(this.direction));
                 return;
             }

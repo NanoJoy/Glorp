@@ -9,11 +9,13 @@ module MyGame {
         start: Phaser.Point;
         directions: Direction[];
         loop: boolean;
+        triggerName: string;
 
-        constructor(start: Phaser.Point, directions: Direction[], loop = true) {
+        constructor(start: Phaser.Point, directions: Direction[], loop = true, triggerName?: string) {
             this.start = start;
             this.directions = directions;
             this.loop = loop;
+            this.triggerName = triggerName;
         }
     }
 
@@ -26,6 +28,11 @@ module MyGame {
         currentTween: Phaser.Tween;
         readyForNext: boolean;
         paused: boolean;
+        loop: boolean;
+        hasTrigger: boolean;
+        triggerName: string;
+        private onComplete: () => void;
+        private onCompleteContext: object;
         private obj: Moveable;
 
         constructor(game: Phaser.Game, script: MovementScript, obj: Moveable) {
@@ -35,6 +42,8 @@ module MyGame {
             this.sprite = obj.sprite;
             this.readyForNext = false;
             this.paused = false;
+            this.triggerName = script.triggerName;
+            this.hasTrigger = this.triggerName && this.triggerName !== "";
         }
 
         start(resetToOriginalPosition = false) {
@@ -77,6 +86,9 @@ module MyGame {
             if (this.currentNum === this.destinations.length) {
                 this.currentNum = 0;
                 if (!this.script.loop) {
+                    if (this.onComplete) {
+                        this.onComplete.call(this.onCompleteContext)
+                    }
                     return;
                 }
             }
@@ -86,7 +98,10 @@ module MyGame {
             this.currentTween.onComplete.add(this.onTweenComplete, this);
         }
 
-
+        setOnComplete(onComplete: () => void, onCompleteContext: object) {
+            this.onComplete = onComplete;
+            this.onCompleteContext = onCompleteContext;
+        }
 
         onTweenComplete() {
             this.readyForNext = true;

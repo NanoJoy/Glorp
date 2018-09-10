@@ -42,11 +42,13 @@ module MyGame {
     }
 
     class MapTrigger {
+        type: TriggerType;
         x: number;
         y: number;
         width: number;
         height: number;
-        action: (main: Main, trigger: Trigger) => void;
+        name?: string;
+        action?: (main: Main, trigger: Trigger) => void;
     }
 
     export class DialogState {
@@ -327,29 +329,56 @@ module MyGame {
             if (!script) {
                 return null;
             }
-            var directions = script.toLocaleLowerCase().split("").map(c => this.getDirectionFromLetter(c));
-            return new MovementScript(position, directions);
+            if (script.indexOf("=") === -1) {
+                return new MovementScript(position, makeDirections(script));
+            }
+
+            var loop = script.indexOf("l=") !== -1;
+            if (loop) {
+                loop = getValue("l") === "true";
+            }
+
+            var triggerName = "";
+            if (script.indexOf("t=") === -1) {
+                triggerName = null;
+            } else {
+                triggerName = getValue("t");
+            }
+
+            var directions = makeDirections(getValue("d"));
+            return new MovementScript(position, directions, loop, triggerName);
+
+            function getValue(key: string): string {
+                var entries = script.split(";");
+                return entries.map(e => e.split("=")).filter(e => e[0] === key).map(e => e[1])[0];
+            }
+
+            function makeDirections(directionsString: string) {
+                return script.toLocaleLowerCase().split("").map(c => getDirectionFromLetter(c));
+            }
+
+            function getDirectionFromLetter(letter: string): Direction {
+                switch (letter) {
+                    case " ":
+                        return null;
+                    case "u":
+                        return Direction.Up;
+                    case "d":
+                        return Direction.Down;
+                    case "l":
+                        return Direction.Left;
+                    case "r":
+                        return Direction.Right;
+                    case "f":
+                        return Direction.Forward;
+                    case "b":
+                        return Direction.Back;
+                }
+                throw new Error(`${letter} is not a valid direction char.`);
+            }
         }
 
-        private getDirectionFromLetter(letter: string): Direction {
-            switch (letter) {
-                case " ":
-                    return null;
-                case "u":
-                    return Direction.Up;
-                case "d":
-                    return Direction.Down;
-                case "l":
-                    return Direction.Left;
-                case "r":
-                    return Direction.Right;
-                case "f":
-                    return Direction.Forward;
-                case "b":
-                    return Direction.Back;
-            }
-            throw new Error(`${letter} is not a valid direction char.`);
-        }
+        
 
         private getPadChar(type: IslandType): string {
             switch (type) {

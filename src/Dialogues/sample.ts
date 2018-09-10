@@ -3,7 +3,8 @@ module MyGame {
         GRANDPA,
         SIGHING,
         THE_MEEP,
-        TUTTLE_VILLAGE
+        TUTTLE_VILLAGE,
+        ALBERT_FIRST
     }
 
     function getSignText(info: string): TextManager {
@@ -12,6 +13,8 @@ module MyGame {
 
     export function getDialog(key: Texts): TextManager {
         switch (key) {
+            case Texts.ALBERT_FIRST:
+                return getSignText("I am albert helo.");
             case Texts.GRANDPA:
                 return getGrandpaText();
             case Texts.SIGHING:

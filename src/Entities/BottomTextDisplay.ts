@@ -93,7 +93,7 @@ module MyGame {
                     this.currentOptionText.destroy();
                 }
                 this.game.physics.arcade.isPaused = false;
-                this.game.textOnScreen = false;
+                this.game.playerStopped = false;
                 this.textEncounter.onFinish(this.game, this.parent);
                 this.textEncounter.reset();
                 this.game.inputs.O.onUp.remove(this.addOnDownListener, this);
@@ -146,7 +146,7 @@ module MyGame {
             }
             this.textEncounter = textEncounter;
             this.game.physics.arcade.isPaused = true;
-            this.game.textOnScreen = true;
+            this.game.playerStopped = true;
 
             this.textBackground = this.game.add.image(0, 0, Assets.Images.BottomTextBackground);
             this.upArrow = this.game.add.image(SCREEN_WIDTH - 22, 8, Assets.Sprites.Arrow.key, 0);

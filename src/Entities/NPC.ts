@@ -35,7 +35,7 @@ module MyGame {
         }
 
         onStageBuilt() {
-            if (this.movementManager) {
+            if (this.movementManager && !this.movementManager.hasTrigger) {
                 this.movementManager.start();
             }
         }
@@ -77,15 +77,32 @@ module MyGame {
                 }
             }
 
+            this.showText();
+            this.main.physics.arcade.collide(this.sprite, this.main.player);
+        }
+
+        showText() {
             if (this.shouldShowText()) {
                 this.buttonPrompt.hide();
                 this.textDisplay.start(this.textManager.useNext(this.main, this));
             }
-            this.main.physics.arcade.collide(this.sprite, this.main.player);
         }
 
         setDialogState(lastViewed: number) {
             this.textManager.setLastViewed(lastViewed);
+        }
+
+        matchesTrigger(name: string): boolean {
+            return this.movementManager && this.movementManager.hasTrigger && this.movementManager.triggerName === name;
+        }
+
+        doTrigger(name: string): void {
+            if (this.movementManager && this.movementManager.hasTrigger && this.movementManager.triggerName === name) {
+                this.movementManager.start();
+                if (!this.movementManager.loop) {
+                    this.movementManager.setOnComplete(this.showText, this)
+                }
+            }
         }
 
         private shouldShowText(): boolean {
