@@ -45,6 +45,7 @@ module MyGame {
             this.paused = false;
             this.triggerName = script.triggerName;
             this.hasTrigger = this.triggerName && this.triggerName !== "";
+            this.currentNum = -1;
         }
 
         start(resetToOriginalPosition = false) {
@@ -87,6 +88,7 @@ module MyGame {
             if (this.currentNum === this.destinations.length) {
                 this.currentNum = 0;
                 if (!this.script.loop) {
+                    this.currentNum = -1;
                     if (this.onComplete) {
                         console.log(this.onComplete);
                         this.onComplete.call(this.onCompleteContext, this.onCompleteArgs);
@@ -121,7 +123,7 @@ module MyGame {
         }
 
         resume() {
-            if (!this.paused) {
+            if (!this.paused || this.currentNum === -1) {
                 return;
             }
             this.obj.direction = this.script.directions[this.currentNum];
@@ -130,7 +132,7 @@ module MyGame {
         }
 
         currentlyStationary() {
-            return this.script.directions[this.currentNum] === null;
+            return this.currentNum === -1 || this.script.directions[this.currentNum] === null;
         }
     }
 }

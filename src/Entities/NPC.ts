@@ -84,6 +84,10 @@ module MyGame {
         showText(override = false) {
             if (override || this.shouldShowText()) {
                 this.buttonPrompt.hide();
+                let anim = Utils.getIdleAnimName(this.direction);
+                if (anim && anim !== this.sprite.animations.currentAnim.name) {
+                    this.sprite.play(anim);
+                }
                 this.textDisplay.start(this.textManager.useNext(this.main, this));
             }
         }
