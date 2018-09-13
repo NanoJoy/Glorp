@@ -49,6 +49,7 @@ module MyGame {
         };
 
         create() {
+            this.playerStopped = false;
             let gameSaver = GameSaver.getInstance();
             let worldManager = WorldManager.getInstance();
             let stateTransfer = StateTransfer.getInstance();
@@ -211,6 +212,11 @@ module MyGame {
         saveGame() {
             var gameSaver = GameSaver.getInstance();
             gameSaver.saveGame(this, WorldManager.getInstance());
+        }
+
+        stopPlayer() {
+            this.playerStopped = true;
+            this.player.body.velocity.setTo(0, 0);
         }
     }
 }

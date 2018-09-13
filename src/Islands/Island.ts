@@ -322,7 +322,14 @@ module MyGame {
         }
 
         public makeTriggers(main: Main): Trigger[] {
-            return this.triggers.map(t => new Trigger(main, t.x, t.y, t.width, t.height, t.action));
+            return this.triggers.map(t => {
+                switch (t.type) {
+                    case TriggerType.REGULAR:
+                        return new Trigger(main, t.x, t.y, t.width, t.height, t.action);
+                    case TriggerType.MOVE_NPC:
+                        return new NPCMoveTrigger(main, t.x, t.y, t.width, t.height, t.name);
+                }
+            });
         }
 
         private makeMovementScript(position: Phaser.Point, script: string): MovementScript {
@@ -354,7 +361,7 @@ module MyGame {
             }
 
             function makeDirections(directionsString: string) {
-                return script.toLocaleLowerCase().split("").map(c => getDirectionFromLetter(c));
+                return directionsString.toLocaleLowerCase().split("").map(c => getDirectionFromLetter(c));
             }
 
             function getDirectionFromLetter(letter: string): Direction {

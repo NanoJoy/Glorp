@@ -42,7 +42,7 @@ module MyGame {
                 throw new Error(`Expected exactly one NPC with trigger name "${trigger.name}". Found ${matchingNPCs.length}.`);
             }
             var matchingNPC = matchingNPCs[0];
-            main.playerStopped = true;
+            main.stopPlayer();
             matchingNPC.doTrigger(trigger.name);
         }
     }

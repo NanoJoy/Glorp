@@ -33,6 +33,7 @@ module MyGame {
         triggerName: string;
         private onComplete: () => void;
         private onCompleteContext: object;
+        private onCompleteArgs: any[];
         private obj: Moveable;
 
         constructor(game: Phaser.Game, script: MovementScript, obj: Moveable) {
@@ -87,7 +88,8 @@ module MyGame {
                 this.currentNum = 0;
                 if (!this.script.loop) {
                     if (this.onComplete) {
-                        this.onComplete.call(this.onCompleteContext)
+                        console.log(this.onComplete);
+                        this.onComplete.call(this.onCompleteContext, this.onCompleteArgs);
                     }
                     return;
                 }
@@ -98,9 +100,10 @@ module MyGame {
             this.currentTween.onComplete.add(this.onTweenComplete, this);
         }
 
-        setOnComplete(onComplete: () => void, onCompleteContext: object) {
+        setOnComplete(onComplete: () => void, onCompleteContext: object, ...onCompletArgs: any[]) {
             this.onComplete = onComplete;
             this.onCompleteContext = onCompleteContext;
+            this.onCompleteArgs = onCompletArgs;
         }
 
         onTweenComplete() {

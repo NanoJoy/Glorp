@@ -81,8 +81,8 @@ module MyGame {
             this.main.physics.arcade.collide(this.sprite, this.main.player);
         }
 
-        showText() {
-            if (this.shouldShowText()) {
+        showText(override = false) {
+            if (override || this.shouldShowText()) {
                 this.buttonPrompt.hide();
                 this.textDisplay.start(this.textManager.useNext(this.main, this));
             }
@@ -100,7 +100,7 @@ module MyGame {
             if (this.movementManager && this.movementManager.hasTrigger && this.movementManager.triggerName === name) {
                 this.movementManager.start();
                 if (!this.movementManager.loop) {
-                    this.movementManager.setOnComplete(this.showText, this)
+                    this.movementManager.setOnComplete(this.showText, this, true);
                 }
             }
         }
