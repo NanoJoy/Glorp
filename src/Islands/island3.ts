@@ -6,9 +6,9 @@ module MyGame {
                 "  ww   ww  ",
                 "  w     w  ",
                 "  w     w  ",
-                "           ",
-                "           ",
                 "     n     ",
+                "           ",
+                "           ",
                 "           ",
                 "           ",
                 "           ",
@@ -20,7 +20,7 @@ module MyGame {
                 { type: TriggerType.MOVE_NPC, name: "albertfirst", x: 3, y: 2, width: 5, height: 1 }
             ])
             .setNPCs([
-                { position: pof(5, 6), type: Assets.Sprites.Albert.key, textKey: Texts.ALBERT_FIRST, script: "d=uuuu;t=albertfirst;l=false" }
+                { position: pof(5, 4), type: Assets.Sprites.Albert.key, textKey: Texts.ALBERT_FIRST, script: "d=uu;t=albertfirst;l=false" }
             ])
             .build();
     }

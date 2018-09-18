@@ -14,7 +14,7 @@ module MyGame {
     export function getDialog(key: Texts): TextManager {
         switch (key) {
             case Texts.ALBERT_FIRST:
-                return getSignText("I am albert helo.");
+                return getAlbertText();
             case Texts.GRANDPA:
                 return getGrandpaText();
             case Texts.SIGHING:

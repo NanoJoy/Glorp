@@ -308,7 +308,6 @@ module MyGame {
         }
 
         getDialogStates() {
-            console.log(this.dialogStates);
             return this.dialogStates.slice();
         }
 

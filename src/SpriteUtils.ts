@@ -96,23 +96,30 @@ module MyGame {
             let rowsInPage = 3;
             let words = text.split(" ");
             let pages = [] as string[];
-            let workingPage = "";
-            for (let i = 0; i < lettersInRow * rowsInPage; i++) {
-                workingPage += "a";
+            let workingPage = ["","",""];
+            let rowCount = rowsInPage;
+            for (let i = 0; i < lettersInRow; i++) {
+                workingPage[rowsInPage - 1] += "a";
             }
             for (let i = 0; i < words.length; i++) {
                 let word = words[i];
                 if (word.length > lettersInRow) {
                     throw new Error(`Word ${word} has more letters than allowed in row.`);
                 }
-                if (workingPage.length + word.length + 1 > lettersInRow * rowsInPage) {
-                    pages.push(workingPage);
-                    workingPage = word;
+                if (workingPage[rowCount - 1].length + word.length + 1 > lettersInRow) {
+                    if (workingPage.length === rowsInPage) {
+                        pages.push(workingPage.join(" "));
+                        workingPage = [word];
+                        rowCount = 1;
+                    } else {
+                        rowCount += 1;
+                        workingPage[rowCount - 1] = word;
+                    }
                 } else {
-                    workingPage = workingPage + " " + word;
+                    workingPage[rowCount - 1] = workingPage[rowCount - 1] + " " + word;
                 }
             }
-            pages.push(workingPage);
+            pages.push(workingPage.join(" "));
             pages.shift();
             return pages;
         }

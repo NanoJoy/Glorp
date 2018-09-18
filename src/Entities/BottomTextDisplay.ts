@@ -92,6 +92,10 @@ module MyGame {
                     this.optionsBackground.destroy();
                     this.currentOptionText.destroy();
                 }
+                if (this.rightArrow) this.rightArrow.destroy();
+                if (this.leftArrow) this.leftArrow.destroy();
+                if (this.downArrow) this.downArrow.destroy();
+                if (this.upArrow) this.upArrow.destroy();
                 this.game.physics.arcade.isPaused = false;
                 this.game.playerStopped = false;
                 this.textEncounter.onFinish(this.game, this.parent);
@@ -104,17 +108,13 @@ module MyGame {
                 return;
             }
             if (!next.hasOptions) {
-                if (this.optionsBackground) {
-                    this.optionsBackground.destroy();
-                    this.currentOptionText.destroy();
-                }
-                if (this.rightArrow) {
-                    this.rightArrow.destroy();
-                    this.leftArrow.destroy();
-                }
+                this.optionsBackground.visible = false;;
+                this.currentOptionText.visible = false;
+                this.rightArrow.visible = false;
+                this.leftArrow.visible = false;
                 this.options = null;
-                this.game.inputs.right.onDown.removeAll();
-                this.game.inputs.left.onDown.removeAll();
+                this.game.inputs.right.onDown.remove(this.scrollRight, this);
+                this.game.inputs.left.onDown.remove(this.scrollLeft, this);
                 this.text.text = next.text[0];
                 this.pageNumber = 0;
                 this.upArrow.visible = false;
@@ -122,7 +122,7 @@ module MyGame {
                 this.game.inputs.O.onUp.add(this.addOnDownListener, this);
                 return;
             }
-            var nextPrompt = (next as TextPrompt);
+            let nextPrompt = (next as TextPrompt);
             this.options = nextPrompt.options;
             this.currentOption = 0;
             this.pageNumber = 0;
@@ -132,6 +132,10 @@ module MyGame {
             this.downArrow.visible = nextPrompt.text.length > 1;
             this.leftArrow.visible = false;
             this.rightArrow.visible = nextPrompt.options.length > 0;
+            this.game.inputs.left.onDown.add(this.scrollLeft, this);
+            this.game.inputs.right.onDown.add(this.scrollRight, this);
+            this.currentOptionText.visible = true;
+            this.optionsBackground.visible = true;
             
             this.game.inputs.O.onUp.add(this.addOnDownListener, this);
         }
