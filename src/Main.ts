@@ -55,6 +55,7 @@ module MyGame {
             let stateTransfer = StateTransfer.getInstance();
             let saveState = gameSaver.loadGame();
             if (!stateTransfer.fromLink && saveState) {
+                console.log("Hi");
                 stateTransfer.island = saveState.islandNum;
                 stateTransfer.position = pof(saveState.playerPosition.x, saveState.playerPosition.y);
                 worldManager.importLayouts(saveState.layouts);
@@ -111,6 +112,7 @@ module MyGame {
         }
 
         private setupLevel(island: Island) {
+            this.stage.backgroundColor = island.type === IslandType.INSIDE ? 0x000000 : 0xEAEAEA;
             this.game.world.setBounds(0, 0, island.layout[0].length * TILE_WIDTH,
                 island.layout.length * TILE_HEIGHT);
 

@@ -11,6 +11,7 @@ module MyGame {
 
         create() {
             this.playerHealth = 100;
+            this.stage.backgroundColor =  0xEAEAEA;
             var stateTransfer = StateTransfer.getInstance();
             this.game.add.image(10, SCREEN_HEIGHT - 146, Assets.Images.PlayerBattle);
             this.playerHealthDisplay = new HealthDisplay(this, 146, SCREEN_HEIGHT - 50, "You", this.playerHealth);
@@ -49,7 +50,8 @@ module MyGame {
                 this.playerHealth = Math.max(playerDamage, 0);
                 this.playerHealthDisplay.updateHitPoints(this.playerHealth);
                 if (this.playerHealth === 0) {
-                    this.game.time.events.stop(true);
+                    StateTransfer.getInstance().fromLink = false;
+                    this.game.state.start(States.Main);
                 }
                 return;
             }

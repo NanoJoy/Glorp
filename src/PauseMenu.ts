@@ -38,7 +38,7 @@ module MyGame {
             this.texts = [];
 
             this.displayOptions(this.options);
-            this.infoText = this.main.add.bitmapText(0, SCREEN_HEIGHT - 38, Assets.FontName, "buttz", 28);
+            this.infoText = this.main.add.bitmapText(0, this.main.camera.y + SCREEN_HEIGHT - 38, Assets.FontName, "", 14);
         }
 
         changeSelection(key: Phaser.Key) {
@@ -96,7 +96,7 @@ module MyGame {
 
         private showInfo(text: string) {
             this.infoText.text = text;
-            this.infoText.x = (SCREEN_WIDTH - this.infoText.width) / 2;
+            this.infoText.x = this.main.camera.x + (SCREEN_WIDTH - this.infoText.width) / 2;
         }
     }
 }
