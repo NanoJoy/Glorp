@@ -14,10 +14,9 @@ module MyGame {
 
     export class GameSaver implements IGameSaver {
         private static instance: IGameSaver;
-        private alreadyLoaded: boolean;
+        private cached: SaveState;
 
         private constructor() {
-            this.alreadyLoaded = false;
         }
 
         static getInstance(): IGameSaver {
@@ -35,22 +34,24 @@ module MyGame {
                 dialogs: worldManager.exportDialogs()
             } as SaveState
             localStorage.setItem(SAVE_FILE_NAME, JSON.stringify(saveState));
+            this.cached = saveState;
         }
 
         loadGame() {
-            if (this.alreadyLoaded) {
-                return null
+            if (this.cached) {
+                return this.cached;
             }
             let file = localStorage.getItem(SAVE_FILE_NAME);
             if (!file) {
                 return null;
             }
-            this.alreadyLoaded = true;
-            return JSON.parse(file) as SaveState;
+            this.cached = JSON.parse(file) as SaveState;
+            return this.cached;
         }
 
         clearData() {
             localStorage.removeItem(SAVE_FILE_NAME);
+            this.cached = null;
         }
     }
 }

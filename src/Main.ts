@@ -55,7 +55,6 @@ module MyGame {
             let stateTransfer = StateTransfer.getInstance();
             let saveState = gameSaver.loadGame();
             if (!stateTransfer.fromLink && saveState) {
-                console.log("Hi");
                 stateTransfer.island = saveState.islandNum;
                 stateTransfer.position = pof(saveState.playerPosition.x, saveState.playerPosition.y);
                 worldManager.importLayouts(saveState.layouts);
@@ -64,7 +63,7 @@ module MyGame {
                 var tween = this.add.tween(this.world).to({ alpha: 1 }, 500, Phaser.Easing.Linear.None, true);
                 tween.onComplete.add(function () {
                     this.physics.arcade.isPaused = false;
-                    this.textOnScreen = false;
+                    this.playerStopped = false;
                 }, this);
             }
             this.inputs = new Inputs(this);
