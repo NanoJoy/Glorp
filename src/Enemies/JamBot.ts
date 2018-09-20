@@ -18,6 +18,7 @@ module MyGame {
         speed: number;
         movementManager: MovementManager;
         alive: boolean;
+        afterDeath: (main: Main) => void;
 
         constructor(main: Main, position: Phaser.Point, movementScript: MovementScript) {
             this.alive = true;

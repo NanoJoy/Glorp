@@ -23,7 +23,17 @@ module MyGame {
                 { position: pof(5, 4), type: Assets.Sprites.Albert.key, textKey: Texts.ALBERT_FIRST, script: "d=uu;t=albertfirst;l=false" }
             ])
             .setEnemies([
-                { position: pof(8, 6), type: Assets.Sprites.JamBotWorld.key, script: "llllllrrrrrr"}
+                { 
+                    position: pof(8, 6),
+                    type: Assets.Sprites.JamBotWorld.key,
+                    script: "llllllrrrrrr",
+                    afterDeath: function (main: Main) {
+                        if (main.groups.enemies.filter(e => e.alive).length === 0) {
+                            console.log("All the jambots are dead.");
+                        }
+                    }
+                    
+                }
             ])
             .build();
     }

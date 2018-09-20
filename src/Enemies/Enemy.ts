@@ -11,10 +11,12 @@ module MyGame {
         worldSprite: Phaser.Sprite;
         hitPoints: number;
         health: number;
+        alive: boolean;
         calculateDamage: (pattern: PatternNote[], notePresses: NotePress[]) => number;
         getAttackPoints: (pattern: PatternNote[]) => number;
         onStageBuilt: () => void;
         update: () => void;
         die: () => void;
+        afterDeath: (main: Main) => void;
     }
 }

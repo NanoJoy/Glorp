@@ -25,6 +25,7 @@ module MyGame {
         position: Phaser.Point;
         type: string;
         script: string;
+        afterDeath?: (main: Main) => void;
     }
 
     class MapOutsideBoundsPortal {
@@ -237,7 +238,9 @@ module MyGame {
             var enemy = matching[0];
             switch (enemy.type) {
                 case Assets.Sprites.JamBotWorld.key:
-                    return new JamBot(main, pcop(enemy.position), this.makeMovementScript(enemy.position, enemy.script));
+                    let jambot = new JamBot(main, pcop(enemy.position), this.makeMovementScript(enemy.position, enemy.script));
+                    jambot.afterDeath = enemy.afterDeath;
+                    return jambot;
             }
             throw new Error(`${enemy.type} is not a valid enemy type.`);
         }

@@ -13,6 +13,7 @@ module MyGame {
         health: number;
         fromLink: boolean;
         dialogs: Dialogs[];
+        funcs: (main: Main) => void;
         private static instance: StateTransfer;
 
         private constructor() {
@@ -22,6 +23,7 @@ module MyGame {
             this.health = -1;
             this.fromLink = false;
             this.dialogs = [];
+            this.funcs = null;
         }
 
         static getInstance() {
@@ -84,6 +86,11 @@ module MyGame {
             this.groups.enemies.forEach(function (value: Enemy) {
                 value.onStageBuilt();
             }, this)
+
+            if (stateTransfer.funcs) {
+                stateTransfer.funcs(this);
+                stateTransfer.funcs = null;
+            }
 
             this.groups.npcs.forEach(function (value: NPC) {
                 value.onStageBuilt();
