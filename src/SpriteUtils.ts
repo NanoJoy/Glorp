@@ -133,5 +133,58 @@ module MyGame {
                 (x === 0 || layout[y][x - 1] === char) &&
                 (x === layout[y].length || layout[y][x + 1] === char);
         }
+
+        static makeMovementScript(position: Phaser.Point, script: string): MovementScript {
+            if (!script) {
+                return null;
+            }
+            if (script.indexOf("=") === -1) {
+                return new MovementScript(position, makeDirections(script));
+            }
+
+            var loop = script.indexOf("l=") !== -1;
+            if (loop) {
+                loop = getValue("l") === "true";
+            }
+
+            var triggerName = "";
+            if (script.indexOf("t=") === -1) {
+                triggerName = null;
+            } else {
+                triggerName = getValue("t");
+            }
+
+            var directions = makeDirections(getValue("d"));
+            return new MovementScript(position, directions, loop, triggerName);
+
+            function getValue(key: string): string {
+                var entries = script.split(";");
+                return entries.map(e => e.split("=")).filter(e => e[0] === key).map(e => e[1])[0];
+            }
+
+            function makeDirections(directionsString: string) {
+                return directionsString.toLocaleLowerCase().split("").map(c => getDirectionFromLetter(c));
+            }
+
+            function getDirectionFromLetter(letter: string): Direction {
+                switch (letter) {
+                    case " ":
+                        return null;
+                    case "u":
+                        return Direction.Up;
+                    case "d":
+                        return Direction.Down;
+                    case "l":
+                        return Direction.Left;
+                    case "r":
+                        return Direction.Right;
+                    case "f":
+                        return Direction.Forward;
+                    case "b":
+                        return Direction.Back;
+                }
+                throw new Error(`${letter} is not a valid direction char.`);
+            }
+        }
     }
 }

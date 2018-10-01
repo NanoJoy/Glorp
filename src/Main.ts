@@ -144,6 +144,9 @@ module MyGame {
                             this.groups.grounds.push(island.makeGround(this, pof(j, i)));
                             this.groups.enemies.push(island.getEnemy(this, pof(j, i)));
                             break;
+                        case "g":
+                            this.groups.barriers.push(new Gate(this, pof(j, i)));
+                            this.groups.grounds.push(island.makeGround(this, pof(j, i)))
                         case "h":
                             this.groups.houses.push(new House(this, pof(j, i)));
                             this.groups.grounds.push(island.makeGround(this, pof(j, i)));
@@ -172,7 +175,6 @@ module MyGame {
 
             var playerPosition = null as Phaser.Point;
             var stateTransfer = StateTransfer.getInstance();
-            console.log(stateTransfer);
             if (stateTransfer.position) {
                 playerPosition = stateTransfer.fromLink ? island.getAdjustedPosition(stateTransfer.position.clone()) : stateTransfer.position.clone();
             } else {

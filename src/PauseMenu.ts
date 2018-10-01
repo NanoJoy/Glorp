@@ -53,7 +53,6 @@ module MyGame {
                     break;
                 case Phaser.KeyCode.S:
                     if (this.cursor !== this.texts.length - 1) {
-                        console.log("here");
                         this.texts[this.cursor].x -= 10;
                         this.cursor += 1;
                         this.texts[this.cursor].x += 10;

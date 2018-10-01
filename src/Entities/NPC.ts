@@ -45,11 +45,9 @@ module MyGame {
             if (Phaser.Math.distance(this.sprite.centerX, this.sprite.centerY, player.centerX, player.centerY) < TILE_HEIGHT * 1.5) {
                 if (this.movementManager) {
                     this.buttonPrompt.reposition(this.sprite.x, this.sprite.y, -4);
-                }
-                this.buttonPrompt.show();
-                if (this.movementManager) {
                     this.movementManager.pause();
                 }
+                this.buttonPrompt.show();
                 if (player.centerY < this.sprite.y) {
                     this.direction = Direction.Forward;
                 } else if (player.centerY > this.sprite.bottom) {
@@ -85,7 +83,7 @@ module MyGame {
             if (override || this.shouldShowText()) {
                 this.buttonPrompt.hide();
                 let anim = Utils.getIdleAnimName(this.direction);
-                if (anim && anim !== this.sprite.animations.currentAnim.name) {
+                if (this.sprite.animations.currentAnim && anim !== this.sprite.animations.currentAnim.name) {
                     this.sprite.play(anim);
                 }
                 this.textDisplay.start(this.textManager.useNext(this.main, this));
@@ -107,6 +105,13 @@ module MyGame {
                     this.movementManager.setOnComplete(this.showText, this, true);
                 }
             }
+        }
+
+        doScript(directions: string) {
+            this.movementManager.pause();
+            let start = pof(Math.floor(this.sprite.x / TILE_WIDTH), Math.floor(this.sprite.y) / TILE_WIDTH);
+            let tempMovement = new MovementManager(this.main.game, Utils.makeMovementScript(start, directions), this);
+            tempMovement.start();
         }
 
         private shouldShowText(): boolean {

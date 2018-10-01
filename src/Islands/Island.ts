@@ -221,7 +221,6 @@ module MyGame {
             }
             let matching = this.links.filter(key => key.pos.equals(pos));
             if (matching.length === 0) {
-                console.log(this.links);
                 throw new Error(`Could not find link information at x: ${pos.x}, y: ${pos.y}.`);
             }
 
@@ -232,13 +231,12 @@ module MyGame {
         getEnemy(main: Main, pos: Phaser.Point): Enemy {
             var matching = this.enemies.filter(key => key.position.equals(pos));
             if (matching.length === 0) {
-                console.log(this.enemies);
                 throw new Error(`Could not find enemy information at x: ${pos.x}, y: ${pos.y}.`);
             }
             var enemy = matching[0];
             switch (enemy.type) {
                 case Assets.Sprites.JamBotWorld.key:
-                    let jambot = new JamBot(main, pcop(enemy.position), this.makeMovementScript(enemy.position, enemy.script));
+                    let jambot = new JamBot(main, pcop(enemy.position), Utils.makeMovementScript(enemy.position, enemy.script));
                     jambot.afterDeath = enemy.afterDeath;
                     return jambot;
             }
@@ -248,17 +246,16 @@ module MyGame {
         getNPC(main: Main, pos: Phaser.Point): NPC {
             let matching = this.npcs.filter(n => n.position.equals(pos));
             if (matching.length === 0) {
-                console.log(this.npcs);
                 throw new Error(`Could not find NPC information at x: ${pos.x}, y: ${pos.y}.`);
             }
             let mapNPC = matching[0];
             let npc = null as NPC;
             switch (mapNPC.type) {
                 case Assets.Sprites.Albert.key:
-                    npc = new Albert(main, pcop(mapNPC.position), mapNPC.textKey, this.makeMovementScript(mapNPC.position, mapNPC.script));
+                    npc = new Albert(main, pcop(mapNPC.position), mapNPC.textKey, Utils.makeMovementScript(mapNPC.position, mapNPC.script));
                     break;
                 case Assets.Sprites.OldMan.key:
-                    npc = new OldMan(main, pcop(mapNPC.position), mapNPC.textKey, this.makeMovementScript(mapNPC.position, mapNPC.script));
+                    npc = new OldMan(main, pcop(mapNPC.position), mapNPC.textKey, Utils.makeMovementScript(mapNPC.position, mapNPC.script));
                     break;
                 case Assets.Images.Sign:
                     npc = new Sign(main, pcop(mapNPC.position), mapNPC.textKey);
@@ -299,7 +296,6 @@ module MyGame {
                     }
                 }
             }
-            console.log(portals);
             return portals;
         }
 
@@ -333,61 +329,6 @@ module MyGame {
                 }
             });
         }
-
-        private makeMovementScript(position: Phaser.Point, script: string): MovementScript {
-            if (!script) {
-                return null;
-            }
-            if (script.indexOf("=") === -1) {
-                return new MovementScript(position, makeDirections(script));
-            }
-
-            var loop = script.indexOf("l=") !== -1;
-            if (loop) {
-                loop = getValue("l") === "true";
-            }
-
-            var triggerName = "";
-            if (script.indexOf("t=") === -1) {
-                triggerName = null;
-            } else {
-                triggerName = getValue("t");
-            }
-
-            var directions = makeDirections(getValue("d"));
-            return new MovementScript(position, directions, loop, triggerName);
-
-            function getValue(key: string): string {
-                var entries = script.split(";");
-                return entries.map(e => e.split("=")).filter(e => e[0] === key).map(e => e[1])[0];
-            }
-
-            function makeDirections(directionsString: string) {
-                return directionsString.toLocaleLowerCase().split("").map(c => getDirectionFromLetter(c));
-            }
-
-            function getDirectionFromLetter(letter: string): Direction {
-                switch (letter) {
-                    case " ":
-                        return null;
-                    case "u":
-                        return Direction.Up;
-                    case "d":
-                        return Direction.Down;
-                    case "l":
-                        return Direction.Left;
-                    case "r":
-                        return Direction.Right;
-                    case "f":
-                        return Direction.Forward;
-                    case "b":
-                        return Direction.Back;
-                }
-                throw new Error(`${letter} is not a valid direction char.`);
-            }
-        }
-
-        
 
         private getPadChar(type: IslandType): string {
             switch (type) {

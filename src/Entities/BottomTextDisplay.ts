@@ -170,27 +170,31 @@ module MyGame {
             
             this.game.inputs.down.onDown.add(this.scrollDown, this);
             this.game.inputs.up.onDown.add(this.scrollUp, this);
-
+            this.optionsBackground = this.game.add.image(0, this.textBackground.height, Assets.Images.OptionsBackground);
+            this.optionsBackground.fixedToCamera = true;
+            this.optionsBackground.visible = false;
+            this.currentOptionText = this.game.add.bitmapText(18, this.optionsBackground.y + 8, Assets.FontName, "", 14);
+            this.currentOptionText.fixedToCamera = true;
+            this.currentOptionText.visible = false;
+            this.leftArrow = this.game.add.image(6, this.textBackground.height + 12, Assets.Sprites.Arrow.key, 3);
+            this.leftArrow.visible = false;
+            this.leftArrow.fixedToCamera = true;
+            this.rightArrow = this.game.add.image(SCREEN_WIDTH - 18, this.textBackground.height + 12, Assets.Sprites.Arrow.key, 2);
+            this.rightArrow.visible = false
+            this.rightArrow.fixedToCamera = true;
+            this.game.inputs.O.onDown.add(this.makeChoice, this);
             if (this.textEncounter.getCurrentPage().hasOptions) {
                 var textPrompt = this.textEncounter.getCurrentPage() as TextPrompt;
                 this.currentOption = 0;
-                this.optionsBackground = this.game.add.image(0, this.textBackground.height, Assets.Images.OptionsBackground);
-                this.optionsBackground.fixedToCamera = true;
-                this.leftArrow = this.game.add.image(6, this.textBackground.height + 12, Assets.Sprites.Arrow.key, 3);
-                this.leftArrow.visible = false;
-                this.leftArrow.fixedToCamera = true;
-                this.rightArrow = this.game.add.image(SCREEN_WIDTH - 18, this.textBackground.height + 12, Assets.Sprites.Arrow.key, 2);
+                this.optionsBackground.visible = true;
                 this.rightArrow.visible = textPrompt.options.length > 1;
                 this.rightArrow.fixedToCamera = true;
-
-                this.currentOptionText = this.game.add.bitmapText(18, this.optionsBackground.y + 8, Assets.FontName, textPrompt.options[0].text, 14);
-                this.currentOptionText.fixedToCamera = true;
+                this.currentOptionText.text = textPrompt.options[0].text;
+                this.currentOptionText.visible = true;
                 this.options = textPrompt.options;
                 this.game.inputs.left.onDown.add(this.scrollLeft, this);
                 this.game.inputs.right.onDown.add(this.scrollRight, this);
             }
-            
-            this.game.inputs.O.onDown.add(this.makeChoice, this);
         }
     }
 }

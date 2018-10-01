@@ -90,7 +90,6 @@ module MyGame {
                 if (!this.script.loop) {
                     this.currentNum = -1;
                     if (this.onComplete) {
-                        console.log(this.onComplete);
                         this.onComplete.call(this.onCompleteContext, this.onCompleteArgs);
                     }
                     return;
