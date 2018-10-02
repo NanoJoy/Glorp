@@ -10,6 +10,7 @@ module MyGame {
         enemy: Enemy;
 
         create() {
+            this.time.reset();
             this.playerHealth = 100;
             this.stage.backgroundColor =  0xEAEAEA;
             var stateTransfer = StateTransfer.getInstance();
@@ -27,6 +28,7 @@ module MyGame {
             this.patternChecker = new PatternMatcher(this, this.enemy);
             this.startPattern();
             this.time.events.loop(this.enemy.tempo * this.enemy.patternLength * 2, this.startPattern, this);
+            this.time.events.start();
         }
 
         private startChecker() {
