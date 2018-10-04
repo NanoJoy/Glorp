@@ -7,7 +7,7 @@ module MyGame {
                 main.stopPlayer();
                 main.player.position.setTo(5 * TILE_WIDTH, 7 * TILE_HEIGHT);
                 albert.setDialogState(0);
-                albert.doScript("ldddddrrrr");
+                albert.doScript("d=ldddddddrrr;l=false", pof(5, 2));
             }
         }
 

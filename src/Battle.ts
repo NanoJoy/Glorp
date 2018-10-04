@@ -72,6 +72,7 @@ module MyGame {
             this.enemy.die();
             stateTransfer.position = new Phaser.Point(Math.floor(this.enemy.worldSprite.position.x / TILE_WIDTH), Math.floor(this.enemy.worldSprite.position.y / TILE_HEIGHT));
             stateTransfer.funcs = this.enemy.afterDeath;
+            stateTransfer.fromLink = false;
             this.state.start(States.Main);
         }
     }

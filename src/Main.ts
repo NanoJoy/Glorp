@@ -56,7 +56,7 @@ module MyGame {
             let worldManager = WorldManager.getInstance();
             let stateTransfer = StateTransfer.getInstance();
             let saveState = gameSaver.loadGame();
-            if (!stateTransfer.fromLink && saveState) {
+            if (!stateTransfer.position && saveState) {
                 stateTransfer.island = saveState.islandNum;
                 stateTransfer.position = pof(saveState.playerPosition.x, saveState.playerPosition.y);
                 worldManager.importLayouts(saveState.layouts);
@@ -173,8 +173,9 @@ module MyGame {
             this.groups.portals = this.groups.portals.concat(island.getPortals(this));
             this.triggers = island.makeTriggers(this);
 
-            var playerPosition = null as Phaser.Point;
-            var stateTransfer = StateTransfer.getInstance();
+            let playerPosition = null as Phaser.Point;
+            let stateTransfer = StateTransfer.getInstance();
+            console.info(stateTransfer);
             if (stateTransfer.position) {
                 playerPosition = stateTransfer.fromLink ? island.getAdjustedPosition(stateTransfer.position.clone()) : stateTransfer.position.clone();
             } else {

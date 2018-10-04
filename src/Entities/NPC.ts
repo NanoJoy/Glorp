@@ -107,11 +107,12 @@ module MyGame {
             }
         }
 
-        doScript(directions: string) {
+        doScript(directions: string, start?: Phaser.Point) {
             this.movementManager.pause();
-            let start = pof(Math.floor(this.sprite.x / TILE_WIDTH), Math.floor(this.sprite.y) / TILE_WIDTH);
-            let tempMovement = new MovementManager(this.main.game, Utils.makeMovementScript(start, directions), this);
-            tempMovement.start();
+            start = start ? start : pof(Math.floor(this.sprite.x / TILE_WIDTH), Math.floor(this.sprite.y / TILE_WIDTH));
+
+            this.movementManager = new MovementManager(this.main.game, Utils.makeMovementScript(start, directions), this);
+            this.movementManager.start(true);
         }
 
         private shouldShowText(): boolean {
