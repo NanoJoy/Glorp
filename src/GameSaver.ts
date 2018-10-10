@@ -4,6 +4,7 @@ module MyGame {
         layouts: Layout[];
         playerPosition: { x: number, y: number };
         dialogs: Dialogs[];
+        triggers: Location[];
     }
 
     export interface IGameSaver {
@@ -31,7 +32,9 @@ module MyGame {
                     x: Math.round(main.player.x / TILE_WIDTH),
                     y: Math.round(main.player.y / TILE_HEIGHT)
                 },
-                dialogs: worldManager.exportDialogs()
+                dialogs: worldManager.exportDialogs(),
+                triggers: main.triggers.filter(t => !t.active)
+                    .map(t => { return { island: main.island.num, x: t.x, y: t.y } })
             } as SaveState
             localStorage.setItem(SAVE_FILE_NAME, JSON.stringify(saveState));
             this.cached = saveState;

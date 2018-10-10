@@ -5,6 +5,7 @@ module MyGame {
         sprite: Phaser.Sprite;
         direction: Direction;
         speed: number;
+        private positionToSave: Phaser.Point;
         private movementManager: MovementManager;
         private textManager: TextManager;
         private textDisplay: TextDisplay;
@@ -113,6 +114,20 @@ module MyGame {
 
             this.movementManager = new MovementManager(this.main.game, Utils.makeMovementScript(start, directions), this);
             this.movementManager.start(true);
+        }
+
+        savePosition(x?: number, y?: number): void {
+            if (x === undefined && y === undefined) {
+                this.positionToSave = pof(Math.floor(this.sprite.x / TILE_WIDTH), Math.floor(this.sprite.y / TILE_WIDTH));
+                return;
+            }
+            this.positionToSave = pof(x ? x : 0, y ? y : 0);
+        }
+
+        unloadPositionToSave(): Phaser.Point {
+            var temp = this.positionToSave;
+            this.positionToSave = null;
+            return temp;
         }
 
         private shouldShowText(): boolean {

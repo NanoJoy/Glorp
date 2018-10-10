@@ -56,11 +56,13 @@ module MyGame {
             let worldManager = WorldManager.getInstance();
             let stateTransfer = StateTransfer.getInstance();
             let saveState = gameSaver.loadGame();
+            // Load from save.
             if (!stateTransfer.position && saveState) {
                 stateTransfer.island = saveState.islandNum;
                 stateTransfer.position = pof(saveState.playerPosition.x, saveState.playerPosition.y);
                 worldManager.importLayouts(saveState.layouts);
                 worldManager.importDialogs(this, saveState.dialogs);
+            // Coming from link.
             } else if (stateTransfer.island !== -1) {
                 var tween = this.add.tween(this.world).to({ alpha: 1 }, 500, Phaser.Easing.Linear.None, true);
                 tween.onComplete.add(function () {
@@ -82,7 +84,7 @@ module MyGame {
             }
 
             this.island = worldManager.getIsland(stateTransfer.island === -1 ? 0 : stateTransfer.island);
-            this.setupLevel(this.island);
+            this.setupLevel(this.island, saveState);
             this.groups.enemies.forEach(function (value: Enemy) {
                 value.onStageBuilt();
             }, this)
@@ -117,7 +119,7 @@ module MyGame {
             }
         }
 
-        private setupLevel(island: Island) {
+        private setupLevel(island: Island, savedGame?: SaveState) {
             this.stage.backgroundColor = island.type === IslandType.INSIDE ? 0x000000 : 0xEAEAEA;
             this.game.world.setBounds(0, 0, island.layout[0].length * TILE_WIDTH,
                 island.layout.length * TILE_HEIGHT);
@@ -146,7 +148,8 @@ module MyGame {
                             break;
                         case "g":
                             this.groups.barriers.push(new Gate(this, pof(j, i)));
-                            this.groups.grounds.push(island.makeGround(this, pof(j, i)))
+                            this.groups.grounds.push(island.makeGround(this, pof(j, i)));
+                            break;
                         case "h":
                             this.groups.houses.push(new House(this, pof(j, i)));
                             this.groups.grounds.push(island.makeGround(this, pof(j, i)));
@@ -172,6 +175,14 @@ module MyGame {
 
             this.groups.portals = this.groups.portals.concat(island.getPortals(this));
             this.triggers = island.makeTriggers(this);
+            if (savedGame) {
+                savedGame.triggers
+                for (let saveTrigger of savedGame.triggers.filter(t => t.island === island.num)) {
+                    for (let matchingTrigger of this.triggers.filter(t => t.x === saveTrigger.x && t.y === saveTrigger.y)) {
+                        matchingTrigger.active = false;
+                    }
+                }
+            }
 
             let playerPosition = null as Phaser.Point;
             let stateTransfer = StateTransfer.getInstance();

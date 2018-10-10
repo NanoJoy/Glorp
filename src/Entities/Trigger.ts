@@ -3,11 +3,15 @@ module MyGame {
         name: string;
         main: Main;
         area: Phaser.Sprite;
+        x: number;
+        y: number;
         active: boolean;
         action: (main: Main, trigger: Trigger) => void;
         
         constructor(main: Main, x: number, y: number, width: number, height: number, 
             action: (main: Main, trigger: Trigger) => void, name?: string) {
+            this.x = x;
+            this.y = y;
             this.main = main;
             this.area = main.add.sprite(x * TILE_WIDTH, y * TILE_HEIGHT, null);
             main.physics.arcade.enable(this.area);

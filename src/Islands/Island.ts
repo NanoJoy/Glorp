@@ -140,10 +140,10 @@ module MyGame {
         npcs: MapNPC[];
         outsideBoundsPortals: MapOutsideBoundsPortal[];
         playerStart: Phaser.Point;
-        private paddingOffset: Phaser.Point;
-        private links: MapLink[];
-        private triggers: MapTrigger[];
-        private dialogStates: DialogState[];
+        paddingOffset: Phaser.Point;
+        links: MapLink[];
+        triggers: MapTrigger[];
+        dialogStates: DialogState[];
 
         constructor(num: number, type: IslandType, layout: string[], additions: LayoutAddition[],
             enemies: MapEnemy[], npcs: MapNPC[], playerStart: Phaser.Point, outsideBoundsPortals: MapOutsideBoundsPortal[],

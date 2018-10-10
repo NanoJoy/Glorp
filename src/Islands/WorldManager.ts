@@ -7,6 +7,12 @@ module MyGame {
         return islandGetters[num]();
     }
 
+    export class Location {
+        island: number;
+        x: number;
+        y: number;
+    }
+
     export class Dialogs {
         num: number;
         dialogs: DialogState[];
