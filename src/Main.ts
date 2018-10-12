@@ -13,6 +13,7 @@ module MyGame {
         health: number;
         fromLink: boolean;
         dialogs: Dialogs[];
+        triggers: Location[];
         funcs: (main: Main) => void;
         private static instance: StateTransfer;
 
@@ -23,6 +24,7 @@ module MyGame {
             this.health = -1;
             this.fromLink = false;
             this.dialogs = [];
+            this.triggers = [];
             this.funcs = null;
         }
 
@@ -47,7 +49,7 @@ module MyGame {
             npcs: NPC[],
             portals: Portal[],
             signs: Sign[]
-            frontOfPlayer: Entity[] 
+            frontOfPlayer: Entity[]
         };
 
         create() {
@@ -62,7 +64,7 @@ module MyGame {
                 stateTransfer.position = pof(saveState.playerPosition.x, saveState.playerPosition.y);
                 worldManager.importLayouts(saveState.layouts);
                 worldManager.importDialogs(this, saveState.dialogs);
-            // Coming from link.
+                // Coming from link.
             } else if (stateTransfer.island !== -1) {
                 var tween = this.add.tween(this.world).to({ alpha: 1 }, 500, Phaser.Easing.Linear.None, true);
                 tween.onComplete.add(function () {
@@ -175,17 +177,15 @@ module MyGame {
 
             this.groups.portals = this.groups.portals.concat(island.getPortals(this));
             this.triggers = island.makeTriggers(this);
-            if (savedGame) {
-                savedGame.triggers
-                for (let saveTrigger of savedGame.triggers.filter(t => t.island === island.num)) {
-                    for (let matchingTrigger of this.triggers.filter(t => t.x === saveTrigger.x && t.y === saveTrigger.y)) {
-                        matchingTrigger.active = false;
-                    }
+            let stateTransfer = StateTransfer.getInstance();
+            let triggersToImport = savedGame ? savedGame.triggers : stateTransfer.triggers;
+            for (let saveTrigger of triggersToImport.filter(t => t.island === island.num)) {
+                for (let matchingTrigger of this.triggers.filter(t => t.x === saveTrigger.x && t.y === saveTrigger.y)) {
+                    matchingTrigger.active = false;
                 }
             }
 
             let playerPosition = null as Phaser.Point;
-            let stateTransfer = StateTransfer.getInstance();
             console.info(stateTransfer);
             if (stateTransfer.position) {
                 playerPosition = stateTransfer.fromLink ? island.getAdjustedPosition(stateTransfer.position.clone()) : stateTransfer.position.clone();

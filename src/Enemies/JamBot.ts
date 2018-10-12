@@ -65,6 +65,9 @@ module MyGame {
             var stateTransfer = StateTransfer.getInstance();
             stateTransfer.island = this.main.island.num;
             stateTransfer.enemy = this;
+            stateTransfer.dialogs = WorldManager.getInstance().exportDialogs();
+            stateTransfer.triggers = this.main.triggers.filter(t => !t.active)
+                    .map(t => { return { island: this.main.island.num, x: t.x, y: t.y } })
             this.main.state.start(States.Battle);
         }
 
