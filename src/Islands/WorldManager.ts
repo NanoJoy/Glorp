@@ -11,6 +11,18 @@ module MyGame {
         island: number;
         x: number;
         y: number;
+
+        constructor(island: number, x: number, y: number) {
+            this.island = island;
+            this.x = x;
+            this.y = y;
+        }
+
+        equals(other: Location) {
+            return other.island === this.island
+                && other.x === this.x
+                && other.y === this.y;
+        }
     }
 
     export class Dialogs {

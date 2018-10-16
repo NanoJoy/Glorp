@@ -5,6 +5,7 @@ module MyGame {
         playerPosition: { x: number, y: number };
         dialogs: Dialogs[];
         triggers: Location[];
+        npcs: { old: Location, now: Location }[];
     }
 
     export interface IGameSaver {
@@ -25,6 +26,33 @@ module MyGame {
         }
 
         saveGame(main: Main, worldManager: WorldManager) {
+            let npcs = this.loadGame() ? this.loadGame().npcs : [] as { old: Location, now: Location }[];
+            for (let npc of main.groups.npcs) {
+                let position = npc.unloadPositionToSave();
+                if (position) {
+                    let old = new Location(main.island.num, npc.startX, npc.startY);
+                    let matching = npcs.filter(n => n.old.equals(old));
+                    if (matching.length > 0) {
+                        let match = matching[0];
+                        match.now = new Location(main.island.num, position.x, position.y)
+                    } else {
+                        npcs.push({
+                            old: old,
+                            now: new Location(main.island.num, position.x, position.y)
+                        });
+                    }
+                }
+            }
+            let triggers = this.loadGame() ? this.loadGame().triggers : [] as Location[];
+            let triggerLocations = main.triggers
+                .filter(t => !t.active)
+                .map(t => new Location(main.island.num, t.x, t.y));
+            for (let trigger of triggerLocations) {
+                let matching = triggers.filter(t => t.equals(trigger));
+                if (matching.length === 0) {
+                    triggers.push(trigger);
+                }
+            }
             let saveState = {
                 islandNum: main.island.num,
                 layouts: worldManager.exportLayouts(),
@@ -33,8 +61,8 @@ module MyGame {
                     y: Math.round(main.player.y / TILE_HEIGHT)
                 },
                 dialogs: worldManager.exportDialogs(),
-                triggers: main.triggers.filter(t => !t.active)
-                    .map(t => { return { island: main.island.num, x: t.x, y: t.y } })
+                triggers: triggers,
+                npcs: npcs
             } as SaveState
             localStorage.setItem(SAVE_FILE_NAME, JSON.stringify(saveState));
             this.cached = saveState;

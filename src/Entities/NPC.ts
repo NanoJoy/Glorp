@@ -5,7 +5,9 @@ module MyGame {
         sprite: Phaser.Sprite;
         direction: Direction;
         speed: number;
-        private positionToSave: Phaser.Point;
+        startX: number;
+        startY: number;
+        positionToSave: Phaser.Point;
         private movementManager: MovementManager;
         private textManager: TextManager;
         private textDisplay: TextDisplay;
@@ -14,6 +16,8 @@ module MyGame {
         constructor(main: Main, position: Phaser.Point, dialogKey: Texts, movementScript: MovementScript,
         speed: number, animationSpeed: number, spriteKey: string) {
             this.main = main;
+            this.startX = position.x;
+            this.startY = position.y;
             this.position = position.clone();
             this.speed = speed;
             this.sprite = main.add.sprite(position.x * TILE_WIDTH, position.y * TILE_HEIGHT, spriteKey);
@@ -128,6 +132,11 @@ module MyGame {
             var temp = this.positionToSave;
             this.positionToSave = null;
             return temp;
+        }
+
+        setPosition(location: Location) {
+            this.sprite.x = location.x * TILE_WIDTH;
+            this.sprite.y = location.y * TILE_HEIGHT;
         }
 
         private shouldShowText(): boolean {

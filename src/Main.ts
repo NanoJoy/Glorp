@@ -14,6 +14,7 @@ module MyGame {
         fromLink: boolean;
         dialogs: Dialogs[];
         triggers: Location[];
+        npcs: { old: Location; now: Location }[];
         funcs: (main: Main) => void;
         private static instance: StateTransfer;
 
@@ -25,6 +26,7 @@ module MyGame {
             this.fromLink = false;
             this.dialogs = [];
             this.triggers = [];
+            this.npcs = [];
             this.funcs = null;
         }
 
@@ -178,6 +180,16 @@ module MyGame {
             this.groups.portals = this.groups.portals.concat(island.getPortals(this));
             this.triggers = island.makeTriggers(this);
             let stateTransfer = StateTransfer.getInstance();
+
+            let npcsToImport = savedGame ? savedGame.npcs : stateTransfer.npcs;
+            for (let npc of npcsToImport.filter(t => t.old.island === island.num)) {
+                let matches = this.groups.npcs.filter(n => n.startX === npc.old.x && n.startY === npc.old.y);
+                if (matches.length === 0) {
+                    throw new Error(`No matching npc found with start position ${npc.old.x} ${npc.old.y}`);
+                }
+                matches[0].setPosition(npc.now);
+            }
+
             let triggersToImport = savedGame ? savedGame.triggers : stateTransfer.triggers;
             for (let saveTrigger of triggersToImport.filter(t => t.island === island.num)) {
                 for (let matchingTrigger of this.triggers.filter(t => t.x === saveTrigger.x && t.y === saveTrigger.y)) {
@@ -186,7 +198,6 @@ module MyGame {
             }
 
             let playerPosition = null as Phaser.Point;
-            console.info(stateTransfer);
             if (stateTransfer.position) {
                 playerPosition = stateTransfer.fromLink ? island.getAdjustedPosition(stateTransfer.position.clone()) : stateTransfer.position.clone();
             } else {

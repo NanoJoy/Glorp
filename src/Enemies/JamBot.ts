@@ -1,5 +1,5 @@
 module MyGame {
-    export class JamBot implements Enemy,  Moveable {
+    export class JamBot implements Enemy, Moveable {
         name = "JamBot";
         minNumNotes = 4;
         maxNumNotes = 4;
@@ -67,7 +67,14 @@ module MyGame {
             stateTransfer.enemy = this;
             stateTransfer.dialogs = WorldManager.getInstance().exportDialogs();
             stateTransfer.triggers = this.main.triggers.filter(t => !t.active)
-                    .map(t => { return { island: this.main.island.num, x: t.x, y: t.y } })
+                .map(t => new Location(this.main.island.num, t.x, t.y));
+            stateTransfer.npcs = this.main.groups.npcs.filter(n => n.positionToSave)
+                .map(n => {
+                    return {
+                        old: new Location(this.main.island.num, n.startX, n.startY),
+                        now: new Location(this.main.island.num, n.positionToSave.x, n.positionToSave.y)
+                    }
+                });
             this.main.state.start(States.Battle);
         }
 
