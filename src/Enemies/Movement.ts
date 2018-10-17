@@ -31,6 +31,7 @@ module MyGame {
         loop: boolean;
         hasTrigger: boolean;
         triggerName: string;
+        interruptable: boolean;
         private onComplete: () => void;
         private onCompleteContext: object;
         private onCompleteArgs: any[];
@@ -46,9 +47,11 @@ module MyGame {
             this.triggerName = script.triggerName;
             this.hasTrigger = this.triggerName && this.triggerName !== "";
             this.currentNum = -1;
+            this.interruptable = true;
         }
 
         start(resetToOriginalPosition = false) {
+            console.log("start");
             if (resetToOriginalPosition) {
                 this.sprite.body.position.setTo(this.script.start.x * TILE_WIDTH, this.script.start.y * TILE_HEIGHT);
             }
@@ -89,6 +92,7 @@ module MyGame {
                 this.currentNum = 0;
                 if (!this.script.loop) {
                     this.currentNum = -1;
+                    this.interruptable = true;
                     if (this.onComplete) {
                         this.onComplete.call(this.onCompleteContext, this.onCompleteArgs);
                     }
@@ -97,7 +101,8 @@ module MyGame {
             }
             this.obj.direction = this.script.directions[this.currentNum] ? this.script.directions[this.currentNum] : this.obj.direction;
             let nextDest = this.destinations[this.currentNum];
-            this.currentTween = this.game.add.tween(this.sprite.body.position).to({x: nextDest.x, y: nextDest.y}, this.obj.speed, Phaser.Easing.Linear.None, true);
+            let speed = isVertical(this.script.directions[this.currentNum]) ? this.obj.speed * (TILE_WIDTH / TILE_HEIGHT) : this.obj.speed;
+            this.currentTween = this.game.add.tween(this.sprite.body.position).to({x: nextDest.x, y: nextDest.y}, speed, Phaser.Easing.Linear.None, true);
             this.currentTween.onComplete.add(this.onTweenComplete, this);
         }
 

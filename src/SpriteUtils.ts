@@ -10,6 +10,11 @@ module MyGame {
         return pof(point.x, point.y);
     }
 
+    export function isVertical(direction: Direction) {
+        return direction === Direction.Up || direction === Direction.Down
+          || direction === Direction.Forward || direction === Direction.Back;
+    }
+
     export class Utils {
         static fillString(s: string, len: number) {
             if (!s || s.length === 0) {

@@ -47,7 +47,8 @@ module MyGame {
 
         update() {
             let player = this.main.player;
-            if (Phaser.Math.distance(this.sprite.centerX, this.sprite.centerY, player.centerX, player.centerY) < TILE_HEIGHT * 1.5) {
+            if ((!this.movementManager || this.movementManager.interruptable)
+                && Phaser.Math.distance(this.sprite.centerX, this.sprite.centerY, player.centerX, player.centerY) < TILE_HEIGHT * 1.5) {
                 if (this.movementManager) {
                     this.buttonPrompt.reposition(this.sprite.x, this.sprite.y, -4);
                     this.movementManager.pause();
@@ -113,10 +114,12 @@ module MyGame {
         }
 
         doScript(directions: string, start?: Phaser.Point) {
+            console.log("doscript");
             this.movementManager.pause();
             start = start ? start : pof(Math.floor(this.sprite.x / TILE_WIDTH), Math.floor(this.sprite.y / TILE_WIDTH));
 
             this.movementManager = new MovementManager(this.main.game, Utils.makeMovementScript(start, directions), this);
+            this.movementManager.interruptable = false;
             this.movementManager.start(true);
         }
 
