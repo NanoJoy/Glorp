@@ -119,6 +119,7 @@ module MyGame {
                 this.pageNumber = 0;
                 this.upArrow.visible = false;
                 this.downArrow.visible = this.textEncounter.getCurrentPage().text.length > 1;
+                this.currentRead = !this.downArrow.visible;
                 this.game.inputs.O.onUp.add(this.addOnDownListener, this);
                 return;
             }
@@ -130,6 +131,7 @@ module MyGame {
             this.text.text = next.text[0];
             this.upArrow.visible = false;
             this.downArrow.visible = nextPrompt.text.length > 1;
+            this.currentRead = !this.downArrow.visible;
             this.leftArrow.visible = false;
             this.rightArrow.visible = nextPrompt.options.length > 0;
             this.game.inputs.left.onDown.add(this.scrollLeft, this);

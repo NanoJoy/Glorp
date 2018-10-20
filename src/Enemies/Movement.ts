@@ -51,7 +51,6 @@ module MyGame {
         }
 
         start(resetToOriginalPosition = false) {
-            console.log("start");
             if (resetToOriginalPosition) {
                 this.sprite.body.position.setTo(this.script.start.x * TILE_WIDTH, this.script.start.y * TILE_HEIGHT);
             }

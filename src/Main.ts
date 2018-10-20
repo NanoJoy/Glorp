@@ -122,6 +122,11 @@ module MyGame {
                     }
                 }
             }
+            else {
+                for (let npc of this.groups.npcs) {
+                    npc.playerStoppedUpdate();
+                }
+            }
         }
 
         private setupLevel(island: Island, savedGame?: SaveState) {

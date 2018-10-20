@@ -8,7 +8,7 @@ module MyGame {
         startX: number;
         startY: number;
         positionToSave: Phaser.Point;
-        private movementManager: MovementManager;
+        movementManager: MovementManager;
         private textManager: TextManager;
         private textDisplay: TextDisplay;
         private buttonPrompt: ButtonPrompt;
@@ -45,6 +45,16 @@ module MyGame {
         onStageBuilt() {
             if (this.movementManager && !this.movementManager.hasTrigger && !this.doingScript) {
                 this.movementManager.start();
+            }
+        }
+
+        playerStoppedUpdate() {
+            if (this.movementManager && !this.movementManager.paused) {
+                
+                let anim = this.movementManager.currentlyStationary() ? Utils.getIdleAnimName(this.direction) : Utils.getWalkingAnimName(this.direction);
+                if (anim && anim !== this.sprite.animations.currentAnim.name) {
+                    this.sprite.play(anim);
+                }
             }
         }
 
