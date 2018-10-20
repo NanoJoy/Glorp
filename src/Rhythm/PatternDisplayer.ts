@@ -23,7 +23,6 @@ module MyGame {
         }
 
         display(): PatternNote[] {
-            console.info(this);
             if (this.isDisplaying) {
                 return;
             }
@@ -32,7 +31,6 @@ module MyGame {
             var numNotes = Math.floor(Math.random() + (this.maxNumNotes - this.minNumNotes)) + this.minNumNotes;
             this.currentPattern = this.generator.generate(numNotes);
             for (let i = 0; i < this.generator.length; i++) {
-                console.log(i);
                 this.game.time.events.add(this.tempo * i, this.showNote, this, i);
             }
             this.game.time.events.add((this.generator.length + 1) * this.tempo, function () {

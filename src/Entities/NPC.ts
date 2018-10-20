@@ -12,6 +12,8 @@ module MyGame {
         private textManager: TextManager;
         private textDisplay: TextDisplay;
         private buttonPrompt: ButtonPrompt;
+        private doingScript: boolean;
+        private textShowing: boolean;
 
         constructor(main: Main, position: Phaser.Point, dialogKey: Texts, movementScript: MovementScript,
         speed: number, animationSpeed: number, spriteKey: string) {
@@ -37,10 +39,11 @@ module MyGame {
             }
             this.sprite.body.immovable = true;
             this.direction = Direction.Back;
+            this.textShowing = false;
         }
 
         onStageBuilt() {
-            if (this.movementManager && !this.movementManager.hasTrigger) {
+            if (this.movementManager && !this.movementManager.hasTrigger && !this.doingScript) {
                 this.movementManager.start();
             }
         }
@@ -93,6 +96,7 @@ module MyGame {
                     this.sprite.play(anim);
                 }
                 this.textDisplay.start(this.textManager.useNext(this.main, this));
+                this.textShowing = true;
             }
         }
 
@@ -114,12 +118,12 @@ module MyGame {
         }
 
         doScript(directions: string, start?: Phaser.Point) {
-            console.log("doscript");
             this.movementManager.pause();
             start = start ? start : pof(Math.floor(this.sprite.x / TILE_WIDTH), Math.floor(this.sprite.y / TILE_WIDTH));
 
             this.movementManager = new MovementManager(this.main.game, Utils.makeMovementScript(start, directions), this);
             this.movementManager.interruptable = false;
+            this.doingScript = true;
             this.movementManager.start(true);
         }
 
@@ -143,6 +147,12 @@ module MyGame {
         }
 
         private shouldShowText(): boolean {
+            if (this.textShowing) {
+                if (!this.buttonPrompt.input.isDown) {
+                    this.textShowing = false;
+                }
+                return false;
+            }
             return this.buttonPrompt.isShowing() && (this.textManager.getNext(this.main, this).autoStart || this.buttonPrompt.buttonIsDown());
         }
     }

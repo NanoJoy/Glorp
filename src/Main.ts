@@ -67,7 +67,7 @@ module MyGame {
                 worldManager.importLayouts(saveState.layouts);
                 worldManager.importDialogs(this, saveState.dialogs);
                 // Coming from link.
-            } else if (stateTransfer.island !== -1) {
+            } else if (stateTransfer.island !== -1 && !stateTransfer.funcs) {
                 var tween = this.add.tween(this.world).to({ alpha: 1 }, 500, Phaser.Easing.Linear.None, true);
                 tween.onComplete.add(function () {
                     this.physics.arcade.isPaused = false;
@@ -93,16 +93,17 @@ module MyGame {
                 value.onStageBuilt();
             }, this)
 
-            if (stateTransfer.funcs) {
-                stateTransfer.funcs(this);
-                stateTransfer.funcs = null;
-            }
-
             this.groups.npcs.forEach(function (value: NPC) {
                 value.onStageBuilt();
             }, this)
 
             this.player.onStageBuilt();
+
+            if (stateTransfer.funcs) {
+                stateTransfer.funcs(this);
+                stateTransfer.funcs = null;
+            }
+            console.log(this.playerStopped);
 
             this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
 
