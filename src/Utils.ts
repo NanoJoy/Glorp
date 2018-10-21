@@ -11,8 +11,7 @@ module MyGame {
     }
 
     export function isVertical(direction: Direction) {
-        return direction === Direction.Up || direction === Direction.Down
-          || direction === Direction.Forward || direction === Direction.Back;
+        return direction === Direction.Up || direction === Direction.Down;
     }
 
     export class Utils {
@@ -47,14 +46,14 @@ module MyGame {
             if (finish < start) {
                 throw new Error("finish must be greater than or equal to start.");
             }
-            var result = [];
-            for (var i = start; i <= finish; i++) {
+            let result = [];
+            for (let i = start; i <= finish; i++) {
                 result.push(i);
             }
             return result;
         }
 
-        static isAThing(thing: object): boolean {
+        static isAThing(thing: any): boolean {
             return thing !== undefined && thing !== null;
         }
 
@@ -82,10 +81,8 @@ module MyGame {
                 case null:
                     return null;
                 case Direction.Down:
-                case Direction.Back:
                     return "back";
                 case Direction.Up:
-                case Direction.Forward:
                     return "forward";
                 case Direction.Right:
                     return "right";
@@ -183,10 +180,6 @@ module MyGame {
                         return Direction.Left;
                     case "r":
                         return Direction.Right;
-                    case "f":
-                        return Direction.Forward;
-                    case "b":
-                        return Direction.Back;
                 }
                 throw new Error(`${letter} is not a valid direction char.`);
             }
@@ -198,11 +191,9 @@ module MyGame {
                 let end = start.clone();
                 for (let i = 0; i < directions.length; i++) {
                     switch (directions[i]) {
-                        case Direction.Forward:
                         case Direction.Up:
                             end.y -= 1;
                             break;
-                        case Direction.Back:
                         case Direction.Down:
                             end.y += 1;
                             break;

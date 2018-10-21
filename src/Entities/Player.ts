@@ -12,7 +12,7 @@ module MyGame {
             state.game.physics.arcade.enableBody(this);
             Utils.addPersonAnimations(this);
             this.inputs = state.inputs;
-            this.direction = Direction.Back;
+            this.direction = Direction.Down;
             state.add.existing(this);
             this.state = state;
         }
@@ -49,7 +49,7 @@ module MyGame {
             var animName = "";
             switch (directionDown) {
                 case 2:
-                    this.direction = Direction.Forward;
+                    this.direction = Direction.Up;
                     animName = "walk_forward";
                     this.body.velocity.setTo(0, -Player.WALKING_SPEED);
                     break;
@@ -59,7 +59,7 @@ module MyGame {
                     this.body.velocity.setTo(-Player.WALKING_SPEED, 0);
                     break;
                 case 5:
-                    this.direction = Direction.Back;
+                    this.direction = Direction.Down;
                     animName = "walk_back";
                     this.body.velocity.setTo(0, Player.WALKING_SPEED);
                     break;

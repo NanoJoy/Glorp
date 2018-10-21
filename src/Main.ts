@@ -61,17 +61,16 @@ module MyGame {
             let stateTransfer = StateTransfer.getInstance();
             let saveState = gameSaver.loadGame();
             // Load from save.
-            if ((stateTransfer.reason === TransferReason.DEATH || !stateTransfer.position) && saveState) {
+            if ((stateTransfer.reason === TransferReason.DEATH || stateTransfer.reason === TransferReason.NONE) && saveState) {
                 stateTransfer.island = saveState.islandNum;
                 stateTransfer.position = pof(saveState.playerPosition.x, saveState.playerPosition.y);
                 worldManager.importLayouts(saveState.layouts);
                 worldManager.importDialogs(this, saveState.dialogs);
-                // Coming from link.
-            } else if (stateTransfer.island !== -1 && !stateTransfer.funcs) {
+            // Coming from link.
+            } else if (stateTransfer.reason === TransferReason.LINK && stateTransfer.island !== -1) {
                 var tween = this.add.tween(this.world).to({ alpha: 1 }, 500, Phaser.Easing.Linear.None, true);
                 tween.onComplete.add(function () {
-                    this.physics.arcade.isPaused = false;
-                    this.playerStopped = false;
+                    this.unstopPlayer();
                 }, this);
             }
             this.inputs = new Inputs(this);
@@ -234,17 +233,14 @@ module MyGame {
 
         spacebarDown() {
             this.game.paused = !this.game.paused;
-            if (this.game.paused) {
-                this.pauseMenu = new PauseMenu(this);
-                this.inputs.down.onDown.add(this.pauseMenu.changeSelection, this.pauseMenu);
-                this.inputs.up.onDown.add(this.pauseMenu.changeSelection, this.pauseMenu);
-                this.inputs.O.onDown.add(this.pauseMenu.select, this.pauseMenu);
+            if (!this.game.paused) {
+                this.pauseMenu.exit();
                 return;
             }
-            this.pauseMenu.exit();
-            this.inputs.down.onDown.remove(this.pauseMenu.changeSelection, this.pauseMenu);
-            this.inputs.up.onDown.remove(this.pauseMenu.changeSelection, this.pauseMenu);
-            this.inputs.O.onDown.remove(this.pauseMenu.select, this.pauseMenu);
+            this.pauseMenu = new PauseMenu(this);
+            this.inputs.down.onDown.add(this.pauseMenu.changeSelection, this.pauseMenu);
+            this.inputs.up.onDown.add(this.pauseMenu.changeSelection, this.pauseMenu);
+            this.inputs.O.onDown.add(this.pauseMenu.select, this.pauseMenu);
         }
 
         saveGame() {

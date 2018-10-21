@@ -32,13 +32,14 @@ module MyGame {
             this.textDisplay = new BottomTextDisplay(main, this);
             this.buttonPrompt = new ButtonPrompt(this, main.inputs.O, -4);
 
+            console.log(movementScript);
             if (movementScript) {
                 this.movementManager = new MovementManager(main.game, movementScript, this);
             } else {
                 this.sprite.body.moves = false;
             }
             this.sprite.body.immovable = true;
-            this.direction = Direction.Back;
+            this.direction = Direction.Down;
             this.textShowing = false;
         }
 
@@ -68,9 +69,9 @@ module MyGame {
                 }
                 this.buttonPrompt.show();
                 if (player.centerY < this.sprite.y) {
-                    this.direction = Direction.Forward;
+                    this.direction = Direction.Up;
                 } else if (player.centerY > this.sprite.bottom) {
-                    this.direction = Direction.Back;
+                    this.direction = Direction.Down;
                 } else if (player.centerX < this.sprite.left) {
                     this.direction = Direction.Left;
                 } else {

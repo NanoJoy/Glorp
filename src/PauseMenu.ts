@@ -80,6 +80,9 @@ module MyGame {
             this.background.destroy();
             this.texts.forEach(t => t.destroy());
             this.infoText.text = "";
+            this.main.inputs.down.onDown.remove(this.changeSelection, this);
+            this.main.inputs.up.onDown.remove(this.changeSelection, this);
+            this.main.inputs.O.onDown.remove(this.select, this);
         }
 
         private displayOptions(options: Option[]) {

@@ -67,11 +67,9 @@ module MyGame {
                     case Direction.Right:
                         destinations.push(pof(lastPosition.x + TILE_WIDTH, lastPosition.y));
                         break;
-                    case Direction.Forward:
                     case Direction.Up:
                         destinations.push(pof(lastPosition.x, lastPosition.y - TILE_HEIGHT));
                         break;
-                    case Direction.Back:
                     case Direction.Down:
                         destinations.push(pof(lastPosition.x, lastPosition.y + TILE_HEIGHT));
                         break;
@@ -98,7 +96,7 @@ module MyGame {
                     return;
                 }
             }
-            this.obj.direction = this.script.directions[this.currentNum] ? this.script.directions[this.currentNum] : this.obj.direction;
+            this.obj.direction = Utils.isAThing(this.script.directions[this.currentNum]) ? this.script.directions[this.currentNum] : this.obj.direction;
             let nextDest = this.destinations[this.currentNum];
             let speed = isVertical(this.script.directions[this.currentNum]) ? this.obj.speed * (TILE_WIDTH / TILE_HEIGHT) : this.obj.speed;
             this.currentTween = this.game.add.tween(this.sprite.body.position).to({x: nextDest.x, y: nextDest.y}, speed, Phaser.Easing.Linear.None, true);
@@ -129,7 +127,7 @@ module MyGame {
             if (!this.paused || this.currentNum === -1) {
                 return;
             }
-            this.obj.direction = this.script.directions[this.currentNum];
+            this.obj.direction = Utils.isAThing(this.script.directions[this.currentNum]) ? this.script.directions[this.currentNum] : this.obj.direction;
             this.currentTween.resume();
             this.paused = false;
         }
