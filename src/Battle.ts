@@ -52,7 +52,7 @@ module MyGame {
                 this.playerHealth = Math.max(playerDamage, 0);
                 this.playerHealthDisplay.updateHitPoints(this.playerHealth);
                 if (this.playerHealth === 0) {
-                    StateTransfer.getInstance().fromLink = false;
+                    StateTransfer.getInstance().reason = TransferReason.DEATH;
                     this.game.state.start(States.Main);
                 }
                 return;
@@ -72,7 +72,7 @@ module MyGame {
             this.enemy.die();
             stateTransfer.position = new Phaser.Point(Math.floor(this.enemy.worldSprite.position.x / TILE_WIDTH), Math.floor(this.enemy.worldSprite.position.y / TILE_HEIGHT));
             stateTransfer.funcs = this.enemy.afterDeath;
-            stateTransfer.fromLink = false;
+            stateTransfer.reason = TransferReason.VICTORY;
             this.state.start(States.Main);
         }
     }

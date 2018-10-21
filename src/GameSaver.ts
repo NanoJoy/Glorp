@@ -78,6 +78,12 @@ module MyGame {
             }
             this.cached = JSON.parse(file) as SaveState;
             this.cached.triggers = this.cached.triggers.map(t => new Location(t.island, t.x, t.y));
+            this.cached.npcs = this.cached.npcs.map(n => {
+                return {
+                    old: new Location(n.old.island, n.old.x, n.old.y),
+                    now: new Location(n.now.island, n.now.x, n.now.y)
+                }
+            });
             return this.cached;
         }
 

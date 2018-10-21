@@ -6,4 +6,8 @@ module MyGame {
     export enum Diagonal {
         SW, NE, NW, SE
     }
+
+    export enum TransferReason {
+        NONE, LINK, DEATH, VICTORY
+    }
 }

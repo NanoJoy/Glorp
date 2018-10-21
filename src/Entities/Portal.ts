@@ -32,7 +32,7 @@ module MyGame {
             var stateTransfer = StateTransfer.getInstance();
             stateTransfer.island = this.link;
             stateTransfer.position = this.playerStart;
-            stateTransfer.fromLink = true;
+            stateTransfer.reason = TransferReason.LINK;
             stateTransfer.dialogs = WorldManager.getInstance().exportDialogs();
             this.main.state.restart();
         }

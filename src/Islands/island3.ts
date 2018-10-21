@@ -7,11 +7,13 @@ module MyGame {
                 main.stopPlayer();
                 main.player.position.setTo(5 * TILE_WIDTH, 7 * TILE_HEIGHT);
                 albert.setDialogState(0);
-                albert.doScript("d=ldddddddrrr;l=false", pof(5, 2));
+                albert.doScript("d=lddddddrrr;l=false", pof(5, 2));
                 albert.movementManager.setOnComplete(function() {
                     this.playerStopped = false;
+                    main.groups.barriers.filter(b => b instanceof Gate)[0].sprite.destroy();
+                    WorldManager.getInstance().changeLayout(3, pof(8, 9), " ");
                 }, main);
-                albert.savePosition(7, 9);
+                albert.savePosition(7, 8);
             }
         }
 

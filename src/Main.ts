@@ -11,7 +11,7 @@ module MyGame {
         island: number;
         position: Phaser.Point;
         health: number;
-        fromLink: boolean;
+        reason: TransferReason;
         dialogs: Dialogs[];
         triggers: Location[];
         npcs: { old: Location; now: Location }[];
@@ -23,7 +23,7 @@ module MyGame {
             this.island = -1;
             this.position = null;
             this.health = -1;
-            this.fromLink = false;
+            this.reason = TransferReason.NONE;
             this.dialogs = [];
             this.triggers = [];
             this.npcs = [];
@@ -61,7 +61,7 @@ module MyGame {
             let stateTransfer = StateTransfer.getInstance();
             let saveState = gameSaver.loadGame();
             // Load from save.
-            if (!stateTransfer.position && saveState) {
+            if ((stateTransfer.reason === TransferReason.DEATH || !stateTransfer.position) && saveState) {
                 stateTransfer.island = saveState.islandNum;
                 stateTransfer.position = pof(saveState.playerPosition.x, saveState.playerPosition.y);
                 worldManager.importLayouts(saveState.layouts);
@@ -204,7 +204,7 @@ module MyGame {
 
             let playerPosition = null as Phaser.Point;
             if (stateTransfer.position) {
-                playerPosition = stateTransfer.fromLink ? island.getAdjustedPosition(stateTransfer.position.clone()) : stateTransfer.position.clone();
+                playerPosition = stateTransfer.reason === TransferReason.LINK ? island.getAdjustedPosition(stateTransfer.position.clone()) : stateTransfer.position.clone();
             } else {
                 playerPosition = island.getAdjustedPosition(island.playerStart.clone());
             }
