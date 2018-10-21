@@ -23,8 +23,7 @@ module MyGame {
         }
 
         onCollide(portalSprite: Phaser.Sprite, playerSprite: Phaser.Sprite) {
-            this.main.playerStopped = true;
-            this.main.physics.arcade.isPaused = true;
+            this.main.stopPlayer();
             var tween = this.main.add.tween(this.main.game.world).to({ alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
             tween.onComplete.add(this.changeIsland, this);
         }

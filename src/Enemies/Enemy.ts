@@ -12,6 +12,7 @@ module MyGame {
         hitPoints: number;
         health: number;
         alive: boolean;
+        movementManager: MovementManager;
         calculateDamage: (pattern: PatternNote[], notePresses: NotePress[]) => number;
         getAttackPoints: (pattern: PatternNote[]) => number;
         onStageBuilt: () => void;

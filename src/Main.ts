@@ -103,7 +103,6 @@ module MyGame {
                 stateTransfer.funcs(this);
                 stateTransfer.funcs = null;
             }
-            console.log(this.playerStopped);
 
             this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
 
@@ -256,6 +255,20 @@ module MyGame {
         stopPlayer() {
             this.playerStopped = true;
             this.player.body.velocity.setTo(0, 0);
+            this.groups.enemies.forEach(e => {
+                if (e.movementManager) {
+                    e.movementManager.pause();
+                }
+            });
+        }
+
+        unstopPlayer() {
+            this.playerStopped = false;
+            this.groups.enemies.forEach(e => {
+                if (e.movementManager) {
+                    e.movementManager.resume();
+                }
+            })
         }
     }
 }
