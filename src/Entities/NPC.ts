@@ -120,6 +120,7 @@ module MyGame {
 
         doTrigger(name: string): void {
             if (this.movementManager && this.movementManager.hasTrigger && this.movementManager.triggerName === name) {
+                this.positionToSave = Utils.getEndPosition(pof(this.startX, this.startY), this.movementManager.script.directions);
                 this.movementManager.start();
                 if (!this.movementManager.loop) {
                     this.movementManager.setOnComplete(this.showText, this, true);

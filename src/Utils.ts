@@ -191,5 +191,33 @@ module MyGame {
                 throw new Error(`${letter} is not a valid direction char.`);
             }
         }
+
+        
+
+        static getEndPosition(start: Phaser.Point, directions: Direction[]): Phaser.Point {
+            let end = start.clone();
+            for (let i = 0; i < directions.length; i++) {
+                switch (directions[i]) {
+                    case Direction.Forward:
+                    case Direction.Up:
+                        end.y -= 1;
+                        break;
+                    case Direction.Back:
+                    case Direction.Down:
+                        end.y += 1;
+                        break;
+                    case Direction.Left:
+                        end.x -= 1;
+                        break;
+                    case Direction.Right:
+                        end.x += 1;
+                        break;
+                }
+            }
+            if (end.x < 0 || end.y < 0) {
+                throw new Error("End point of script would have negative value.");
+            }
+            return end;
+        }
     }
 }
