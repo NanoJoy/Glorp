@@ -77,6 +77,7 @@ module MyGame {
                 return null;
             }
             this.cached = JSON.parse(file) as SaveState;
+            this.cached.triggers = this.cached.triggers.map(t => new Location(t.island, t.x, t.y));
             return this.cached;
         }
 
