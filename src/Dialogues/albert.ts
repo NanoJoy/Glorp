@@ -19,6 +19,24 @@ module MyGame {
             ])
         }
 
+        let dumpy = new TextDump("If you want to hurt them more, I think you should try to hit the moves on the same beats that they do. Try it out.");
+        function getJamBugExplanation() {
+            return new TextPrompt("The JamBots were supposed to be the beginner's version. The hard version is called JamBugs. And they also started acting up. I managed to trap them behind this gate, but you'll have to go through them to get to town.", [
+                new TextOption("Anything else?", dumpy)
+            ]);
+        }
+
+        function decision(lastViewed: number, main: Main, parent: Entity): number {
+            if (lastViewed < 0) {
+                return 0;
+            }
+            if (lastViewed < 2) {
+                let jambotsLeft = main.groups.enemies.filter(e => e instanceof JamBot).length > 0;
+                return jambotsLeft ? 1 : 2;
+            }
+            return 3;
+        }
+
         return new TextManager([
             new TextEncounter(new TextPrompt("Hello Rosie.", [
                 new TextOption("Oh hey Albert.", new TextPrompt("Do you want to hear about my latest invention?", [
@@ -26,6 +44,12 @@ module MyGame {
                     new TextOption("Not really...", new TextDump("Well, I think you had better listen anyway, if you want to survive. Um, just kidding!", getJambotExplanation()))
                 ]))
             ])),
-        ])
+            new TextEncounter(danceDance()),
+            new TextEncounter(new TextPrompt("Wow, thanks! I knew you could do it. But uh...", [
+                new TextOption("What?", getJamBugExplanation()),
+                new TextOption("*Sigh*", getJamBugExplanation())
+            ]), true),
+            new TextEncounter(dumpy)
+        ], decision)
     }
 }

@@ -132,7 +132,7 @@ module MyGame {
             this.downArrow.visible = nextPrompt.text.length > 1;
             this.currentRead = !this.downArrow.visible;
             this.leftArrow.visible = false;
-            this.rightArrow.visible = nextPrompt.options.length > 0;
+            this.rightArrow.visible = nextPrompt.options.length > 1;
             this.game.inputs.left.onDown.add(this.scrollLeft, this);
             this.game.inputs.right.onDown.add(this.scrollRight, this);
             this.currentOptionText.visible = true;

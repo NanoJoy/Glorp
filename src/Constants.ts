@@ -45,6 +45,7 @@ module MyGame {
         BottomTextBackground = "bottom_text_background";
         ButtonPrompt = "button_prompt";
         Door = "door";
+        Gate = "gate";
         HealthBarContainer = "healthbar_container";
         House = "house";
         JamBotBattle = "jambot_battle";

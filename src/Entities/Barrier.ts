@@ -84,7 +84,7 @@ module MyGame {
 
     export class Gate extends Barrier {
         constructor(main: Main, position: Phaser.Point) {
-            super(main, position, Assets.Images.Door, "g");
+            super(main, position, Assets.Images.Gate, "g");
         }
     }
 }
