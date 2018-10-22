@@ -1,13 +1,13 @@
 module MyGame {
-    export class JamBot implements Enemy, Moveable {
-        name = "JamBot";
-        minNumNotes = 4;
-        maxNumNotes = 4;
-        patternLength = 8;
-        beatLength = 2;
-        tempo = 500;
-        battleSpriteKey = "jambot";
-        worldSpriteKey = Assets.Sprites.JamBotWorld.key;
+    abstract class Jammer implements Enemy, Moveable {
+        name: string;
+        minNumNotes: number;
+        maxNumNotes: number;
+        patternLength: number;
+        beatLength: number;
+        tempo: number;
+        battleSpriteKey: string;
+        worldSpriteKey: string;
         hitPoints = 100;
         main: Main;
         position: Phaser.Point;
@@ -20,12 +20,12 @@ module MyGame {
         alive: boolean;
         afterDeath: (main: Main) => void;
 
-        constructor(main: Main, position: Phaser.Point, movementScript: MovementScript) {
+        constructor(main: Main, position: Phaser.Point, movementScript: MovementScript, hitPoints: number, worldSprite: string) {
             this.alive = true;
             this.main = main;
             this.position = position;
-            this.health = this.hitPoints;
-            this.worldSprite = this.main.add.sprite(position.x * TILE_WIDTH, position.y * TILE_HEIGHT, this.worldSpriteKey);
+            this.health = hitPoints;
+            this.worldSprite = this.main.add.sprite(position.x * TILE_WIDTH, position.y * TILE_HEIGHT, worldSprite);
             this.main.physics.arcade.enable(this.worldSprite);
             this.worldSprite.animations.add("walk", Utils.animationArray(0, 7), 5, true);
             this.worldSprite.play("walk");
@@ -89,6 +89,36 @@ module MyGame {
         die() {
             this.alive = false;
             WorldManager.getInstance().changeLayout(StateTransfer.getInstance().island, this.position, "J");
+        }
+    }
+
+    export class JamBot extends Jammer {
+        constructor(main: Main, position: Phaser.Point, movementScript: MovementScript) {
+            super(main, position, movementScript, 100, Assets.Sprites.JamBotWorld.key);
+            this.name = "JamBot";
+            this.minNumNotes = 4;
+            this.maxNumNotes = 4;
+            this.patternLength = 8;
+            this.beatLength = 2;
+            this.tempo = 500;
+            this.battleSpriteKey = "jambot";
+            this.worldSpriteKey = Assets.Sprites.JamBotWorld.key;
+            this.hitPoints = 100;
+        }
+    }
+
+    export class JamBug extends Jammer {
+        constructor(main: Main, position: Phaser.Point, movementScript: MovementScript) {
+            super(main, position, movementScript, 100, Assets.Sprites.JamBugWorld.key);
+            this.name = "JamBug";
+            this.minNumNotes = 4;
+            this.maxNumNotes = 4;
+            this.patternLength = 8;
+            this.beatLength = 2;
+            this.tempo = 500;
+            this.battleSpriteKey = "jambot";
+            this.worldSpriteKey = Assets.Sprites.JamBugWorld.key;
+            this.hitPoints = 100;
         }
     }
 }

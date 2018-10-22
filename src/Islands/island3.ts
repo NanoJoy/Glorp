@@ -27,7 +27,7 @@ module MyGame {
                 "  w    ew             ",
                 "  w  *  w             ",
                 "  we    wwwwwwwwww    ",
-                "  w     *             ",
+                "  w     *    e        ",
                 "  w     g             ",
                 "  w     *             ",
                 "  wwwwwwwwwwwwwwww    "
@@ -53,6 +53,11 @@ module MyGame {
                     type: Assets.Sprites.JamBotWorld.key,
                     script: "rrrrllll",
                     afterDeath: jambotDead
+                },
+                {
+                    position: pof(13, 8),
+                    type: Assets.Sprites.JamBugWorld.key,
+                    script: "du",
                 }
             ])
             .build();

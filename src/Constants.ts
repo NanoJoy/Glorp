@@ -32,6 +32,7 @@ module MyGame {
         DoorWay = new SpriteAsset("doorway", 36, 8);
         Grounds = new SpriteAsset("grounds");
         JamBotWorld = new SpriteAsset("jambot_world");
+        JamBugWorld = new SpriteAsset("jambug_world");
         OldMan = new SpriteAsset("old_man");
         Player = new SpriteAsset("player");
         RhythmSymbols = new SpriteAsset("rhythm_symbols", 24, 24);

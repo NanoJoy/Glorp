@@ -239,6 +239,10 @@ module MyGame {
                     let jambot = new JamBot(main, pcop(enemy.position), Utils.makeMovementScript(enemy.position, enemy.script));
                     jambot.afterDeath = enemy.afterDeath;
                     return jambot;
+                case Assets.Sprites.JamBugWorld.key:
+                    let jambug = new JamBug(main, enemy.position.clone(), Utils.makeMovementScript(enemy.position, enemy.script));
+                    jambug.afterDeath = enemy.afterDeath;
+                    return jambug;
             }
             throw new Error(`${enemy.type} is not a valid enemy type.`);
         }
