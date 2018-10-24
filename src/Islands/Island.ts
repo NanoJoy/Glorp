@@ -240,7 +240,7 @@ module MyGame {
                     jambot.afterDeath = enemy.afterDeath;
                     return jambot;
                 case Assets.Sprites.JamBugWorld.key:
-                    let jambug = new JamBug(main, enemy.position.clone(), Utils.makeMovementScript(enemy.position, enemy.script));
+                    let jambug = new JamBug(main, pcop(enemy.position), Utils.makeMovementScript(enemy.position, enemy.script));
                     jambug.afterDeath = enemy.afterDeath;
                     return jambug;
             }

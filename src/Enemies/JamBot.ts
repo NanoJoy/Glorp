@@ -24,11 +24,13 @@ module MyGame {
             this.alive = true;
             this.main = main;
             this.position = position;
+            console.log(position);
             this.health = hitPoints;
             this.worldSprite = this.main.add.sprite(position.x * TILE_WIDTH, position.y * TILE_HEIGHT, worldSprite);
             this.main.physics.arcade.enable(this.worldSprite);
             this.worldSprite.animations.add("walk", Utils.animationArray(0, 7), 5, true);
             this.worldSprite.play("walk");
+            console.log(this.worldSprite);
             this.sprite = this.worldSprite;
             this.movementManager = new MovementManager(this.main.game, movementScript, this);
         }
@@ -104,6 +106,7 @@ module MyGame {
             this.battleSpriteKey = "jambot";
             this.worldSpriteKey = Assets.Sprites.JamBotWorld.key;
             this.hitPoints = 100;
+            this.speed = 1000;
         }
     }
 
@@ -119,6 +122,7 @@ module MyGame {
             this.battleSpriteKey = "jambot";
             this.worldSpriteKey = Assets.Sprites.JamBugWorld.key;
             this.hitPoints = 100;
+            this.speed = 1000;
         }
     }
 }

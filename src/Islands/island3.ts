@@ -3,7 +3,7 @@ module MyGame {
         function jambotDead (main: Main) {
             let albert = main.groups.npcs[0];
             albert.sprite.position.setTo(5 * TILE_WIDTH, 2 * TILE_HEIGHT);
-            if (main.groups.enemies.filter(e => e.alive).length === 0) {
+            if (main.groups.enemies.filter(e => e instanceof JamBot && e.alive).length === 0) {
                 main.stopPlayer();
                 main.player.position.setTo(5 * TILE_WIDTH, 7 * TILE_HEIGHT);
                 albert.setDialogState(0);
@@ -57,7 +57,7 @@ module MyGame {
                 {
                     position: pof(13, 8),
                     type: Assets.Sprites.JamBugWorld.key,
-                    script: "du",
+                    script: "du"
                 }
             ])
             .build();
