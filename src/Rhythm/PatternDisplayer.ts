@@ -14,7 +14,7 @@ module MyGame {
         constructor(game: Battle, enemy: Enemy) {
             this.game = game;
             this.isDisplaying = false;
-            this.tempo = enemy.tempo;
+            this.tempo = Utils.bpmToMilliseconds(enemy.tempo);
             this.minNumNotes = enemy.minNumNotes;
             this.maxNumNotes = enemy.maxNumNotes;
             var allowedNotes = [Phaser.KeyCode.W, Phaser.KeyCode.A,

@@ -18,12 +18,12 @@ module MyGame {
 
         constructor(game: Battle, enemy: Enemy) {
             this.game = game;
-            this.tempo = enemy.tempo;
+            this.tempo = Utils.bpmToMilliseconds(enemy.tempo);
             this.patternLength = enemy.patternLength;
             this.beatLength = enemy.beatLength;
             this.active = false;
             this.inputAllowed = false;
-            this.numMils = enemy.patternLength * enemy.tempo;
+            this.numMils = enemy.patternLength * this.tempo;
         }
 
         begin(pattern: PatternNote[]) {

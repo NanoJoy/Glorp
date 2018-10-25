@@ -98,7 +98,7 @@ module MyGame {
             let rowsInPage = 3;
             let words = text.split(" ");
             let pages = [] as string[];
-            let workingPage = ["","",""];
+            let workingPage = ["", "", ""];
             let rowCount = rowsInPage;
             for (let i = 0; i < lettersInRow; i++) {
                 workingPage[rowsInPage - 1] += "a";
@@ -185,30 +185,32 @@ module MyGame {
             }
         }
 
-        
-
-            static getEndPosition(start: Phaser.Point, directions: Direction[]): Phaser.Point {
-                let end = start.clone();
-                for (let i = 0; i < directions.length; i++) {
-                    switch (directions[i]) {
-                        case Direction.Up:
-                            end.y -= 1;
-                            break;
-                        case Direction.Down:
-                            end.y += 1;
-                            break;
-                        case Direction.Left:
-                            end.x -= 1;
-                            break;
-                        case Direction.Right:
-                            end.x += 1;
-                            break;
-                    }
+        static getEndPosition(start: Phaser.Point, directions: Direction[]): Phaser.Point {
+            let end = start.clone();
+            for (let i = 0; i < directions.length; i++) {
+                switch (directions[i]) {
+                    case Direction.Up:
+                        end.y -= 1;
+                        break;
+                    case Direction.Down:
+                        end.y += 1;
+                        break;
+                    case Direction.Left:
+                        end.x -= 1;
+                        break;
+                    case Direction.Right:
+                        end.x += 1;
+                        break;
                 }
-                if (end.x < 0 || end.y < 0) {
-                    throw new Error("End point of script would have negative value.");
-                }
-                return end;
             }
+            if (end.x < 0 || end.y < 0) {
+                throw new Error("End point of script would have negative value.");
+            }
+            return end;
+        }
+
+        static bpmToMilliseconds(bpm: number): number {
+            return 60000 / bpm;
+        }
     }
 }

@@ -27,7 +27,7 @@ module MyGame {
             this.patternDisplayer = new PatternDisplayer(this, this.enemy);
             this.patternChecker = new PatternMatcher(this, this.enemy);
             this.startPattern();
-            this.time.events.loop(this.enemy.tempo * this.enemy.patternLength * 2, this.startPattern, this);
+            this.time.events.loop(this.patternDisplayer.tempo * this.enemy.patternLength * 2, this.startPattern, this);
             this.time.events.start();
         }
 
@@ -42,7 +42,7 @@ module MyGame {
             this.patternDisplayer.reset();
             this.patternChecker.reset();
             this.currentPattern = this.patternDisplayer.display();
-            this.time.events.add((this.enemy.patternLength - 1) * this.enemy.tempo, this.startChecker, this);
+            this.time.events.add((this.enemy.patternLength - 1) * this.patternDisplayer.tempo, this.startChecker, this);
         }
 
         private afterRound() {
