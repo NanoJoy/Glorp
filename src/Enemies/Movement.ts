@@ -99,10 +99,8 @@ module MyGame {
             this.obj.direction = Utils.isAThing(this.script.directions[this.currentNum]) ? this.script.directions[this.currentNum] : this.obj.direction;
             let nextDest = this.destinations[this.currentNum];
             let speed = isVertical(this.script.directions[this.currentNum]) ? this.obj.speed * (TILE_WIDTH / TILE_HEIGHT) : this.obj.speed;
-            console.log(this.obj.speed);
             this.currentTween = this.game.add.tween(this.sprite.body.position).to({x: nextDest.x, y: nextDest.y}, speed, Phaser.Easing.Linear.None, true);
             this.currentTween.onComplete.add(this.onTweenComplete, this);
-            console.log(this.sprite.body.position);
         }
 
         setOnComplete(onComplete: () => void, onCompleteContext: object, ...onCompletArgs: any[]) {

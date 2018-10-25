@@ -19,44 +19,25 @@ module MyGame {
         movementManager: MovementManager;
         alive: boolean;
         afterDeath: (main: Main) => void;
+        specificUpdate: () => void;
+        calculateDamage: (pattern: PatternNote[], notePresses: NotePress[]) => number;
 
         constructor(main: Main, position: Phaser.Point, movementScript: MovementScript, hitPoints: number, worldSprite: string) {
             this.alive = true;
             this.main = main;
             this.position = position;
-            console.log(position);
             this.health = hitPoints;
             this.worldSprite = this.main.add.sprite(position.x * TILE_WIDTH, position.y * TILE_HEIGHT, worldSprite);
+            this.worldSprite.anchor.setTo(0.5, 0.5);
             this.main.physics.arcade.enable(this.worldSprite);
             this.worldSprite.animations.add("walk", Utils.animationArray(0, 7), 5, true);
             this.worldSprite.play("walk");
-            console.log(this.worldSprite);
             this.sprite = this.worldSprite;
             this.movementManager = new MovementManager(this.main.game, movementScript, this);
         }
 
         onStageBuilt() {
             this.movementManager.start();
-        }
-
-        calculateDamage(pattern: PatternNote[], notePresses: NotePress[]): number {
-            if (pattern.length !== notePresses.length) {
-                return 0;
-            }
-            var sortedPattern = pattern.sort(function (a, b) { return a.position - b.position });
-            var sortedPresses = notePresses.sort(function (a, b) { return a.position - b.position });
-            var damage = 0;
-            for (var i = 0; i < sortedPattern.length; i++) {
-                if (sortedPattern[i].key !== sortedPresses[i].note) {
-                    return 0;
-                }
-                var amount = Math.round((500 - sortedPresses[i].distance) / 50);
-                if (sortedPattern[i].position === sortedPresses[i].position) {
-                    amount = Math.floor(amount * 1.5);
-                }
-                damage += amount;
-            }
-            return damage;
         }
 
         getAttackPoints(pattern: PatternNote[]) {
@@ -86,6 +67,9 @@ module MyGame {
             }
             this.movementManager.playNext();
             this.main.physics.arcade.overlap(this.worldSprite, this.main.player, this.playerOverlap, null, this);
+            if (Utils.isAThing(this.specificUpdate)) {
+                this.specificUpdate();
+            }
         }
 
         die() {
@@ -107,6 +91,22 @@ module MyGame {
             this.worldSpriteKey = Assets.Sprites.JamBotWorld.key;
             this.hitPoints = 100;
             this.speed = 1000;
+
+            this.calculateDamage = (pattern: PatternNote[], notePresses: NotePress[]) => {
+                if (pattern.length !== notePresses.length) {
+                    return 0;
+                }
+                let sortedPattern = pattern.sort(function (a, b) { return a.position - b.position });
+                let sortedPresses = notePresses.sort(function (a, b) { return a.position - b.position });
+                let damage = 0;
+                for (let i = 0; i < sortedPattern.length; i++) {
+                    if (sortedPattern[i].key !== sortedPresses[i].note) {
+                        return 0;
+                    }
+                    damage += Math.round((500 - sortedPresses[i].distance) / 50);
+                }
+                return damage;
+            }
         }
     }
 
@@ -122,7 +122,39 @@ module MyGame {
             this.battleSpriteKey = "jambot";
             this.worldSpriteKey = Assets.Sprites.JamBugWorld.key;
             this.hitPoints = 100;
-            this.speed = 1000;
+            this.speed = 500;
+
+            this.specificUpdate = () => {
+                if (this.direction === Direction.Up && this.sprite.rotation !== Math.PI) {
+                    this.sprite.rotation = Math.PI;
+                } else if (this.direction === Direction.Down && this.sprite.rotation !== 0) {
+                    this.sprite.rotation = 0;
+                } else if (this.direction === Direction.Right && this.sprite.rotation !== Math.PI * 1.5) {
+                    this.sprite.rotation = Math.PI * 1.5;
+                } else if (this.direction === Direction.Left && this.sprite.rotation !== Math.PI * 0.5) {
+                    this.sprite.rotation = Math.PI * 0.5;
+                }
+            }
+
+            this.calculateDamage = (pattern: PatternNote[], notePresses: NotePress[]) => {
+                if (pattern.length !== notePresses.length) {
+                    return 0;
+                }
+                var sortedPattern = pattern.sort(function (a, b) { return a.position - b.position });
+                var sortedPresses = notePresses.sort(function (a, b) { return a.position - b.position });
+                var damage = 0;
+                for (var i = 0; i < sortedPattern.length; i++) {
+                    if (sortedPattern[i].key !== sortedPresses[i].note) {
+                        return 0;
+                    }
+                    var amount = Math.round((500 - sortedPresses[i].distance) / 100);
+                    if (sortedPattern[i].position === sortedPresses[i].position) {
+                        amount = Math.floor(amount * 3);
+                    }
+                    damage += amount;
+                }
+                return damage;
+            }
         }
     }
 }

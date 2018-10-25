@@ -57,7 +57,7 @@ module MyGame {
                 {
                     position: pof(13, 8),
                     type: Assets.Sprites.JamBugWorld.key,
-                    script: "du"
+                    script: "ddlluurr"
                 }
             ])
             .build();
