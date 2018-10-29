@@ -64,6 +64,7 @@ module MyGame {
             if ((stateTransfer.reason === TransferReason.DEATH || stateTransfer.reason === TransferReason.NONE) && saveState) {
                 stateTransfer.island = saveState.islandNum;
                 stateTransfer.position = pof(saveState.playerPosition.x, saveState.playerPosition.y);
+                stateTransfer.health = saveState.health;
                 worldManager.importLayouts(saveState.layouts);
                 worldManager.importDialogs(this, saveState.dialogs);
             // Coming from link.
@@ -207,7 +208,8 @@ module MyGame {
             } else {
                 playerPosition = island.getAdjustedPosition(island.playerStart.clone());
             }
-            this.player = new Player(this, playerPosition);
+            console.log(stateTransfer);
+            this.player = new Player(this, playerPosition, stateTransfer.health === -1 ? 100 : stateTransfer.health);
 
             this.setDepths();
         }

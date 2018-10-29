@@ -54,7 +54,7 @@ module MyGame {
         }
 
         static isAThing(thing: any): boolean {
-            return thing !== undefined && thing !== null;
+            return thing !== undefined && thing !== null && thing !== NaN;
         }
 
         static addPersonAnimations(sprite: Phaser.Sprite, speed = 5) {

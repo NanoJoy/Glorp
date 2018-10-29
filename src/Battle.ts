@@ -11,17 +11,20 @@ module MyGame {
 
         create() {
             this.time.reset();
-            this.playerHealth = 100;
             this.stage.backgroundColor =  0xEAEAEA;
-            var stateTransfer = StateTransfer.getInstance();
+
+            let stateTransfer = StateTransfer.getInstance();
+            console.log(stateTransfer);
+            this.playerHealth = stateTransfer.health === -1 ? 100 : stateTransfer.health;
             this.game.add.image(10, SCREEN_HEIGHT - 146, Assets.Images.PlayerBattle);
+            console.info(this.playerHealth);
             this.playerHealthDisplay = new HealthDisplay(this, 146, SCREEN_HEIGHT - 50, "You", this.playerHealth);
             if (!Utils.isAThing(stateTransfer.enemy)) {
                 throw new Error("enemy is not set for battle.");
             }
             this.enemy = stateTransfer.enemy;
             this.inputs = new Inputs(this);
-            var topY = Assets.Sprites.RhythmSymbols.height * 2 + 20;
+            let topY = Assets.Sprites.RhythmSymbols.height * 2 + 20;
             this.game.add.image(SCREEN_WIDTH - 146, topY, Assets.Images.JamBotBattle);
             this.enemyHealthDisplay = new HealthDisplay(this, 10, topY, this.enemy.name, this.enemy.hitPoints);
             this.patternDisplayer = new PatternDisplayer(this, this.enemy);
@@ -53,6 +56,7 @@ module MyGame {
                 this.playerHealthDisplay.updateHitPoints(this.playerHealth);
                 if (this.playerHealth === 0) {
                     StateTransfer.getInstance().reason = TransferReason.DEATH;
+                    StateTransfer.getInstance().health = -1;
                     this.game.state.start(States.Main);
                 }
                 return;
@@ -73,6 +77,8 @@ module MyGame {
             stateTransfer.position = new Phaser.Point(Math.floor(this.enemy.worldSprite.position.x / TILE_WIDTH), Math.floor(this.enemy.worldSprite.position.y / TILE_HEIGHT));
             stateTransfer.funcs = this.enemy.afterDeath;
             stateTransfer.reason = TransferReason.VICTORY;
+            console.log(this.playerHealth);
+            stateTransfer.health = this.playerHealth;
             this.state.start(States.Main);
         }
     }

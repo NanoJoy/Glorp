@@ -58,6 +58,7 @@ module MyGame {
                         now: new Location(this.main.island.num, n.positionToSave.x, n.positionToSave.y)
                     }
                 });
+            stateTransfer.health = this.main.player.health;
             this.main.state.start(States.Battle);
         }
 

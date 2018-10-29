@@ -7,7 +7,7 @@ module MyGame {
         state: Main;
         hasCollided: boolean;
 
-        constructor(state: Main, position: Phaser.Point) {
+        constructor(state: Main, position: Phaser.Point, health?: number) {
             super(state.game, position.x * TILE_WIDTH, position.y * TILE_HEIGHT, Assets.Sprites.Player.key, 0);
             state.game.physics.arcade.enableBody(this);
             Utils.addPersonAnimations(this);
@@ -15,6 +15,7 @@ module MyGame {
             this.direction = Direction.Down;
             state.add.existing(this);
             this.state = state;
+            this.health = Utils.isAThing(health) ? 100 : health;
         }
 
         onStageBuilt() {

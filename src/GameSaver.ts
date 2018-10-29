@@ -6,6 +6,7 @@ module MyGame {
         dialogs: Dialogs[];
         triggers: Location[];
         npcs: { old: Location, now: Location }[];
+        health: number;
     }
 
     export interface IGameSaver {
@@ -62,7 +63,8 @@ module MyGame {
                 },
                 dialogs: worldManager.exportDialogs(),
                 triggers: triggers,
-                npcs: npcs
+                npcs: npcs,
+                health: StateTransfer.getInstance().health
             } as SaveState
             localStorage.setItem(SAVE_FILE_NAME, JSON.stringify(saveState));
             this.cached = saveState;
