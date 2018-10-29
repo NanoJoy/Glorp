@@ -41,7 +41,7 @@ module MyGame {
         }
 
         getAttackPoints(pattern: PatternNote[]) {
-            return pattern.length * 25;
+            return Math.floor((pattern.length * 25) / 2);
         }
 
         playerOverlap(sp: Phaser.Sprite, pl: Player) {
@@ -103,7 +103,11 @@ module MyGame {
                     if (sortedPattern[i].key !== sortedPresses[i].note) {
                         return 0;
                     }
-                    damage += Math.round((500 - sortedPresses[i].distance) / 50);
+                    let amount = Math.max(Math.round((500 - sortedPresses[i].distance) / 60), 0);
+                    if (sortedPattern[i].position === sortedPresses[i].position) {
+                        amount = Math.floor(amount * 2);
+                    }
+                    damage += amount;
                 }
                 return damage;
             }
@@ -140,18 +144,14 @@ module MyGame {
                 if (pattern.length !== notePresses.length) {
                     return 0;
                 }
-                var sortedPattern = pattern.sort(function (a, b) { return a.position - b.position });
-                var sortedPresses = notePresses.sort(function (a, b) { return a.position - b.position });
-                var damage = 0;
-                for (var i = 0; i < sortedPattern.length; i++) {
-                    if (sortedPattern[i].key !== sortedPresses[i].note) {
+                let sortedPattern = pattern.sort(function (a, b) { return a.position - b.position });
+                let sortedPresses = notePresses.sort(function (a, b) { return a.position - b.position });
+                let damage = 0;
+                for (let i = 0; i < sortedPattern.length; i++) {
+                    if (sortedPattern[i].key !== sortedPresses[i].note || sortedPattern[i].position !== sortedPresses[i].position) {
                         return 0;
                     }
-                    var amount = Math.round((500 - sortedPresses[i].distance) / 100);
-                    if (sortedPattern[i].position === sortedPresses[i].position) {
-                        amount = Math.floor(amount * 3);
-                    }
-                    damage += amount;
+                    damage += Math.round((500 - sortedPresses[i].distance) / 100);
                 }
                 return damage;
             }

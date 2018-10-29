@@ -2,7 +2,7 @@ module MyGame {
     export function getAlbertText(): TextManager {
         function danceDance() {
             return new TextPrompt("For each measure that appears on the screen, you have to repeat the pattern in order. "
-            + "You don't even have to hit the moves on the same beats, but it helps if you hit them on some beat. "
+            + "You don't even have to hit the moves on the same beats, but if you do it should hurt them more. "
             + "Just remember that if you see an up arrow it is really the W key, the down arrow is the S key, etcetera. "
             + "Go give it a shot.", [
                 new TextOption("Sounds good!"),
@@ -19,7 +19,7 @@ module MyGame {
             ])
         }
 
-        let dumpy = new TextDump("If you want to hurt them more, I think you should try to hit the moves on the same beats that they do. Try it out.");
+        let dumpy = new TextDump("If you want to do any damage to them, you'll have to hit the notes on the same beat as them. Try it out.");
         function getJamBugExplanation() {
             return new TextPrompt("The JamBots were supposed to be the beginner's version. The hard version is called JamBugs. And they also started acting up. I managed to trap them behind this gate, but you'll have to go through them to get to town.", [
                 new TextOption("Anything else?", dumpy)
