@@ -152,7 +152,7 @@ module MyGame {
                     if (sortedPattern[i].key !== sortedPresses[i].note || sortedPattern[i].position !== sortedPresses[i].position) {
                         return 0;
                     }
-                    damage += Math.round((500 - sortedPresses[i].distance) / 100);
+                    damage += Math.round((500 - sortedPresses[i].distance) / 33);
                 }
                 return damage;
             }

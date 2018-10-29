@@ -2,6 +2,7 @@ module MyGame {
     export class Player extends Phaser.Sprite {
 
         static readonly WALKING_SPEED = 100;
+        static readonly STARTING_HEALTH = 100;
         direction: Direction;
         inputs: Inputs;
         state: Main;
@@ -15,7 +16,7 @@ module MyGame {
             this.direction = Direction.Down;
             state.add.existing(this);
             this.state = state;
-            this.health = Utils.isAThing(health) ? 100 : health;
+            this.health = Utils.isAThing(health) ? health : Player.STARTING_HEALTH;
         }
 
         onStageBuilt() {

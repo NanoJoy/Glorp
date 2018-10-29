@@ -14,11 +14,10 @@ module MyGame {
             this.stage.backgroundColor =  0xEAEAEA;
 
             let stateTransfer = StateTransfer.getInstance();
-            console.log(stateTransfer);
             this.playerHealth = stateTransfer.health === -1 ? 100 : stateTransfer.health;
             this.game.add.image(10, SCREEN_HEIGHT - 146, Assets.Images.PlayerBattle);
-            console.info(this.playerHealth);
-            this.playerHealthDisplay = new HealthDisplay(this, 146, SCREEN_HEIGHT - 50, "You", this.playerHealth);
+            this.playerHealthDisplay = new HealthDisplay(this, 146, SCREEN_HEIGHT - 50, "You", Player.STARTING_HEALTH);
+            this.playerHealthDisplay.updateHitPoints(this.playerHealth);
             if (!Utils.isAThing(stateTransfer.enemy)) {
                 throw new Error("enemy is not set for battle.");
             }
