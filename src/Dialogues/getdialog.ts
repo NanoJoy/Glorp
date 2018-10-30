@@ -4,7 +4,8 @@ module MyGame {
         SIGHING,
         THE_MEEP,
         TUTTLE_VILLAGE,
-        ALBERT_FIRST
+        ALBERT_FIRST,
+        HOW_TO_SAVE
     }
 
     function getSignText(info: string): TextManager {
@@ -23,6 +24,8 @@ module MyGame {
                 return getSignText("The Meep");
             case Texts.TUTTLE_VILLAGE:
                 return getSignText("Tuttle Village");
+            case Texts.HOW_TO_SAVE:
+                return getSignText("It's good to save often. You can save by pressing the SPACEBAR to pause, then pressing O when you have the Save option selected. If you die, you will be sent back to your last save.")
             default:
                 throw new Error(`Cannot find dialog for key '${key}'.`);
         }

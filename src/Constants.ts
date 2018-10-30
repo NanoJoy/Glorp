@@ -1,8 +1,8 @@
 module MyGame {
-    export var SCREEN_WIDTH = 288;
-    export var SCREEN_HEIGHT = 320;
-    export var TILE_WIDTH = 28;
-    export var TILE_HEIGHT = 32;
+    export const SCREEN_WIDTH = 288;
+    export const SCREEN_HEIGHT = 320;
+    export const TILE_WIDTH = 28;
+    export const TILE_HEIGHT = 32;
 
     export var States = {
         Boot: "Boot",
