@@ -4,6 +4,10 @@ module MyGame {
     export const TILE_WIDTH = 28;
     export const TILE_HEIGHT = 32;
 
+    export const DEVELOPER_MODE = true;
+    export const START_ISLAND = 3;
+    export const CLEAR_SAVE = true;
+
     export var States = {
         Boot: "Boot",
         Preloader: "Preloader",

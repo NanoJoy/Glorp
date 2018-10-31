@@ -57,6 +57,10 @@ module MyGame {
         create() {
             this.playerStopped = false;
             let gameSaver = GameSaver.getInstance();
+            if (DEVELOPER_MODE && CLEAR_SAVE) {
+                gameSaver.clearData();
+            }
+
             let worldManager = WorldManager.getInstance();
             let stateTransfer = StateTransfer.getInstance();
             let saveState = gameSaver.loadGame();
@@ -88,6 +92,11 @@ module MyGame {
             }
 
             this.island = worldManager.getIsland(stateTransfer.island === -1 ? 0 : stateTransfer.island);
+
+            if (DEVELOPER_MODE && stateTransfer.island === -1) {
+                this.island = worldManager.getIsland(START_ISLAND);
+            }
+
             this.setupLevel(this.island, saveState);
             this.groups.enemies.forEach(function (value: Enemy) {
                 value.onStageBuilt();

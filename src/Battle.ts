@@ -10,6 +10,12 @@ module MyGame {
         enemy: Enemy;
 
         create() {
+            if (DEVELOPER_MODE) {
+                this.inputs.spacebar.onUp.add(function () {
+                    this.enemy.health = 0;
+                }, this);
+            }
+
             this.time.reset();
             this.stage.backgroundColor =  0xEAEAEA;
 

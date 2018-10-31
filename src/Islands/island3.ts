@@ -19,19 +19,20 @@ module MyGame {
 
         return new IslandBuilder(3, IslandType.OUTSIDE)
             .setLayout([
-                "   w   w              ",
-                "  ww   ww             ",
-                "  w     w             ",
-                "  w     w             ",
-                "  w  n  w             ",
-                "  w    ew             ",
-                "  w  *  w             ",
-                "  we    wwwwwwwwww    ",
-                "  w     *    e        ",
-                "  w     g             ",
-                "  w     *             ",
-                "  wwwwwwwwwwwwwwww    "
+                "   w   w**********************",
+                "  ww   ww                    t",
+                "  w     w                     ",
+                "  w     w                    t",
+                "  w  n  w                     ",
+                "  w    ew                    t",
+                "  w  *  w        *   *        ",
+                "  we    wwwwwwwwww   wwwwwwwww",
+                "  w     w    e   *   * e  w   ",
+                "  w     g      e          g   ",
+                "  w     w                 w   ",
+                "  wwwwwwwwwwwwwwwwwwwwwwwww   "
             ])
+            .setPlayerStart(pof(5, 0))
             .setOutsideBoundsPortals([
                 { side: Direction.Up, start: 4, end: 8, link: 1, playerStart: pof(21, 8) }
             ])
@@ -58,6 +59,16 @@ module MyGame {
                     position: pof(13, 8),
                     type: Assets.Sprites.JamBugWorld.key,
                     script: "ddlluurr"
+                },
+                {
+                    position: pof(15, 9),
+                    type: Assets.Sprites.JamBugWorld.key,
+                    script: "rdlu"
+                },
+                {
+                    position: pof(23, 8),
+                    type: Assets.Sprites.JamBugWorld.key,
+                    script: "dduulrrl"
                 }
             ])
             .build();
