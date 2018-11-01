@@ -10,10 +10,9 @@ module MyGame {
         enemy: Enemy;
 
         create() {
+            this.inputs = new Inputs(this);
             if (DEVELOPER_MODE) {
-                this.inputs.spacebar.onUp.add(function () {
-                    this.enemy.health = 0;
-                }, this);
+                this.inputs.spacebar.onUp.add(this.enemyDeath, this);
             }
 
             this.time.reset();
@@ -28,7 +27,6 @@ module MyGame {
                 throw new Error("enemy is not set for battle.");
             }
             this.enemy = stateTransfer.enemy;
-            this.inputs = new Inputs(this);
             let topY = Assets.Sprites.RhythmSymbols.height * 2 + 20;
             this.game.add.image(SCREEN_WIDTH - 146, topY, Assets.Images.JamBotBattle);
             this.enemyHealthDisplay = new HealthDisplay(this, 10, topY, this.enemy.name, this.enemy.hitPoints);

@@ -70,6 +70,7 @@ module MyGame {
         private playerStart: Phaser.Point;
         private links: MapLink[];
         private triggers: MapTrigger[];
+        private otherLinks: MapLink[];
 
         constructor(num: number, type: IslandType) {
             this.num = num;
@@ -82,6 +83,7 @@ module MyGame {
             this.playerStart = pof(0, 0);
             this.links = [];
             this.triggers = [];
+            this.otherLinks = [];
         }
 
         setLayout(layout: string[]): IslandBuilder {
@@ -124,9 +126,14 @@ module MyGame {
             return this;
         }
 
+        setOtherLinks(otherLinks: MapLink[]): IslandBuilder {
+            this.otherLinks = otherLinks;
+            return this;
+        }
+
         build(): Island {
             return new Island(this.num, this.type, this.layout, this.additions, this.enemies, this.npcs,
-                this.playerStart, this.outsideBoundsPortals, this.links, this.triggers);
+                this.playerStart, this.outsideBoundsPortals, this.links, this.triggers, this.otherLinks);
         }
     }
 
@@ -144,10 +151,11 @@ module MyGame {
         links: MapLink[];
         triggers: MapTrigger[];
         dialogStates: DialogState[];
+        otherLinks: MapLink[];
 
         constructor(num: number, type: IslandType, layout: string[], additions: LayoutAddition[],
             enemies: MapEnemy[], npcs: MapNPC[], playerStart: Phaser.Point, outsideBoundsPortals: MapOutsideBoundsPortal[],
-            links: MapLink[], triggers: MapTrigger[]) {
+            links: MapLink[], triggers: MapTrigger[], otherLinks: MapLink[]) {
             this.num = num;
             this.type = type;
             this.layout = layout;
@@ -226,6 +234,10 @@ module MyGame {
 
             let direction = this.layout[pos.y + 1][pos.x] === "b" ? Direction.Down : Direction.Up;
             return new Doorway(main, pos.clone(), matching[0].link, direction, matching[0].playerStart);
+        }
+
+        makeOtherLinks(main: Main): AdhocPortal[] {
+            return this.otherLinks.map(l => new AdhocPortal(main, l.pos, l.link, l.playerStart));
         }
 
         getEnemy(main: Main, pos: Phaser.Point): Enemy {

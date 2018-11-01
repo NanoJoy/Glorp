@@ -21,7 +21,7 @@ module MyGame {
             .setLayout([
                 "   w   w**********************",
                 "  ww   ww                    t",
-                "  w     w                     ",
+                "  w     w h                   ",
                 "  w     w                    t",
                 "  w  n  w                     ",
                 "  w    ew                    t",
