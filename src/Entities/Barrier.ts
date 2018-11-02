@@ -87,4 +87,10 @@ module MyGame {
             super(main, position, Assets.Images.Gate, "g");
         }
     }
+
+    export class Lillypad extends Barrier {
+        constructor(main: Main, position: Phaser.Point) {
+            super(main, position, Assets.Images.Lillypad, "p");
+        }
+    }
 }

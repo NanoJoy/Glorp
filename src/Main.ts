@@ -50,7 +50,7 @@ module MyGame {
             houses: House[],
             npcs: NPC[],
             portals: Portal[],
-            signs: Sign[]
+            signs: Sign[],
             frontOfPlayer: Entity[]
         };
 
@@ -178,6 +178,9 @@ module MyGame {
                             break;
                         case "o":
                             this.groups.barriers.push(new Water(this, pof(j, i)));
+                            break;
+                        case "p":
+                            this.groups.barriers.push(new Lillypad(this, pof(j, i)));
                             break;
                         case "t":
                             let tree = new Tree(this, pof(j, i));

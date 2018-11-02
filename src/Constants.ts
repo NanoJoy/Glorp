@@ -54,6 +54,7 @@ module MyGame {
         HealthBarContainer = "healthbar_container";
         House = "house";
         JamBotBattle = "jambot_battle";
+        Lillypad = "lillypad";
         MenuBackground = "menu_background";
         OptionsBackground = "options_background";
         PlayerBattle = "player_battle";

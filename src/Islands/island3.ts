@@ -7,7 +7,7 @@ module MyGame {
                 main.stopPlayer();
                 main.player.position.setTo(5 * TILE_WIDTH, 7 * TILE_HEIGHT);
                 albert.setDialogState(0);
-                albert.doScript("d=lddddddrrr;l=false", pof(5, 2));
+                albert.doScript("d=lddddddddrrr;l=false", pof(5, 2));
                 albert.movementManager.setOnComplete(function() {
                     this.playerStopped = false;
                     main.groups.barriers.filter(b => b instanceof Gate)[0].sprite.destroy();
@@ -20,17 +20,19 @@ module MyGame {
         return new IslandBuilder(3, IslandType.OUTSIDE)
             .setLayout([
                 "   w   w**********************",
-                "  ww   ww                    t",
-                "  w     w h                   ",
-                "  w     w                    t",
-                "  w  n  w                     ",
+                "  ww   ww ppppppppppppppppp  t",
+                "  w     w pooooooooooooooop  ",
+                "  w     w ppppppppoooooooop  t",
+                "  w  n  w poooooooooooooooo  ",
+                "  w     w pooooooooooooooop  t",
+                "  w  *  w ppppppppppppppppp   ",
                 "  w    ew                    t",
                 "  w  *  w        *   *        ",
                 "  we    wwwwwwwwww   wwwwwwwww",
-                "  w     w    e   *   * e  w   ",
-                "  w     g      e          g   ",
-                "  w     w                 w   ",
-                "  wwwwwwwwwwwwwwwwwwwwwwwww   "
+                "  w     w    e   *   * e  w  w",
+                "  w     g      e          g  w",
+                "  w     w                 w  w",
+                "  wwwwwwwwwwwwwwwwwwwwwwwww  w"
             ])
             .setPlayerStart(pof(5, 0))
             .setOutsideBoundsPortals([
@@ -44,29 +46,29 @@ module MyGame {
             ])
             .setEnemies([
                 { 
-                    position: pof(7, 5),
+                    position: pof(7, 7),
                     type: Assets.Sprites.JamBotWorld.key,
                     script: "llllrrrr",
                     afterDeath: jambotDead
                 },
                 { 
-                    position: pof(3, 7),
+                    position: pof(3, 9),
                     type: Assets.Sprites.JamBotWorld.key,
                     script: "rrrrllll",
                     afterDeath: jambotDead
                 },
                 {
-                    position: pof(13, 8),
+                    position: pof(13, 10),
                     type: Assets.Sprites.JamBugWorld.key,
                     script: "ddlluurr"
                 },
                 {
-                    position: pof(15, 9),
+                    position: pof(15, 11),
                     type: Assets.Sprites.JamBugWorld.key,
                     script: "rdlu"
                 },
                 {
-                    position: pof(23, 8),
+                    position: pof(23, 10),
                     type: Assets.Sprites.JamBugWorld.key,
                     script: "dduulrrl"
                 }

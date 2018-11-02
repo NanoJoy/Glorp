@@ -8,8 +8,6 @@ module MyGame {
             this.main = main;
             this.position = position;
             this.sprite = main.add.sprite(position.x * TILE_WIDTH, position.y * TILE_HEIGHT, Assets.Images.House);
-            this.sprite.scale.setTo(2, 2);
-            this.sprite.smoothed = false;
             main.physics.arcade.enable(this.sprite);
             this.sprite.body.moves = true;
             this.sprite.body.immovable = true;
