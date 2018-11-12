@@ -21,7 +21,7 @@ module MyGame {
             .setLayout([
                 "   w   w**********************",
                 "  ww   ww ppppppppppppppppp  t",
-                "  w     w pooooooooooooooop  ",
+                "  w     w pcoooooooooooooop  ",
                 "  w     w ppppppppoooooooop  t",
                 "  w  n  w poooooooooooooooo  ",
                 "  w     w pooooooooooooooop  t",
@@ -72,6 +72,9 @@ module MyGame {
                     type: Assets.Sprites.JamBugWorld.key,
                     script: "dduulrrl"
                 }
+            ])
+            .setCreatures([
+                { x: 11, y: 2, type: Assets.Sprites.Blish.key }
             ])
             .build();
     }

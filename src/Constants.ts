@@ -7,6 +7,8 @@ module MyGame {
     export const DEVELOPER_MODE = true;
     export const START_ISLAND = 3;
     export const CLEAR_SAVE = true;
+    export const PLAYER_START_X = 9;
+    export const PLAYER_START_Y = 8;
 
     export var States = {
         Boot: "Boot",
@@ -32,6 +34,7 @@ module MyGame {
         Albert = new SpriteAsset("albert");
         Arrow = new SpriteAsset("arrow", 12, 12);
         Blackness = new SpriteAsset("blackness");
+        Blish = new SpriteAsset("blish");
         Bush = new SpriteAsset("bush");
         DoorWay = new SpriteAsset("doorway", 36, 8);
         Grounds = new SpriteAsset("grounds");

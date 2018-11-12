@@ -52,6 +52,12 @@ module MyGame {
         action?: (main: Main, trigger: Trigger) => void;
     }
 
+    class MapCreature {
+        type: string;
+        x: number;
+        y: number;
+    }
+
     export class DialogState {
         x: number;
         y: number;
@@ -61,7 +67,6 @@ module MyGame {
     export class IslandBuilder {
         private num: number;
         private type: IslandType;
-        private position: Phaser.Point;
         private layout: string[];
         private additions: LayoutAddition[];
         private enemies: MapEnemy[];
@@ -71,6 +76,7 @@ module MyGame {
         private links: MapLink[];
         private triggers: MapTrigger[];
         private otherLinks: MapLink[];
+        private creatures: MapCreature[];
 
         constructor(num: number, type: IslandType) {
             this.num = num;
@@ -84,6 +90,7 @@ module MyGame {
             this.links = [];
             this.triggers = [];
             this.otherLinks = [];
+            this.creatures = [];
         }
 
         setLayout(layout: string[]): IslandBuilder {
@@ -131,9 +138,15 @@ module MyGame {
             return this;
         }
 
+        setCreatures(creatures: MapCreature[]): IslandBuilder {
+            this.creatures = creatures;
+            return this;
+        }
+
         build(): Island {
             return new Island(this.num, this.type, this.layout, this.additions, this.enemies, this.npcs,
-                this.playerStart, this.outsideBoundsPortals, this.links, this.triggers, this.otherLinks);
+                this.playerStart, this.outsideBoundsPortals, this.links, this.triggers, this.otherLinks,
+                this.creatures);
         }
     }
 
@@ -152,10 +165,11 @@ module MyGame {
         triggers: MapTrigger[];
         dialogStates: DialogState[];
         otherLinks: MapLink[];
+        creatures: MapCreature[];
 
         constructor(num: number, type: IslandType, layout: string[], additions: LayoutAddition[],
             enemies: MapEnemy[], npcs: MapNPC[], playerStart: Phaser.Point, outsideBoundsPortals: MapOutsideBoundsPortal[],
-            links: MapLink[], triggers: MapTrigger[], otherLinks: MapLink[]) {
+            links: MapLink[], triggers: MapTrigger[], otherLinks: MapLink[], creatures: MapCreature[]) {
             this.num = num;
             this.type = type;
             this.layout = layout;
@@ -166,7 +180,9 @@ module MyGame {
             this.outsideBoundsPortals = outsideBoundsPortals;
             this.links = links;
             this.triggers = triggers;
+            this.creatures = 
             this.dialogStates = [];
+            this.creatures = creatures;
 
             if (this.type !== IslandType.OUTSIDE) {
                 let paddingOffset = pof(0, 0);
@@ -286,6 +302,20 @@ module MyGame {
                 npc.setDialogState(matchingStates[0].lastViewed);
             }
             return npc;
+        }
+
+        getCreature(main: Main, x: number, y: number): Creature {
+            let matching = this.creatures.filter(c => c.x == x && c.y == y);
+            if (matching.length === 0) {
+                throw new Error(`Could not find Creature information at x: ${x}, y: ${y}.`);
+            }
+            let mapCreature = matching[0];
+            switch (mapCreature.type) {
+                case Assets.Sprites.Blish.key:
+                    return new Blish(main, pof(x, y));
+                default:
+                    throw new Error(`${mapCreature.type} is not a valid Creature type.`);
+            }
         }
 
         getPortals(main: Main): OutsideBoundsPortal[] {

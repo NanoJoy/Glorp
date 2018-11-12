@@ -44,7 +44,8 @@ module MyGame {
         pauseMenu: IPauseMenu;
         triggers: Trigger[];
         groups: {
-            barriers: Barrier[]
+            barriers: Barrier[],
+            creatures: Creature[],
             enemies: Enemy[],
             grounds: Ground[],
             houses: House[],
@@ -71,7 +72,7 @@ module MyGame {
                 stateTransfer.health = saveState.health;
                 worldManager.importLayouts(saveState.layouts);
                 worldManager.importDialogs(this, saveState.dialogs);
-            // Coming from link.
+                // Coming from link.
             } else if (stateTransfer.reason === TransferReason.LINK && stateTransfer.island !== -1) {
                 var tween = this.add.tween(this.world).to({ alpha: 1 }, 500, Phaser.Easing.Linear.None, true);
                 tween.onComplete.add(function () {
@@ -81,6 +82,7 @@ module MyGame {
             this.inputs = new Inputs(this);
 
             this.groups = {
+                creatures: [],
                 enemies: [],
                 grounds: [],
                 houses: [],
@@ -156,6 +158,9 @@ module MyGame {
                         case "b":
                             this.groups.barriers.push(new Blackness(this, pof(j, i)));
                             break;
+                        case "c":
+                            this.groups.creatures.push(island.getCreature(this, j, i));
+                            break;
                         case "d":
                             this.groups.portals.push(island.makeDoorway(this, pof(j, i)));
                             this.groups.grounds.push(island.makeGround(this, pof(j, i), true));
@@ -220,7 +225,12 @@ module MyGame {
             } else {
                 playerPosition = island.getAdjustedPosition(island.playerStart.clone());
             }
-            console.log(stateTransfer);
+
+            if (DEVELOPER_MODE) {
+                playerPosition.x = PLAYER_START_X < 0 ? playerPosition.x : PLAYER_START_X;
+                playerPosition.y = PLAYER_START_Y < 0 ? playerPosition.y : PLAYER_START_Y;
+            }
+
             this.player = new Player(this, playerPosition, stateTransfer.health === -1 ? 100 : stateTransfer.health);
 
             this.setDepths();
@@ -234,6 +244,7 @@ module MyGame {
                     this.game.world.bringToTop(b.sprite);
                 }
             }, this);
+            this.groups.creatures.forEach((c) => { this.game.world.bringToTop(c.sprite); }, this);
             this.groups.houses.forEach(function (ho) { this.game.world.bringToTop(ho.sprite); }, this);
             this.groups.npcs.forEach(function (n) { this.game.world.bringToTop(n.sprite); }, this);
             this.groups.enemies.forEach(function (en) { this.game.world.bringToTop(en.worldSprite); }, this);
