@@ -212,5 +212,27 @@ module MyGame {
         static bpmToMilliseconds(bpm: number): number {
             return 60000 / bpm;
         }
+
+        static roundToClosestTile(point: Phaser.Point) {
+            return point.clone().divide(TILE_WIDTH, TILE_HEIGHT).round().multiply(TILE_WIDTH, TILE_HEIGHT);
+        }
+
+        static accelerateToTarget(target: number, currentPosition: number, currentVelocity: number, acceleration: number, maxSpeed?: number): number {
+            let multiplier = 1;
+            if (maxSpeed !== undefined && maxSpeed <= 0) {
+                throw new Error(`maxSpeed must be positive. Given value: ${maxSpeed}.`);
+            }
+            if (isNaN(currentVelocity)) {
+                currentVelocity = 0;
+            }
+            if (target < currentPosition) {
+                multiplier = -1;
+                currentPosition *= -1;
+                currentVelocity *= -1;
+            }
+            let calculated = multiplier * (currentVelocity + acceleration);
+            return maxSpeed === undefined ? calculated 
+                : multiplier === 1 ? Math.min(calculated, maxSpeed) : Math.max(calculated, maxSpeed * -1);
+        }
     }
 }

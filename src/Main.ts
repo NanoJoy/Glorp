@@ -124,7 +124,7 @@ module MyGame {
             if (!this.playerStopped) {
                 this.triggers.forEach(t => t.checkPlayerOverlap());
 
-                let groupsToUpdate = [this.groups.enemies, this.groups.houses, this.groups.npcs, this.groups.portals, this.groups.signs];
+                let groupsToUpdate = [this.groups.enemies, this.groups.houses, this.groups.npcs, this.groups.portals, this.groups.creatures];
                 for (let i = 0; i < groupsToUpdate.length; i++) {
                     let grp = groupsToUpdate[i];
                     for (let j = 0; j < grp.length; j++) {
