@@ -8,6 +8,7 @@ module MyGame {
         position: Phaser.Point;
         sprite: Phaser.Sprite;
         type: string;
+        collidesWith: string[];
         uniqueUpdate: () => void;
         
         constructor(main: Main, position: Phaser.Point, spriteKey: string) {
@@ -20,26 +21,30 @@ module MyGame {
         }
 
         update() {
-            let barriers = this.main.groups.barriers.map(b => b.sprite);
-            //this.main.physics.arcade.collide(this.sprite, barriers);
+            let barriers = this.main.groups.barriers;
+            if (Utils.isAThing(this.collidesWith)) {
+                barriers = barriers.filter(b => this.collidesWith.indexOf(b.sprite.key as string) !== -1);
+            }
+            let barrierSprites = barriers.map(b => b.sprite);
+            this.main.physics.arcade.collide(this.sprite, barrierSprites);
             this.uniqueUpdate();
         }
     }
 
     export class Blish extends Creature {
-        private static MAX_SPEED: 200;
-        private static ACCELERATION: 5;
+        private static MAX_SPEED = 100;
+        private static ACCELERATION = 5;
 
         constructor(main: Main, position: Phaser.Point) {
             super(main, position, Assets.Sprites.Blish.key);
             this.type = Assets.Sprites.Blish.key;
             main.groups.barriers.push(new Water(main, position));
-            console.log(this.sprite.body);
+            this.sprite.body.velocity.setTo(0, 0);
+            this.collidesWith = [Assets.Images.Lillypad];
 
             this.uniqueUpdate = () => {
                 let target = Utils.roundToClosestTile(this.main.player.position);
-                this.sprite.body.velocity.x = Utils.accelerateToTarget(target.x, this.sprite.x, this.sprite.body.velocity.x, Blish.ACCELERATION, Blish.MAX_SPEED);
-                this.sprite.body.velocity.y = Utils.accelerateToTarget(target.y, this.sprite.y, this.sprite.body.velocity.y, Blish.ACCELERATION, Blish.MAX_SPEED);
+                Utils.moveToTarget(this.sprite.body, target, Blish.MAX_SPEED);
             };
         }
     }

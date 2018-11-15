@@ -217,6 +217,25 @@ module MyGame {
             return point.clone().divide(TILE_WIDTH, TILE_HEIGHT).round().multiply(TILE_WIDTH, TILE_HEIGHT);
         }
 
+        static moveToTarget(body: Phaser.Physics.Arcade.Body, target: Phaser.Point, speed: number, visionRange?: number) {
+            let distance = target.clone().subtract(body.position.x, body.position.y);
+            let absDistance = pof(Math.abs(distance.x), Math.abs(distance.y));
+            let seesHorizontal = true;
+            let seesVertical = true;
+            
+            if (this.isAThing(visionRange)) {
+                let transformedRange = pof(TILE_WIDTH, TILE_HEIGHT).multiply(visionRange, visionRange);
+                seesHorizontal = absDistance.y <= transformedRange.y;
+                seesVertical = absDistance.x <= transformedRange.x;
+            }
+
+            if (seesHorizontal && absDistance.x >= absDistance.y) {
+                body.velocity.x = this.signOf(distance.x) * speed;
+            } else if (seesVertical && absDistance.y > absDistance.x) {
+                body.velocity.y = this.signOf(distance.y) * speed;
+            }
+        }
+
         static accelerateToTarget(target: number, currentPosition: number, currentVelocity: number, acceleration: number, maxSpeed?: number): number {
             let multiplier = 1;
             if (maxSpeed !== undefined && maxSpeed <= 0) {
@@ -230,9 +249,21 @@ module MyGame {
                 currentPosition *= -1;
                 currentVelocity *= -1;
             }
+            
+            let distance = Math.abs(target - currentPosition);
+            if (distance < maxSpeed) {
+                let calculated = multiplier * distance;
+                return maxSpeed === undefined ? calculated
+                    : multiplier === 1 ? Math.min(calculated, currentVelocity) : Math.max(calculated, currentVelocity);
+            }
+
             let calculated = multiplier * (currentVelocity + acceleration);
             return maxSpeed === undefined ? calculated 
                 : multiplier === 1 ? Math.min(calculated, maxSpeed) : Math.max(calculated, maxSpeed * -1);
+        }
+
+        static signOf(num: number) {
+            return num < 0 ? -1 : num > 0 ? 1 : 0;
         }
     }
 }
