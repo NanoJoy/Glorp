@@ -217,21 +217,43 @@ module MyGame {
             return point.clone().divide(TILE_WIDTH, TILE_HEIGHT).round().multiply(TILE_WIDTH, TILE_HEIGHT);
         }
 
-        static moveToTarget(body: Phaser.Physics.Arcade.Body, target: Phaser.Point, speed: number, visionRange?: number) {
+        static moveToTarget(body: Phaser.Physics.Arcade.Body, target: Phaser.Point, speed: number, cutoff: number, visionRange?: number, blockersLeft?: Phaser.Line[], blockersTop?: Phaser.Line[]) {
+            debugger;
             let distance = target.clone().subtract(body.position.x, body.position.y);
             let absDistance = pof(Math.abs(distance.x), Math.abs(distance.y));
             let seesHorizontal = true;
             let seesVertical = true;
+            let blockedH = (distance.x < 0 && body.blocked.left) || (distance.x > 0 && body.blocked.right);
+            let blockedV = (distance.y < 0 && body.blocked.up) || (distance.y > 0 && body.blocked.down);
+
+            let lineOfSight = new Phaser.Line(body.center.x, body.center.y, target.x, target.y);
+            if (this.isAThing(blockersLeft)) {
+                seesHorizontal = !blockersLeft.some(b => b.intersects(lineOfSight, true) !== null);
+            }
+            if (this.isAThing(blockersTop)) {
+                seesVertical = !blockersTop.some(b => b.intersects(lineOfSight, true) !== null);
+            }
             
             if (this.isAThing(visionRange)) {
                 let transformedRange = pof(TILE_WIDTH, TILE_HEIGHT).multiply(visionRange, visionRange);
-                seesHorizontal = absDistance.y <= transformedRange.y;
-                seesVertical = absDistance.x <= transformedRange.x;
+                seesHorizontal = seesHorizontal && !blockedH && absDistance.y <= transformedRange.y;
+                seesVertical = seesVertical && !blockedV && absDistance.x <= transformedRange.x;
             }
 
-            if (seesHorizontal && absDistance.x >= absDistance.y) {
+            if (absDistance.x < cutoff) {
+                body.position.x = target.x;
+                body.velocity.x = 0;
+                seesHorizontal = false;
+            }
+            if (absDistance.y < cutoff) {
+                body.position.y = target.y;
+                body.velocity.y = 0;
+                seesVertical = false;
+            }
+
+            if (seesHorizontal && (blockedV || absDistance.x >= absDistance.y)) {
                 body.velocity.x = this.signOf(distance.x) * speed;
-            } else if (seesVertical && absDistance.y > absDistance.x) {
+            } else if (seesVertical && (blockedH || absDistance.y > absDistance.x)) {
                 body.velocity.y = this.signOf(distance.y) * speed;
             }
         }

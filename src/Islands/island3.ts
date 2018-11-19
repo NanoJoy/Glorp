@@ -20,12 +20,12 @@ module MyGame {
         return new IslandBuilder(3, IslandType.OUTSIDE)
             .setLayout([
                 "   w   w**********************",
-                "  ww   ww ppppppppppppppppp  t",
-                "  w     w pcoooooooooooooop  ",
-                "  w     w ppppppppoooooooop  t",
-                "  w  n  w poooooooooooooooo  ",
-                "  w     w pooooooooooooooop  t",
-                "  w  *  w ppppppppppppppppp   ",
+                "  ww   ww ooooooooooooooooo  t",
+                "  w     w pcooooooooooooooo  ",
+                "  w     w ppppppppooooooooo  t",
+                "  w  n  w ooooooopppooooooo  ",
+                "  w     w ooooooooooooooooo  t",
+                "  w  *  w ooooooooooooooooo   ",
                 "  w    ew                    t",
                 "  w  *  w        *   *        ",
                 "  we    wwwwwwwwww   wwwwwwwww",
