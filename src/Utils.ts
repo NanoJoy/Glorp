@@ -217,7 +217,7 @@ module MyGame {
             return point.clone().divide(TILE_WIDTH, TILE_HEIGHT).round().multiply(TILE_WIDTH, TILE_HEIGHT);
         }
 
-        static moveToTarget(body: Phaser.Physics.Arcade.Body, target: Phaser.Point, speed: number, cutoff: number, visionRange?: number, blockersLeft?: Phaser.Line[], blockersTop?: Phaser.Line[]) {
+        static moveToTarget(body: Phaser.Physics.Arcade.Body, target: Phaser.Point, speed: number, cutoff: number, visionRange?: number, blockers?: Phaser.Line[]) {
             debugger;
             let distance = target.clone().subtract(body.position.x, body.position.y);
             let absDistance = pof(Math.abs(distance.x), Math.abs(distance.y));
@@ -227,11 +227,9 @@ module MyGame {
             let blockedV = (distance.y < 0 && body.blocked.up) || (distance.y > 0 && body.blocked.down);
 
             let lineOfSight = new Phaser.Line(body.center.x, body.center.y, target.x, target.y);
-            if (this.isAThing(blockersLeft)) {
-                seesHorizontal = !blockersLeft.some(b => b.intersects(lineOfSight, true) !== null);
-            }
-            if (this.isAThing(blockersTop)) {
-                seesVertical = !blockersTop.some(b => b.intersects(lineOfSight, true) !== null);
+            if (this.isAThing(blockers) && blockers.some(b => b.intersects(lineOfSight, true) !== null)) {
+                seesHorizontal = false;
+                seesVertical = false;
             }
             
             if (this.isAThing(visionRange)) {
