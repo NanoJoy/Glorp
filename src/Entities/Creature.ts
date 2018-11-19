@@ -8,8 +8,10 @@ module MyGame {
         position: Phaser.Point;
         sprite: Phaser.Sprite;
         type: string;
+        collidesWith: string[];
         barriers: Phaser.Sprite[];
         uniqueUpdate: () => void;
+        uniqueOnStageBuilt: () => void;
         
         constructor(main: Main, position: Phaser.Point, spriteKey: string, collidesWith?: string[]) {
             this.main = main;
@@ -18,14 +20,18 @@ module MyGame {
             this.sprite.animations.add(this.MOVE, null, 10, true);
             this.main.physics.arcade.enableBody(this.sprite);
             this.sprite.play(this.MOVE);
-            if (collidesWith !== undefined) {
+            this.collidesWith = collidesWith;
+        }
+
+        onStageBuilt() {
+            if (this.collidesWith !== undefined) {
                 this.barriers = this.main.groups.barriers
-                    .filter(b => collidesWith.indexOf(b.sprite.key as string) !== -1)
+                    .filter(b => this.collidesWith.indexOf(b.sprite.key as string) !== -1)
                     .map(b => b.sprite);
             } else {
                 this.barriers = this.main.groups.barriers.map(b => b.sprite);
             }
-
+            this.uniqueOnStageBuilt();
         }
 
         update() {
@@ -42,16 +48,18 @@ module MyGame {
         topSides: Phaser.Line[];
 
         constructor(main: Main, position: Phaser.Point) {
-            debugger;
             super(main, position, Assets.Sprites.Blish.key, [Assets.Images.Lillypad]);
             this.type = Assets.Sprites.Blish.key;
             main.groups.barriers.push(new Water(main, position));
             this.sprite.body.velocity.setTo(0, 0);
-            this.leftSides = this.barriers.map(b => new Phaser.Line(b.left, b.top, b.left, b.bottom));
-            this.topSides = this.barriers.map(b => new Phaser.Line(b.left, b.top, b.right, b.top));
 
             this.uniqueUpdate = () => {
                 Utils.moveToTarget(this.sprite.body, this.main.player.position, Blish.MAX_SPEED, Blish.CUTOFF, Infinity, this.leftSides, this.topSides);
+            };
+
+            this.uniqueOnStageBuilt = () => {
+                this.leftSides = this.barriers.map(b => new Phaser.Line(b.left, b.top, b.left, b.bottom));
+                this.topSides = this.barriers.map(b => new Phaser.Line(b.left, b.top, b.right, b.top));
             };
         }
     }

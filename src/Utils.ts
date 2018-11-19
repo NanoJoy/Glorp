@@ -251,11 +251,8 @@ module MyGame {
                 seesVertical = false;
             }
 
-            if (seesHorizontal && (blockedV || absDistance.x >= absDistance.y)) {
-                body.velocity.x = this.signOf(distance.x) * speed;
-            } else if (seesVertical && (blockedH || absDistance.y > absDistance.x)) {
-                body.velocity.y = this.signOf(distance.y) * speed;
-            }
+            body.velocity.x = seesHorizontal ? this.signOf(distance.x) * speed : 0;
+            body.velocity.y = seesVertical && !seesHorizontal ? this.signOf(distance.y) * speed : 0;
         }
 
         static accelerateToTarget(target: number, currentPosition: number, currentVelocity: number, acceleration: number, maxSpeed?: number): number {

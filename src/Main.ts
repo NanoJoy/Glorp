@@ -100,14 +100,9 @@ module MyGame {
             }
 
             this.setupLevel(this.island, saveState);
-            this.groups.enemies.forEach(function (value: Enemy) {
-                value.onStageBuilt();
-            }, this)
-
-            this.groups.npcs.forEach(function (value: NPC) {
-                value.onStageBuilt();
-            }, this)
-
+            this.groups.enemies.forEach(e => { e.onStageBuilt(); });
+            this.groups.npcs.forEach(n => { n.onStageBuilt(); });
+            this.groups.creatures.forEach(c => { c.onStageBuilt(); });
             this.player.onStageBuilt();
 
             if (stateTransfer.funcs) {
@@ -185,6 +180,7 @@ module MyGame {
                             this.groups.barriers.push(new Water(this, pof(j, i)));
                             break;
                         case "p":
+                            console.log("lillypad");
                             this.groups.barriers.push(new Lillypad(this, pof(j, i)));
                             break;
                         case "t":
