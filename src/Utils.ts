@@ -218,7 +218,6 @@ module MyGame {
         }
 
         static moveToTarget(body: Phaser.Physics.Arcade.Body, target: Phaser.Point, speed: number, cutoff: number, visionRange?: number, blockers?: Phaser.Line[]) {
-            debugger;
             let distance = target.clone().subtract(body.position.x, body.position.y);
             let absDistance = pof(Math.abs(distance.x), Math.abs(distance.y));
             let seesHorizontal = true;

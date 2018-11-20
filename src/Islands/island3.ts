@@ -20,14 +20,14 @@ module MyGame {
         return new IslandBuilder(3, IslandType.OUTSIDE)
             .setLayout([
                 "   w   w**********************",
-                "  ww   ww ooooooooooooooooo  t",
-                "  w     w pcooooooooooooooo  ",
-                "  w     w ppppppppooooooooo  t",
-                "  w  n  w ooooooopppooooooo  ",
-                "  w     w ooooooooooooooooo  t",
-                "  w  *  w ooooooooooooooooo   ",
-                "  w    ew                    t",
-                "  w  *  w        *   *        ",
+                "  ww   ww  ooooo             *",
+                "  w     w  opopo             *",
+                "  w     w  ooooo            **",
+                "  w  n  w  oopoo              ",
+                "  w     w  oooop              ",
+                "  w  *  w                     ",
+                "  w    ew                   **",
+                "  w  *  w        *   *       *",
                 "  we    wwwwwwwwww   wwwwwwwww",
                 "  w     w    e   *   * e  w  w",
                 "  w     g      e          g  w",
@@ -36,7 +36,8 @@ module MyGame {
             ])
             .setPlayerStart(pof(5, 0))
             .setOutsideBoundsPortals([
-                { side: Direction.Up, start: 4, end: 8, link: 1, playerStart: pof(21, 8) }
+                { side: Direction.Up, start: 4, end: 8, link: 1, playerStart: pof(21, 8) },
+                { side: Direction.Right, start: 3, end: 7, link: 5, playerStart: pof(1, 4) }
             ])
             .setTriggers([
                 { type: TriggerType.MOVE_NPC, name: "albertfirst", x: 3, y: 2, width: 5, height: 1 }
@@ -72,9 +73,6 @@ module MyGame {
                     type: Assets.Sprites.JamBugWorld.key,
                     script: "dduulrrl"
                 }
-            ])
-            .setCreatures([
-                { x: 11, y: 2, type: Assets.Sprites.Blish.key }
             ])
             .build();
     }

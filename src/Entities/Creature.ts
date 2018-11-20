@@ -47,7 +47,7 @@ module MyGame {
         lines: Phaser.Line[];
 
         constructor(main: Main, position: Phaser.Point) {
-            super(main, position, Assets.Sprites.Blish.key, [Assets.Images.Lillypad]);
+            super(main, position, Assets.Sprites.Blish.key, [Assets.Images.Lillypad, Assets.Sprites.Grounds.key]);
             this.type = Assets.Sprites.Blish.key;
             main.groups.barriers.push(new Water(main, position));
             this.sprite.body.velocity.setTo(0, 0);
@@ -65,6 +65,9 @@ module MyGame {
                 } else if (this.sprite.body.velocity.x < 0 && this.sprite.rotation !== Math.PI * 1.5) {
                     this.sprite.rotation = Math.PI * 1.5;
                 }
+                this.main.groups.grounds.forEach(g => {
+                    this.main.physics.arcade.collide(this.sprite, g.sprite);
+                });
             };
 
             this.uniqueOnStageBuilt = () => {

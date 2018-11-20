@@ -4,10 +4,11 @@ module MyGame {
         position: Phaser.Point;
         sprite: Phaser.Sprite;
         hasBody: boolean;
+        playerCollides: boolean;
 
         onCollision: (playerSprite: Phaser.Sprite, barrierSprite: Phaser.Sprite) => void;
 
-        constructor(main: Main, position: Phaser.Point, key: string, char: string) {
+        constructor(main: Main, position: Phaser.Point, key: string, char: string, playerCollides = true) {
             this.main = main;
             this.position = position;
             this.sprite = main.add.sprite(position.x * TILE_WIDTH, position.y * TILE_HEIGHT, key);
@@ -19,6 +20,7 @@ module MyGame {
             } else {
                 this.hasBody = false;
             }
+            this.playerCollides = playerCollides;
         }
     }
 
@@ -90,7 +92,7 @@ module MyGame {
 
     export class Lillypad extends Barrier {
         constructor(main: Main, position: Phaser.Point) {
-            super(main, position, Assets.Images.Lillypad, "p");
+            super(main, position, Assets.Images.Lillypad, "p", false);
         }
     }
 }
