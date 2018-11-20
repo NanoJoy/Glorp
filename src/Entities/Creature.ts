@@ -55,6 +55,9 @@ module MyGame {
             this.sprite.position.add(TILE_WIDTH / 2, TILE_HEIGHT / 2);
 
             this.uniqueUpdate = () => {
+                this.main.groups.grounds.filter(g => g.hasBody).forEach(g => {
+                    this.main.physics.arcade.collide(this.sprite, g.sprite);
+                });
                 Utils.moveToTarget(this.sprite.body, this.main.player.position, Blish.MAX_SPEED, Blish.CUTOFF, Infinity, this.lines);
                 if (this.sprite.body.velocity.y < 0 && this.sprite.rotation !== 0) {
                     this.sprite.rotation = 0;
@@ -65,9 +68,6 @@ module MyGame {
                 } else if (this.sprite.body.velocity.x < 0 && this.sprite.rotation !== Math.PI * 1.5) {
                     this.sprite.rotation = Math.PI * 1.5;
                 }
-                this.main.groups.grounds.forEach(g => {
-                    this.main.physics.arcade.collide(this.sprite, g.sprite);
-                });
             };
 
             this.uniqueOnStageBuilt = () => {

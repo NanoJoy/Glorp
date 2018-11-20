@@ -2,12 +2,21 @@ module MyGame {
     export abstract class Ground implements Entity {
         main: Main;
         position: Phaser.Point;
-        sprite: Phaser.Image;
+        sprite: Phaser.Sprite;
+        hasBody: boolean;
 
         constructor(main: Main, position: Phaser.Point, imageKey: string) {
             this.main = main;
             this.position = position;
-            this.sprite = main.add.image(position.x * TILE_WIDTH, position.y * TILE_HEIGHT, imageKey);
+            this.sprite = main.add.sprite(position.x * TILE_WIDTH, position.y * TILE_HEIGHT, imageKey);
+            if (Utils.hasNeighboringChar(main.island.layout, position.x, position.y, "o")) {
+                main.physics.arcade.enable(this.sprite);
+                this.sprite.body.moves = false;
+                this.sprite.body.immovable = true;
+                this.hasBody = true;
+            } else {
+                this.hasBody = false;
+            }
         }
     }
 
