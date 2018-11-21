@@ -10,4 +10,8 @@ module MyGame {
     export enum TransferReason {
         NONE, LINK, DEATH, VICTORY
     }
+
+    export enum ProjectileState {
+        WAITING = "WAITING", FLYING = "FLYING", AFTER_FLYING = "AFTER_FLYING", DONE = "DONE"
+    }
 }

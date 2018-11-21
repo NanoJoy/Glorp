@@ -291,5 +291,22 @@ module MyGame {
         static signOf(num: number) {
             return num < 0 ? -1 : num > 0 ? 1 : 0;
         }
+
+        static moveInDirection(body: Phaser.Physics.Arcade.Body, direction: Direction, speed: number) {
+            switch(direction) {
+                case Direction.Up:
+                    body.velocity.setTo(0, speed * -1);
+                    break;
+                case Direction.Right:
+                    body.velocity.setTo(speed, 0);
+                    break;
+                case Direction.Down:
+                    body.velocity.setTo(0, speed);
+                    break;
+                case Direction.Left:
+                    body.velocity.setTo(speed * -1, 0);
+                    break;
+            }
+        }
     }
 }
