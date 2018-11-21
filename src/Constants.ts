@@ -36,6 +36,7 @@ module MyGame {
         Blackness = new SpriteAsset("blackness");
         Blish = new SpriteAsset("blish");
         Bush = new SpriteAsset("bush");
+        Crumbs = new SpriteAsset("crumbs");
         DoorWay = new SpriteAsset("doorway", 36, 8);
         Grounds = new SpriteAsset("grounds");
         JamBotWorld = new SpriteAsset("jambot_world");
