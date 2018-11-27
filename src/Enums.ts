@@ -12,6 +12,6 @@ module MyGame {
     }
 
     export enum ProjectileState {
-        WAITING = "WAITING", FLYING = "FLYING", AFTER_FLYING = "AFTER_FLYING", DONE = "DONE"
+        WAITING, FLYING, AFTER_FLYING, DONE
     }
 }

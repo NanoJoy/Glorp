@@ -17,6 +17,7 @@ module MyGame {
             state.add.existing(this);
             this.state = state;
             this.health = Utils.isAThing(health) ? health : Player.STARTING_HEALTH;
+            this.inputs.K.onUp.add(this.throwCrumbs, this);
         }
 
         onStageBuilt() {
@@ -82,6 +83,10 @@ module MyGame {
             }
             
             Utils.snapToPixels(this);
+        }
+
+        throwCrumbs() {
+            this.state.groups.projectiles.push(new Crumbs(this.state, this.x, this.y, this.direction));
         }
     }
 }

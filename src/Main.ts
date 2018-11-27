@@ -51,6 +51,7 @@ module MyGame {
             houses: House[],
             npcs: NPC[],
             portals: Portal[],
+            projectiles: Projectile[],
             signs: Sign[],
             frontOfPlayer: Entity[]
         };
@@ -88,6 +89,7 @@ module MyGame {
                 houses: [],
                 npcs: [],
                 portals: [],
+                projectiles: [],
                 signs: [],
                 barriers: [],
                 frontOfPlayer: []
@@ -119,7 +121,7 @@ module MyGame {
             if (!this.playerStopped) {
                 this.triggers.forEach(t => t.checkPlayerOverlap());
 
-                let groupsToUpdate = [this.groups.enemies, this.groups.houses, this.groups.npcs, this.groups.portals, this.groups.creatures];
+                let groupsToUpdate = [this.groups.enemies, this.groups.houses, this.groups.npcs, this.groups.portals, this.groups.creatures, this.groups.projectiles];
                 for (let i = 0; i < groupsToUpdate.length; i++) {
                     let grp = groupsToUpdate[i];
                     for (let j = 0; j < grp.length; j++) {

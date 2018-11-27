@@ -32,13 +32,19 @@ module MyGame {
         }
 
         update() {
-            if (this.state === ProjectileState.DONE) return;
-            let updateMap = {
-                WAITING: this.wait,
-                FLYING: this.fly,
-                AFTER_FLYING: this.afterFly
-            };
-            updateMap[this.state]();
+            switch (this.state) {
+                case ProjectileState.WAITING:
+                    this.wait();
+                    break;
+                case ProjectileState.FLYING:
+                    this.fly();
+                    break;
+                case ProjectileState.AFTER_FLYING:
+                    this.afterFly();
+                    break;
+                case ProjectileState.DONE:
+                    this.remove();
+            }
         }
 
         start() {
@@ -58,9 +64,16 @@ module MyGame {
                 this.sprite.play(this.animations.moving);
             }
         }
+
+        remove() {
+            this.main.groups.projectiles = this.main.groups.projectiles.filter(p => p !== this);
+            this.sprite.destroy();
+        }
     }
 
     export class Crumbs extends Projectile {
+        landed: boolean;
+
         constructor(main: Main, x: number, y: number, direction: Direction) {
             super(main, x, y, Assets.Sprites.Crumbs.key, direction, 150, 3);
             this.sprite.animations.add("start", Utils.animationArray(0, 3), 8, false);
@@ -71,8 +84,19 @@ module MyGame {
 
             this.wait = () => null;
             this.afterFly = () => {
-                this.sprite.play(this.animations.end);
+                if (!this.landed) {
+                    this.sprite.body.velocity.setTo(0, 0);
+                    this.landed = true;
+                    this.main.time.events.add(5000, this.dissolve, this);
+                }
             };
+        }
+
+        dissolve() {
+            this.sprite.play("end");
+            this.main.time.events.add(2000, () => {
+                this.state = ProjectileState.DONE;
+            }, this)
         }
     }
 }
