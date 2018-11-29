@@ -53,6 +53,7 @@ module MyGame {
         [key: string]: string;
         BottomTextBackground = "bottom_text_background";
         ButtonPrompt = "button_prompt";
+        CrumbsIcon = "crumbs_icon";
         Door = "door";
         Gate = "gate";
         HealthBarContainer = "healthbar_container";
@@ -62,6 +63,7 @@ module MyGame {
         MenuBackground = "menu_background";
         OptionsBackground = "options_background";
         PlayerBattle = "player_battle";
+        ProjectileDisplay = "projectile_display";
         Sign = "sign";
         TileFloor = "tile_floor";
         Wall = "wall";

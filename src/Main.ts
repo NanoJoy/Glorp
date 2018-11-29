@@ -55,6 +55,7 @@ module MyGame {
             signs: Sign[],
             frontOfPlayer: Entity[]
         };
+        projectileDisplay: ProjectileDisplay;
 
         create() {
             this.playerStopped = false;
@@ -230,7 +231,7 @@ module MyGame {
             }
 
             this.player = new Player(this, playerPosition, stateTransfer.health === -1 ? 100 : stateTransfer.health);
-
+            this.projectileDisplay = new ProjectileDisplay(this, Assets.Images.CrumbsIcon);
             this.setDepths();
         }
 
@@ -248,6 +249,7 @@ module MyGame {
             this.groups.enemies.forEach(function (en) { this.game.world.bringToTop(en.worldSprite); }, this);
             this.game.world.bringToTop(this.player);
             this.groups.frontOfPlayer.forEach(f => this.game.world.bringToTop(f.sprite));
+            this.projectileDisplay.bringToTop();
         }
 
         paused() {
