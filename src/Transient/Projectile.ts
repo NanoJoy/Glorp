@@ -1,4 +1,17 @@
 module MyGame {
+    export enum ProjectileType {
+        CRUMBS, NONE
+    }
+
+    export var makeProjectile = (type: ProjectileType, main: Main, x: number, y: number, direction: Direction): Projectile => {
+        switch (type) {
+            case ProjectileType.CRUMBS:
+                return new Crumbs(main, x, y, direction);
+            case ProjectileType.NONE:
+                return null;
+        }
+    }
+
     export abstract class Projectile {
         main: Main;
         sprite: Phaser.Sprite;

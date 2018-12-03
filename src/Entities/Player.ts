@@ -8,6 +8,9 @@ module MyGame {
         state: Main;
         hasCollided: boolean;
 
+        projectileType: ProjectileType;
+        projectileCount: number;
+
         constructor(state: Main, position: Phaser.Point, health?: number) {
             super(state.game, position.x * TILE_WIDTH, position.y * TILE_HEIGHT, Assets.Sprites.Player.key, 0);
             state.game.physics.arcade.enableBody(this);
@@ -17,7 +20,10 @@ module MyGame {
             state.add.existing(this);
             this.state = state;
             this.health = Utils.isAThing(health) ? health : Player.STARTING_HEALTH;
-            this.inputs.K.onUp.add(this.throwCrumbs, this);
+            this.inputs.K.onUp.add(this.throwProjectile, this);
+
+            this.projectileType = ProjectileType.NONE;
+            this.projectileCount = 0;
         }
 
         onStageBuilt() {
@@ -85,8 +91,11 @@ module MyGame {
             Utils.snapToPixels(this);
         }
 
-        throwCrumbs() {
-            this.state.groups.projectiles.push(new Crumbs(this.state, this.x, this.y, this.direction));
+        throwProjectile() {
+            if (this.projectileCount > 0) {
+                this.state.groups.projectiles.push(makeProjectile(this.projectileType, this.state, this.x, this.y, this.direction));
+                this.projectileCount -= 1;
+            }
         }
     }
 }
