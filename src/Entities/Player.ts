@@ -95,6 +95,7 @@ module MyGame {
             if (this.projectileCount > 0) {
                 this.state.groups.projectiles.push(makeProjectile(this.projectileType, this.state, this.x, this.y, this.direction));
                 this.projectileCount -= 1;
+                this.state.projectileDisplay.updateCount(this.projectileCount);
             }
         }
     }

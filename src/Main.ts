@@ -183,8 +183,10 @@ module MyGame {
                             this.groups.barriers.push(new Water(this, pof(j, i)));
                             break;
                         case "p":
-                            console.log("lillypad");
                             this.groups.barriers.push(new Lillypad(this, pof(j, i)));
+                            break;
+                        case "s":
+                            this.groups.barriers.push(new CrumbSource(this, j, i));
                             break;
                         case "t":
                             let tree = new Tree(this, pof(j, i));
