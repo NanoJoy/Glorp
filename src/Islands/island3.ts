@@ -22,7 +22,7 @@ module MyGame {
                 "   w   w**********************",
                 "  ww   ww  ooooo             *",
                 "  w     w  opopo             *",
-                "  w     w  ooooo     s      **",
+                "  w     w  ooooo            **",
                 "  w  n  w  oopoo              ",
                 "  w     w  oooop              ",
                 "  w  *  w                     ",

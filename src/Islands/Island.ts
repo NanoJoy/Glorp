@@ -4,16 +4,6 @@ module MyGame {
         WATER, INSIDE, OUTSIDE
     }
 
-    class LayoutAddition {
-        public tile: string;
-        position: Phaser.Point;
-    }
-
-    class TextKey {
-        key: string;
-        position: Phaser.Point;
-    }
-
     class MapNPC {
         position: Phaser.Point;
         type: string;
@@ -52,7 +42,7 @@ module MyGame {
         action?: (main: Main, trigger: Trigger) => void;
     }
 
-    class MapCreature {
+    export class StringPos {
         type: string;
         x: number;
         y: number;
@@ -68,7 +58,7 @@ module MyGame {
         private num: number;
         private type: IslandType;
         private layout: string[];
-        private additions: LayoutAddition[];
+        private additions: StringPos[];
         private enemies: MapEnemy[];
         private npcs: MapNPC[];
         private outsideBoundsPortals: MapOutsideBoundsPortal[];
@@ -76,7 +66,8 @@ module MyGame {
         private links: MapLink[];
         private triggers: MapTrigger[];
         private otherLinks: MapLink[];
-        private creatures: MapCreature[];
+        private creatures: StringPos[];
+        private sources: StringPos[];
 
         constructor(num: number, type: IslandType) {
             this.num = num;
@@ -98,7 +89,7 @@ module MyGame {
             return this;
         }
 
-        setAdditions(additions: LayoutAddition[]): IslandBuilder {
+        setAdditions(additions: StringPos[]): IslandBuilder {
             this.additions = additions;
             return this;
         }
@@ -138,15 +129,22 @@ module MyGame {
             return this;
         }
 
-        setCreatures(creatures: MapCreature[]): IslandBuilder {
+        setCreatures(creatures: StringPos[]): IslandBuilder {
             this.creatures = creatures;
             return this;
         }
 
+        setSources(sources: StringPos[]): IslandBuilder {
+            this.sources = sources;
+            return this;
+        }
+
         build(): Island {
-            return new Island(this.num, this.type, this.layout, this.additions, this.enemies, this.npcs,
+            let island = new Island(this.num, this.type, this.layout, this.additions, this.enemies, this.npcs,
                 this.playerStart, this.outsideBoundsPortals, this.links, this.triggers, this.otherLinks,
                 this.creatures);
+            island.sources = this.sources;
+            return island;
         }
     }
 
@@ -155,7 +153,7 @@ module MyGame {
         type: IslandType;
         position: Phaser.Point;
         layout: string[];
-        additions: LayoutAddition[];
+        additions: StringPos[];
         enemies: MapEnemy[];
         npcs: MapNPC[];
         outsideBoundsPortals: MapOutsideBoundsPortal[];
@@ -165,11 +163,12 @@ module MyGame {
         triggers: MapTrigger[];
         dialogStates: DialogState[];
         otherLinks: MapLink[];
-        creatures: MapCreature[];
+        creatures: StringPos[];
+        sources: StringPos[];
 
-        constructor(num: number, type: IslandType, layout: string[], additions: LayoutAddition[],
+        constructor(num: number, type: IslandType, layout: string[], additions: StringPos[],
             enemies: MapEnemy[], npcs: MapNPC[], playerStart: Phaser.Point, outsideBoundsPortals: MapOutsideBoundsPortal[],
-            links: MapLink[], triggers: MapTrigger[], otherLinks: MapLink[], creatures: MapCreature[]) {
+            links: MapLink[], triggers: MapTrigger[], otherLinks: MapLink[], creatures: StringPos[]) {
             this.num = num;
             this.type = type;
             this.layout = layout;

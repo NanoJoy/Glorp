@@ -4,6 +4,7 @@ module MyGame {
             .setLayout([
                 "*t t t t t t t t t t t t ",
                 "*                        ",
+                "*           s            ",
                 "*       oooooooo         ",
                 "**     oooooooooo        ",
                 "        oooooooo         ",
@@ -21,7 +22,7 @@ module MyGame {
                 "w     oooooooooooo       ",
                 "w     oocoooooooo        ",
                 "w     oooooooooo         ",
-                "w                        ",
+                "w          s             ",
                 "w                        ",
                 "w                        ",
                 "w                        ",
@@ -30,10 +31,15 @@ module MyGame {
                 "w                        "
             ])
             .setOutsideBoundsPortals([
-                { side: Direction.Left, start: 3, end: 7, link: 3, playerStart: pof(28, 4) }
+                { side: Direction.Left, start: 4, end: 7, link: 3, playerStart: pof(28, 4) }
             ])
             .setCreatures([
-                { type: Assets.Sprites.Blish.key, x: 8, y: 17 }
+                { type: Assets.Sprites.Blish.key, x: 8, y: 18 }
+            ])
+            .setSources([
+                { type: Assets.Images.CrumbsSource, x: 12, y: 2 },
+                { type: Assets.Images.CrumbsSource, x: 11, y: 20 }
+
             ])
             .build();
     };

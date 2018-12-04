@@ -58,7 +58,12 @@ module MyGame {
                 this.main.groups.grounds.filter(g => g.hasBody).forEach(g => {
                     this.main.physics.arcade.collide(this.sprite, g.sprite);
                 });
-                Utils.moveToTarget(this.sprite.body, this.main.player.position, Blish.MAX_SPEED, Blish.CUTOFF, Infinity, this.lines);
+                this.main.groups.projectiles.filter(p => p instanceof Crumbs).forEach(c => {
+                    let sees = Utils.sees(this.sprite.position, c.sprite.position, Infinity, this.lines);
+                    if (sees.item1 || sees.item2) {
+                        Utils.moveToTarget(this.sprite.body, c.sprite.body.position, Blish.MAX_SPEED, Blish.CUTOFF, sees);
+                    }
+                });
                 if (this.sprite.body.velocity.y < 0 && this.sprite.rotation !== 0) {
                     this.sprite.rotation = 0;
                 } else if (this.sprite.body.velocity.y > 0 && this.sprite.rotation !== Math.PI) {

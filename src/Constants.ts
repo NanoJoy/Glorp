@@ -54,6 +54,7 @@ module MyGame {
         BottomTextBackground = "bottom_text_background";
         ButtonPrompt = "button_prompt";
         CrumbsIcon = "crumbs_icon";
+        CrumbsSource = "crumbs_source";
         Door = "door";
         Gate = "gate";
         HealthBarContainer = "healthbar_container";

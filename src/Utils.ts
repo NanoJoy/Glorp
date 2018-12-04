@@ -1,4 +1,14 @@
 module MyGame {
+    export class Tuple<T1, T2> {
+        public item1: T1;
+        public item2: T2;
+
+        constructor(item1: T1, item2: T2) {
+            this.item1 = item1;
+            this.item2 = item2;
+        }
+    }
+
     export function pof(x: number, y: number): Phaser.Point {
         return new Phaser.Point(x, y);
     }
@@ -227,15 +237,13 @@ module MyGame {
             return point.clone().divide(TILE_WIDTH, TILE_HEIGHT).round().multiply(TILE_WIDTH, TILE_HEIGHT);
         }
 
-        static moveToTarget(body: Phaser.Physics.Arcade.Body, target: Phaser.Point, speed: number, cutoff: number, visionRange?: number, blockers?: Phaser.Line[]) {
-            let distance = target.clone().subtract(body.position.x, body.position.y);
-            let absDistance = pof(Math.abs(distance.x), Math.abs(distance.y));
+        static sees(position: Phaser.Point, obj: Phaser.Point, visionRange: number, blockers: Phaser.Line[]): Tuple<boolean, boolean> {
             let seesHorizontal = true;
             let seesVertical = true;
-            let blockedH = (distance.x < 0 && body.blocked.left) || (distance.x > 0 && body.blocked.right);
-            let blockedV = (distance.y < 0 && body.blocked.up) || (distance.y > 0 && body.blocked.down);
+            let distance = obj.clone().subtract(position.x, position.y);
+            let absDistance = pof(Math.abs(distance.x), Math.abs(distance.y));
 
-            let lineOfSight = new Phaser.Line(body.center.x, body.center.y, target.x, target.y);
+            let lineOfSight = new Phaser.Line(position.x, position.y, obj.x, obj.y);
             if (this.isAThing(blockers) && blockers.some(b => b.intersects(lineOfSight, true) !== null)) {
                 seesHorizontal = false;
                 seesVertical = false;
@@ -243,23 +251,30 @@ module MyGame {
             
             if (this.isAThing(visionRange)) {
                 let transformedRange = pof(TILE_WIDTH, TILE_HEIGHT).multiply(visionRange, visionRange);
-                seesHorizontal = seesHorizontal && !blockedH && absDistance.y <= transformedRange.y;
-                seesVertical = seesVertical && !blockedV && absDistance.x <= transformedRange.x;
+                seesHorizontal = seesHorizontal  && absDistance.y <= transformedRange.y;
+                seesVertical = seesVertical && absDistance.x <= transformedRange.x;
             }
+
+            return new Tuple(seesHorizontal, seesVertical);
+        }
+
+        static moveToTarget(body: Phaser.Physics.Arcade.Body, target: Phaser.Point, speed: number, cutoff: number, sees: Tuple<boolean, boolean>) {
+            let distance = target.clone().subtract(body.x, body.y);
+            let absDistance = pof(Math.abs(distance.x), Math.abs(distance.y));
 
             if (absDistance.x < cutoff) {
                 body.position.x = target.x;
                 body.velocity.x = 0;
-                seesHorizontal = false;
+                sees.item1 = false;
             }
             if (absDistance.y < cutoff) {
                 body.position.y = target.y;
                 body.velocity.y = 0;
-                seesVertical = false;
+                sees.item2 = false;
             }
 
-            body.velocity.x = seesHorizontal ? this.signOf(distance.x) * speed : 0;
-            body.velocity.y = seesVertical && !seesHorizontal ? this.signOf(distance.y) * speed : 0;
+            body.velocity.x = sees.item1 ? this.signOf(distance.x) * speed : 0;
+            body.velocity.y = sees.item2 && !sees.item1 ? this.signOf(distance.y) * speed : 0;
         }
 
         static accelerateToTarget(target: number, currentPosition: number, currentVelocity: number, acceleration: number, maxSpeed?: number): number {

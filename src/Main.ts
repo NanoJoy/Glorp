@@ -186,7 +186,8 @@ module MyGame {
                             this.groups.barriers.push(new Lillypad(this, pof(j, i)));
                             break;
                         case "s":
-                            this.groups.barriers.push(new CrumbSource(this, j, i));
+                            let type = this.getTypeOfThing(island.sources, j, i, "Source");
+                            this.groups.barriers.push(Source.makeSource(this, j, i, type));
                             break;
                         case "t":
                             let tree = new Tree(this, pof(j, i));
@@ -292,6 +293,14 @@ module MyGame {
                     e.movementManager.resume();
                 }
             })
+        }
+
+        getTypeOfThing(things: StringPos[], x: number, y: number, thingType = "thing"): string {
+            let matching = things.filter(t => t.x === x && t.y === y);
+            if (matching.length === 0) {
+                throw new Error(`${thingType} information could not be found at x: ${x}, y: ${y}.`);
+            }
+            return matching[0].type;
         }
     }
 }

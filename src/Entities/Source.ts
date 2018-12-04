@@ -2,7 +2,7 @@ module MyGame {
     var keyMap = (type: ProjectileType): string => {
         switch (type) {
             case ProjectileType.CRUMBS:
-                return Assets.Sprites.Crumbs.key;
+                return Assets.Images.CrumbsSource;
         }
         throw new Error("Projectile Type must not be NONE");
     }
@@ -24,6 +24,14 @@ module MyGame {
                 this.main.player.projectileCount = this.amount;
                 this.main.projectileDisplay.updateCount(this.amount);
             }
+        }
+
+        static makeSource(main: Main, x: number, y: number, type: string): Source {
+            switch (type) {
+                case Assets.Images.CrumbsSource:
+                    return new CrumbSource(main, x, y);
+            }
+            throw new Error(`Source type ${type} is invalid.`);
         }
     }
 
