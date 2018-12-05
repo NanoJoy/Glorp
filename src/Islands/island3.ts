@@ -17,12 +17,29 @@ module MyGame {
             }
         }
 
+        function jambugDead(main: Main) {
+            let albert = main.groups.npcs[0];
+            albert.sprite.position.setTo(7 * TILE_WIDTH, 10 * TILE_HEIGHT);
+            if (main.groups.enemies.filter(e => e instanceof JamBug && e.alive).length === 0) {
+                main.stopPlayer();
+                main.player.position.setTo(19 * TILE_WIDTH, 10 * TILE_HEIGHT);
+                albert.setDialogState(0);
+                albert.doScript("d=drrrrrrrrrrrrrrrrrru;l=false", pof(7, 10));
+                albert.movementManager.setOnComplete(function() {
+                    this.playerStopped = false;
+                    main.groups.barriers.filter(b => b instanceof Gate)[1].sprite.destroy();
+                    WorldManager.getInstance().changeLayout(3, pof(26, 9), " ");
+                }, main);
+                albert.savePosition(25, 10);
+            }
+        }
+
         return new IslandBuilder(3, IslandType.OUTSIDE)
             .setLayout([
                 "   w   w**********************",
                 "  ww   ww  ooooo             *",
                 "  w     w  opopo             *",
-                "  w     w  ooooo            **",
+                "  w     w  ooooo           n**",
                 "  w  n  w  oopoo              ",
                 "  w     w  oooop              ",
                 "  w  *  w                     ",
@@ -43,7 +60,8 @@ module MyGame {
                 { type: TriggerType.MOVE_NPC, name: "albertfirst", x: 3, y: 2, width: 5, height: 1 }
             ])
             .setNPCs([
-                { position: pof(5, 4), type: Assets.Sprites.Albert.key, textKey: Texts.ALBERT_FIRST, script: "d=uu;t=albertfirst;l=false" }
+                { position: pof(5, 4), type: Assets.Sprites.Albert.key, textKey: Texts.ALBERT_FIRST, script: "d=uu;t=albertfirst;l=false" },
+                { position: pof(27, 3), type: Assets.Images.Sign, textKey: Texts.LULLY_POND, script: null }
             ])
             .setEnemies([
                 { 
@@ -61,17 +79,20 @@ module MyGame {
                 {
                     position: pof(13, 10),
                     type: Assets.Sprites.JamBugWorld.key,
-                    script: "ddlluurr"
+                    script: "ddlluurr",
+                    afterDeath: jambugDead
                 },
                 {
                     position: pof(15, 11),
                     type: Assets.Sprites.JamBugWorld.key,
-                    script: "rdlu"
+                    script: "rdlu",
+                    afterDeath: jambugDead
                 },
                 {
                     position: pof(23, 10),
                     type: Assets.Sprites.JamBugWorld.key,
-                    script: "dduulrrl"
+                    script: "dduulrrl",
+                    afterDeath: jambugDead
                 }
             ])
             .build();

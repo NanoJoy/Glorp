@@ -27,6 +27,7 @@ module MyGame {
         }
 
         saveGame(main: Main, worldManager: WorldManager) {
+            debugger;
             let npcs = this.loadGame() ? this.loadGame().npcs : [] as { old: Location, now: Location }[];
             for (let npc of main.groups.npcs) {
                 let position = npc.unloadPositionToSave();

@@ -22,7 +22,7 @@ module MyGame {
             .setNPCs([
                 { position: pof(8, 3), textKey: Texts.SIGHING, type: Assets.Sprites.Albert.key, script: "rrrrrrdllllllu" },
                 { position: pof(22, 5), textKey: Texts.THE_MEEP, type: Assets.Images.Sign, script: "" },
-                { position: pof(22, 7), textKey: Texts.TUTTLE_VILLAGE, type: Assets.Images.Sign, script: "" },
+                { position: pof(22, 7), textKey: Texts.PATH_TO_TUTTLE_VILLAGE, type: Assets.Images.Sign, script: "" },
                 { position: pof(1, 2), textKey: Texts.HOW_TO_SAVE, type: Assets.Images.Sign, script: "" }
             ])
             .build();

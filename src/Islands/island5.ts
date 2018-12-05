@@ -6,7 +6,7 @@ module MyGame {
                 "*                        ",
                 "*           s            ",
                 "*       oooooooo         ",
-                "**     oooooooooo        ",
+                "**n    oooooooooo        ",
                 "        oooooooo         ",
                 "           oo            ",
                 "           oo            ",
@@ -40,6 +40,9 @@ module MyGame {
                 { type: Assets.Images.CrumbsSource, x: 12, y: 2 },
                 { type: Assets.Images.CrumbsSource, x: 11, y: 20 }
 
+            ])
+            .setNPCs([
+                { position: pof(4, 2), type: Assets.Images.Sign, textKey: Texts.PATH_TO_TUTTLE_VILLAGE, script: null }
             ])
             .build();
     };

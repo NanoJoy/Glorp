@@ -130,7 +130,9 @@ module MyGame {
         }
 
         doScript(directions: string, start?: Phaser.Point) {
-            this.movementManager.pause();
+            if (this.movementManager) {
+                this.movementManager.pause();
+            }
             start = start ? start : pof(Math.floor(this.sprite.x / TILE_WIDTH), Math.floor(this.sprite.y / TILE_WIDTH));
 
             this.movementManager = new MovementManager(this.main.game, Utils.makeMovementScript(start, directions), this);

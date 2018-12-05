@@ -302,5 +302,10 @@ module MyGame {
             }
             return matching[0].type;
         }
+
+        bringGroupToTop(group: Entity[]) {
+            group.forEach(g => { this.world.bringToTop(g.sprite); });
+            this.projectileDisplay.bringToTop();
+        }
     }
 }

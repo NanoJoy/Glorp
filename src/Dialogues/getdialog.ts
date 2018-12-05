@@ -3,9 +3,11 @@ module MyGame {
         GRANDPA,
         SIGHING,
         THE_MEEP,
+        PATH_TO_TUTTLE_VILLAGE,
         TUTTLE_VILLAGE,
         ALBERT_FIRST,
-        HOW_TO_SAVE
+        HOW_TO_SAVE,
+        LULLY_POND
     }
 
     function getSignText(info: string): TextManager {
@@ -18,6 +20,10 @@ module MyGame {
                 return getAlbertText();
             case Texts.GRANDPA:
                 return getGrandpaText();
+            case Texts.LULLY_POND:
+                return getSignText("Lully Pond");
+            case Texts.PATH_TO_TUTTLE_VILLAGE:
+                return getSignText("Path to Tuttle Village");
             case Texts.SIGHING:
                 return new TextManager([new TextEncounter(new TextDump("Sigh...", new TextDump("This time of year always reminds me of when Sarah left.")))]);
             case Texts.THE_MEEP:

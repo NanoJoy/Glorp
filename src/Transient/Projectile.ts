@@ -93,6 +93,9 @@ module MyGame {
             this.animations.start = "start";
             this.sprite.animations.add("end", Utils.animationArray(4, 6), 2, false);
             this.animations.end = "end";
+            this.main.bringGroupToTop(this.main.groups.barriers.filter(b => {
+                return b instanceof Tree || b instanceof Bush || b instanceof StoneWall
+            }));
             this.start();
 
             this.wait = () => null;
