@@ -52,7 +52,7 @@ module MyGame {
 
         start(resetToOriginalPosition = false) {
             if (resetToOriginalPosition) {
-                this.sprite.body.position.setTo(this.script.start.x * TILE_WIDTH, this.script.start.y * TILE_HEIGHT);
+                this.sprite.position.setTo(this.script.start.x * TILE_WIDTH, this.script.start.y * TILE_HEIGHT);
             }
             let destinations = [] as Phaser.Point[];
             for (let i = 0; i < this.script.directions.length; i++) {

@@ -228,7 +228,7 @@ module MyGame {
                 playerPosition = island.getAdjustedPosition(island.playerStart.clone());
             }
 
-            if (DEVELOPER_MODE) {
+            if (DEVELOPER_MODE && !stateTransfer.position) {
                 playerPosition.x = PLAYER_START_X < 0 ? playerPosition.x : PLAYER_START_X;
                 playerPosition.y = PLAYER_START_Y < 0 ? playerPosition.y : PLAYER_START_Y;
             }

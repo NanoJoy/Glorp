@@ -73,7 +73,8 @@ module MyGame {
     export var Assets = {
         Sprites: new SpriteAssets(),
         Images: new ImageAssets(),
-        FontName: "testbitmap"
+        FontName: "testbitmap",
+        FontSize: 14
     }
 
     export var VISUAL_ASSETS_PATH = "assets/visual";

@@ -90,7 +90,7 @@ module MyGame {
         battle: Battle;
         x: number;
         y: number;
-        text: Phaser.Text;
+        text: Phaser.BitmapText;
         healthBarContainer: Phaser.Image;
         healthBar: Phaser.Sprite;
         hitPoints: number;
@@ -100,7 +100,7 @@ module MyGame {
             this.x = x;
             this.y = y;
             this.hitPoints = hitPoints;
-            this.text = battle.add.text(x, y, name, { font: "16px okeydokey", fill: "#000000" });
+            this.text = battle.add.bitmapText(x, y, Assets.FontName, name, Assets.FontSize);
             this.healthBarContainer = battle.add.image(x, y + 18, Assets.Images.HealthBarContainer);
             this.healthBar = null;
             this.updateHitPoints(hitPoints);
