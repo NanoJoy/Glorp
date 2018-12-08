@@ -9,11 +9,12 @@ module MyGame {
         startY: number;
         positionToSave: Phaser.Point;
         movementManager: MovementManager;
-        private textManager: TextManager;
+        private textManager: ITextManager;
         private textDisplay: TextDisplay;
         private buttonPrompt: ButtonPrompt;
         private doingScript: boolean;
         private textShowing: boolean;
+        private notDefaultAnims: boolean;
 
         constructor(main: Main, position: Phaser.Point, dialogKey: Texts, movementScript: MovementScript,
         speed: number, animationSpeed: number, spriteKey: string, notDefaultAnims = false) {
@@ -28,6 +29,7 @@ module MyGame {
                 Utils.addPersonAnimations(this.sprite, animationSpeed);
             }
 
+            this.notDefaultAnims = notDefaultAnims;
             this.textManager = getDialog(dialogKey);
             this.textDisplay = new BottomTextDisplay(main, this);
             this.buttonPrompt = new ButtonPrompt(this, main.inputs.O, -4);
@@ -62,7 +64,7 @@ module MyGame {
         update() {
             let player = this.main.player;
             if ((!this.movementManager || this.movementManager.interruptable)
-                && Phaser.Math.distance(this.sprite.centerX, this.sprite.centerY, player.centerX, player.centerY) < TILE_HEIGHT * 1.5) {
+                && Utils.getEdgeDistance(this.sprite, this.main.player) < TILE_HEIGHT / 2) {
                 if (this.movementManager) {
                     this.buttonPrompt.reposition(this.sprite.x, this.sprite.y, -4);
                     this.movementManager.pause();
@@ -77,7 +79,7 @@ module MyGame {
                 } else {
                     this.direction = Direction.Right;
                 }
-                if (!(this instanceof Sign)) {
+                if (!(this instanceof Sign) && !this.notDefaultAnims) {
                     this.sprite.play(Utils.getIdleAnimName(this.direction));
                 }
             } else {
@@ -102,9 +104,11 @@ module MyGame {
         showText(override = false) {
             if (override || this.shouldShowText()) {
                 this.buttonPrompt.hide();
-                let anim = Utils.getIdleAnimName(this.direction);
-                if (this.sprite.animations.currentAnim && anim !== this.sprite.animations.currentAnim.name) {
-                    this.sprite.play(anim);
+                if (!this.notDefaultAnims) {
+                    let anim = Utils.getIdleAnimName(this.direction);
+                    if (this.sprite.animations.currentAnim && anim !== this.sprite.animations.currentAnim.name) {
+                        this.sprite.play(anim);
+                    }
                 }
                 this.textDisplay.start(this.textManager.useNext(this.main, this));
                 this.textShowing = true;

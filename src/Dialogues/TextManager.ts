@@ -1,5 +1,11 @@
 module MyGame {
-    export class TextManager {
+    export interface ITextManager {
+        getNext(main: Main, parent: Entity): ITextEncounter;
+        useNext(main: Main, parent: Entity): ITextEncounter;
+        setLastViewed(lastViewed: number): void;
+    }
+
+    export class TextManager implements ITextManager {
         private textEncounters: ITextEncounter[];
         private lastViewed: number;
         private decisionFunction: (lastViewed: number, main: Main, parent: Entity) => number;

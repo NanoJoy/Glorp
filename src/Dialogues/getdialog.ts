@@ -11,11 +11,11 @@ module MyGame {
         MEEP_GROWL
     }
 
-    function getSignText(info: string): TextManager {
+    function getSignText(info: string): ITextManager {
         return new TextManager([new TextEncounter(new TextDump(info))]);
     }
 
-    export function getDialog(key: Texts): TextManager {
+    export function getDialog(key: Texts): ITextManager {
         switch (key) {
             case Texts.ALBERT_FIRST:
                 return getAlbertText();
@@ -34,7 +34,7 @@ module MyGame {
             case Texts.HOW_TO_SAVE:
                 return getSignText("It's good to save often. You can save by pressing the SPACEBAR to pause, then pressing O when you have the Save option selected. If you die, you will be sent back to your last save.");
             case Texts.MEEP_GROWL:
-                return new TextManager([new TextEncounter(new TextDump("Grr...", new TextDump("..rrrRRRrrr...")), true)]);
+                return getTheMeepText();
             default:
                 throw new Error(`Cannot find dialog for key '${key}'.`);
         }

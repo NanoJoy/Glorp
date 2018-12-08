@@ -323,5 +323,40 @@ module MyGame {
                     break;
             }
         }
+
+        static getEdgeDistance(sp1: Phaser.Sprite, sp2: Phaser.Sprite): number {
+            function haveOverlap(begin1: number, end1: number, begin2: number, end2: number) {
+                return (begin2 <= begin1 && begin1 <= end2) || (begin1 <= begin2 && begin2 <= end1);
+            }
+
+            if (haveOverlap(sp1.left, sp1.right, sp2.left, sp2.right)) {
+                if (haveOverlap(sp1.top, sp1.bottom, sp2.top, sp2.bottom)) {
+                    return 0;
+                }
+                if (sp1.top < sp2.top) {
+                    return sp2.top - sp1.bottom;
+                } 
+                return sp1.top - sp2.bottom;
+            }
+
+            if (haveOverlap(sp1.top, sp1.bottom, sp2.top, sp2.bottom)) {
+                if (sp1.left < sp2.left) {
+                    return sp2.left - sp1.right;
+                }
+                return sp1.left - sp2.right;
+            }
+
+            if (sp1.left < sp2.left) {
+                if (sp1.top < sp2.top) {
+                    return Math.max(sp2.top - sp1.bottom, sp2.left - sp1.right);
+                }
+                return Math.max(sp1.top - sp2.bottom, sp2.left - sp1.right);
+            }
+            
+            if (sp1.top < sp2.top) {
+                return Math.max(sp2.top - sp1.bottom, sp1.left - sp2.right);
+            }
+            return Math.max(sp1.top - sp2.bottom, sp1.left - sp2.right);
+        }
     }
 }
