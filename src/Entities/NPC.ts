@@ -16,7 +16,7 @@ module MyGame {
         private textShowing: boolean;
 
         constructor(main: Main, position: Phaser.Point, dialogKey: Texts, movementScript: MovementScript,
-        speed: number, animationSpeed: number, spriteKey: string) {
+        speed: number, animationSpeed: number, spriteKey: string, notDefaultAnims = false) {
             this.main = main;
             this.startX = position.x;
             this.startY = position.y;
@@ -24,7 +24,7 @@ module MyGame {
             this.speed = speed;
             this.sprite = main.add.sprite(position.x * TILE_WIDTH, position.y * TILE_HEIGHT, spriteKey);
             main.physics.arcade.enable(this.sprite);
-            if (spriteKey !== Assets.Images.Sign) {
+            if (spriteKey !== Assets.Images.Sign || notDefaultAnims) {
                 Utils.addPersonAnimations(this.sprite, animationSpeed);
             }
 
@@ -186,6 +186,14 @@ module MyGame {
     export class Sign extends NPC {
         constructor(main: Main, position: Phaser.Point, dialogKey: Texts) {
             super (main, position, dialogKey, null, 0, 0, Assets.Images.Sign);
+        }
+    }
+
+    export class TheMeep extends NPC {
+        constructor(main: Main, position: Phaser.Point, dialogKey: Texts) {
+            super(main, position, dialogKey, null, 0, 0, Assets.Sprites.TheMeep.key, true);
+            this.sprite.animations.add("plop", Utils.animationArray(0, 3), 5, true);
+            this.sprite.animations.play("plop");
         }
     }
 }

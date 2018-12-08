@@ -291,6 +291,9 @@ module MyGame {
                 case Assets.Images.Sign:
                     npc = new Sign(main, pcop(mapNPC.position), mapNPC.textKey);
                     break;
+                case Assets.Sprites.TheMeep.key:
+                    npc = new TheMeep(main, pcop(mapNPC.position), mapNPC.textKey);
+                    break;
                 default:
                     throw new Error(`${mapNPC.type} is not a valid NPC type.`);
             }
