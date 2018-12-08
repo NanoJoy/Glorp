@@ -86,6 +86,7 @@ module MyGame {
 
     export class Crumbs extends Projectile {
         landed: boolean;
+        dissolved: boolean;
 
         constructor(main: Main, x: number, y: number, direction: Direction) {
             super(main, x, y, Assets.Sprites.Crumbs.key, direction, 150, 3);
@@ -96,6 +97,8 @@ module MyGame {
             this.main.bringGroupToTop(this.main.groups.barriers.filter(b => {
                 return b instanceof Tree || b instanceof Bush || b instanceof StoneWall
             }));
+            this.landed = false;
+            this.dissolved = false;
             this.start();
 
             this.wait = () => null;
@@ -109,10 +112,13 @@ module MyGame {
         }
 
         dissolve() {
-            this.sprite.play("end");
-            this.main.time.events.add(2000, () => {
-                this.state = ProjectileState.DONE;
-            }, this)
+            if (!this.dissolved) {
+                this.dissolved = true;
+                this.sprite.play("end");
+                this.main.time.events.add(2000, () => {
+                    this.state = ProjectileState.DONE;
+                }, this);
+            }
         }
     }
 }

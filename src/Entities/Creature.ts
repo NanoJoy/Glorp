@@ -1,6 +1,4 @@
 module MyGame {
-
-
     export abstract class Creature implements Entity {
         readonly MOVE = "move";
 
@@ -63,6 +61,12 @@ module MyGame {
                     if (sees.item1 || sees.item2) {
                         Utils.moveToTarget(this.sprite.body, c.sprite.body.position, Blish.MAX_SPEED, Blish.CUTOFF, sees);
                     }
+                    let crumbs = c as Crumbs;
+                    this.main.physics.arcade.overlap(this.sprite, c.sprite, (blishSprite: Phaser.Sprite, crumbSprite: Phaser.Sprite) => {
+                        if (crumbs.landed) {
+                            crumbs.dissolve();
+                        }
+                    })
                 });
                 if (this.sprite.body.velocity.y < 0 && this.sprite.rotation !== 0) {
                     this.sprite.rotation = 0;
