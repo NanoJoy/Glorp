@@ -13,7 +13,7 @@ module MyGame {
                     main.groups.barriers.filter(b => b instanceof Gate)[0].sprite.destroy();
                     WorldManager.getInstance().changeLayout(3, pof(8, 11), " ");
                 }, main);
-                albert.savePosition(7, 8);
+                albert.savePosition(7, 10);
             }
         }
 

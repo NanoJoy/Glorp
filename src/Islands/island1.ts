@@ -16,7 +16,7 @@ module MyGame {
             .setPlayerStart(pof(1, 0))
             .setOutsideBoundsPortals([
                 { side: Direction.Up, start: 1, end: 4, playerStart: pof(4, 9), link: 0 },
-                { side: Direction.Right, start: 3, end: 6, playerStart: undefined, link: 2 },
+                { side: Direction.Right, start: 3, end: 6, playerStart: pof(1, 1), link: 2 },
                 { side: Direction.Down, start: 20, end: 24, playerStart: pof(5, 0), link: 3 }
             ])
             .setNPCs([

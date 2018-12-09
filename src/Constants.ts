@@ -4,11 +4,11 @@ module MyGame {
     export const TILE_WIDTH = 28;
     export const TILE_HEIGHT = 32;
 
-    export const DEVELOPER_MODE = false;
+    export const DEVELOPER_MODE = true;
     export const START_ISLAND = 3;
     export const CLEAR_SAVE = true;
     export const PLAYER_START_X = 5;
-    export const PLAYER_START_Y = 1;
+    export const PLAYER_START_Y = 0;
 
     export var States = {
         Boot: "Boot",
