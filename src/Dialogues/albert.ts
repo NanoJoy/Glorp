@@ -26,6 +26,14 @@ module MyGame {
             ]);
         }
 
+        function getToTown(): TextPrompt {
+            return new TextPrompt("Well I know Stacy can get... strange in her routines. But anyway, you should get into town. Also, can you stop by Professor Dorfusk's house? "
+            + "I was supposed to help him fix the Thumpotron but I should probably stay here and clean up this mess. I think he's just missing some parts or something.", [
+                new TextOption("Okay."),
+                new TextOption("I'll see.")
+            ])
+        }
+
         function decision(lastViewed: number, main: Main, parent: Entity): number {
             if (lastViewed < 0) {
                 return 0;
@@ -34,22 +42,38 @@ module MyGame {
                 let jambotsLeft = main.groups.enemies.filter(e => e instanceof JamBot).length > 0;
                 return jambotsLeft ? 1 : 2;
             }
-            return 3;
+            let jambugsLeft = main.groups.enemies.some(e => e instanceof JamBug);
+            return jambugsLeft ? 3 : 4;
         }
 
         return new TextManager([
+            //0
             new TextEncounter(new TextPrompt("Hello Rosie.", [
                 new TextOption("Oh hey Albert.", new TextPrompt("Do you want to hear about my latest invention?", [
                     new TextOption("Sure!", new TextDump("That's good, because your survival might depend on it! Just kidding, I think.", getJambotExplanation())),
                     new TextOption("Not really...", new TextDump("Well, I think you had better listen anyway, if you want to survive. Um, just kidding!", getJambotExplanation()))
                 ]))
             ])),
+            //1
             new TextEncounter(danceDance()),
+            //2
             new TextEncounter(new TextPrompt("Wow, thanks! I knew you could do it. But uh...", [
                 new TextOption("What?", getJamBugExplanation()),
                 new TextOption("*Sigh*", getJamBugExplanation())
             ]), true),
-            new TextEncounter(dumpy)
+            //3
+            new TextEncounter(dumpy),
+            //4
+            new TextEncounter(new TextPrompt("What a relief, now I don't have to worry about my little experiments killing anyone. Thanks again!", [
+                new TextOption("Are there more?", new TextPrompt("This should be all of the ones that escaped, but don't think you're done dancing. I know Stacy and Ralph were very eager to try your skills before the Feast.", [
+                    new TextOption("Cool!", getToTown()),
+                    new TextOption("Oh no...", getToTown())
+                ])),
+                new TextOption("I enjoyed it.", new TextPrompt("Uhh... That's good I guess. It was probably good practice at least. I know Stacy and Ralph were very eager to try your skills before the Feast.", [
+                    new TextOption("Cool!", getToTown()),
+                    new TextOption("Oh no...", getToTown())
+                ]))
+            ]))
         ], decision)
     }
 }

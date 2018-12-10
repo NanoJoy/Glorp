@@ -23,7 +23,7 @@ module MyGame {
             if (main.groups.enemies.filter(e => e instanceof JamBug && e.alive).length === 0) {
                 main.stopPlayer();
                 main.player.position.setTo(19 * TILE_WIDTH, 10 * TILE_HEIGHT);
-                albert.setDialogState(0);
+                albert.setDialogState(2);
                 albert.doScript("d=rrrrrru;l=false", pof(19, 11));
                 albert.movementManager.setOnComplete(function() {
                     this.playerStopped = false;
