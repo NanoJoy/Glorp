@@ -35,6 +35,32 @@ module MyGame {
         }
     }
 
+    class MainGroups {
+        barriers: Barrier[];
+        creatures: Creature[];
+        enemies: Enemy[];
+        grounds: Ground[];
+        houses: House[];
+        npcs: NPC[];
+        portals: Portal[];
+        projectiles: Projectile[];
+        signs: Sign[];
+        frontOfPlayer: Entity[];
+
+        constructor() {
+            this.barriers = [];
+            this.creatures = [];
+            this.enemies = [];
+            this.grounds = [];
+            this.houses = [];
+            this.npcs = [];
+            this.portals = [];
+            this.projectiles = [];
+            this.signs = [];
+            this.frontOfPlayer = [];
+        }
+    }
+
     export class Main extends Phaser.State {
 
         player: Player;
@@ -43,18 +69,7 @@ module MyGame {
         island: Island;
         pauseMenu: IPauseMenu;
         triggers: Trigger[];
-        groups: {
-            barriers: Barrier[],
-            creatures: Creature[],
-            enemies: Enemy[],
-            grounds: Ground[],
-            houses: House[],
-            npcs: NPC[],
-            portals: Portal[],
-            projectiles: Projectile[],
-            signs: Sign[],
-            frontOfPlayer: Entity[]
-        };
+        groups: MainGroups;
         projectileDisplay: ProjectileDisplay;
 
         create() {
@@ -83,18 +98,7 @@ module MyGame {
             }
             this.inputs = new Inputs(this);
 
-            this.groups = {
-                creatures: [],
-                enemies: [],
-                grounds: [],
-                houses: [],
-                npcs: [],
-                portals: [],
-                projectiles: [],
-                signs: [],
-                barriers: [],
-                frontOfPlayer: []
-            }
+            this.groups = new MainGroups();
 
             this.island = worldManager.getIsland(stateTransfer.island === -1 ? 0 : stateTransfer.island);
 
@@ -260,6 +264,7 @@ module MyGame {
         }
 
         spacebarDown() {
+            if (this.playerStopped) return;
             this.game.paused = !this.game.paused;
             if (!this.game.paused) {
                 this.pauseMenu.exit();
