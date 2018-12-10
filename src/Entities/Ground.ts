@@ -18,6 +18,16 @@ module MyGame {
                 this.hasBody = false;
             }
         }
+
+        static makeGround(main: Main, islandType: IslandType, position: Phaser.Point, fromDoor = false): Ground {
+            switch (islandType) {
+                case IslandType.INSIDE:
+                    return new TileFloor(main, position, fromDoor);
+                case IslandType.WATER:
+                case IslandType.OUTSIDE:
+                    return new Grass(main, position);
+            }
+        }
     }
 
     export class Grass extends Ground {

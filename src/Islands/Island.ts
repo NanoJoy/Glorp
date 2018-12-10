@@ -125,7 +125,15 @@ module MyGame {
         }
 
         setOtherLinks(otherLinks: MapLink[]): IslandBuilder {
-            this.otherLinks = otherLinks;
+            this.otherLinks = this.otherLinks ? otherLinks : this.otherLinks.concat(otherLinks);
+            return this;
+        }
+
+        setHouseLinks(houseLinks: MapLink[]): IslandBuilder {
+            if (!this.otherLinks) this.otherLinks = [];
+            houseLinks.forEach(h => {
+                this.otherLinks.push({ pos: pof(h.pos.x + 3.5, h.pos.y + 5.1), playerStart: h.playerStart, link: h.link });
+            })
             return this;
         }
 
@@ -179,9 +187,10 @@ module MyGame {
             this.outsideBoundsPortals = outsideBoundsPortals;
             this.links = links;
             this.triggers = triggers;
-            this.creatures = 
-            this.dialogStates = [];
+            this.creatures =
+                this.dialogStates = [];
             this.creatures = creatures;
+            this.otherLinks = otherLinks;
 
             if (this.type !== IslandType.OUTSIDE) {
                 let paddingOffset = pof(0, 0);
@@ -226,16 +235,6 @@ module MyGame {
                 right: position.x === this.layout[0].length - 1 ? null : this.layout[position.y][position.x + 1],
                 below: position.y === this.layout.length - 1 ? null : this.layout[position.y + 1][position.x]
             };
-        }
-
-        makeGround(main: Main, position: Phaser.Point, fromDoor = false): Ground {
-            switch (this.type) {
-                case IslandType.INSIDE:
-                    return new TileFloor(main, position, fromDoor);
-                case IslandType.WATER:
-                case IslandType.OUTSIDE:
-                    return new Grass(main, position);
-            }
         }
 
         makeDoorway(main: Main, pos: Phaser.Point): Doorway {
@@ -320,7 +319,7 @@ module MyGame {
             }
         }
 
-        getPortals(main: Main): OutsideBoundsPortal[] {
+        getPortals(main: Main): Portal[] {
             let portals = [] as OutsideBoundsPortal[];
 
             for (let portalGroup of this.outsideBoundsPortals) {

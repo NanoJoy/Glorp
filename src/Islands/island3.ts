@@ -54,7 +54,8 @@ module MyGame {
             .setPlayerStart(pof(5, 0))
             .setOutsideBoundsPortals([
                 { side: Direction.Up, start: 4, end: 8, link: 1, playerStart: pof(21, 8) },
-                { side: Direction.Right, start: 3, end: 7, link: 5, playerStart: pof(1, 6) }
+                { side: Direction.Right, start: 3, end: 7, link: 5, playerStart: pof(1, 6) },
+                { side: Direction.Down, start: 27, end: 30, link: 4, playerStart: pof(17, 1)}
             ])
             .setTriggers([
                 { type: TriggerType.MOVE_NPC, name: "albertfirst", x: 3, y: 2, width: 5, height: 1 }

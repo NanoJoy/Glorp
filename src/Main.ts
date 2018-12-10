@@ -151,11 +151,11 @@ module MyGame {
                 for (let j = 0; j < line.length; j++) {
                     switch (line.charAt(j)) {
                         case " ":
-                            this.groups.grounds.push(island.makeGround(this, pof(j, i)));
+                            this.groups.grounds.push(Ground.makeGround(this, island.type, pof(j, i)));
                             break;
                         case "*":
                             this.groups.barriers.push(new Bush(this, pof(j, i)));
-                            this.groups.grounds.push(island.makeGround(this, pof(j, i)));
+                            this.groups.grounds.push(Ground.makeGround(this, island.type, pof(j, i)));
                             break;
                         case "b":
                             this.groups.barriers.push(new Blackness(this, pof(j, i)));
@@ -165,22 +165,22 @@ module MyGame {
                             break;
                         case "d":
                             this.groups.portals.push(island.makeDoorway(this, pof(j, i)));
-                            this.groups.grounds.push(island.makeGround(this, pof(j, i), true));
+                            this.groups.grounds.push(Ground.makeGround(this, island.type, pof(j, i)));
                             break;
                         case "e":
-                            this.groups.grounds.push(island.makeGround(this, pof(j, i)));
+                        this.groups.grounds.push(Ground.makeGround(this, island.type, pof(j, i)));
                             this.groups.enemies.push(island.getEnemy(this, pof(j, i)));
                             break;
                         case "g":
                             this.groups.barriers.push(new Gate(this, pof(j, i)));
-                            this.groups.grounds.push(island.makeGround(this, pof(j, i)));
+                            this.groups.grounds.push(Ground.makeGround(this, island.type, pof(j, i)));
                             break;
                         case "h":
                             this.groups.houses.push(new House(this, pof(j, i)));
-                            this.groups.grounds.push(island.makeGround(this, pof(j, i)));
+                            this.groups.grounds.push(Ground.makeGround(this, island.type, pof(j, i)));
                             break;
                         case "n":
-                            this.groups.grounds.push(island.makeGround(this, pof(j, i)));
+                        this.groups.grounds.push(Ground.makeGround(this, island.type, pof(j, i)));
                             this.groups.npcs.push(island.getNPC(this, pof(j, i)));
                             break;
                         case "o":
@@ -196,7 +196,7 @@ module MyGame {
                         case "t":
                             let tree = new Tree(this, pof(j, i));
                             this.groups.barriers.push(tree);
-                            this.groups.grounds.push(island.makeGround(this, pof(j, i)));
+                            this.groups.grounds.push(Ground.makeGround(this, island.type, pof(j, i)));
                             this.groups.frontOfPlayer.push(tree)
                             break;
                         case "w":
@@ -205,7 +205,7 @@ module MyGame {
                 }
             }
 
-            this.groups.portals = this.groups.portals.concat(island.getPortals(this));
+            this.groups.portals = this.groups.portals.concat(island.getPortals(this), island.makeOtherLinks(this));
             this.triggers = island.makeTriggers(this);
             let stateTransfer = StateTransfer.getInstance();
 
