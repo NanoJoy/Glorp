@@ -18,7 +18,7 @@ module MyGame {
                 "wwwwwwwwwwwwwwww",
             ])
             .setOutsideBoundsPortals([
-                { side: Direction.Left, start: 1, end: 4, playerStart: pof(21, 3), link: 1 }
+                { side: Direction.Left, start: 1, end: 4, playerStart: pof(21, 3), link: Islands.SADMAN }
             ])
             .setNPCs([
                 { position: pof(3, 2), textKey: Texts.MEEP_GROWL, type: Assets.Sprites.TheMeep.key, script: null }

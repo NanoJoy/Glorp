@@ -8,7 +8,8 @@ module MyGame {
         ALBERT_FIRST,
         HOW_TO_SAVE,
         LULLY_POND,
-        MEEP_GROWL
+        MEEP_GROWL,
+        THE_SPLOOFERS
     }
 
     function getSignText(info: string): ITextManager {
@@ -35,6 +36,8 @@ module MyGame {
                 return getSignText("It's good to save often. You can save by pressing the SPACEBAR to pause, then pressing O when you have the Save option selected. If you die, you will be sent back to your last save.");
             case Texts.MEEP_GROWL:
                 return getTheMeepText();
+            case Texts.THE_SPLOOFERS:
+                return getSignText("The Sploofers");
             default:
                 throw new Error(`Cannot find dialog for key '${key}'.`);
         }
