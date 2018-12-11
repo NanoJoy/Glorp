@@ -39,6 +39,7 @@ module MyGame {
         Crumbs = new SpriteAsset("crumbs");
         DoorWay = new SpriteAsset("doorway", 36, 8);
         Grounds = new SpriteAsset("grounds");
+        House = new SpriteAsset("house", 112, 96);
         JamBotWorld = new SpriteAsset("jambot_world");
         JamBugWorld = new SpriteAsset("jambug_world");
         OldMan = new SpriteAsset("old_man");
@@ -59,7 +60,6 @@ module MyGame {
         Door = "door";
         Gate = "gate";
         HealthBarContainer = "healthbar_container";
-        House = "house";
         JamBotBattle = "jambot_battle";
         Lillypad = "lillypad";
         MenuBackground = "menu_background";

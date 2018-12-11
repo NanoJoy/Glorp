@@ -3,11 +3,12 @@ module MyGame {
         main: Main;
         sprite: Phaser.Sprite;
         position: Phaser.Point;
+        link: AdhocPortal;
 
         constructor(main: Main, position: Phaser.Point) {
             this.main = main;
             this.position = position;
-            this.sprite = main.add.sprite(position.x * TILE_WIDTH, position.y * TILE_HEIGHT, Assets.Images.House);
+            this.sprite = main.add.sprite(position.x * TILE_WIDTH, position.y * TILE_HEIGHT, Assets.Sprites.House.key);
             this.sprite.scale.setTo(2, 2);
             main.physics.arcade.enable(this.sprite);
             this.sprite.body.moves = true;

@@ -68,6 +68,7 @@ module MyGame {
         private otherLinks: MapLink[];
         private creatures: StringPos[];
         private sources: StringPos[];
+        private houseLinks: MapLink[];
 
         constructor(num: number, type: IslandType) {
             this.num = num;
@@ -81,6 +82,7 @@ module MyGame {
             this.links = [];
             this.triggers = [];
             this.otherLinks = [];
+            this.houseLinks = [];
             this.creatures = [];
         }
 
@@ -125,15 +127,12 @@ module MyGame {
         }
 
         setOtherLinks(otherLinks: MapLink[]): IslandBuilder {
-            this.otherLinks = this.otherLinks ? otherLinks : this.otherLinks.concat(otherLinks);
+            this.otherLinks = this.otherLinks.concat(otherLinks);
             return this;
         }
 
         setHouseLinks(houseLinks: MapLink[]): IslandBuilder {
-            if (!this.otherLinks) this.otherLinks = [];
-            houseLinks.forEach(h => {
-                this.otherLinks.push({ pos: pof(h.pos.x + 3.5, h.pos.y + 5.1), playerStart: h.playerStart, link: h.link });
-            })
+            this.houseLinks = this.houseLinks.concat(houseLinks);
             return this;
         }
 
@@ -152,6 +151,7 @@ module MyGame {
                 this.playerStart, this.outsideBoundsPortals, this.links, this.triggers, this.otherLinks,
                 this.creatures);
             island.sources = this.sources;
+            island.houseLinks = this.houseLinks;
             return island;
         }
     }
@@ -170,6 +170,7 @@ module MyGame {
         links: MapLink[];
         triggers: MapTrigger[];
         dialogStates: DialogState[];
+        houseLinks: MapLink[];
         otherLinks: MapLink[];
         creatures: StringPos[];
         sources: StringPos[];
@@ -251,7 +252,18 @@ module MyGame {
         }
 
         makeOtherLinks(main: Main): AdhocPortal[] {
-            return this.otherLinks.map(l => new AdhocPortal(main, l.pos, l.link, l.playerStart));
+            let housePortals = [] as AdhocPortal[];
+            this.houseLinks.forEach(h => {
+                let matching = main.groups.houses.filter(ho => ho.position.equals(h.pos));
+                if (matching.length === 0) {
+                    throw new Error(`No house found at x: ${h.pos.x}, y: ${h.pos.y}.`);
+                }
+                matching[0].sprite.frame = 1;
+                let portal = new AdhocPortal(main, h.pos.clone().add(3.5, 5.1), h.link, h.playerStart);
+                matching[0].link = portal;
+                housePortals.push(portal);
+            });
+            return this.otherLinks.map(l => new AdhocPortal(main, l.pos, l.link, l.playerStart)).concat(housePortals);
         }
 
         getEnemy(main: Main, pos: Phaser.Point): Enemy {

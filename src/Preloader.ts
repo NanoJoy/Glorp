@@ -10,13 +10,13 @@ module MyGame {
 			this.preloadBar = this.add.sprite(300, 400, "preloadBar");
 			this.load.setPreloadSprite(this.preloadBar);
 
-			var spriteAssets = Object.getOwnPropertyNames(Assets.Sprites)
+			let spriteAssets = Object.getOwnPropertyNames(Assets.Sprites)
 			for (let i = 0; i < spriteAssets.length; i++) {
 				let a = Assets.Sprites[spriteAssets[i]];
 				this.load.spritesheet(a.key, `${VISUAL_ASSETS_PATH}/${a.key}.${PNG}`, a.width, a.height);
 			}
 
-			var imageAssets = Object.getOwnPropertyNames(Assets.Images);
+			let imageAssets = Object.getOwnPropertyNames(Assets.Images);
 			for (let i = 0; i < imageAssets.length; i++) {
 				let a = Assets.Images[imageAssets[i]];
 				this.load.image(a, `${VISUAL_ASSETS_PATH}/${a}.${PNG}`);
