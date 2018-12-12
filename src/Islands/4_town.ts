@@ -4,15 +4,15 @@ module MyGame {
             .setLayout([
                 "             w     w             ",
                 "**************     **************",
+                "*    h                          *",
+                "*                               *",
+                "*                       h       *",
                 "*                               *",
                 "*                               *",
-                "*    h                  h       *",
                 "*                               *",
                 "*                               *",
+                "*          n                    *",
                 "*                               *",
-                "*                               *",
-                "*                               *",
-                "*         n                     *",
                 "*                               *",
                 "*                               *",
                 "*                               *",
@@ -34,13 +34,13 @@ module MyGame {
                 "*********************************"
             ])
             .setOutsideBoundsPortals([
-                { side: Direction.Up, start: 14, end: 20, playerStart: pof(21, 8), link: 1 }
+                { side: Direction.Up, start: 14, end: 20, playerStart: pof(27, 12), link: Islands.ALBERT }
             ])
             .setHouseLinks([
-                { pos: pof(5, 4), playerStart: pof(3, 4), link: Islands.BROTHER }
+                { pos: pof(5, 2), playerStart: pof(3, 4), link: Islands.BROTHER }
             ])
             .setNPCs([
-                { position: pof(10, 10), type: Assets.Images.Sign, textKey: Texts.THE_SPLOOFERS, script: null }
+                { position: pof(11, 9), type: Assets.Images.Sign, text: "The Sploofers", script: null }
             ])
             .setPlayerStart(pof(17, 1))
             .build();

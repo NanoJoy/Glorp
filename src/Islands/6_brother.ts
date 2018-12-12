@@ -11,7 +11,7 @@ module MyGame {
                 "bbbbbb"
             ])
             .setLinks([
-                { pos: pof(3, 5), link: Islands.TOWN, playerStart: pof(11, 7) }
+                { pos: pof(3, 5), link: Islands.TOWN, playerStart: Utils.getHouseStart(5, 2) }
             ])
             .build();
     };

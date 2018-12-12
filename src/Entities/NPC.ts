@@ -16,7 +16,7 @@ module MyGame {
         private textShowing: boolean;
         private notDefaultAnims: boolean;
 
-        constructor(main: Main, position: Phaser.Point, dialogKey: Texts, movementScript: MovementScript,
+        constructor(main: Main, position: Phaser.Point, textManager: ITextManager, movementScript: MovementScript,
         speed: number, animationSpeed: number, spriteKey: string, notDefaultAnims = false) {
             this.main = main;
             this.startX = position.x;
@@ -30,7 +30,7 @@ module MyGame {
             }
 
             this.notDefaultAnims = notDefaultAnims;
-            this.textManager = getDialog(dialogKey);
+            this.textManager = textManager;
             this.textDisplay = new BottomTextDisplay(main, this);
             this.buttonPrompt = new ButtonPrompt(this, main.inputs.O, -4);
 
@@ -176,26 +176,26 @@ module MyGame {
     }
 
     export class Albert extends NPC {
-        constructor(main: Main, position: Phaser.Point, dialogKey: Texts, movementScript: MovementScript) {
-            super(main, position, dialogKey, movementScript, 750, 5, Assets.Sprites.Albert.key);
+        constructor(main: Main, position: Phaser.Point, textManager: ITextManager, movementScript: MovementScript) {
+            super(main, position, textManager, movementScript, 750, 5, Assets.Sprites.Albert.key);
         }
     }
 
     export class OldMan extends NPC {
-        constructor(main: Main, position: Phaser.Point, dialogKey: Texts, movementScript: MovementScript) {
-            super(main, position, dialogKey, movementScript, 1000, 3, Assets.Sprites.OldMan.key);
+        constructor(main: Main, position: Phaser.Point, textManager: ITextManager, movementScript: MovementScript) {
+            super(main, position, textManager, movementScript, 1000, 3, Assets.Sprites.OldMan.key);
         }
     }
 
     export class Sign extends NPC {
-        constructor(main: Main, position: Phaser.Point, dialogKey: Texts) {
-            super (main, position, dialogKey, null, 0, 0, Assets.Images.Sign);
+        constructor(main: Main, position: Phaser.Point, textManager: ITextManager) {
+            super (main, position, textManager, null, 0, 0, Assets.Images.Sign);
         }
     }
 
     export class TheMeep extends NPC {
-        constructor(main: Main, position: Phaser.Point, dialogKey: Texts) {
-            super(main, position, dialogKey, null, 0, 0, Assets.Sprites.TheMeep.key, true);
+        constructor(main: Main, position: Phaser.Point, textManager: ITextManager) {
+            super(main, position, textManager, null, 0, 0, Assets.Sprites.TheMeep.key, true);
             this.sprite.animations.add("plop", Utils.animationArray(0, 3), 5, true);
             this.sprite.animations.play("plop");
         }

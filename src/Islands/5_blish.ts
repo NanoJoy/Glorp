@@ -42,7 +42,7 @@ module MyGame {
 
             ])
             .setNPCs([
-                { position: pof(2, 4), type: Assets.Images.Sign, textKey: Texts.PATH_TO_TUTTLE_VILLAGE, script: null }
+                { position: pof(2, 4), type: Assets.Images.Sign, text: "Path to Tuttle Village", script: null }
             ])
             .build();
     };

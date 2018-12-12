@@ -62,7 +62,7 @@ module MyGame {
             ])
             .setNPCs([
                 { position: pof(5, 4), type: Assets.Sprites.Albert.key, textKey: Texts.ALBERT_FIRST, script: "d=uu;t=albertfirst;l=false" },
-                { position: pof(27, 3), type: Assets.Images.Sign, textKey: Texts.LULLY_POND, script: null }
+                { position: pof(27, 3), type: Assets.Images.Sign, text: "Lully Pond", script: null }
             ])
             .setEnemies([
                 { 

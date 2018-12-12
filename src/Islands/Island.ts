@@ -7,7 +7,8 @@ module MyGame {
     class MapNPC {
         position: Phaser.Point;
         type: string;
-        textKey: Texts;
+        textKey?: Texts;
+        text?: string;
         script: string;
     }
 
@@ -292,18 +293,19 @@ module MyGame {
             }
             let mapNPC = matching[0];
             let npc = null as NPC;
+            let textManager = mapNPC.textKey !== undefined ? getDialog(mapNPC.textKey) : getSignText(mapNPC.text);
             switch (mapNPC.type) {
                 case Assets.Sprites.Albert.key:
-                    npc = new Albert(main, pcop(mapNPC.position), mapNPC.textKey, Utils.makeMovementScript(mapNPC.position, mapNPC.script));
+                    npc = new Albert(main, pcop(mapNPC.position), textManager, Utils.makeMovementScript(mapNPC.position, mapNPC.script));
                     break;
                 case Assets.Sprites.OldMan.key:
-                    npc = new OldMan(main, pcop(mapNPC.position), mapNPC.textKey, Utils.makeMovementScript(mapNPC.position, mapNPC.script));
+                    npc = new OldMan(main, pcop(mapNPC.position), textManager, Utils.makeMovementScript(mapNPC.position, mapNPC.script));
                     break;
                 case Assets.Images.Sign:
-                    npc = new Sign(main, pcop(mapNPC.position), mapNPC.textKey);
+                    npc = new Sign(main, pcop(mapNPC.position), textManager);
                     break;
                 case Assets.Sprites.TheMeep.key:
-                    npc = new TheMeep(main, pcop(mapNPC.position), mapNPC.textKey);
+                    npc = new TheMeep(main, pcop(mapNPC.position), textManager);
                     break;
                 default:
                     throw new Error(`${mapNPC.type} is not a valid NPC type.`);

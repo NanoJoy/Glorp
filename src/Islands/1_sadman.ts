@@ -21,9 +21,9 @@ module MyGame {
             ])
             .setNPCs([
                 { position: pof(8, 3), textKey: Texts.SIGHING, type: Assets.Sprites.Albert.key, script: "rrrrrrdllllllu" },
-                { position: pof(22, 5), textKey: Texts.THE_MEEP, type: Assets.Images.Sign, script: "" },
-                { position: pof(22, 7), textKey: Texts.PATH_TO_TUTTLE_VILLAGE, type: Assets.Images.Sign, script: "" },
-                { position: pof(1, 2), textKey: Texts.HOW_TO_SAVE, type: Assets.Images.Sign, script: "" }
+                { position: pof(22, 5), text: "The Meep", type: Assets.Images.Sign, script: "" },
+                { position: pof(22, 7), text: "Path to Tuttle Village", type: Assets.Images.Sign, script: "" },
+                { position: pof(1, 2), text: "It's good to save often. You can save by pressing the SPACEBAR to pause, then pressing O when you have the Save option selected. If you die, you will be sent back to your last save.", type: Assets.Images.Sign, script: "" }
             ])
             .build();
     }

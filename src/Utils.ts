@@ -358,5 +358,9 @@ module MyGame {
             }
             return Math.max(sp1.top - sp2.bottom, sp1.left - sp2.right);
         }
+
+        static getHouseStart(x: number, y: number): Phaser.Point {
+            return pof(x + 4, y + 7);
+        }
     }
 }
