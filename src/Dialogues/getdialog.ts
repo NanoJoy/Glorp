@@ -3,7 +3,8 @@ module MyGame {
         GRANDPA,
         SIGHING,
         ALBERT_FIRST,
-        MEEP_GROWL
+        MEEP_GROWL,
+        BROTHER
     }
 
     export function getSignText(info: string): ITextManager {
@@ -20,6 +21,8 @@ module MyGame {
                 return new TextManager([new TextEncounter(new TextDump("Sigh...", new TextDump("This time of year always reminds me of when Sarah left.")))]);
             case Texts.MEEP_GROWL:
                 return getTheMeepText();
+            case Texts.BROTHER:
+                return getBrotherText();
             default:
                 throw new Error(`Cannot find dialog for key '${key}'.`);
         }
