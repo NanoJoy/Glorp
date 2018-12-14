@@ -88,9 +88,8 @@ module MyGame {
             if (!next) {
                 this.textBackground.destroy();
                 this.text.destroy();
-                let result = this.text.text;
+                let result = this.optionsBackground.visible ? this.currentOptionText.text : this.text.text;
                 if (this.optionsBackground) {
-                    result = this.currentOptionText.text;
                     this.optionsBackground.destroy();
                     this.currentOptionText.destroy();
                 }
@@ -99,6 +98,7 @@ module MyGame {
                 if (this.downArrow) this.downArrow.destroy();
                 if (this.upArrow) this.upArrow.destroy();
                 this.game.unstopPlayer();
+                this.textEncounter.lastResult = result;
                 this.textEncounter.onFinish(this.game, this.parent, result);
                 this.textEncounter.reset();
                 this.game.inputs.O.onUp.remove(this.addOnDownListener, this);
@@ -109,7 +109,7 @@ module MyGame {
                 return;
             }
             if (!next.hasOptions) {
-                this.optionsBackground.visible = false;;
+                this.optionsBackground.visible = false;
                 this.currentOptionText.visible = false;
                 this.rightArrow.visible = false;
                 this.leftArrow.visible = false;

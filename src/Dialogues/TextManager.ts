@@ -8,13 +8,13 @@ module MyGame {
     export class TextManager implements ITextManager {
         private textEncounters: ITextEncounter[];
         private lastViewed: number;
-        private decisionFunction: (lastViewed: number, main: Main, parent: Entity) => number;
+        private decisionFunction: (lastViewed: number, main: Main, parent: Entity, lastResult?: string) => number;
 
-        constructor(textEncounters: ITextEncounter[], decisionFunction = null as (lastViewed: number, main: Main, parent: Entity) => number) {
+        constructor(textEncounters: ITextEncounter[], decisionFunction = null as (lastViewed: number, main: Main, parent: Entity, lastResult?: string) => number) {
             this.textEncounters = textEncounters;
             this.lastViewed = -1;
             if (!decisionFunction) {
-                this.decisionFunction = function (lastViewed: number, main: Main, parent: Entity) {
+                this.decisionFunction = function (lastViewed: number, main: Main, parent: Entity, lastResult?: string) {
                     if (lastViewed < this.textEncounters.length - 1) {
                         return lastViewed + 1;
                     }
@@ -30,7 +30,8 @@ module MyGame {
         }
 
         useNext(main: Main, parent: Entity) {
-            this.lastViewed = this.decisionFunction(this.lastViewed, main, parent);
+            let current = this.textEncounters[this.lastViewed];
+            this.lastViewed = this.decisionFunction(this.lastViewed, main, parent, current ? current.lastResult : undefined);
             main.island.saveDialogState(parent.position.x, parent.position.y, this.lastViewed);
             return this.textEncounters[this.lastViewed];
         }

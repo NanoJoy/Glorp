@@ -47,6 +47,7 @@ module MyGame {
 
     export interface ITextEncounter {
         autoStart: boolean;
+        lastResult: string;
         getCurrentPage: () => TextPage;
         onFinish: (main: Main, parent: Entity, result?: string) => void;
         getResponse: (selected: number) => TextPage;
@@ -56,6 +57,7 @@ module MyGame {
 
     export class TextEncounter implements ITextEncounter {
         autoStart: boolean;
+        lastResult: string;
         private currentPage: TextPage;
         private startPage: TextPage;
         onFinish: (main: Main, parent: Entity, result?: string) => void;

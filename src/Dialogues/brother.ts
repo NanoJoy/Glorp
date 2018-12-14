@@ -13,13 +13,33 @@ module MyGame {
         }
 
         function startOven(main: Main, parent: Entity, result: string) {
-            if (result === "Sure!") {
+            if (result === "Okay, go for it.") {
                 StateTransfer.getInstance().enemy = new OvenEncounter();
                 main.state.start(States.Battle);
             }
         }
 
+        function decision(lastViewed: number, main: Main, parent: Entity, lastResult: string): number {
+            if (lastViewed === -1) {
+                return 0;
+            }
+            if (lastViewed === 0) {
+                switch (lastResult) {
+                    case "You know what? I hate you too. Goodbye.":
+                        return 1;
+                    case "Alright, think about it, but please come back soon.":
+                        return 2;
+                    case "Okay, go for it.":
+                        return 3;
+                    default:
+                        return lastViewed;
+                }
+            }
+            return lastViewed;
+        }
+
         return new TextManager([
+            // 0
             new TextEncounter(new TextPrompt("Hi Rosie. I see you could finally be bothered to come home.", [
                 new TextOption("I was busy", new TextPrompt("I don't want to hear your excuses because I know you can only say like three words a time.", [
                     new TextOption("That makes sense", getOven())
@@ -28,7 +48,13 @@ module MyGame {
                 new TextOption("Sorry, Stanley", new TextPrompt("I don't want to hear your excuses because I know you can only say like three words a time.", [
                     new TextOption("That makes sense", getOven())
                 ]))
-            ]), false, startOven)
-        ]);
+            ]), false, startOven),
+            // 1
+            new TextEncounter(new TextDump("I am mad.")),
+            // 2
+            new TextEncounter(new TextDump("I am okay.")),
+            // 3
+            new TextEncounter(new TextDump("I am happy."))
+        ], decision);
     }
 }
