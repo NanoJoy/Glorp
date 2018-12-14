@@ -48,7 +48,7 @@ module MyGame {
     export interface ITextEncounter {
         autoStart: boolean;
         getCurrentPage: () => TextPage;
-        onFinish: (main: Main, parent: Entity) => void;
+        onFinish: (main: Main, parent: Entity, result?: string) => void;
         getResponse: (selected: number) => TextPage;
         isFinished: () => boolean;
         reset: () => void;
@@ -58,9 +58,9 @@ module MyGame {
         autoStart: boolean;
         private currentPage: TextPage;
         private startPage: TextPage;
-        onFinish: (main: Main, parent: Entity) => void;
+        onFinish: (main: Main, parent: Entity, result?: string) => void;
 
-        constructor(startPage: TextPage, autoStart = false, onFinish = function (main: Main, parent: Entity) {}) {
+        constructor(startPage: TextPage, autoStart = false, onFinish = function (main: Main, parent: Entity, result?: string) {}) {
             this.currentPage = startPage;
             this.startPage = startPage;
             this.autoStart = autoStart;

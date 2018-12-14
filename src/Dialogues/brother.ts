@@ -12,6 +12,13 @@ module MyGame {
             ])
         }
 
+        function startOven(main: Main, parent: Entity, result: string) {
+            if (result === "Sure!") {
+                StateTransfer.getInstance().enemy = new OvenEncounter();
+                main.state.start(States.Battle);
+            }
+        }
+
         return new TextManager([
             new TextEncounter(new TextPrompt("Hi Rosie. I see you could finally be bothered to come home.", [
                 new TextOption("I was busy", new TextPrompt("I don't want to hear your excuses because I know you can only say like three words a time.", [
@@ -21,7 +28,7 @@ module MyGame {
                 new TextOption("Sorry, Stanley", new TextPrompt("I don't want to hear your excuses because I know you can only say like three words a time.", [
                     new TextOption("That makes sense", getOven())
                 ]))
-            ]))
+            ]), false, startOven)
         ]);
     }
 }

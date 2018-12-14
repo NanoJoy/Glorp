@@ -88,7 +88,9 @@ module MyGame {
             if (!next) {
                 this.textBackground.destroy();
                 this.text.destroy();
+                let result = this.text.text;
                 if (this.optionsBackground) {
+                    result = this.currentOptionText.text;
                     this.optionsBackground.destroy();
                     this.currentOptionText.destroy();
                 }
@@ -97,10 +99,10 @@ module MyGame {
                 if (this.downArrow) this.downArrow.destroy();
                 if (this.upArrow) this.upArrow.destroy();
                 this.game.unstopPlayer();
-                this.textEncounter.onFinish(this.game, this.parent);
+                this.textEncounter.onFinish(this.game, this.parent, result);
                 this.textEncounter.reset();
                 this.game.inputs.O.onUp.remove(this.addOnDownListener, this);
-                this.game.inputs.O.onUp.remove(this.makeChoice, this);
+                this.game.inputs.O.onDown.remove(this.makeChoice, this);
                 this.game.inputs.down.onDown.remove(this.scrollDown, this);
                 this.game.inputs.up.onDown.remove(this.scrollUp, this);
                 this.game.inputs.O.onUp.addOnce(function () {this.isDisplaying  = false;}, this);
