@@ -13,6 +13,10 @@ module MyGame {
             });
             return arr;
         }
+
+        static getNthNote(pattern: Phaser.KeyCode[], position: number): Phaser.KeyCode {
+            return pattern.filter(p => Utils.isAThing(p))[position];
+        }
     }
 
     export class PatternGenerator {

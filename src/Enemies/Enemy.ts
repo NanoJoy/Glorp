@@ -19,5 +19,6 @@ module MyGame {
         update: () => void;
         die: () => void;
         afterDeath: (main: Main) => void;
+        noteComparer: (pattern: Phaser.KeyCode[], pressed: number, pressedCount: number) => boolean;
     }
 }

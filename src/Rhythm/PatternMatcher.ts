@@ -1,5 +1,5 @@
 module MyGame {
-    export class PatternMatcher {
+    export interface IPatternMatcher {
         game: Battle;
         tempo: number;
         patternLength: number;
@@ -12,9 +12,26 @@ module MyGame {
         inputAllowed: boolean;
         noteDisplays: NoteDisplay[];
         notesPressed: NotePress[];
+        comparer: (pattern: Phaser.KeyCode[], pressed: number, pressedCount: number) => boolean;
+        begin: (pattern: PatternNote[]) => void;
+        reset: () => void;
+    }
 
-        readonly fontStyle = { font: "14px okeydokey", fill: "#000000" };
-        readonly redStyle = { font: "14px okeydokey", fill: "#ff0000" };
+    export class PatternMatcher implements IPatternMatcher {
+        game: Battle;
+        tempo: number;
+        patternLength: number;
+        beatLength: number;
+        currentPattern: Phaser.KeyCode[];
+        nextNote: number;
+        active: boolean;
+        numMils: number;
+        startTime: number;
+        inputAllowed: boolean;
+        noteDisplays: NoteDisplay[];
+        notesPressed: NotePress[];
+        pressCount: number;
+        comparer: (pattern: Phaser.KeyCode[], pressed: number, pressedCount: number) => boolean;
 
         constructor(game: Battle, enemy: Enemy) {
             this.game = game;
@@ -24,9 +41,18 @@ module MyGame {
             this.active = false;
             this.inputAllowed = false;
             this.numMils = enemy.patternLength * this.tempo;
+
+            if (enemy.noteComparer) {
+                this.comparer = enemy.noteComparer;
+            } else {
+                this.comparer = (pattern: Phaser.KeyCode[], pressed: number, pressedCount: number) => {
+                    return PatternUtil.getNthNote(pattern, pressedCount) === pressed;
+                }
+            }
         }
 
         begin(pattern: PatternNote[]) {
+            this.pressCount = 0;
             this.currentPattern = PatternUtil.convertPatternNotesToArray(pattern, this.patternLength);
             this.active = true;
             this.getFirstNote();
@@ -47,7 +73,24 @@ module MyGame {
             }
         }
 
-        checkOnSubBeat(position: number) {
+        reset() {
+            this.active = false;
+            this.inputAllowed = false;
+            this.currentPattern = null;
+            this.notesPressed = null;
+            this.pressCount = 0;
+
+            var inputs = this.game.inputs.asArray();
+            for (let i = 0; i < inputs.length; i++) {
+                inputs[i].onDown.removeAll();
+            }
+
+            if (this.noteDisplays !== undefined) {
+                this.noteDisplays.forEach(function (disp) { disp.destroy(); });
+            }
+        }
+
+        private checkOnSubBeat(position: number) {
             if (this.noteDisplays[position] === null) {
                 var isBeat = position % this.beatLength === 0;
                 var noteDisplay = new NoteDisplay(this.game, null, isBeat, false, position, this.patternLength);
@@ -55,32 +98,33 @@ module MyGame {
             }
         }
 
-        recordKeyPress(key: Phaser.Key) {
-            var keyCode = key.keyCode;
+        private recordKeyPress(key: Phaser.Key) {
+            let keyCode = key.keyCode;
             if (!this.inputAllowed) return;
 
-            var timePressed = this.game.time.now;
-            var timeElapsed = timePressed - this.startTime;
-            var position = Math.round(timeElapsed / this.tempo);
+            let timePressed = this.game.time.now;
+            let timeElapsed = timePressed - this.startTime;
+            let position = Math.round(timeElapsed / this.tempo);
 
-            var isBeat = position % this.beatLength === 0;
+            let isBeat = position % this.beatLength === 0;
             if (this.noteDisplays[position] === null) {
                 var noteDisplay = new NoteDisplay(this.game, keyCode, isBeat, false, position, this.patternLength);
                 this.noteDisplays[position] = noteDisplay;
             } else {
                 this.noteDisplays[position].updateFrame(keyCode, isBeat);
             }
-            if (this.currentPattern[this.nextNote] !== keyCode) {
+            if (!this.comparer(this.currentPattern, keyCode, this.pressCount)) {
                 this.inputAllowed = false;
                 this.noteDisplays[position].tint = 0xFF0000;
                 return;
             }
             this.getNextNote();
 
-            var distance = Math.round(Math.abs(timePressed - (position * this.tempo + this.startTime)));
+            let distance = Math.round(Math.abs(timePressed - (position * this.tempo + this.startTime)));
             distance = distance < 10 ? 0 : distance;
             this.noteDisplays[position].alpha = (this.tempo / 2 - distance) / (this.tempo / 2);
             this.notesPressed.push({note: keyCode, position: position, distance: distance});
+            this.pressCount += 1;
         }
 
         private getFirstNote() {
@@ -94,26 +138,6 @@ module MyGame {
             this.nextNote++;
             while (this.currentPattern[this.nextNote] === null && this.nextNote < this.currentPattern.length) {
                 this.nextNote++;
-            }
-        }
-
-        private makeNoteImage() {
-
-        }
-
-        reset() {
-            this.active = false;
-            this.inputAllowed = false;
-            this.currentPattern = null;
-            this.notesPressed = null;
-
-            var inputs = this.game.inputs.asArray();
-            for (let i = 0; i < inputs.length; i++) {
-                inputs[i].onDown.removeAll();
-            }
-
-            if (this.noteDisplays !== undefined) {
-                this.noteDisplays.forEach(function (disp) { disp.destroy(); });
             }
         }
     }

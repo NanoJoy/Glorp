@@ -21,6 +21,7 @@ module MyGame {
         afterDeath: (main: Main) => void;
         specificUpdate: () => void;
         calculateDamage: (pattern: PatternNote[], notePresses: NotePress[]) => number;
+        noteComparer = null as (pattern: Phaser.KeyCode[], pressed: number, pressedCount: number) => boolean;
 
         constructor(main: Main, position: Phaser.Point, movementScript: MovementScript, hitPoints: number, worldSprite: string) {
             this.alive = true;

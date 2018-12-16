@@ -28,7 +28,7 @@ module MyGame {
                 albert.movementManager.setOnComplete(function() {
                     this.playerStopped = false;
                     main.groups.barriers.filter(b => b instanceof Gate)[0].sprite.destroy();
-                    WorldManager.getInstance().changeLayout(3, pof(26, 9), " ");
+                    WorldManager.getInstance().changeLayout(3, pof(26, 11), " ");
                 }, main);
                 albert.savePosition(25, 10);
             }
