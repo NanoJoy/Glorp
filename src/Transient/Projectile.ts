@@ -25,8 +25,6 @@ module MyGame {
             end: string
         };
         state: ProjectileState;
-        wait: () => void;
-        afterFly: () => void;
         
         constructor(main: Main, x: number, y: number, key: string, direction: Direction, speed: number, range = Infinity) {
             this.main = main;
@@ -82,6 +80,9 @@ module MyGame {
             this.main.groups.projectiles = this.main.groups.projectiles.filter(p => p !== this);
             this.sprite.destroy();
         }
+
+        abstract wait(): void;
+        abstract afterFly(): void;
     }
 
     export class Crumbs extends Projectile {
@@ -100,15 +101,6 @@ module MyGame {
             this.landed = false;
             this.dissolved = false;
             this.start();
-
-            this.wait = () => null;
-            this.afterFly = () => {
-                if (!this.landed) {
-                    this.sprite.body.velocity.setTo(0, 0);
-                    this.landed = true;
-                    this.main.time.events.add(5000, this.dissolve, this);
-                }
-            };
         }
 
         dissolve() {
@@ -118,6 +110,16 @@ module MyGame {
                 this.main.time.events.add(2000, () => {
                     this.state = ProjectileState.DONE;
                 }, this);
+            }
+        }
+
+        wait() {}
+
+        afterFly() {
+            if (!this.landed) {
+                this.sprite.body.velocity.setTo(0, 0);
+                this.landed = true;
+                this.main.time.events.add(5000, this.dissolve, this);
             }
         }
     }

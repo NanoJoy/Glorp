@@ -59,7 +59,8 @@ module MyGame {
 
     export class AdhocPortal extends Portal {
         constructor(main: Main, position: Phaser.Point, link: number, playerStart?: Phaser.Point) {
-            super(main, position, "", link, playerStart);
+            super(main, position, Assets.Sprites.Blackness.key, link, playerStart);
+            this.sprite.alpha = 0;
         }
     }
 }
