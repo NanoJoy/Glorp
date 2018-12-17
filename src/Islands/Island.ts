@@ -49,6 +49,10 @@ module MyGame {
         y: number;
     }
 
+    class MapCustomBarrier extends StringPos {
+        playerCollides: boolean;
+    }
+
     export class DialogState {
         x: number;
         y: number;
@@ -70,6 +74,7 @@ module MyGame {
         private creatures: StringPos[];
         private sources: StringPos[];
         private houseLinks: MapLink[];
+        private customBarriers: MapCustomBarrier[];
 
         constructor(num: number, type: IslandType) {
             this.num = num;
@@ -147,12 +152,18 @@ module MyGame {
             return this;
         }
 
+        setCustomBarriers(customBarriers: MapCustomBarrier[]): IslandBuilder {
+            this.customBarriers = customBarriers;
+            return this;
+        }
+
         build(): Island {
             let island = new Island(this.num, this.type, this.layout, this.additions, this.enemies, this.npcs,
                 this.playerStart, this.outsideBoundsPortals, this.links, this.triggers, this.otherLinks,
                 this.creatures);
             island.sources = this.sources;
             island.houseLinks = this.houseLinks;
+            island.customBarriers = this.customBarriers;
             return island;
         }
     }
@@ -175,6 +186,7 @@ module MyGame {
         otherLinks: MapLink[];
         creatures: StringPos[];
         sources: StringPos[];
+        customBarriers: MapCustomBarrier[];
 
         constructor(num: number, type: IslandType, layout: string[], additions: StringPos[],
             enemies: MapEnemy[], npcs: MapNPC[], playerStart: Phaser.Point, outsideBoundsPortals: MapOutsideBoundsPortal[],

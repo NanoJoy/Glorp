@@ -18,6 +18,7 @@ module MyGame {
         speed: number;
         movementManager: MovementManager;
         alive: boolean;
+        transferPosition: Phaser.Point;
         afterDeath: (main: Main) => void;
         specificUpdate: () => void;
         calculateDamage: (pattern: PatternNote[], notePresses: NotePress[]) => number;

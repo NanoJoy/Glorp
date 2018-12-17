@@ -8,7 +8,7 @@ module MyGame {
     export const START_ISLAND = 4;
     export const CLEAR_SAVE = true;
     export const PLAYER_START_X = 15;
-    export const PLAYER_START_Y = 1;
+    export const PLAYER_START_Y = 8;
 
     export var States = {
         Boot: "Boot",
@@ -58,6 +58,7 @@ module MyGame {
         CrumbsIcon = "crumbs_icon";
         CrumbsSource = "crumbs_source";
         Door = "door";
+        FruitStand = "fruit_stand";
         Gate = "gate";
         HealthBarContainer = "healthbar_container";
         JamBotBattle = "jambot_battle";

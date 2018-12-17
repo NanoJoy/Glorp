@@ -2,19 +2,19 @@ module MyGame {
     islandGetters[Islands.BROTHER] = () => {
         return new IslandBuilder(Islands.BROTHER, IslandType.INSIDE)
             .setLayout([
-                "bbbbbb",
-                "b n  b",
-                "b    b",
-                "b    b",
-                "b    b",
-                "b  d b",
-                "bbbbbb"
+                "bbbbbbbbbbbbbbbbbbbbbb",
+                "b                    b",
+                "b            b       b",
+                "b            b       b",
+                "b            b       b",
+                "b          d b    n  b",
+                "bbbbbbbbbbbbbbbbbbbbbb"
             ])
             .setNPCs([
-                { position: pof(2, 1), type: Assets.Sprites.OldMan.key, script: null, textKey: Texts.BROTHER}
+                { position: pof(18, 5), type: Assets.Sprites.OldMan.key, script: null, textKey: Texts.BROTHER}
             ])
             .setLinks([
-                { pos: pof(3, 5), link: Islands.TOWN, playerStart: Utils.getHouseStart(5, 2) }
+                { pos: pof(11, 5), link: Islands.TOWN, playerStart: Utils.getHouseStart(5, 2) }
             ])
             .build();
     };

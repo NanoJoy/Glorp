@@ -95,4 +95,10 @@ module MyGame {
             super(main, position, Assets.Images.Lillypad, "p", false);
         }
     }
+
+    export class CustomBarrier extends Barrier {
+        constructor(main: Main, position: Phaser.Point, spriteKey: string, playerCollides: boolean) {
+            super(main, position, spriteKey, "x", playerCollides);
+        }
+    }
 }

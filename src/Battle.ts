@@ -77,7 +77,11 @@ module MyGame {
             var stateTransfer = StateTransfer.getInstance();
             stateTransfer.enemy = null;
             this.enemy.die();
-            stateTransfer.position = new Phaser.Point(Math.floor(this.enemy.worldSprite.position.x / TILE_WIDTH), Math.floor(this.enemy.worldSprite.position.y / TILE_HEIGHT));
+            if (Utils.isAThing(this.enemy.transferPosition)) {
+                stateTransfer.position = this.enemy.transferPosition;
+            } else {
+                stateTransfer.position = new Phaser.Point(Math.floor(this.enemy.worldSprite.position.x / TILE_WIDTH), Math.floor(this.enemy.worldSprite.position.y / TILE_HEIGHT));
+            }
             stateTransfer.funcs = this.enemy.afterDeath;
             stateTransfer.reason = TransferReason.VICTORY;
             console.log(this.playerHealth);

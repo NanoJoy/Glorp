@@ -13,6 +13,7 @@ module MyGame {
         health: number;
         alive: boolean;
         movementManager: MovementManager;
+        transferPosition: Phaser.Point;
         calculateDamage: (pattern: PatternNote[], notePresses: NotePress[]) => number;
         getAttackPoints: (pattern: PatternNote[]) => number;
         onStageBuilt: () => void;

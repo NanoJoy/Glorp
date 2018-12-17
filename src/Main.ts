@@ -201,6 +201,11 @@ module MyGame {
                             break;
                         case "w":
                             this.groups.barriers.push(new StoneWall(this, pof(j, i), island.getNeighborhood(pof(j, i))));
+                            break;
+                        case "x":
+                            let spriteKey = this.getTypeOfThing(island.customBarriers, j, i, "Custom Barrier");
+                            let barrier = new CustomBarrier(this, pof(j, i), spriteKey, island.customBarriers.filter(c => c.x === j && c.y === i)[0].playerCollides);
+                            this.groups.barriers.push(barrier);
                     }
                 }
             }
