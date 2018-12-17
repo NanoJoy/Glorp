@@ -232,7 +232,7 @@ module MyGame {
 
             let playerPosition = null as Phaser.Point;
             if (stateTransfer.position) {
-                playerPosition = stateTransfer.reason === TransferReason.LINK ? island.getAdjustedPosition(stateTransfer.position.clone()) : stateTransfer.position.clone();
+                playerPosition = island.getAdjustedPosition(stateTransfer.position.clone());
             } else {
                 playerPosition = island.getAdjustedPosition(island.playerStart.clone());
             }
