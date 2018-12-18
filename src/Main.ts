@@ -146,66 +146,67 @@ module MyGame {
             this.game.world.setBounds(0, 0, island.layout[0].length * TILE_WIDTH,
                 island.layout.length * TILE_HEIGHT);
 
-            for (let i = 0; i < island.layout.length; i++) {
-                let line = island.layout[i];
-                for (let j = 0; j < line.length; j++) {
-                    switch (line.charAt(j)) {
+            for (let y = 0; y < island.layout.length; y++) {
+                let line = island.layout[y];
+                for (let x = 0; x < line.length; x++) {
+                    switch (line.charAt(x)) {
                         case " ":
-                            this.groups.grounds.push(Ground.makeGround(this, island.type, pof(j, i)));
+                            this.groups.grounds.push(Ground.makeGround(this, island.type, pof(x, y)));
                             break;
                         case "*":
-                            this.groups.barriers.push(new Bush(this, pof(j, i)));
-                            this.groups.grounds.push(Ground.makeGround(this, island.type, pof(j, i)));
+                            this.groups.barriers.push(new Bush(this, pof(x, y)));
+                            this.groups.grounds.push(Ground.makeGround(this, island.type, pof(x, y)));
                             break;
                         case "b":
-                            this.groups.barriers.push(new Blackness(this, pof(j, i)));
+                            this.groups.barriers.push(new Blackness(this, pof(x, y)));
                             break;
                         case "c":
-                            this.groups.creatures.push(island.getCreature(this, j, i));
+                            this.groups.creatures.push(island.getCreature(this, x, y));
                             break;
                         case "d":
-                            this.groups.portals.push(island.makeDoorway(this, pof(j, i)));
-                            this.groups.grounds.push(Ground.makeGround(this, island.type, pof(j, i)));
+                            this.groups.portals.push(island.makeDoorway(this, pof(x, y)));
+                            this.groups.grounds.push(Ground.makeGround(this, island.type, pof(x, y)));
                             break;
                         case "e":
-                        this.groups.grounds.push(Ground.makeGround(this, island.type, pof(j, i)));
-                            this.groups.enemies.push(island.getEnemy(this, pof(j, i)));
+                        this.groups.grounds.push(Ground.makeGround(this, island.type, pof(x, y)));
+                            this.groups.enemies.push(island.getEnemy(this, pof(x, y)));
                             break;
                         case "g":
-                            this.groups.barriers.push(new Gate(this, pof(j, i)));
-                            this.groups.grounds.push(Ground.makeGround(this, island.type, pof(j, i)));
+                            this.groups.barriers.push(new Gate(this, pof(x, y)));
+                            this.groups.grounds.push(Ground.makeGround(this, island.type, pof(x, y)));
                             break;
                         case "h":
-                            this.groups.houses.push(new House(this, pof(j, i)));
-                            this.groups.grounds.push(Ground.makeGround(this, island.type, pof(j, i)));
+                            this.groups.houses.push(new House(this, pof(x, y)));
+                            this.groups.grounds.push(Ground.makeGround(this, island.type, pof(x, y)));
                             break;
                         case "n":
-                        this.groups.grounds.push(Ground.makeGround(this, island.type, pof(j, i)));
-                            this.groups.npcs.push(island.getNPC(this, pof(j, i)));
+                        this.groups.grounds.push(Ground.makeGround(this, island.type, pof(x, y)));
+                            this.groups.npcs.push(island.getNPC(this, pof(x, y)));
                             break;
                         case "o":
-                            this.groups.barriers.push(new Water(this, pof(j, i)));
+                            this.groups.barriers.push(new Water(this, pof(x, y)));
                             break;
                         case "p":
-                            this.groups.barriers.push(new Lillypad(this, pof(j, i)));
+                            this.groups.barriers.push(new Lillypad(this, pof(x, y)));
                             break;
                         case "s":
-                            let type = this.getTypeOfThing(island.sources, j, i, "Source");
-                            this.groups.barriers.push(Source.makeSource(this, j, i, type));
+                            let type = this.getTypeOfThing(island.sources, x, y, "Source");
+                            this.groups.barriers.push(Source.makeSource(this, x, y, type));
                             break;
                         case "t":
-                            let tree = new Tree(this, pof(j, i));
+                            let tree = new Tree(this, pof(x, y));
                             this.groups.barriers.push(tree);
-                            this.groups.grounds.push(Ground.makeGround(this, island.type, pof(j, i)));
+                            this.groups.grounds.push(Ground.makeGround(this, island.type, pof(x, y)));
                             this.groups.frontOfPlayer.push(tree)
                             break;
                         case "w":
-                            this.groups.barriers.push(new StoneWall(this, pof(j, i), island.getNeighborhood(pof(j, i))));
+                            this.groups.barriers.push(new StoneWall(this, pof(x, y), island.getNeighborhood(pof(x, y))));
                             break;
                         case "x":
-                            let spriteKey = this.getTypeOfThing(island.customBarriers, j, i, "Custom Barrier");
-                            let barrier = new CustomBarrier(this, pof(j, i), spriteKey, island.customBarriers.filter(c => c.x === j && c.y === i)[0].playerCollides);
+                            let customBarrier = this.getThingAtPosition(island.customBarriers, x, y, "Custom Barrier") as MapCustomBarrier;
+                            let barrier = new CustomBarrier(this, pof(x, y), customBarrier.type, customBarrier.playerCollides);
                             this.groups.barriers.push(barrier);
+                            this.groups.grounds.push(Ground.makeGround(this, island.type, pof(x, y)));
                     }
                 }
             }
@@ -238,8 +239,7 @@ module MyGame {
             }
 
             if (DEVELOPER_MODE && !stateTransfer.position) {
-                playerPosition.x = PLAYER_START_X < 0 ? playerPosition.x : PLAYER_START_X;
-                playerPosition.y = PLAYER_START_Y < 0 ? playerPosition.y : PLAYER_START_Y;
+                playerPosition = island.getAdjustedPosition(pof(PLAYER_START_X, PLAYER_START_Y));
             }
 
             this.player = new Player(this, playerPosition, stateTransfer.health === -1 ? 100 : stateTransfer.health);
@@ -306,11 +306,18 @@ module MyGame {
         }
 
         getTypeOfThing(things: StringPos[], x: number, y: number, thingType = "thing"): string {
-            let matching = things.filter(t => t.x === x && t.y === y);
+            return this.getThingAtPosition(things, x, y, thingType).type;
+        }
+
+        getThingAtPosition(things: StringPos[], x: number, y: number, thingType = "thing"): StringPos {
+            let matching = things.filter(t => {
+                let adjusted = this.island.getAdjustedPosition(pof(t.x, t.y));
+                return adjusted.x === x && adjusted.y === y;
+            });
             if (matching.length === 0) {
                 throw new Error(`${thingType} information could not be found at x: ${x}, y: ${y}.`);
             }
-            return matching[0].type;
+            return matching[0];
         }
 
         bringGroupToTop(group: Entity[]) {

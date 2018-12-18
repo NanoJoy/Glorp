@@ -49,7 +49,7 @@ module MyGame {
         y: number;
     }
 
-    class MapCustomBarrier extends StringPos {
+    export class MapCustomBarrier extends StringPos {
         playerCollides: boolean;
     }
 
@@ -201,8 +201,8 @@ module MyGame {
             this.outsideBoundsPortals = outsideBoundsPortals;
             this.links = links;
             this.triggers = triggers;
-            this.creatures =
-                this.dialogStates = [];
+            this.creatures = [];
+            this.dialogStates = [];
             this.creatures = creatures;
             this.otherLinks = otherLinks;
 
