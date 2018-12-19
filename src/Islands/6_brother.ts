@@ -6,12 +6,12 @@ module MyGame {
                 "b                    b",
                 "b            b       b",
                 "b            b       b",
-                "b            b     x b",
-                "b          d b    n  b",
+                "b            b    nx b",
+                "b          d b       b",
                 "bbbbbbbbbbbbbbbbbbbbbb"
             ])
             .setNPCs([
-                { position: pof(18, 5), type: Assets.Sprites.OldMan.key, script: null, textKey: Texts.BROTHER}
+                { position: pof(18, 4), type: Assets.Sprites.Stanley.key, script: "lllldrurrr", textKey: Texts.BROTHER}
             ])
             .setCustomBarriers([
                 { x: 19, y: 4, type: Assets.Images.Oven, playerCollides: true }

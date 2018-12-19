@@ -316,6 +316,9 @@ module MyGame {
                 case Assets.Images.Sign:
                     npc = new Sign(main, pcop(mapNPC.position), textManager);
                     break;
+                case Assets.Sprites.Stanley.key:
+                    npc = new Stanley(main, pcop(mapNPC.position), textManager, Utils.makeMovementScript(mapNPC.position, mapNPC.script));
+                    break;
                 case Assets.Sprites.TheMeep.key:
                     npc = new TheMeep(main, pcop(mapNPC.position), textManager);
                     break;

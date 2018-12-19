@@ -45,6 +45,7 @@ module MyGame {
         OldMan = new SpriteAsset("old_man");
         Player = new SpriteAsset("player");
         RhythmSymbols = new SpriteAsset("rhythm_symbols", 24, 24);
+        Stanley = new SpriteAsset("stanley");
         StoneWall = new SpriteAsset("stone_wall");
         TheMeep = new SpriteAsset("the_meep", 224, 320);
         Tree = new SpriteAsset("tree", 56, 64);
