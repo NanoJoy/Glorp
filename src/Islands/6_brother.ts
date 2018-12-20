@@ -4,10 +4,10 @@ module MyGame {
             .setLayout([
                 "bbbbbbbbbbbbbbbbbbbbbb",
                 "b                    b",
-                "b            b       b",
-                "b            b       b",
-                "b            b    nx b",
-                "b          d b       b",
+                "b        b   b       b",
+                "b        b   b       b",
+                "b        b   b    nx b",
+                "b        b d b       b",
                 "bbbbbbbbbbbbbbbbbbbbbb"
             ])
             .setNPCs([

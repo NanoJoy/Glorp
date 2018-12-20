@@ -1,14 +1,18 @@
 module MyGame {
     export function getBrotherText(): ITextManager {
+        function getInstruction(): TextPrompt {
+            return new TextPrompt("Well, it seems like to get it to cook evenly, you have to press the buttons that it says on the screen in tempo. "
+            + "But the crazy thing is you have to press them in the reverse order of how it displays them. Do you think you can handle that?", [
+                new TextOption("Sure!", new TextDump("Okay, go for it.")),
+                new TextOption("I dunno...", new TextDump("Alright, think about it, but please come back soon."))
+            ])
+        }
+
         function getOven(): TextPrompt {
             return new TextPrompt("Meanwhile, I've been stuck here cooking without you. Mom has even been making snarky comments about how I could stand to learn to cook by myself." + 
             " Anyways I'm actually doing pretty good with this Blish and Blerry pie, but I can't figure out how to work the oven.", [
                 new TextOption("Too bad", new TextDump("You know what? I hate you too. Goodbye.")),
-                new TextOption("Let me try", new TextPrompt("Well, it seems like to get it to cook evenly, you have to press the buttons that it says on the screen in tempo. "
-                + "But the crazy thing is you have to press them in the reverse order of how it displays them. Do you think you can handle that?", [
-                    new TextOption("Sure!", new TextDump("Okay, go for it.")),
-                    new TextOption("I dunno...", new TextDump("Alright, think about it, but please come back soon."))
-                ]))
+                new TextOption("Let me try", getInstruction())
             ])
         }
 
@@ -23,11 +27,14 @@ module MyGame {
             if (lastViewed === -1) {
                 return 0;
             }
-            if (lastViewed === 0) {
+            if (lastViewed === 0 || lastViewed === 1) {
+                debugger;
                 switch (lastResult) {
+                    case "Arrrgggghhh!!!":
                     case "You know what? I hate you too. Goodbye.":
                         return 1;
-                    case "Alright, think about it, but please come back soon.":
+                    case "soon.":
+                    case "comes.":
                         return 2;
                     case "Okay, go for it.":
                         return 3;
@@ -50,11 +57,19 @@ module MyGame {
                 ]))
             ]), false, startOven),
             // 1
-            new TextEncounter(new TextDump("I am mad.")),
+            new TextEncounter(new TextPrompt("Hmm. Looks like you've come crawling back after having some fun on the town. Ready to help me with the oven?", [
+                new TextOption("Soon, I promise.", new TextDump("Please, it has to be ready before the first Beast comes.")),
+                new TextOption("Yup.", getInstruction()),
+                new TextOption("Hahaha... No.", new TextDump("Arrrgggghhh!!!"))
+            ])),
             // 2
-            new TextEncounter(new TextDump("I am okay.")),
+            new TextEncounter(new TextPrompt("Do you think you can help me with this? I still can't quite get it.", [
+                new TextOption("Soon, I promise.", new TextDump("Please, it has to be ready before the first Beast comes.")),
+                new TextOption("Yup.", getInstruction()),
+                new TextOption("Hahaha... No.", new TextDump("Arrrgggghhh!!!"))
+            ])),
             // 3
-            new TextEncounter(new TextDump("I am happy."))
+            new TextEncounter(new TextDump("I am happy."), true)
         ], decision);
     }
 }

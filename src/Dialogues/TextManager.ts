@@ -26,7 +26,8 @@ module MyGame {
         }
 
         getNext(main: Main, parent: Entity) {
-            return this.textEncounters[this.decisionFunction(this.lastViewed, main, parent)];
+            let current = this.textEncounters[this.lastViewed];
+            return this.textEncounters[this.decisionFunction(this.lastViewed, main, parent, current ? current.lastResult : undefined)];
         }
 
         useNext(main: Main, parent: Entity) {
