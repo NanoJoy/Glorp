@@ -28,7 +28,6 @@ module MyGame {
                 return 0;
             }
             if (lastViewed === 0 || lastViewed === 1) {
-                debugger;
                 switch (lastResult) {
                     case "Arrrgggghhh!!!":
                     case "You know what? I hate you too. Goodbye.":
