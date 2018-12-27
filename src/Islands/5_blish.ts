@@ -37,8 +37,8 @@ module MyGame {
                 { type: Assets.Sprites.Blish.key, x: 8, y: 18 }
             ])
             .setSources([
-                { type: Assets.Images.CrumbsSource, x: 12, y: 2 },
-                { type: Assets.Images.CrumbsSource, x: 11, y: 20 }
+                { type: Assets.Sprites.Crumbs.key, x: 12, y: 2 },
+                { type: Assets.Sprites.Crumbs.key, x: 11, y: 20 }
 
             ])
             .setNPCs([

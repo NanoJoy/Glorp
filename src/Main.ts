@@ -70,7 +70,7 @@ module MyGame {
         pauseMenu: IPauseMenu;
         triggers: Trigger[];
         groups: MainGroups;
-        projectileDisplay: ProjectileDisplay;
+        projectileDisplay: HoldableDisplay;
 
         create() {
             this.playerStopped = false;
@@ -243,7 +243,7 @@ module MyGame {
             }
 
             this.player = new Player(this, playerPosition, stateTransfer.health === -1 ? 100 : stateTransfer.health);
-            this.projectileDisplay = new ProjectileDisplay(this, Assets.Images.CrumbsIcon);
+            this.projectileDisplay = new HoldableDisplay(this);
             this.setDepths();
         }
 

@@ -1,18 +1,6 @@
 module MyGame {
-    export enum ProjectileType {
-        CRUMBS, NONE
-    }
 
-    export var makeProjectile = (type: ProjectileType, main: Main, x: number, y: number, direction: Direction): Projectile => {
-        switch (type) {
-            case ProjectileType.CRUMBS:
-                return new Crumbs(main, x, y, direction);
-            case ProjectileType.NONE:
-                return null;
-        }
-    }
-
-    export abstract class Projectile {
+    export abstract class Projectile implements Holdable {
         main: Main;
         sprite: Phaser.Sprite;
         startPosition: Phaser.Point;
@@ -25,6 +13,7 @@ module MyGame {
             end: string
         };
         state: ProjectileState;
+        abstract iconKey: string;
         
         constructor(main: Main, x: number, y: number, key: string, direction: Direction, speed: number, range = Infinity) {
             this.main = main;
@@ -40,6 +29,8 @@ module MyGame {
                 end: null
             }
             this.state = ProjectileState.WAITING;
+
+            this.main.groups.projectiles.push(this);
         }
 
         update() {
@@ -58,7 +49,7 @@ module MyGame {
             }
         }
 
-        start() {
+        use() {
             Utils.moveInDirection(this.sprite.body, this.direction, this.speed);
             if (this.animations.start) {
                 this.sprite.play(this.animations.start);
@@ -86,11 +77,14 @@ module MyGame {
     }
 
     export class Crumbs extends Projectile {
+        static readonly type = Assets.Sprites.Crumbs.key;
+
         landed: boolean;
         dissolved: boolean;
+        iconKey = Assets.Images.CrumbsIcon;
 
         constructor(main: Main, x: number, y: number, direction: Direction) {
-            super(main, x, y, Assets.Sprites.Crumbs.key, direction, 150, 3);
+            super(main, x, y, Crumbs.type, direction, 150, 3);
             this.sprite.animations.add("start", Utils.animationArray(0, 3), 8, false);
             this.animations.start = "start";
             this.sprite.animations.add("end", Utils.animationArray(4, 6), 2, false);
@@ -100,7 +94,7 @@ module MyGame {
             }));
             this.landed = false;
             this.dissolved = false;
-            this.start();
+            this.use();
         }
 
         dissolve() {

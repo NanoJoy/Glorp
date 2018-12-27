@@ -8,8 +8,8 @@ module MyGame {
         state: Main;
         hasCollided: boolean;
 
-        projectileType: ProjectileType;
-        projectileCount: number;
+        itemType: string;
+        itemCount: number;
 
         constructor(state: Main, position: Phaser.Point, health?: number) {
             super(state.game, position.x * TILE_WIDTH, position.y * TILE_HEIGHT, Assets.Sprites.Player.key, 0);
@@ -22,8 +22,7 @@ module MyGame {
             this.health = Utils.isAThing(health) ? health : Player.STARTING_HEALTH;
             this.inputs.K.onUp.add(this.throwProjectile, this);
 
-            this.projectileType = ProjectileType.NONE;
-            this.projectileCount = 0;
+            this.itemCount = 0;
         }
 
         onStageBuilt() {
@@ -92,10 +91,10 @@ module MyGame {
         }
 
         throwProjectile() {
-            if (this.projectileCount > 0) {
-                this.state.groups.projectiles.push(makeProjectile(this.projectileType, this.state, this.x, this.y, this.direction));
-                this.projectileCount -= 1;
-                this.state.projectileDisplay.updateCount(this.projectileCount);
+            if (this.itemCount > 0) {
+                useItem(this.itemType, this.state, this.x, this.y, this.direction);
+                this.itemCount -= 1;
+                this.state.projectileDisplay.updateCount(this.itemCount);
             }
         }
     }
