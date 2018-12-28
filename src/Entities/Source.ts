@@ -22,7 +22,7 @@ module MyGame {
 
         static makeSource(main: Main, x: number, y: number, type: string): Source {
             switch (type) {
-                case Assets.Sprites.Crumbs.key:
+                case Assets.Images.CrumbsSource:
                     return new CrumbSource(main, x, y);
             }
             throw new Error(`Source type ${type} is invalid.`);
@@ -31,7 +31,7 @@ module MyGame {
 
     export class CrumbSource extends Source {
         constructor(main: Main, x: number, y: number) {
-            super(Assets.Images.CrumbsSource, main, x, y, true, 10);
+            super(Assets.Sprites.Crumbs.key, main, x, y, true, 10);
         }
     }
 }

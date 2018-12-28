@@ -13,12 +13,13 @@ module MyGame {
 
         constructor(main: Main, iconKey?: string, startingCount = 0) {
             this.main = main;
-            this.displayGroup = main.add.group();
-            this.background = main.add.image(SCREEN_WIDTH - 56 - 4, 4, Assets.Images.ProjectileDisplay);
-            this.text = main.add.bitmapText(this.background.x + 6, this.background.y + 6, Assets.FontName, startingCount.toString(), Assets.FontSize);
+            this.background = main.add.image(SCREEN_WIDTH - WIDTH - PADDING, PADDING, Assets.Images.ProjectileDisplay);
+            this.text = main.add.bitmapText(this.background.x + TEXT_PADDING, this.background.y + TEXT_PADDING, Assets.FontName, startingCount.toString(), Assets.FontSize);
+            this.icon = this.main.add.image(this.background.x + (WIDTH / 2) + TEXT_PADDING, this.background.y + TEXT_PADDING, iconKey);
             this.background.fixedToCamera = true;
             this.text.fixedToCamera = true;
-            this.updateIcon(iconKey);
+            this.icon.fixedToCamera = true;
+            this.displayGroup = main.add.group();
             this.displayGroup.addMultiple([this.background, this.icon, this.text]);
             this.updateCount(startingCount);
             this.showing = true;
@@ -37,32 +38,27 @@ module MyGame {
         }
 
         updateIcon(key: string) {
-            if (this.icon) {
-                if (this.icon.key === key) return;
-                this.icon.destroy();
+            if (this.icon && this.icon.key !== key) {
+                this.icon.loadTexture(key);
             }
-            this.icon = this.main.add.image(this.background.x + (WIDTH / 2) + TEXT_PADDING, this.background.y + TEXT_PADDING, key);
-            this.icon.fixedToCamera = true;
         }
 
         bringToTop() {
             this.main.world.bringToTop(this.displayGroup);
+            this.displayGroup.bringToTop(this.icon);
+            this.displayGroup.bringToTop(this.text);
         }
 
         hide() {
             if (!this.showing) return;
-            this.displayGroup.forEach(function (s: Phaser.Sprite) {
-                s.visible = false;
-            });
+            this.displayGroup.visible = false;
             this.showing = false;
         }
 
 
         show() {
             if (this.showing) return;
-            this.displayGroup.forEach(function (s: Phaser.Sprite) {
-                s.visible = true;
-            });
+            this.displayGroup.visible = true;
             this.showing = true;
         }
     }
