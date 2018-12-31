@@ -38,6 +38,7 @@ module MyGame {
         Bush = new SpriteAsset("bush");
         Crumbs = new SpriteAsset("crumbs");
         DoorWay = new SpriteAsset("doorway", 36, 8);
+        Grodule = new SpriteAsset("grodule");
         Grounds = new SpriteAsset("grounds");
         House = new SpriteAsset("house", 112, 96);
         JamBotWorld = new SpriteAsset("jambot_world");

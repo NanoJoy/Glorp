@@ -1,7 +1,6 @@
 module MyGame {
 
     export abstract class Source extends Barrier {
-
         renewing: boolean;
         amount: number;
         type: string;
@@ -17,6 +16,11 @@ module MyGame {
                 this.main.player.itemCount = this.amount;
                 this.main.projectileDisplay.updateCount(this.amount);
                 this.main.projectileDisplay.updateIcon(this.type + "_" + ICON);
+
+                if (!this.renewing) {
+                    this.sprite.destroy();
+                    this.main.groups.barriers = this.main.groups.barriers.filter(b => b !== this);
+                }
             }
         }
 
@@ -24,6 +28,8 @@ module MyGame {
             switch (type) {
                 case Assets.Images.CrumbsSource:
                     return new CrumbSource(main, x, y);
+                case Assets.Sprites.Grodule.key:
+                    return new SingleSource(main, x, y, type);
             }
             throw new Error(`Source type ${type} is invalid.`);
         }
@@ -32,6 +38,12 @@ module MyGame {
     export class CrumbSource extends Source {
         constructor(main: Main, x: number, y: number) {
             super(Assets.Sprites.Crumbs.key, main, x, y, true, 10);
+        }
+    }
+
+    export class SingleSource extends Source {
+        constructor(main: Main, x: number, y: number, key: string) {
+            super(key, main, x, y, false, 1);
         }
     }
 }
