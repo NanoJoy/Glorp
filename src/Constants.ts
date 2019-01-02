@@ -5,7 +5,7 @@ module MyGame {
     export const TILE_HEIGHT = 32;
 
     export const DEVELOPER_MODE = true;
-    export const START_ISLAND = 5;
+    export const START_ISLAND = 6;
     export const CLEAR_SAVE = true;
     export const PLAYER_START_X = 1;
     export const PLAYER_START_Y = 5;
@@ -63,6 +63,7 @@ module MyGame {
         Door = "door";
         FruitStand = "fruit_stand";
         Gate = "gate";
+        GroduleIcon = "grodule_icon";
         HealthBarContainer = "healthbar_container";
         JamBotBattle = "jambot_battle";
         Lillypad = "lillypad";

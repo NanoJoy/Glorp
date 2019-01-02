@@ -17,4 +17,12 @@ module MyGame {
             this.main.groups.barriers.push(Source.makeSource(this.main, rounded.x, rounded.y, this.worldKey));
         }
     }
+
+    export class Grodule extends Droppable {
+        iconKey = Assets.Images.GroduleIcon;
+
+        constructor(main: Main, startPosition: Phaser.Point) {
+            super(main, startPosition, Assets.Sprites.Grodule.key);
+        }
+    }
 }

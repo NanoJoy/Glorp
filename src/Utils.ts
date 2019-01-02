@@ -234,7 +234,8 @@ module MyGame {
         }
 
         static roundToClosestTile(point: Phaser.Point) {
-            return point.clone().divide(TILE_WIDTH, TILE_HEIGHT).round().multiply(TILE_WIDTH, TILE_HEIGHT);
+            let divided = point.clone().divide(TILE_WIDTH, TILE_HEIGHT);
+            return pof(Math.round(divided.x), Math.round(divided.y));
         }
 
         static sees(position: Phaser.Point, obj: Phaser.Point, visionRange: number, blockers: Phaser.Line[]): Tuple<boolean, boolean> {

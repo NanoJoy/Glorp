@@ -5,8 +5,9 @@ module MyGame {
         amount: number;
         type: string;
 
-        constructor(type: string, main: Main, x: number, y: number, renewing: boolean, amount: number) {
-            super(main, pof(x, y), type + "_" + SOURCE, "s", true);
+        constructor(type: string, main: Main, x: number, y: number, renewing: boolean, amount: number, typeAsSource = false) {
+            let sourceKey = typeAsSource ? type : type + "_" + SOURCE;
+            super(main, pof(x, y), sourceKey, "s", true);
             this.type = type;
             this.renewing = renewing;
             this.amount = amount;
@@ -43,7 +44,9 @@ module MyGame {
 
     export class SingleSource extends Source {
         constructor(main: Main, x: number, y: number, key: string) {
-            super(key, main, x, y, false, 1);
+            super(key, main, x, y, false, 1, true);
+            this.sprite.animations.add("anim", null, 5, true);
+            this.sprite.play("anim");
         }
     }
 }

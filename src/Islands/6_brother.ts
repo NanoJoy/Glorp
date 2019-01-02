@@ -11,7 +11,7 @@ module MyGame {
                 "bbbbbbbbbbbbbbbbbbbbbb"
             ])
             .setNPCs([
-                { position: pof(18, 4), type: Assets.Sprites.Stanley.key, script: "lllldrurrr", textKey: Texts.BROTHER}
+                { position: pof(18, 4), type: Assets.Sprites.Stanley.key, script: "lllldrurrr", textKey: Texts.STANLEY}
             ])
             .setCustomBarriers([
                 { x: 19, y: 4, type: Assets.Images.Oven, playerCollides: true },

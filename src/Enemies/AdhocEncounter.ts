@@ -70,6 +70,8 @@ module MyGame {
             return noNulls[noNulls.length - 1 - pressedCount] === pressed;
         }
 
-        die() {}
+        die() {
+            this.alive = false;
+        }
     }
 }

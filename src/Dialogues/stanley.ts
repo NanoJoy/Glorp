@@ -1,5 +1,5 @@
 module MyGame {
-    export function getBrotherText(): ITextManager {
+    export function getStanleyText(): ITextManager {
         function getInstruction(): TextPrompt {
             return new TextPrompt("Well, it seems like to get it to cook evenly, you have to press the buttons that it says on the screen in tempo. "
             + "But the crazy thing is you have to press them in the reverse order of how it displays them. Do you think you can handle that?", [
@@ -23,11 +23,18 @@ module MyGame {
             }
         }
 
+        function giveGrodule(main: Main, parent: Entity, result: string) {
+            main.groups.barriers.push(Source.makeSource(main, 17 + main.island.paddingOffset.x, 2 + main.island.paddingOffset.y, Assets.Sprites.Grodule.key));
+        }
+
         function decision(lastViewed: number, main: Main, parent: Entity, lastResult: string): number {
             if (lastViewed === -1) {
                 return 0;
             }
-            if (lastViewed === 0 || lastViewed === 1) {
+            if (lastViewed === 0 || lastViewed === 1 || lastViewed === 2) {
+                if (StateTransfer.getInstance().reason === TransferReason.VICTORY) {
+                    return 3;
+                }
                 switch (lastResult) {
                     case "Arrrgggghhh!!!":
                     case "You know what? I hate you too. Goodbye.":
@@ -40,6 +47,9 @@ module MyGame {
                     default:
                         return lastViewed;
                 }
+            }
+            if (lastViewed === 3) {
+                return 4;
             }
             return lastViewed;
         }
@@ -60,15 +70,17 @@ module MyGame {
                 new TextOption("Soon, I promise.", new TextDump("Please, it has to be ready before the first Beast comes.")),
                 new TextOption("Yup.", getInstruction()),
                 new TextOption("Hahaha... No.", new TextDump("Arrrgggghhh!!!"))
-            ])),
+            ]), false, startOven),
             // 2
             new TextEncounter(new TextPrompt("Do you think you can help me with this? I still can't quite get it.", [
                 new TextOption("Soon, I promise.", new TextDump("Please, it has to be ready before the first Beast comes.")),
                 new TextOption("Yup.", getInstruction()),
                 new TextOption("Hahaha... No.", new TextDump("Arrrgggghhh!!!"))
-            ])),
+            ]), false, startOven),
             // 3
-            new TextEncounter(new TextDump("I am happy."), true)
+            new TextEncounter(new TextDump("Wow, thanks Rosie! The pie should be ready in about an hour. Oh, by the way, I found this thing lying around the toofball field. You can take it if you want it."), true, giveGrodule),
+            // 4
+            new TextEncounter(new TextDump("I can smell it already. MMmm... Blish and Blerry..."))
         ], decision);
     }
 }

@@ -3,6 +3,8 @@ module MyGame {
         switch (type) {
             case Crumbs.type:
                 return new Crumbs(main, x, y, direction);
+            case Assets.Sprites.Grodule.key:
+                return new Grodule(main, pof(x, y));
             default:
                 throw new Error(`Item type ${type} is invalid.`);
         }
