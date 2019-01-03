@@ -84,7 +84,6 @@ module MyGame {
             }
             stateTransfer.funcs = this.enemy.afterDeath;
             stateTransfer.reason = TransferReason.VICTORY;
-            console.log(this.playerHealth);
             stateTransfer.health = this.playerHealth;
             this.state.start(States.Main);
         }

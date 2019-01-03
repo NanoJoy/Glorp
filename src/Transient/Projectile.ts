@@ -49,12 +49,13 @@ module MyGame {
             }
         }
 
-        use() {
+        use(): number {
             Utils.moveInDirection(this.sprite.body, this.direction, this.speed);
             if (this.animations.start) {
                 this.sprite.play(this.animations.start);
             }
             this.state = ProjectileState.FLYING;
+            return 1;
         }
 
         fly() {
@@ -94,7 +95,6 @@ module MyGame {
             }));
             this.landed = false;
             this.dissolved = false;
-            this.use();
         }
 
         dissolve() {

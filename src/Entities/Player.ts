@@ -92,8 +92,7 @@ module MyGame {
 
         throwProjectile() {
             if (this.itemCount > 0) {
-                useItem(this.itemType, this.state, this.x, this.y, this.direction);
-                this.itemCount -= 1;
+                this.itemCount -= useItem(this.itemType, this.state, this.x, this.y, this.direction);
                 this.state.projectileDisplay.updateCount(this.itemCount);
             }
         }

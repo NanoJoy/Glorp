@@ -34,7 +34,6 @@ module MyGame {
             this.textDisplay = new BottomTextDisplay(main, this);
             this.buttonPrompt = new ButtonPrompt(this, main.inputs.O, -4);
 
-            console.log(movementScript);
             if (movementScript) {
                 this.movementManager = new MovementManager(main.game, movementScript, this);
             } else {

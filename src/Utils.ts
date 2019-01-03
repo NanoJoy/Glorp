@@ -238,6 +238,27 @@ module MyGame {
             return pof(Math.round(divided.x), Math.round(divided.y));
         }
 
+        static tileisClear(x: number, y: number, main: Main): boolean {
+            debugger;
+            let layout = main.island.layout;
+            let width = layout[0].length;
+            if (layout.some(r => r.length !== width)) {
+                throw new Error("All rows of layout must have same length.");
+            }
+            if (x > width - 1 || y > layout.length) {
+                return false;
+            }
+            let tile = layout[y].charAt(x);
+            if (tile === " ") {
+                return true;
+            }
+            if (tile === "x") {
+                let matching = main.groups.barriers.filter(b => b.position.x === x && b.position.y === y)[0];
+                return !matching.playerCollides;
+            }
+            return false;
+        }
+
         static sees(position: Phaser.Point, obj: Phaser.Point, visionRange: number, blockers: Phaser.Line[]): Tuple<boolean, boolean> {
             let seesHorizontal = true;
             let seesVertical = true;

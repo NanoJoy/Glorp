@@ -1,10 +1,10 @@
 module MyGame {
-    export var useItem = (type: string, main: Main, x: number, y: number, direction: Direction): Holdable => {
+    export var useItem = (type: string, main: Main, x: number, y: number, direction: Direction): number => {
         switch (type) {
             case Crumbs.type:
-                return new Crumbs(main, x, y, direction);
+                return new Crumbs(main, x, y, direction).use();
             case Assets.Sprites.Grodule.key:
-                return new Grodule(main, pof(x, y));
+                return new Grodule(main, pof(x, y)).use();
             default:
                 throw new Error(`Item type ${type} is invalid.`);
         }
@@ -14,6 +14,6 @@ module MyGame {
         main: Main;
         startPosition: Phaser.Point;
         iconKey: string;
-        use: () => void;
+        use: () => number;
     }
 }
