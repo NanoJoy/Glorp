@@ -5,7 +5,7 @@ module MyGame {
                 "bbbbbbbbbbbbbbbbbbbbbb",
                 "b                    b",
                 "bx- x    b   b       b",
-                "b--      b   b     b",
+                "b--      b   b       b",
                 "b--      b   b    nx b",
                 "b        b d b       b",
                 "bbbbbbbbbbbbbbbbbbbbbb"

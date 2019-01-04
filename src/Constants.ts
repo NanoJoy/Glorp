@@ -17,6 +17,16 @@ module MyGame {
         Battle: "Battle"
     };
 
+    export class Frames {
+        static readonly Arrow = {
+            UP: 0,
+            DOWN: 1,
+            LEFT: 3,
+            RIGHT: 2,
+            O: 4
+        }
+    }
+
     export class SpriteAsset {
         readonly key: string;
         readonly width: number;

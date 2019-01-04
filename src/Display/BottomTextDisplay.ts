@@ -47,18 +47,18 @@ module MyGame {
             if (this.upArrow.visible) {
                 this.pageNumber -= 1;
                 this.text.text = this.textEncounter.getCurrentPage().text[this.pageNumber];
-                this.downArrow.visible = true;
+                this.setDownArrowFrame(true);
                 this.upArrow.visible = this.pageNumber > 0;
             }
         }
 
         scrollDown() {
-            if (this.downArrow.visible) {
+            if (this.downArrow.frame === Frames.Arrow.DOWN) {
                 this.pageNumber += 1;
                 this.text.text = this.textEncounter.getCurrentPage().text[this.pageNumber];
                 this.upArrow.visible = true;
-                this.downArrow.visible = this.pageNumber < this.textEncounter.getCurrentPage().text.length - 1;
-                this.currentRead = !this.downArrow.visible;
+                this.setDownArrowFrame(this.pageNumber < this.textEncounter.getCurrentPage().text.length - 1);
+                this.currentRead = this.downArrow.frame === Frames.Arrow.O;
             }
         }
 
@@ -119,8 +119,8 @@ module MyGame {
                 this.text.text = next.text[0];
                 this.pageNumber = 0;
                 this.upArrow.visible = false;
-                this.downArrow.visible = this.textEncounter.getCurrentPage().text.length > 1;
-                this.currentRead = !this.downArrow.visible;
+                this.setDownArrowFrame(this.textEncounter.getCurrentPage().text.length > 1);
+                this.currentRead = this.downArrow.frame === Frames.Arrow.O;
                 this.game.inputs.O.onUp.add(this.addOnDownListener, this);
                 return;
             }
@@ -131,8 +131,8 @@ module MyGame {
             this.currentOptionText.text = this.options[0].text;
             this.text.text = next.text[0];
             this.upArrow.visible = false;
-            this.downArrow.visible = nextPrompt.text.length > 1;
-            this.currentRead = !this.downArrow.visible;
+            this.setDownArrowFrame(nextPrompt.text.length > 1);
+            this.currentRead = this.downArrow.frame === Frames.Arrow.O;
             this.leftArrow.visible = false;
             this.rightArrow.visible = nextPrompt.options.length > 1;
             this.game.inputs.left.onDown.add(this.scrollLeft, this);
@@ -155,12 +155,12 @@ module MyGame {
             this.game.stopPlayer();
 
             this.textBackground = this.game.add.image(0, 0, Assets.Images.BottomTextBackground);
-            this.upArrow = this.game.add.image(SCREEN_WIDTH - 22, 8, Assets.Sprites.Arrow.key, 0);
+            this.upArrow = this.game.add.image(SCREEN_WIDTH - 22, 8, Assets.Sprites.Arrow.key, Frames.Arrow.UP);
             this.textBackground.fixedToCamera = true;
             this.upArrow.visible = false;
-            this.downArrow = this.game.add.image(SCREEN_WIDTH - 22, this.textBackground.height - 20, Assets.Sprites.Arrow.key, 1);
-            this.downArrow.visible = this.textEncounter.getCurrentPage().text.length > 1;
-            this.currentRead = !this.downArrow.visible;
+            this.downArrow = this.game.add.image(SCREEN_WIDTH - 22, this.textBackground.height - 20, Assets.Sprites.Arrow.key);
+            this.setDownArrowFrame(this.textEncounter.getCurrentPage().text.length > 1);
+            this.currentRead = this.downArrow.frame === Frames.Arrow.O;
             this.upArrow.fixedToCamera = true;
             this.downArrow.fixedToCamera = true;
 
@@ -197,6 +197,10 @@ module MyGame {
                 this.game.inputs.left.onDown.add(this.scrollLeft, this);
                 this.game.inputs.right.onDown.add(this.scrollRight, this);
             }
+        }
+
+        private setDownArrowFrame(showDownArrow: boolean): void {
+            this.downArrow.frame = showDownArrow ? Frames.Arrow.DOWN : Frames.Arrow.O;
         }
     }
 }
