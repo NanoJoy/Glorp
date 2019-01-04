@@ -239,7 +239,6 @@ module MyGame {
         }
 
         static tileisClear(x: number, y: number, main: Main): boolean {
-            debugger;
             let layout = main.island.layout;
             let width = layout[0].length;
             if (layout.some(r => r.length !== width)) {

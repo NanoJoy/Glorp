@@ -4,9 +4,9 @@ module MyGame {
             .setLayout([
                 "bbbbbbbbbbbbbbbbbbbbbb",
                 "b                    b",
-                "bx  x    b   b       b",
-                "b        b   b       b",
-                "b        b   b    nx b",
+                "bx- x    b   b       b",
+                "b--      b   b     b",
+                "b--      b   b    nx b",
                 "b        b d b       b",
                 "bbbbbbbbbbbbbbbbbbbbbb"
             ])
