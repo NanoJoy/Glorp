@@ -19,7 +19,7 @@ module MyGame {
             let x = player.direction === Direction.Left ? rounded.x - TILE_DISTANCE : player.direction === Direction.Right ? rounded.x + TILE_DISTANCE : rounded.x;
             let y = player.direction === Direction.Up ? rounded.y - TILE_DISTANCE : player.direction === Direction.Down ? rounded.y + TILE_DISTANCE : rounded.y;
             if (Utils.tileisClear(x, y, this.main)) {
-                this.main.groups.barriers.push(Source.makeSource(this.main, x, y, this.worldKey));
+                this.main.addItem(x, y, this.worldKey);
                 return 1;
             }
             return 0;

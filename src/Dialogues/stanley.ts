@@ -27,7 +27,7 @@ module MyGame {
             let stanley = parent as Stanley;
             stanley.speed = 1000;
             stanley.doScript("du", pof(18 + main.island.paddingOffset.x, 4 + main.island.paddingOffset.y));
-            main.groups.barriers.push(Source.makeSource(main, 17 + main.island.paddingOffset.x, 2 + main.island.paddingOffset.y, Assets.Sprites.Grodule.key));
+            main.addItem(17 + main.island.paddingOffset.x, 2 + main.island.paddingOffset.y, Assets.Sprites.Grodule.key);
         }
 
         function decision(lastViewed: number, main: Main, parent: Entity, lastResult: string): number {

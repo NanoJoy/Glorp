@@ -7,6 +7,7 @@ module MyGame {
         triggers: Location[];
         npcs: { old: Location, now: Location }[];
         health: number;
+        items: { location: Location, type: string }[];
     }
 
     export interface IGameSaver {
@@ -27,6 +28,7 @@ module MyGame {
         }
 
         saveGame(main: Main, worldManager: WorldManager) {
+            let stateTransfer = StateTransfer.getInstance();
             let npcs = this.loadGame() ? this.loadGame().npcs : [] as { old: Location, now: Location }[];
             for (let npc of main.groups.npcs) {
                 let position = npc.unloadPositionToSave();
@@ -64,7 +66,8 @@ module MyGame {
                 dialogs: worldManager.exportDialogs(),
                 triggers: triggers,
                 npcs: npcs,
-                health: StateTransfer.getInstance().health
+                health: stateTransfer.health,
+                items: stateTransfer.addedItems
             } as SaveState
             localStorage.setItem(SAVE_FILE_NAME, JSON.stringify(saveState));
             this.cached = saveState;

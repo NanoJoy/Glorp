@@ -5,6 +5,7 @@ module MyGame {
         sprite: Phaser.Sprite;
         hasBody: boolean;
         playerCollides: boolean;
+        island: number;
 
         onCollision: (playerSprite: Phaser.Sprite, barrierSprite: Phaser.Sprite) => void;
 
@@ -21,6 +22,7 @@ module MyGame {
                 this.hasBody = false;
             }
             this.playerCollides = playerCollides;
+            this.island = main.island.num;
         }
     }
 

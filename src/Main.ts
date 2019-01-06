@@ -16,6 +16,7 @@ module MyGame {
         triggers: Location[];
         npcs: { old: Location; now: Location }[];
         funcs: (main: Main) => void;
+        addedItems: { location: Location, type: string }[];
         private static instance: StateTransfer;
 
         private constructor() {
@@ -28,6 +29,7 @@ module MyGame {
             this.triggers = [];
             this.npcs = [];
             this.funcs = null;
+            this.addedItems = [];
         }
 
         static getInstance() {
@@ -62,7 +64,6 @@ module MyGame {
     }
 
     export class Main extends Phaser.State {
-
         player: Player;
         inputs: Inputs;
         playerStopped: boolean;
@@ -87,6 +88,7 @@ module MyGame {
                 stateTransfer.island = saveState.islandNum;
                 stateTransfer.position = pof(saveState.playerPosition.x, saveState.playerPosition.y);
                 stateTransfer.health = saveState.health;
+                stateTransfer.addedItems = saveState.items;
                 worldManager.importLayouts(saveState.layouts);
                 worldManager.importDialogs(this, saveState.dialogs);
                 // Coming from link.
@@ -168,7 +170,7 @@ module MyGame {
                             this.groups.grounds.push(Ground.makeGround(this, island.type, pof(x, y)));
                             break;
                         case "e":
-                        this.groups.grounds.push(Ground.makeGround(this, island.type, pof(x, y)));
+                            this.groups.grounds.push(Ground.makeGround(this, island.type, pof(x, y)));
                             this.groups.enemies.push(island.getEnemy(this, pof(x, y)));
                             break;
                         case "g":
@@ -180,7 +182,7 @@ module MyGame {
                             this.groups.grounds.push(Ground.makeGround(this, island.type, pof(x, y)));
                             break;
                         case "n":
-                        this.groups.grounds.push(Ground.makeGround(this, island.type, pof(x, y)));
+                            this.groups.grounds.push(Ground.makeGround(this, island.type, pof(x, y)));
                             this.groups.npcs.push(island.getNPC(this, pof(x, y)));
                             break;
                         case "o":
@@ -230,6 +232,12 @@ module MyGame {
                     matchingTrigger.active = false;
                 }
             }
+
+            stateTransfer.addedItems.filter(i => i.location.island === this.island.num)
+            .forEach(i => {
+                let source = Source.makeSource(this, i.location.x, i.location.y, i.type);
+                this.groups.barriers.push(source);
+            })
 
             let playerPosition = null as Phaser.Point;
             if (stateTransfer.position) {
@@ -323,6 +331,15 @@ module MyGame {
         bringGroupToTop(group: Entity[]) {
             group.forEach(g => { this.world.bringToTop(g.sprite); });
             this.projectileDisplay.bringToTop();
+        }
+
+        addItem(x: number, y: number, key: string) {
+            let source = Source.makeSource(this, x, y, key);
+            this.groups.barriers.push(source);
+            StateTransfer.getInstance().addedItems.push({
+                location: new Location(this.island.num, x, y),
+                type: key
+            });
         }
     }
 }
