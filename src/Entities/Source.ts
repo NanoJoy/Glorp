@@ -13,14 +13,17 @@ module MyGame {
             this.amount = amount;
 
             this.onCollision = (playerSprite: Phaser.Sprite, barrierSprite: Phaser.Sprite) => {
+                let stateTransfer = StateTransfer.getInstance();
                 this.main.player.itemType = this.type;
                 this.main.player.itemCount = this.amount;
                 this.main.projectileDisplay.updateCount(this.amount);
                 this.main.projectileDisplay.updateIcon(this.type + "_" + ICON);
+                stateTransfer.heldItems = { type: this.type, amount: this.amount };
 
                 if (!this.renewing) {
                     this.sprite.destroy();
                     this.main.groups.barriers = this.main.groups.barriers.filter(b => b !== this);
+                    stateTransfer.addedItems = stateTransfer.addedItems.filter(i => !i.location.equals(new Location(this.main.island.num, this.position.x, this.position.y)));
                 }
             }
         }

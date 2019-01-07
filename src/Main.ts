@@ -6,37 +6,6 @@ module MyGame {
         below: string;
     }
 
-    export class StateTransfer {
-        enemy: Enemy;
-        island: number;
-        position: Phaser.Point;
-        health: number;
-        reason: TransferReason;
-        dialogs: Dialogs[];
-        triggers: Location[];
-        npcs: { old: Location; now: Location }[];
-        funcs: (main: Main) => void;
-        addedItems: { location: Location, type: string }[];
-        private static instance: StateTransfer;
-
-        private constructor() {
-            this.enemy = null;
-            this.island = -1;
-            this.position = null;
-            this.health = -1;
-            this.reason = TransferReason.NONE;
-            this.dialogs = [];
-            this.triggers = [];
-            this.npcs = [];
-            this.funcs = null;
-            this.addedItems = [];
-        }
-
-        static getInstance() {
-            return StateTransfer.instance || (StateTransfer.instance = new StateTransfer);
-        }
-    }
-
     class MainGroups {
         barriers: Barrier[];
         creatures: Creature[];
@@ -85,10 +54,7 @@ module MyGame {
             let saveState = gameSaver.loadGame();
             // Load from save.
             if ((stateTransfer.reason === TransferReason.DEATH || stateTransfer.reason === TransferReason.NONE) && saveState) {
-                stateTransfer.island = saveState.islandNum;
-                stateTransfer.position = pof(saveState.playerPosition.x, saveState.playerPosition.y);
-                stateTransfer.health = saveState.health;
-                stateTransfer.addedItems = saveState.items;
+                stateTransfer.loadFromSave(saveState);
                 worldManager.importLayouts(saveState.layouts);
                 worldManager.importDialogs(this, saveState.dialogs);
                 // Coming from link.
@@ -153,6 +119,7 @@ module MyGame {
                 for (let x = 0; x < line.length; x++) {
                     switch (line.charAt(x)) {
                         case " ":
+                        case "-":
                             this.groups.grounds.push(Ground.makeGround(this, island.type, pof(x, y)));
                             break;
                         case "*":
@@ -241,7 +208,11 @@ module MyGame {
 
             let playerPosition = null as Phaser.Point;
             if (stateTransfer.position) {
-                playerPosition = island.getAdjustedPosition(stateTransfer.position.clone());
+                if (stateTransfer.reason === TransferReason.LINK || stateTransfer.reason === TransferReason.DEATH || stateTransfer.reason === TransferReason.VICTORY) {
+                    playerPosition = island.getAdjustedPosition(stateTransfer.position.clone());
+                } else {
+                    playerPosition = stateTransfer.position.clone();
+                }
             } else {
                 playerPosition = island.getAdjustedPosition(island.playerStart.clone());
             }
@@ -252,6 +223,12 @@ module MyGame {
 
             this.player = new Player(this, playerPosition, stateTransfer.health === -1 ? 100 : stateTransfer.health);
             this.projectileDisplay = new HoldableDisplay(this);
+            if (stateTransfer.heldItems) {
+                this.player.itemCount = stateTransfer.heldItems.amount;
+                this.player.itemType = stateTransfer.heldItems.type;
+                this.projectileDisplay.updateIcon(this.player.itemType + "_" + ICON);
+                this.projectileDisplay.updateCount(this.player.itemCount);
+            }
             this.setDepths();
         }
 

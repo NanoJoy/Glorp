@@ -94,6 +94,7 @@ module MyGame {
             if (this.itemCount > 0) {
                 this.itemCount -= useItem(this.itemType, this.state, this.x, this.y, this.direction);
                 this.state.projectileDisplay.updateCount(this.itemCount);
+                StateTransfer.getInstance().heldItems.amount = this.itemCount;
             }
         }
     }
