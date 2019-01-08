@@ -2,7 +2,6 @@ module MyGame {
     export class BottomTextDisplay implements TextDisplay {
         game: Main;
         textBackground: Phaser.Image;
-        optionsBackground: Phaser.Image;
         upArrow: Phaser.Image;
         downArrow: Phaser.Image;
         name: string;
@@ -11,11 +10,7 @@ module MyGame {
         isDisplaying: boolean;
         text: Phaser.BitmapText;
         parent: Entity;
-        options: TextOption[];
-        currentOption: number;
-        currentOptionText: Phaser.BitmapText;
-        leftArrow: Phaser.Image;
-        rightArrow: Phaser.Image;
+        optionsDisplay: OptionsDisplay;
         currentRead: Boolean;
 
         readonly spriteHeight = 80;
@@ -59,42 +54,30 @@ module MyGame {
                 this.upArrow.visible = true;
                 this.setDownArrowFrame(this.pageNumber < this.textEncounter.getCurrentPage().text.length - 1);
                 this.currentRead = this.downArrow.frame === Frames.Arrow.O;
+                if (this.currentRead && this.optionsDisplay.getCurrentOption() !== -1) {
+                    this.optionsDisplay.show();
+                }
             }
         }
 
         scrollRight() {
-            if (this.rightArrow.visible) {
-                this.currentOption += 1;
-                this.currentOptionText.text = this.options[this.currentOption].text;
-                this.leftArrow.visible = true;
-                this.rightArrow.visible = this.currentOption < this.options.length - 1;
-            }
+            this.optionsDisplay.scrollRight();
         }
 
         scrollLeft() {
-            if (this.leftArrow.visible) {
-                this.currentOption -= 1;
-                this.currentOptionText.text = this.options[this.currentOption].text;
-                this.rightArrow.visible = true;
-                this.leftArrow.visible = this.currentOption > 0;
-            }
+            this.optionsDisplay.scrollLeft();
         }
 
         makeChoice() {
             if (!this.currentRead) {
                 return;
             }
-            var next = this.textEncounter.getResponse(this.currentOption);
+            var next = this.textEncounter.getResponse(this.optionsDisplay.getCurrentOption());
             if (!next) {
                 this.textBackground.destroy();
                 this.text.destroy();
-                let result = this.optionsBackground.visible ? this.currentOptionText.text : this.text.text;
-                if (this.optionsBackground) {
-                    this.optionsBackground.destroy();
-                    this.currentOptionText.destroy();
-                }
-                if (this.rightArrow) this.rightArrow.destroy();
-                if (this.leftArrow) this.leftArrow.destroy();
+                let result = this.optionsDisplay.isVisible() ? this.optionsDisplay.getCurrentText() : this.text.text;
+                this.optionsDisplay.destroy();
                 if (this.downArrow) this.downArrow.destroy();
                 if (this.upArrow) this.upArrow.destroy();
                 this.game.unstopPlayer();
@@ -109,11 +92,8 @@ module MyGame {
                 return;
             }
             if (!next.hasOptions) {
-                this.optionsBackground.visible = false;
-                this.currentOptionText.visible = false;
-                this.rightArrow.visible = false;
-                this.leftArrow.visible = false;
-                this.options = null;
+                this.optionsDisplay.setOptions(null);
+                this.optionsDisplay.hide();
                 this.game.inputs.right.onDown.remove(this.scrollRight, this);
                 this.game.inputs.left.onDown.remove(this.scrollLeft, this);
                 this.text.text = next.text[0];
@@ -125,20 +105,15 @@ module MyGame {
                 return;
             }
             let nextPrompt = (next as TextPrompt);
-            this.options = nextPrompt.options;
-            this.currentOption = 0;
+            this.optionsDisplay.setOptions(nextPrompt.options);
+            this.optionsDisplay.hide();
             this.pageNumber = 0;
-            this.currentOptionText.text = this.options[0].text;
             this.text.text = next.text[0];
             this.upArrow.visible = false;
             this.setDownArrowFrame(nextPrompt.text.length > 1);
             this.currentRead = this.downArrow.frame === Frames.Arrow.O;
-            this.leftArrow.visible = false;
-            this.rightArrow.visible = nextPrompt.options.length > 1;
             this.game.inputs.left.onDown.add(this.scrollLeft, this);
             this.game.inputs.right.onDown.add(this.scrollRight, this);
-            this.currentOptionText.visible = true;
-            this.optionsBackground.visible = true;
             
             this.game.inputs.O.onUp.add(this.addOnDownListener, this);
         }
@@ -172,35 +147,128 @@ module MyGame {
             
             this.game.inputs.down.onDown.add(this.scrollDown, this);
             this.game.inputs.up.onDown.add(this.scrollUp, this);
-            this.optionsBackground = this.game.add.image(0, this.textBackground.height, Assets.Images.OptionsBackground);
-            this.optionsBackground.fixedToCamera = true;
-            this.optionsBackground.visible = false;
-            this.currentOptionText = this.game.add.bitmapText(18, this.optionsBackground.y + 8, Assets.FontName, "", 14);
-            this.currentOptionText.fixedToCamera = true;
-            this.currentOptionText.visible = false;
-            this.leftArrow = this.game.add.image(6, this.textBackground.height + 12, Assets.Sprites.Arrow.key, 3);
-            this.leftArrow.visible = false;
-            this.leftArrow.fixedToCamera = true;
-            this.rightArrow = this.game.add.image(SCREEN_WIDTH - 18, this.textBackground.height + 12, Assets.Sprites.Arrow.key, 2);
-            this.rightArrow.visible = false
-            this.rightArrow.fixedToCamera = true;
+            this.optionsDisplay = new OptionsDisplay(this.game, this.textBackground.height);
             this.game.inputs.O.onDown.add(this.makeChoice, this);
             if (this.textEncounter.getCurrentPage().hasOptions) {
                 var textPrompt = this.textEncounter.getCurrentPage() as TextPrompt;
-                this.currentOption = 0;
-                this.optionsBackground.visible = true;
-                this.rightArrow.visible = textPrompt.options.length > 1;
-                this.rightArrow.fixedToCamera = true;
-                this.currentOptionText.text = textPrompt.options[0].text;
-                this.currentOptionText.visible = true;
-                this.options = textPrompt.options;
+                this.optionsDisplay.setOptions(textPrompt.options);
                 this.game.inputs.left.onDown.add(this.scrollLeft, this);
                 this.game.inputs.right.onDown.add(this.scrollRight, this);
+            } else {
+                this.optionsDisplay.setOptions(null);
             }
+            this.optionsDisplay.hide();
         }
 
         private setDownArrowFrame(showDownArrow: boolean): void {
             this.downArrow.frame = showDownArrow ? Frames.Arrow.DOWN : Frames.Arrow.O;
+        }
+    }
+
+    class OptionsDisplay implements Display {
+        private main: Main;
+        private background: Phaser.Image;
+        private rightArrow: Phaser.Image;
+        private leftArrow: Phaser.Image;
+        private text: Phaser.BitmapText;
+        private displayGroup: Phaser.Group;
+        private showing: boolean;
+        private options: TextOption[];
+        private currentOption: number;
+        
+        constructor(main: Main, baseY: number) {
+            this.main = main;
+
+            this.background = this.main.add.image(0, baseY, Assets.Images.OptionsBackground);
+            this.background.fixedToCamera = true;
+
+            this.leftArrow = this.main.add.image(6, baseY + 12, Assets.Sprites.Arrow.key, Frames.Arrow.LEFT);
+            this.leftArrow.fixedToCamera = true;
+
+            this.rightArrow = this.main.add.image(SCREEN_WIDTH - 18, baseY + 12, Assets.Sprites.Arrow.key, Frames.Arrow.RIGHT);
+            this.rightArrow.fixedToCamera = true;
+
+            this.text = this.main.add.bitmapText(18, baseY + 8, Assets.FontName, "", 14);
+            this.text.fixedToCamera = true;
+
+            this.displayGroup = main.add.group();
+            this.displayGroup.addMultiple([this.background, this.leftArrow, this.rightArrow, this.text]);
+
+            this.options = [];
+            this.currentOption = -1;
+            this.hide();
+        }
+
+        setOptions(options: TextOption[]) {
+            this.options = options;
+            if (Utils.isAThing(options)) {
+                this.currentOption = 0;
+                this.text.text = options[0].text;
+            } else {
+                this.currentOption = -1;
+            }
+        }
+
+        show() {
+            if (this.showing) return;
+            if (!Utils.isAThing(this.options) || this.currentOption === -1) {
+                throw new Error("Cannot show display with no options.");
+            }
+            this.displayGroup.visible = true;
+            this.text.text = this.options[this.currentOption].text;
+            this.setArrowVisibility();
+            this.bringToTop();
+            this.showing = true;
+        }
+
+        hide() {
+            if (!this.showing) return;
+            this.displayGroup.visible = false;
+            this.showing = false;
+        }
+
+        bringToTop() {
+            this.main.world.bringToTop(this.displayGroup);
+            this.displayGroup.bringToTop(this.text);
+            this.displayGroup.bringToTop(this.leftArrow);
+            this.displayGroup.bringToTop(this.rightArrow);
+        }
+
+        scrollRight() {
+            if (this.rightArrow.visible) {
+                this.currentOption += 1;
+                this.text.text = this.options[this.currentOption].text;
+                this.setArrowVisibility();
+            }
+        }
+
+        scrollLeft() {
+            if (this.leftArrow.visible) {
+                this.currentOption -= 1;
+                this.text.text = this.options[this.currentOption].text;
+                this.setArrowVisibility();
+            }
+        }
+
+        getCurrentOption(): number {
+            return this.currentOption;
+        }
+
+        getCurrentText(): string {
+            return this.options[this.currentOption].text;
+        }
+
+        isVisible(): boolean {
+            return this.showing;
+        }
+
+        destroy() {
+            this.displayGroup.destroy();
+        }
+
+        private setArrowVisibility() {
+            this.leftArrow.visible = this.currentOption !== 0;
+            this.rightArrow.visible = this.currentOption !== this.options.length - 1;
         }
     }
 }

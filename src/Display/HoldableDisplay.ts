@@ -3,13 +3,13 @@ module MyGame {
     const PADDING = 4;
     const TEXT_PADDING = 6;
 
-    export class HoldableDisplay {
-        main: Main;
-        background: Phaser.Image;
-        icon: Phaser.Image;
-        text: Phaser.BitmapText;
-        displayGroup: Phaser.Group;
-        showing: boolean;
+    export class HoldableDisplay implements Display {
+        private main: Main;
+        private background: Phaser.Image;
+        private icon: Phaser.Image;
+        private text: Phaser.BitmapText;
+        private displayGroup: Phaser.Group;
+        private showing: boolean;
 
         constructor(main: Main, iconKey?: string, startingCount = 0) {
             this.main = main;
