@@ -145,8 +145,10 @@ module MyGame {
                             this.groups.grounds.push(Ground.makeGround(this, island.type, pof(x, y)));
                             break;
                         case "h":
-                            this.groups.houses.push(new House(this, pof(x, y)));
+                            let house = new House(this, pof(x, y))
+                            this.groups.houses.push(house);
                             this.groups.grounds.push(Ground.makeGround(this, island.type, pof(x, y)));
+                            this.groups.frontOfPlayer.push(house)
                             break;
                         case "n":
                             this.groups.grounds.push(Ground.makeGround(this, island.type, pof(x, y)));

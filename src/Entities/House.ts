@@ -14,6 +14,7 @@ module MyGame {
             this.sprite.body.moves = true;
             this.sprite.body.immovable = true;
             this.sprite.smoothed = false;
+            this.sprite.body.setSize(Assets.Sprites.House.width, Assets.Sprites.House.height * (2 / 3), 0, Assets.Sprites.House.height * (1 / 3));
         }
 
         update() {

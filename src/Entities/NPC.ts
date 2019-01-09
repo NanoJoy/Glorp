@@ -132,14 +132,14 @@ module MyGame {
             }
         }
 
-        doScript(directions: string, start?: Phaser.Point) {
+        doScript(directions: string, start?: Phaser.Point, interruptable = false) {
             if (this.movementManager) {
                 this.movementManager.pause();
             }
             start = start ? start : pof(Math.floor(this.sprite.x / TILE_WIDTH), Math.floor(this.sprite.y / TILE_WIDTH));
 
             this.movementManager = new MovementManager(this.main.game, Utils.makeMovementScript(start, directions), this);
-            this.movementManager.interruptable = false;
+            this.movementManager.interruptable = interruptable;
             this.doingScript = true;
             this.movementManager.start(true);
         }

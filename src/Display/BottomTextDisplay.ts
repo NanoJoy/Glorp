@@ -196,6 +196,7 @@ module MyGame {
 
             this.options = [];
             this.currentOption = -1;
+            this.showing = true;
             this.hide();
         }
 
