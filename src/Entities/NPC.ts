@@ -1,4 +1,15 @@
 module MyGame {
+    export class NPCInfo {
+        old: Location;
+        now: Location;
+        script?: MovementScript;
+        speed?: number;
+
+        constructor(npc: NPC) {
+            this.old = new Location(npc.main.island.num, npc.startX, npc.startY);
+        }
+    }
+
     export abstract class NPC implements Entity, Moveable {
         main: Main;
         position: Phaser.Point;
@@ -7,7 +18,6 @@ module MyGame {
         speed: number;
         startX: number;
         startY: number;
-        positionToSave: Phaser.Point;
         movementManager: MovementManager;
         private textManager: ITextManager;
         private textDisplay: TextDisplay;
@@ -15,6 +25,7 @@ module MyGame {
         private doingScript: boolean;
         private textShowing: boolean;
         private notDefaultAnims: boolean;
+        private saveInfo: NPCInfo;
 
         constructor(main: Main, position: Phaser.Point, textManager: ITextManager, movementScript: MovementScript,
         speed: number, animationSpeed: number, spriteKey: string, notDefaultAnims = false) {
@@ -42,6 +53,8 @@ module MyGame {
             this.sprite.body.immovable = true;
             this.direction = Direction.Down;
             this.textShowing = false;
+
+            this.saveInfo = new NPCInfo(this);
         }
 
         onStageBuilt() {
@@ -124,7 +137,7 @@ module MyGame {
 
         doTrigger(name: string): void {
             if (this.movementManager && this.movementManager.hasTrigger && this.movementManager.triggerName === name) {
-                this.positionToSave = Utils.getEndPosition(pof(this.startX, this.startY), this.movementManager.script.directions);
+                this.saveInfo.old.setXY(Utils.getEndPosition(pof(this.startX, this.startY), this.movementManager.script.directions));
                 this.movementManager.start();
                 if (!this.movementManager.loop) {
                     this.movementManager.setOnComplete(this.showText, this, true);
@@ -138,24 +151,37 @@ module MyGame {
             }
             start = start ? start : pof(Math.floor(this.sprite.x / TILE_WIDTH), Math.floor(this.sprite.y / TILE_WIDTH));
 
-            this.movementManager = new MovementManager(this.main.game, Utils.makeMovementScript(start, directions), this);
+            let script = Utils.makeMovementScript(start, directions);
+            this.movementManager = new MovementManager(this.main.game, script, this);
             this.movementManager.interruptable = interruptable;
             this.doingScript = true;
+            if (interruptable) {
+                this.saveInfo.script = script;
+            }
             this.movementManager.start(true);
+        }
+
+        setSpeed(speed: number) {
+            this.speed = speed;
+            this.saveInfo.speed = speed;
         }
 
         savePosition(x?: number, y?: number): void {
             if (x === undefined && y === undefined) {
-                this.positionToSave = pof(Math.floor(this.sprite.x / TILE_WIDTH), Math.floor(this.sprite.y / TILE_WIDTH));
+                this.saveInfo.now.setXY(pof(Math.floor(this.sprite.x / TILE_WIDTH), Math.floor(this.sprite.y / TILE_WIDTH)));
                 return;
             }
-            this.positionToSave = pof(x ? x : 0, y ? y : 0);
+            this.saveInfo.now.setXY(pof(x ? x : 0, y ? y : 0));
         }
 
-        unloadPositionToSave(): Phaser.Point {
-            var temp = this.positionToSave;
-            this.positionToSave = null;
+        unloadSaveInfo(): NPCInfo {
+            var temp = this.saveInfo;
+            this.saveInfo = new NPCInfo(this);
             return temp;
+        }
+
+        hasSaveInfo(): boolean {
+            return this.saveInfo.now !== undefined || this.saveInfo.script !== undefined || this.saveInfo.speed !== undefined;
         }
 
         setPosition(location: Location) {

@@ -53,11 +53,14 @@ module MyGame {
             stateTransfer.dialogs = WorldManager.getInstance().exportDialogs();
             stateTransfer.triggers = this.main.triggers.filter(t => !t.active)
                 .map(t => new Location(this.main.island.num, t.x, t.y));
-            stateTransfer.npcs = this.main.groups.npcs.filter(n => n.positionToSave)
+            stateTransfer.npcs = this.main.groups.npcs.filter(n => n.hasSaveInfo())
                 .map(n => {
+                    let saveInfo = n.unloadSaveInfo();
                     return {
                         old: new Location(this.main.island.num, n.startX, n.startY),
-                        now: new Location(this.main.island.num, n.positionToSave.x, n.positionToSave.y)
+                        now: new Location(this.main.island.num, saveInfo.now.x, saveInfo.now.y),
+                        script: saveInfo.script,
+                        speed: saveInfo.speed
                     }
                 });
             stateTransfer.health = this.main.player.health;

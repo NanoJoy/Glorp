@@ -23,6 +23,11 @@ module MyGame {
                 && other.x === this.x
                 && other.y === this.y;
         }
+
+        setXY(point: Phaser.Point) {
+            this.x = point.x;
+            this.y = point.y;
+        }
     }
 
     export class Dialogs {

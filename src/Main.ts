@@ -192,7 +192,10 @@ module MyGame {
                 if (matches.length === 0) {
                     throw new Error(`No matching npc found with start position ${npc.old.x} ${npc.old.y}`);
                 }
-                matches[0].setPosition(npc.now);
+                let match = matches[0];
+                match.setPosition(npc.now);
+                if (npc.script) {
+                }
             }
 
             let triggersToImport = savedGame ? savedGame.triggers : stateTransfer.triggers;

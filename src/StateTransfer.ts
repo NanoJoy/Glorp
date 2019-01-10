@@ -7,7 +7,7 @@ module MyGame {
         reason: TransferReason;
         dialogs: Dialogs[];
         triggers: Location[];
-        npcs: { old: Location; now: Location }[];
+        npcs: NPCInfo[];
         funcs: (main: Main) => void;
         addedItems: { location: Location, type: string }[];
         heldItems: { type: string, amount: number }

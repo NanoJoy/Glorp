@@ -25,7 +25,7 @@ module MyGame {
 
         function giveGrodule(main: Main, parent: Entity, result: string) {
             let stanley = parent as Stanley;
-            stanley.speed = 1000;
+            stanley.setSpeed(1000);
             stanley.doScript("du", pof(18 + main.island.paddingOffset.x, 4 + main.island.paddingOffset.y), true);
             main.addItem(17 + main.island.paddingOffset.x, 2 + main.island.paddingOffset.y, Assets.Sprites.Grodule.key);
         }

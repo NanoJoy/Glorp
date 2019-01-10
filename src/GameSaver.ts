@@ -1,11 +1,12 @@
 module MyGame {
+
     export class SaveState {
         islandNum: number;
         layouts: Layout[];
         playerPosition: { x: number, y: number };
         dialogs: Dialogs[];
         triggers: Location[];
-        npcs: { old: Location, now: Location }[];
+        npcs: NPCInfo[];
         health: number;
         items: { location: Location, type: string }[];
         heldItems: { type: string, amount: number }
@@ -30,19 +31,23 @@ module MyGame {
 
         saveGame(main: Main, worldManager: WorldManager) {
             let stateTransfer = StateTransfer.getInstance();
-            let npcs = this.loadGame() ? this.loadGame().npcs : [] as { old: Location, now: Location }[];
+            let npcs = this.loadGame() ? this.loadGame().npcs : [] as NPCInfo[];
             for (let npc of main.groups.npcs) {
-                let position = npc.unloadPositionToSave();
-                if (position) {
+                if (npc.hasSaveInfo()) {
+                    let info = npc.unloadSaveInfo();
                     let old = new Location(main.island.num, npc.startX, npc.startY);
                     let matching = npcs.filter(n => n.old.equals(old));
                     if (matching.length > 0) {
                         let match = matching[0];
-                        match.now = new Location(main.island.num, position.x, position.y)
+                        match.now = new Location(main.island.num, info.now.x, info.now.y);
+                        match.script = info.script;
+                        match.speed = info.speed;
                     } else {
                         npcs.push({
                             old: old,
-                            now: new Location(main.island.num, position.x, position.y)
+                            now: new Location(main.island.num, info.now.x, info.now.y),
+                            script: info.script,
+                            speed: info.speed
                         });
                     }
                 }
