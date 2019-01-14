@@ -34,6 +34,18 @@ module MyGame {
             stateTransfer.position = this.playerStart;
             stateTransfer.reason = TransferReason.LINK;
             stateTransfer.dialogs = WorldManager.getInstance().exportDialogs();
+            this.main.groups.npcs.filter(n => n.hasSaveInfo()).forEach(n => {
+                let info = n.unloadSaveInfo();
+                let matches = stateTransfer.npcs.filter(t => t.old.equals(info.old));
+                if (matches.length > 0) {
+                    let match = matches[0];
+                    match.now = info.now;
+                    match.script = info.script;
+                    match.speed = info.speed;
+                } else {
+                    stateTransfer.npcs.push(info);
+                }
+            });
             this.main.state.restart();
         }
     }

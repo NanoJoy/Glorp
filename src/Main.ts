@@ -193,8 +193,14 @@ module MyGame {
                     throw new Error(`No matching npc found with start position ${npc.old.x} ${npc.old.y}`);
                 }
                 let match = matches[0];
-                match.setPosition(npc.now);
+                if (npc.now) {
+                    match.setPosition(npc.now);
+                }
                 if (npc.script) {
+                    match.doScript(Utils.reverseMovementScript(npc.script), npc.script.start, true);
+                }
+                if (npc.speed) {
+                    match.setSpeed(npc.speed);
                 }
             }
 

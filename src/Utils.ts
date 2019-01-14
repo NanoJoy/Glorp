@@ -156,6 +156,29 @@ module MyGame {
                 (x < layout[y].length && layout[y][x + 1] === char);
         }
 
+        static reverseMovementScript(script: MovementScript): string {
+            let result = "";
+            for (let i = 0; i < script.directions.length; i++) {
+                switch(script.directions[i]) {
+                    case null:
+                        result += " ";
+                        break;
+                    case Direction.Up:
+                        result += "u";
+                        break;
+                    case Direction.Down:
+                        result += "d";
+                        break;
+                    case Direction.Right:
+                        result += "r";
+                        break;
+                    case Direction.Left:
+                        result += "l";
+                }
+            }
+            return result;
+        }
+
         static makeMovementScript(position: Phaser.Point, script: string): MovementScript {
             if (!script) {
                 return null;
