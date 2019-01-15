@@ -43,12 +43,16 @@ module MyGame {
                         match.script = info.script;
                         match.speed = info.speed;
                     } else {
-                        npcs.push({
+                        let created = {
                             old: old,
-                            now: new Location(main.island.num, info.now.x, info.now.y),
+                            now: null as Location,
                             script: info.script,
                             speed: info.speed
-                        });
+                        };
+                        if (info.now) {
+                            created.now = new Location(main.island.num, info.now.x, info.now.y);
+                        }
+                        npcs.push(created);
                     }
                 }
             }
@@ -91,10 +95,16 @@ module MyGame {
             this.cached = JSON.parse(file) as SaveState;
             this.cached.triggers = this.cached.triggers.map(t => new Location(t.island, t.x, t.y));
             this.cached.npcs = this.cached.npcs.map(n => {
+                let now = n.now ? new Location(n.now.island, n.now.x, n.now.y) : null;
                 return {
+                    script: n.script,
+                    speed: n.speed,
                     old: new Location(n.old.island, n.old.x, n.old.y),
-                    now: new Location(n.now.island, n.now.x, n.now.y)
-                }
+                    now: now
+                };
+            });
+            this.cached.items.forEach(i => {
+                i.location = new Location(i.location.island, i.location.x, i.location.y);
             });
             return this.cached;
         }

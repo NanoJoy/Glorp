@@ -6,7 +6,7 @@ module MyGame {
 
     export const DEVELOPER_MODE = true;
     export const START_ISLAND = 6;
-    export const CLEAR_SAVE = true;
+    export const CLEAR_SAVE = false;
     export const PLAYER_START_X = 18;
     export const PLAYER_START_Y = 3;
 
@@ -80,6 +80,7 @@ module MyGame {
         MenuBackground = "menu_background";
         OptionsBackground = "options_background";
         Oven = "oven";
+        OvenBattle = "oven_battle";
         PlayerBattle = "player_battle";
         ProjectileDisplay = "projectile_display";
         Rug = "rug";

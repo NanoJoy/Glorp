@@ -8,7 +8,7 @@ module MyGame {
         abstract tempo: number;
         abstract hitPoints: number;
         abstract health: number;
-        battleSpriteKey: string;
+        abstract battleSpriteKey: string;
         worldSpriteKey = null as string;
         worldSprite = null as Phaser.Sprite;
         alive: boolean;
@@ -29,6 +29,7 @@ module MyGame {
 
     export class OvenEncounter extends AdhocEncounter {
         name = "Oven";
+        battleSpriteKey = Assets.Images.OvenBattle;
         minNumNotes = 4;
         maxNumNotes = 6;
         patternLength = 9;

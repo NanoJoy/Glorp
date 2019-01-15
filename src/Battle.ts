@@ -28,7 +28,7 @@ module MyGame {
             }
             this.enemy = stateTransfer.enemy;
             let topY = Assets.Sprites.RhythmSymbols.height * 2 + 20;
-            this.game.add.image(SCREEN_WIDTH - 146, topY, Assets.Images.JamBotBattle);
+            this.game.add.image(SCREEN_WIDTH - 146, topY, this.enemy.battleSpriteKey);
             this.enemyHealthDisplay = new HealthDisplay(this, 10, topY, this.enemy.name, this.enemy.hitPoints);
             this.patternDisplayer = new PatternDisplayer(this, this.enemy);
             this.patternChecker = new PatternMatcher(this, this.enemy);

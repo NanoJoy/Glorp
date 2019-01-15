@@ -6,7 +6,7 @@ module MyGame {
         patternLength: number;
         beatLength: number;
         tempo: number;
-        battleSpriteKey: string;
+        abstract battleSpriteKey: string;
         worldSpriteKey: string;
         hitPoints = 100;
         main: Main;
@@ -87,6 +87,8 @@ module MyGame {
     }
 
     export class JamBot extends Jammer {
+        battleSpriteKey = Assets.Images.JamBotBattle;
+
         constructor(main: Main, position: Phaser.Point, movementScript: MovementScript) {
             super(main, position, movementScript, 100, Assets.Sprites.JamBotWorld.key);
             this.name = "JamBot";
@@ -95,7 +97,6 @@ module MyGame {
             this.patternLength = 8;
             this.beatLength = 2;
             this.tempo = 100;
-            this.battleSpriteKey = "jambot";
             this.worldSpriteKey = Assets.Sprites.JamBotWorld.key;
             this.hitPoints = 100;
             this.speed = 1000;
@@ -123,6 +124,8 @@ module MyGame {
     }
 
     export class JamBug extends Jammer {
+        battleSpriteKey = Assets.Images.JamBotBattle;
+
         constructor(main: Main, position: Phaser.Point, movementScript: MovementScript) {
             super(main, position, movementScript, 100, Assets.Sprites.JamBugWorld.key);
             this.name = "JamBug";
@@ -131,7 +134,6 @@ module MyGame {
             this.patternLength = 8;
             this.beatLength = 2;
             this.tempo = 150;
-            this.battleSpriteKey = "jambot";
             this.worldSpriteKey = Assets.Sprites.JamBugWorld.key;
             this.hitPoints = 100;
             this.speed = 500;
