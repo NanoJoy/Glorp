@@ -18,7 +18,9 @@ module MyGame {
 
         function startOven(main: Main, parent: Entity, result: string) {
             if (result === "Okay, go for it.") {
-                StateTransfer.getInstance().enemy = new OvenEncounter();
+                let stateTransfer = StateTransfer.getInstance();
+                stateTransfer.enemy = new OvenEncounter();
+                stateTransfer.island = main.island.num;
                 main.state.start(States.Battle);
             }
         }

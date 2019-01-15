@@ -1,13 +1,15 @@
 module MyGame {
     export class Battle extends Phaser.State {
         public inputs: Inputs;
-        currentPattern: PatternNote[];
-        patternDisplayer: PatternDisplayer;
-        patternChecker: PatternMatcher;
-        playerHealth: number;
-        playerHealthDisplay: HealthDisplay;
-        enemyHealthDisplay: HealthDisplay;
-        enemy: Enemy;
+        private currentPattern: PatternNote[];
+        private patternDisplayer: PatternDisplayer;
+        private patternChecker: PatternMatcher;
+        private playerHealth: number;
+        private playerHealthDisplay: HealthDisplay;
+        private enemyHealthDisplay: HealthDisplay;
+        private enemy: Enemy;
+        playerDisplay: CharacterDisplay;
+        enemyDisplay: CharacterDisplay;
 
         create() {
             this.inputs = new Inputs(this);
@@ -20,7 +22,8 @@ module MyGame {
 
             let stateTransfer = StateTransfer.getInstance();
             this.playerHealth = stateTransfer.health === -1 ? 100 : stateTransfer.health;
-            this.game.add.image(10, SCREEN_HEIGHT - 146, Assets.Images.PlayerBattle);
+            let playerKey = WorldManager.getInstance().getIsland(stateTransfer.island).type === IslandType.INSIDE ? Frames.PlayerBattle.INSIDE : Frames.PlayerBattle.OUTSIDE;
+            this.playerDisplay = new CharacterDisplay(this, 10, SCREEN_HEIGHT - 146, Assets.Sprites.PlayerBattle.key, playerKey);
             this.playerHealthDisplay = new HealthDisplay(this, 146, SCREEN_HEIGHT - 50, "You", Player.STARTING_HEALTH);
             this.playerHealthDisplay.updateHitPoints(this.playerHealth);
             if (!Utils.isAThing(stateTransfer.enemy)) {
@@ -28,7 +31,7 @@ module MyGame {
             }
             this.enemy = stateTransfer.enemy;
             let topY = Assets.Sprites.RhythmSymbols.height * 2 + 20;
-            this.game.add.image(SCREEN_WIDTH - 146, topY, this.enemy.battleSpriteKey);
+            this.enemyDisplay = new CharacterDisplay(this, SCREEN_WIDTH - 146, topY, this.enemy.battleSpriteKey);
             this.enemyHealthDisplay = new HealthDisplay(this, 10, topY, this.enemy.name, this.enemy.hitPoints);
             this.patternDisplayer = new PatternDisplayer(this, this.enemy);
             this.patternChecker = new PatternMatcher(this, this.enemy);
@@ -89,6 +92,50 @@ module MyGame {
         }
     }
 
+    let MOVEMENT_AMOUNT = 6;
+    class CharacterDisplay {
+        private image: Phaser.Image;
+        private startX: number;
+        private startY: number;
+        
+        constructor(battle: Battle, x: number, y: number, key: string, frame = 0) {
+            this.image = battle.add.image(x, y, key, frame);
+            this.image.anchor.setTo(0.5, 0.5);
+            this.image.position.setTo(x + this.image.width / 2, y + this.image.height / 2);
+            this.startX = this.image.position.x;
+            this.startY = this.image.position.y;
+        }
+
+        reset() {
+            this.image.position.setTo(this.startX, this.startY);
+            this.image.scale.setTo(1, 1);
+        }
+
+        moveUp() {
+            this.image.position.y -= MOVEMENT_AMOUNT;
+        }
+
+        moveDown() {
+            this.image.position.y += MOVEMENT_AMOUNT;
+        }
+
+        moveLeft() {
+            this.image.position.x -= MOVEMENT_AMOUNT;
+        }
+
+        moveRight() {
+            this.image.position.x += MOVEMENT_AMOUNT;
+        }
+
+        pressO() {
+            this.image.scale.setTo(1.1, 1.1)
+        }
+
+        pressK() {
+            this.image.scale.setTo(0.9, 0.9);
+        }
+    }
+
     class HealthDisplay {
         battle: Battle;
         x: number;
@@ -124,8 +171,6 @@ module MyGame {
             bmd.ctx.fillStyle = "#606060";
             bmd.ctx.fill();
             this.healthBar = this.battle.add.sprite(this.healthBarContainer.x + 2, this.healthBarContainer.y + 2, bmd);
-
-
         }
     }
 }

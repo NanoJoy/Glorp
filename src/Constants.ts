@@ -25,6 +25,10 @@ module MyGame {
             RIGHT: 2,
             O: 4
         }
+        static readonly PlayerBattle = {
+            OUTSIDE: 0,
+            INSIDE: 1
+        }
     }
 
     export class SpriteAsset {
@@ -55,6 +59,7 @@ module MyGame {
         JamBugWorld = new SpriteAsset("jambug_world");
         OldMan = new SpriteAsset("old_man");
         Player = new SpriteAsset("player");
+        PlayerBattle = new SpriteAsset("player_battle", 136, 136)
         RhythmSymbols = new SpriteAsset("rhythm_symbols", 24, 24);
         Stanley = new SpriteAsset("stanley");
         StoneWall = new SpriteAsset("stone_wall");
@@ -81,7 +86,6 @@ module MyGame {
         OptionsBackground = "options_background";
         Oven = "oven";
         OvenBattle = "oven_battle";
-        PlayerBattle = "player_battle";
         ProjectileDisplay = "projectile_display";
         Rug = "rug";
         Sign = "sign";
