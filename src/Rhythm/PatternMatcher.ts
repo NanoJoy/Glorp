@@ -125,6 +125,28 @@ module MyGame {
             this.noteDisplays[position].alpha = (this.tempo / 2 - distance) / (this.tempo / 2);
             this.notesPressed.push({note: keyCode, position: position, distance: distance});
             this.pressCount += 1;
+
+            
+            switch (keyCode) {
+                case this.game.inputs.down.keyCode:
+                    this.game.playerDisplay.moveDown();
+                    break;
+                case this.game.inputs.up.keyCode:
+                    this.game.playerDisplay.moveUp();
+                    break;
+                case this.game.inputs.left.keyCode:
+                    this.game.playerDisplay.moveLeft();
+                    break;
+                case this.game.inputs.right.keyCode:
+                    this.game.playerDisplay.moveRight();
+                    break;
+                case this.game.inputs.O.keyCode:
+                    this.game.playerDisplay.pressO();
+                    break;
+                case this.game.inputs.K.keyCode:
+                    this.game.playerDisplay.pressK();
+            }
+            this.game.time.events.add(this.tempo / 2, this.game.playerDisplay.reset, this.game.playerDisplay);
         }
 
         private getFirstNote() {
