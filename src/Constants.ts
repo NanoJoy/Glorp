@@ -17,6 +17,11 @@ module MyGame {
         Battle: "Battle"
     };
 
+    export var Colors = {
+        BLACK: 0x000000,
+        GRAY: 0xEAEAEA
+    };
+
     export class Frames {
         static readonly Arrow = {
             UP: 0,

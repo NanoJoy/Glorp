@@ -28,6 +28,7 @@ module MyGame {
     }
 
     export class OvenEncounter extends AdhocEncounter {
+        main: Main;
         name = "Oven";
         battleSpriteKey = Assets.Images.OvenBattle;
         minNumNotes = 4;
@@ -38,8 +39,9 @@ module MyGame {
         hitPoints = 300;
         health = 300;
 
-        constructor() {
+        constructor(main: Main) {
             super();
+            this.main = main;
             this.transferPosition = pof(17, 5);
         }
 
@@ -69,6 +71,32 @@ module MyGame {
                 return false;
             }
             return noNulls[noNulls.length - 1 - pressedCount] === pressed;
+        }
+
+        startBattle() {
+            let stateTransfer = StateTransfer.getInstance();
+            stateTransfer.island = this.main.island.num;
+            stateTransfer.enemy = this;
+            stateTransfer.dialogs = WorldManager.getInstance().exportDialogs();
+            stateTransfer.triggers = this.main.triggers.filter(t => !t.active)
+                .map(t => new Location(this.main.island.num, t.x, t.y));
+            this.main.groups.npcs.filter(n => n.hasSaveInfo()).forEach(n => {
+                let info = n.unloadSaveInfo();
+                let matches = stateTransfer.npcs.filter(t => t.old.equals(info.old));
+                if (matches.length > 0) {
+                    let match = matches[0];
+                    match.now = info.now;
+                    match.script = info.script;
+                    match.speed = info.speed;
+                } else {
+                    stateTransfer.npcs.push(info);
+                }
+            });
+            stateTransfer.health = this.main.player.health;
+            this.main.add.tween(this.main.world).to({alpha: 0}, 500, Phaser.Easing.Linear.None, true);
+            this.main.time.events.add(500, () => {
+                this.main.state.start(States.Battle);
+            }, this);
         }
 
         die() {

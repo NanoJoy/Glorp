@@ -1,5 +1,5 @@
 module MyGame {
-    export interface Enemy {
+    export abstract class Enemy {
         name: string;
         minNumNotes: number;
         maxNumNotes: number;

@@ -66,7 +66,10 @@ module MyGame {
                 }
             });
             stateTransfer.health = this.main.player.health;
-            this.main.state.start(States.Battle);
+            this.main.add.tween(this.main.world).to({alpha: 0}, 500, Phaser.Easing.Linear.None, true);
+            this.main.time.events.add(500, () => {
+                this.main.state.start(States.Battle);
+            }, this);
         }
 
         update() {

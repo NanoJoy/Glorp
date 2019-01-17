@@ -110,7 +110,7 @@ module MyGame {
         }
 
         private setupLevel(island: Island, savedGame?: SaveState) {
-            this.stage.backgroundColor = island.type === IslandType.INSIDE ? 0x000000 : 0xEAEAEA;
+            this.stage.backgroundColor = island.type === IslandType.INSIDE ? Colors.BLACK : Colors.GRAY;
             this.game.world.setBounds(0, 0, island.layout[0].length * TILE_WIDTH,
                 island.layout.length * TILE_HEIGHT);
 
