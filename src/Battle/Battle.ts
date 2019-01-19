@@ -18,7 +18,8 @@ module MyGame {
             }
 
             this.time.reset();
-            this.stage.backgroundColor =  0xEAEAEA;
+            this.time.events.removeAll();
+            this.stage.backgroundColor = 0xEAEAEA;
 
             let stateTransfer = StateTransfer.getInstance();
             this.playerHealth = stateTransfer.health === -1 ? 100 : stateTransfer.health;
@@ -35,6 +36,37 @@ module MyGame {
             this.enemyHealthDisplay = new HealthDisplay(this, 10, topY, this.enemy.name, this.enemy.hitPoints);
             this.patternDisplayer = new PatternDisplayer(this, this.enemy);
             this.patternChecker = new PatternMatcher(this, this.enemy);
+            Utils.fadeInFromBlack(this, 500, this.startCountdown, this);
+        }
+
+        startCountdown() {
+            let count = this.enemy.beatLength === 2 ? 3 : this.enemy.beatLength - 1;
+            let display = this.add.bitmapText(0, 22, Assets.FontName, count.toString(), Assets.FontSize);
+            this.updateCount(count, display);
+            let millis = Utils.bpmToMilliseconds(this.enemy.tempo);
+            for (let i = 0; i <= count; i++) {
+                this.time.events.add(millis * (count - i), () => {
+                    this.updateCount(i, display);
+                    if (i === 3) {
+                        this.playerDisplay.slideIn(true, millis);
+                    } else if (i === 2) {
+                        this.enemyDisplay.slideIn(false, millis);
+                    }
+                }, this);
+            }
+            this.time.events.add(millis * (count + 1), () => {
+                this.startBattle();
+                display.visible = false;
+            }, this);
+            this.time.events.start();
+        }
+
+        updateCount(count: number, display: Phaser.BitmapText) {
+            display.text = count === 0 ? "GO!!!" : count.toString();
+            Utils.centerInScreen(display);
+        }
+
+        startBattle() {
             this.startPattern();
             this.time.events.loop(this.patternDisplayer.tempo * this.enemy.patternLength * 2, this.startPattern, this);
             this.time.events.start();
@@ -94,16 +126,25 @@ module MyGame {
 
     let MOVEMENT_AMOUNT = 6;
     class CharacterDisplay {
+        private battle: Battle;
         private image: Phaser.Image;
         private startX: number;
         private startY: number;
-        
+
         constructor(battle: Battle, x: number, y: number, key: string, frame = 0) {
+            this.battle = battle;
             this.image = battle.add.image(x, y, key, frame);
             this.image.anchor.setTo(0.5, 0.5);
             this.image.position.setTo(x + this.image.width / 2, y + this.image.height / 2);
             this.startX = this.image.position.x;
             this.startY = this.image.position.y;
+            this.image.visible = false;
+        }
+
+        slideIn(fromLeft: boolean, millis: number) {
+            this.image.visible = true;
+            let startPos = fromLeft ? this.image.width * -1 : SCREEN_WIDTH + this.image.width;
+            this.battle.add.tween(this.image.position).from({ x: startPos }, millis / 2, Phaser.Easing.Linear.None, true, millis / 2);
         }
 
         reset() {

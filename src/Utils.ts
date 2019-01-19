@@ -380,6 +380,19 @@ module MyGame {
             }
         }
 
+        static centerInScreen(text: Phaser.BitmapText) {
+            text.x = (SCREEN_WIDTH - text.width) / 2;
+            text.y = (SCREEN_HEIGHT - text.height) / 2;
+        }
+
+        static fadeInFromBlack(state: Phaser.State, time: number, onComplete: () => void, onCompleteContext: object) {
+            let spr = state.add.image(state.camera.x, state.camera.y, Assets.Images.BlackScreen);
+            state.world.bringToTop(spr);
+            spr.alpha = 1;
+            let tween = state.add.tween(spr).to({ alpha: 0 }, time, Phaser.Easing.Linear.None, true);
+            tween.onComplete.add(onComplete, onCompleteContext);
+        }
+
         static getEdgeDistance(sp1: Phaser.Sprite, sp2: Phaser.Sprite): number {
             function haveOverlap(begin1: number, end1: number, begin2: number, end2: number) {
                 return (begin2 <= begin1 && begin1 <= end2) || (begin1 <= begin2 && begin2 <= end1);
