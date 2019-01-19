@@ -167,6 +167,9 @@ module MyGame {
         }
 
         savePosition(x?: number, y?: number): void {
+            if (!Utils.isAThing(this.saveInfo.now)) {
+                this.saveInfo.now = new Location(this.main.island.num, 0, 0);
+            }
             if (x === undefined && y === undefined) {
                 this.saveInfo.now.setXY(pof(Math.floor(this.sprite.x / TILE_WIDTH), Math.floor(this.sprite.y / TILE_WIDTH)));
                 return;

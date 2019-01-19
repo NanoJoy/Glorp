@@ -19,7 +19,7 @@ module MyGame {
         function startOven(main: Main, parent: Entity, result: string) {
             if (result === "Okay, go for it.") {
                 let enemy = new OvenEncounter(main);
-                enemy.startBattle();
+                enemy.startBattle(main);
             }
         }
 

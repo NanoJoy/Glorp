@@ -1,5 +1,5 @@
 module MyGame {
-    abstract class Jammer implements Enemy, Moveable {
+    abstract class Jammer extends Enemy implements Moveable {
         name: string;
         minNumNotes: number;
         maxNumNotes: number;
@@ -25,6 +25,7 @@ module MyGame {
         noteComparer = null as (pattern: Phaser.KeyCode[], pressed: number, pressedCount: number) => boolean;
 
         constructor(main: Main, position: Phaser.Point, movementScript: MovementScript, hitPoints: number, worldSprite: string) {
+            super();
             this.alive = true;
             this.main = main;
             this.position = position;
@@ -47,29 +48,7 @@ module MyGame {
         }
 
         playerOverlap(sp: Phaser.Sprite, pl: Player) {
-            var stateTransfer = StateTransfer.getInstance();
-            stateTransfer.island = this.main.island.num;
-            stateTransfer.enemy = this;
-            stateTransfer.dialogs = WorldManager.getInstance().exportDialogs();
-            stateTransfer.triggers = this.main.triggers.filter(t => !t.active)
-                .map(t => new Location(this.main.island.num, t.x, t.y));
-            this.main.groups.npcs.filter(n => n.hasSaveInfo()).forEach(n => {
-                let info = n.unloadSaveInfo();
-                let matches = stateTransfer.npcs.filter(t => t.old.equals(info.old));
-                if (matches.length > 0) {
-                    let match = matches[0];
-                    match.now = info.now;
-                    match.script = info.script;
-                    match.speed = info.speed;
-                } else {
-                    stateTransfer.npcs.push(info);
-                }
-            });
-            stateTransfer.health = this.main.player.health;
-            this.main.add.tween(this.main.world).to({alpha: 0}, 500, Phaser.Easing.Linear.None, true);
-            this.main.time.events.add(500, () => {
-                this.main.state.start(States.Battle);
-            }, this);
+            this.startBattle(this.main);
         }
 
         update() {

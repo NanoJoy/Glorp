@@ -159,7 +159,7 @@ module MyGame {
         static reverseMovementScript(script: MovementScript): string {
             let result = "";
             for (let i = 0; i < script.directions.length; i++) {
-                switch(script.directions[i]) {
+                switch (script.directions[i]) {
                     case null:
                         result += " ";
                         break;
@@ -292,10 +292,10 @@ module MyGame {
                 seesHorizontal = false;
                 seesVertical = false;
             }
-            
+
             if (this.isAThing(visionRange)) {
                 let transformedRange = pof(TILE_WIDTH, TILE_HEIGHT).multiply(visionRange, visionRange);
-                seesHorizontal = seesHorizontal  && absDistance.y <= transformedRange.y;
+                seesHorizontal = seesHorizontal && absDistance.y <= transformedRange.y;
                 seesVertical = seesVertical && absDistance.x <= transformedRange.x;
             }
 
@@ -334,7 +334,7 @@ module MyGame {
                 currentPosition *= -1;
                 currentVelocity *= -1;
             }
-            
+
             let distance = Math.abs(target - currentPosition);
             if (distance < maxSpeed) {
                 let calculated = multiplier * distance;
@@ -343,7 +343,7 @@ module MyGame {
             }
 
             let calculated = multiplier * (currentVelocity + acceleration);
-            return maxSpeed === undefined ? calculated 
+            return maxSpeed === undefined ? calculated
                 : multiplier === 1 ? Math.min(calculated, maxSpeed) : Math.max(calculated, maxSpeed * -1);
         }
 
@@ -352,7 +352,7 @@ module MyGame {
         }
 
         static moveInDirection(body: Phaser.Physics.Arcade.Body, direction: Direction, speed: number) {
-            switch(direction) {
+            switch (direction) {
                 case Direction.Up:
                     body.velocity.setTo(0, speed * -1);
                     break;
@@ -368,6 +368,18 @@ module MyGame {
             }
         }
 
+        static fadeToBlack(state: Phaser.State, time = 1000, nextState: string) {
+            let spr = state.add.image(state.camera.x, state.camera.y, Assets.Images.BlackScreen);
+            state.world.bringToTop(spr);
+            spr.alpha = 0;
+            let tween = state.add.tween(spr).to({ alpha: 1 }, time, Phaser.Easing.Linear.None, true);
+            if (nextState) {
+                tween.onComplete.add(() => {
+                    state.state.start(nextState);
+                }, this);
+            }
+        }
+
         static getEdgeDistance(sp1: Phaser.Sprite, sp2: Phaser.Sprite): number {
             function haveOverlap(begin1: number, end1: number, begin2: number, end2: number) {
                 return (begin2 <= begin1 && begin1 <= end2) || (begin1 <= begin2 && begin2 <= end1);
@@ -379,7 +391,7 @@ module MyGame {
                 }
                 if (sp1.top < sp2.top) {
                     return sp2.top - sp1.bottom;
-                } 
+                }
                 return sp1.top - sp2.bottom;
             }
 
@@ -396,7 +408,7 @@ module MyGame {
                 }
                 return Math.max(sp1.top - sp2.bottom, sp2.left - sp1.right);
             }
-            
+
             if (sp1.top < sp2.top) {
                 return Math.max(sp2.top - sp1.bottom, sp1.left - sp2.right);
             }

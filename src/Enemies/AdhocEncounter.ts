@@ -1,5 +1,55 @@
 module MyGame {
-    abstract class AdhocEncounter implements Enemy {
+    export abstract class Enemy {
+        name: string;
+        minNumNotes: number;
+        maxNumNotes: number;
+        patternLength: number;
+        beatLength: number;
+        tempo: number;
+        battleSpriteKey: string;
+        worldSpriteKey: string;
+        worldSprite: Phaser.Sprite;
+        hitPoints: number;
+        health: number;
+        alive: boolean;
+        movementManager: MovementManager;
+        transferPosition: Phaser.Point;
+        abstract onStageBuilt(): void;
+        abstract update(): void;
+        abstract afterDeath(main: Main): void;
+
+        
+        abstract calculateDamage(pattern: PatternNote[], notePresses: NotePress[]): number;
+        abstract getAttackPoints(pattern: PatternNote[]): number;
+        abstract die(): void;
+        abstract noteComparer(pattern: Phaser.KeyCode[], pressed: number, pressedCount: number): boolean;
+
+        startBattle(main: Main) {
+            let stateTransfer = StateTransfer.getInstance();
+            stateTransfer.island = main.island.num;
+            stateTransfer.enemy = this;
+            stateTransfer.dialogs = WorldManager.getInstance().exportDialogs();
+            stateTransfer.triggers = main.triggers.filter(t => !t.active)
+                .map(t => new Location(main.island.num, t.x, t.y));
+            main.groups.npcs.filter(n => n.hasSaveInfo()).forEach(n => {
+                let info = n.unloadSaveInfo();
+                let matches = stateTransfer.npcs.filter(t => t.old.equals(info.old));
+                if (matches.length > 0) {
+                    let match = matches[0];
+                    match.now = info.now;
+                    match.script = info.script;
+                    match.speed = info.speed;
+                } else {
+                    stateTransfer.npcs.push(info);
+                }
+            });
+            stateTransfer.health = main.player.health;
+            main.stopPlayer();
+            Utils.fadeToBlack(main, 500, States.Battle);
+        }
+    }
+
+    abstract class AdhocEncounter extends Enemy {
         abstract name: string;
         abstract minNumNotes: number;
         abstract maxNumNotes: number;
@@ -19,12 +69,8 @@ module MyGame {
         afterDeath: (main: Main) => void;
 
         constructor() {
+            super();
         }
-
-        abstract calculateDamage(pattern: PatternNote[], notePresses: NotePress[]): number;
-        abstract getAttackPoints(pattern: PatternNote[]): number;
-        abstract noteComparer(pattern: Phaser.KeyCode[], pressed: number, pressedCount: number): boolean;
-        abstract die(): void;
     }
 
     export class OvenEncounter extends AdhocEncounter {
@@ -71,32 +117,6 @@ module MyGame {
                 return false;
             }
             return noNulls[noNulls.length - 1 - pressedCount] === pressed;
-        }
-
-        startBattle() {
-            let stateTransfer = StateTransfer.getInstance();
-            stateTransfer.island = this.main.island.num;
-            stateTransfer.enemy = this;
-            stateTransfer.dialogs = WorldManager.getInstance().exportDialogs();
-            stateTransfer.triggers = this.main.triggers.filter(t => !t.active)
-                .map(t => new Location(this.main.island.num, t.x, t.y));
-            this.main.groups.npcs.filter(n => n.hasSaveInfo()).forEach(n => {
-                let info = n.unloadSaveInfo();
-                let matches = stateTransfer.npcs.filter(t => t.old.equals(info.old));
-                if (matches.length > 0) {
-                    let match = matches[0];
-                    match.now = info.now;
-                    match.script = info.script;
-                    match.speed = info.speed;
-                } else {
-                    stateTransfer.npcs.push(info);
-                }
-            });
-            stateTransfer.health = this.main.player.health;
-            this.main.add.tween(this.main.world).to({alpha: 0}, 500, Phaser.Easing.Linear.None, true);
-            this.main.time.events.add(500, () => {
-                this.main.state.start(States.Battle);
-            }, this);
         }
 
         die() {
