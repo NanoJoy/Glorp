@@ -78,7 +78,7 @@ module MyGame {
             this.maxNumNotes = 4;
             this.patternLength = 8;
             this.beatLength = 2;
-            this.tempo = 100;
+            this.tempo = 125;
             this.worldSpriteKey = Assets.Sprites.JamBotWorld.key;
             this.hitPoints = 100;
             this.speed = 1000;
@@ -112,7 +112,7 @@ module MyGame {
             super(main, position, movementScript, 100, Assets.Sprites.JamBugWorld.key);
             this.name = "JamBug";
             this.minNumNotes = 4;
-            this.maxNumNotes = 4;
+            this.maxNumNotes = 6;
             this.patternLength = 8;
             this.beatLength = 2;
             this.tempo = 150;

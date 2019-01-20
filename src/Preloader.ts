@@ -22,6 +22,12 @@ module MyGame {
 				this.load.image(a, `${VISUAL_ASSETS_PATH}/${a}.${PNG}`);
 			}
 
+			let audioAssets = Object.getOwnPropertyNames(Assets.Audio);
+			for (let i = 0; i < audioAssets.length; i++) {
+				let a = Assets.Audio[audioAssets[i]];
+				this.load.audio(a.key, `${AUDIO_ASSETS_PATH}/${a.key}.${MP3}`);
+			}
+
 			this.load.bitmapFont("testbitmap", "assets/fonts/okeydokey_0.png", "assets/fonts/okeydokey.xml");
 		}
 

@@ -8,6 +8,8 @@ module MyGame {
         private playerHealthDisplay: HealthDisplay;
         private enemyHealthDisplay: HealthDisplay;
         private enemy: Enemy;
+        private music: Phaser.Sound;
+        private passedMeasures: number;
         playerDisplay: CharacterDisplay;
         enemyDisplay: CharacterDisplay;
 
@@ -36,14 +38,18 @@ module MyGame {
             this.enemyHealthDisplay = new HealthDisplay(this, 10, topY, this.enemy.name, this.enemy.hitPoints);
             this.patternDisplayer = new PatternDisplayer(this, this.enemy);
             this.patternChecker = new PatternMatcher(this, this.enemy);
+            this.passedMeasures = -2;
             Utils.fadeInFromBlack(this, 500, this.startCountdown, this);
         }
 
         startCountdown() {
+            this.music = this.sound.play(Assets.Audio.JamBot.key);
             let count = this.enemy.beatLength === 2 ? 3 : this.enemy.beatLength - 1;
             let display = this.add.bitmapText(0, 22, Assets.FontName, count.toString(), Assets.FontSize);
             this.updateCount(count, display);
             let millis = Utils.bpmToMilliseconds(this.enemy.tempo);
+            let introLength = ((count + 1) * millis) / 1000
+            this.music.addMarker("hi", introLength, this.music.totalDuration - introLength);
             for (let i = 0; i <= count; i++) {
                 this.time.events.add(millis * (count - i), () => {
                     this.updateCount(i, display);
@@ -77,6 +83,11 @@ module MyGame {
         }
 
         private startPattern() {
+            this.passedMeasures = (this.passedMeasures + 2) % Assets.Audio.JamBot.measures;
+            if (this.passedMeasures === 0) {
+                this.music.play("hi");
+            }
+
             if (Utils.isAThing(this.patternChecker.notesPressed)) {
                 this.afterRound();
             }

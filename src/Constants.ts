@@ -99,15 +99,33 @@ module MyGame {
         Wall = "wall";
     }
 
+    class AudioAsset {
+        key: string;
+        measures: number;
+
+        constructor(key: string, measures: number) {
+            this.key = key;
+            this.measures = measures;
+        }
+    }
+
+    class AudioAssets {
+        [key: string]: AudioAsset;
+        JamBot = new AudioAsset("jambot", 4);
+    }
+
     export var Assets = {
         Sprites: new SpriteAssets(),
         Images: new ImageAssets(),
+        Audio: new AudioAssets(),
         FontName: "testbitmap",
         FontSize: 14
     }
 
     export const VISUAL_ASSETS_PATH = "assets/visual";
+    export const AUDIO_ASSETS_PATH = "assets/audio";
     export const PNG = "png";
+    export const MP3 = "mp3";
     export const SAVE_FILE_NAME = "GlorpGlorpGlorp";
     export const ICON = "icon";
     export const SOURCE = "source";
