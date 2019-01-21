@@ -15,6 +15,7 @@ module MyGame {
 
         create() {
             this.inputs = new Inputs(this);
+            this.sound.boot();
             if (DEVELOPER_MODE) {
                 this.inputs.spacebar.onUp.add(this.enemyDeath, this);
             }
@@ -39,11 +40,12 @@ module MyGame {
             this.patternDisplayer = new PatternDisplayer(this, this.enemy);
             this.patternChecker = new PatternMatcher(this, this.enemy);
             this.passedMeasures = -2;
+            this.music = this.sound.add(Assets.Audio.JamBot.key);
             Utils.fadeInFromBlack(this, 500, this.startCountdown, this);
         }
 
         startCountdown() {
-            this.music = this.sound.play(Assets.Audio.JamBot.key);
+            this.music.play(null, 0);
             let count = this.enemy.beatLength === 2 ? 3 : this.enemy.beatLength - 1;
             let display = this.add.bitmapText(0, 22, Assets.FontName, count.toString(), Assets.FontSize);
             this.updateCount(count, display);

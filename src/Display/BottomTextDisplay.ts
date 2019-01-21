@@ -106,7 +106,7 @@ module MyGame {
             }
             let nextPrompt = (next as TextPrompt);
             this.optionsDisplay.setOptions(nextPrompt.options);
-            this.optionsDisplay.hide();
+            this.optionsDisplay.show();
             this.pageNumber = 0;
             this.text.text = next.text[0];
             this.upArrow.visible = false;
@@ -154,10 +154,11 @@ module MyGame {
                 this.optionsDisplay.setOptions(textPrompt.options);
                 this.game.inputs.left.onDown.add(this.scrollLeft, this);
                 this.game.inputs.right.onDown.add(this.scrollRight, this);
+                this.optionsDisplay.show();
             } else {
                 this.optionsDisplay.setOptions(null);
+                this.optionsDisplay.hide();
             }
-            this.optionsDisplay.hide();
         }
 
         private setDownArrowFrame(showDownArrow: boolean): void {
@@ -205,6 +206,9 @@ module MyGame {
             if (Utils.isAThing(options)) {
                 this.currentOption = 0;
                 this.text.text = options[0].text;
+                if (this.showing) {
+                    this.setArrowVisibility();
+                }
             } else {
                 this.currentOption = -1;
             }
