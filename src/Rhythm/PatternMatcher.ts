@@ -125,28 +125,32 @@ module MyGame {
             this.noteDisplays[position].alpha = (this.tempo / 2 - distance) / (this.tempo / 2);
             this.notesPressed.push({note: keyCode, position: position, distance: distance});
             this.pressCount += 1;
-
             
             switch (keyCode) {
                 case this.game.inputs.down.keyCode:
                     this.game.playerDisplay.moveDown();
+                    this.game.inputs.down.onUp.add(this.game.playerDisplay.reset, this.game.playerDisplay);
                     break;
                 case this.game.inputs.up.keyCode:
                     this.game.playerDisplay.moveUp();
+                    this.game.inputs.up.onUp.add(this.game.playerDisplay.reset, this.game.playerDisplay);
                     break;
                 case this.game.inputs.left.keyCode:
                     this.game.playerDisplay.moveLeft();
+                    this.game.inputs.left.onUp.add(this.game.playerDisplay.reset, this.game.playerDisplay);
                     break;
                 case this.game.inputs.right.keyCode:
                     this.game.playerDisplay.moveRight();
+                    this.game.inputs.right.onUp.add(this.game.playerDisplay.reset, this.game.playerDisplay);
                     break;
                 case this.game.inputs.O.keyCode:
                     this.game.playerDisplay.pressO();
+                    this.game.inputs.O.onUp.add(this.game.playerDisplay.reset, this.game.playerDisplay);
                     break;
                 case this.game.inputs.K.keyCode:
                     this.game.playerDisplay.pressK();
+                    this.game.inputs.K.onUp.add(this.game.playerDisplay.reset, this.game.playerDisplay);
             }
-            this.game.time.events.add(this.tempo / 2, this.game.playerDisplay.reset, this.game.playerDisplay);
         }
 
         private getFirstNote() {

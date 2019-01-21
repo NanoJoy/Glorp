@@ -40,7 +40,7 @@ module MyGame {
             this.patternDisplayer = new PatternDisplayer(this, this.enemy);
             this.patternChecker = new PatternMatcher(this, this.enemy);
             this.passedMeasures = -2;
-            this.music = this.sound.add(Assets.Audio.JamBot.key);
+            this.music = this.sound.add(this.enemy.music.key);
             Utils.fadeInFromBlack(this, 500, this.startCountdown, this);
         }
 
@@ -85,7 +85,7 @@ module MyGame {
         }
 
         private startPattern() {
-            this.passedMeasures = (this.passedMeasures + 2) % Assets.Audio.JamBot.measures;
+            this.passedMeasures = (this.passedMeasures + 2) % this.enemy.music.measures;
             if (this.passedMeasures === 0) {
                 this.music.play("hi");
             }

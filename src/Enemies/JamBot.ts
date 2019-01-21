@@ -70,6 +70,7 @@ module MyGame {
 
     export class JamBot extends Jammer {
         battleSpriteKey = Assets.Images.JamBotBattle;
+        music = Assets.Audio.JamBot;
 
         constructor(main: Main, position: Phaser.Point, movementScript: MovementScript) {
             super(main, position, movementScript, 100, Assets.Sprites.JamBotWorld.key);
@@ -107,6 +108,7 @@ module MyGame {
 
     export class JamBug extends Jammer {
         battleSpriteKey = Assets.Images.JamBotBattle;
+        music = Assets.Audio.JamBug;
 
         constructor(main: Main, position: Phaser.Point, movementScript: MovementScript) {
             super(main, position, movementScript, 100, Assets.Sprites.JamBugWorld.key);

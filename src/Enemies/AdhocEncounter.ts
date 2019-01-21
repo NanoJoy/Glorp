@@ -14,6 +14,7 @@ module MyGame {
         alive: boolean;
         movementManager: MovementManager;
         transferPosition: Phaser.Point;
+        music: AudioAsset;
         abstract onStageBuilt(): void;
         abstract update(): void;
         abstract afterDeath(main: Main): void;

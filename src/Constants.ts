@@ -99,7 +99,7 @@ module MyGame {
         Wall = "wall";
     }
 
-    class AudioAsset {
+    export class AudioAsset {
         key: string;
         measures: number;
 
@@ -112,6 +112,7 @@ module MyGame {
     class AudioAssets {
         [key: string]: AudioAsset;
         JamBot = new AudioAsset("jambot", 4);
+        JamBug = new AudioAsset("jambug", 2);
     }
 
     export var Assets = {
