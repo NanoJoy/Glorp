@@ -106,6 +106,7 @@ module MyGame {
                 this.playerHealth = Math.max(playerDamage, 0);
                 this.playerHealthDisplay.updateHitPoints(this.playerHealth);
                 if (this.playerHealth === 0) {
+                    this.music.stop();
                     StateTransfer.getInstance().reason = TransferReason.DEATH;
                     StateTransfer.getInstance().health = -1;
                     this.game.state.start(States.Main);
@@ -121,6 +122,7 @@ module MyGame {
         }
 
         private enemyDeath() {
+            this.music.stop();
             this.game.time.events.stop(true);
             var stateTransfer = StateTransfer.getInstance();
             stateTransfer.enemy = null;
