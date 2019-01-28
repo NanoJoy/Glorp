@@ -23,7 +23,7 @@ module MyGame {
                 "*    --------       --------    *",
                 "*    --------       --------    *",
                 "*                               *",
-                "*                               *",
+                "*                         n     *",
                 "*                               *",
                 "*                               *",
                 "*                               *",
@@ -37,10 +37,12 @@ module MyGame {
                 { side: Direction.Up, start: 14, end: 20, playerStart: pof(27, 12), link: Islands.ALBERT }
             ])
             .setHouseLinks([
-                { pos: pof(5, 2), playerStart: pof(11, 4), link: Islands.BROTHER }
+                { pos: pof(5, 2), playerStart: pof(11, 4), link: Islands.BROTHER },
+                { pos: pof(20, 14), playerStart: pof(11, 4), link: Islands.PROFESSOR }
             ])
             .setNPCs([
-                { position: pof(11, 9), type: Assets.Images.Sign, text: "The Sploofers", script: null }
+                { position: pof(11, 9), type: Assets.Images.Sign, text: "The Sploofers", script: null },
+                { position: pof (26, 21), type: Assets.Images.Sign, text: "Edward Dorfusk II", script: null }
             ])
             .setCustomBarriers([
                 { x: 22, y: 4, type: Assets.Images.FruitStand, playerCollides: true }
