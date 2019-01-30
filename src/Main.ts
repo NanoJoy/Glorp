@@ -126,6 +126,9 @@ module MyGame {
                             this.groups.barriers.push(new Bush(this, pof(x, y)));
                             this.groups.grounds.push(Ground.makeGround(this, island.type, pof(x, y)));
                             break;
+                        case "#":
+                            this.groups.barriers.push(new Path(this, pof(x, y)));
+                            break;
                         case "b":
                             this.groups.barriers.push(new Blackness(this, pof(x, y)));
                             break;

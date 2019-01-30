@@ -13,7 +13,7 @@ module MyGame {
                 "bbbbbbbbb"
             ])
             .setLinks([
-                { pos: pof(4, 7), link: Islands.TOWN, playerStart: Utils.getHouseStart(26, 21) }
+                { pos: pof(4, 7), link: Islands.TOWN, playerStart: Utils.getHouseStart(20, 14) }
             ])
             .setNPCs([
                 { position: pof(3, 2), type: Assets.Sprites.OldMan.key, script: "rrll", textKey: Texts.PROFESSOR }

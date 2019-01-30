@@ -1,12 +1,35 @@
 module MyGame {
     export function getProfessorText(): ITextManager {
 
+        function ctns(str: string, ...vals: string[]) {
+            return vals.some(v => str.indexOf(v) !== -1);
+        }
+
+        function decision(lastViewed: number, main: Main, parent: Entity, lastResult?: string): number {
+            if (lastViewed === -1) {
+                return 0;
+            }
+
+            if (lastViewed === 0) {
+                if (ctns(lastResult, "reconsider!")) {
+                    return 2;
+                } else if (ctns(lastResult, "hand.")) {
+                    return 1;
+                }
+                return 3;
+            }
+            if (lastViewed === 1 || lastViewed === 2) {
+                return ctns(lastResult, "now.", "happens!", "hand.", "reconsider!") ? 2 : 3; 
+            }
+            return 3
+        }
+
         function getWhatHappened() {
             return new TextPrompt("This morning when I came in, three important parts were missing from my machine. I checked my security footage but all I was a blur in one frame, then the machine was broken in the next. "
                 + "I can't leave my house because I have to monitor another one of my experiments for today or else it may explode. I need you to ask around and see if anyone has seen weird technology lying around. Also if you find anything " +
                 "can you bring it back here?", [
                     new TextOption("Sure thing."),
-                    new TextOption("Nah.", getNoResponse())
+                    new TextOption("Nah.", new TextDump("Please reconsider!"))
                 ]);
         }
 
@@ -46,8 +69,16 @@ module MyGame {
             ])),
             // 2
             new TextEncounter(new TextPrompt("Hello again. Have you changed your mind? Will you help me?", [
-                
-            ]))
-        ])
+                new TextOption("Please re-explain.", getYesResponse()),
+                new TextOption("I have objections.", new TextPrompt("I understand that you are worried about how the Beasts will respond. How about this? I promise I won't use the machine this year, " + 
+                "and I will wait until more studies are completed. But I still really need those parts, because having my machine broken like this puts my lab into a very unstable state, and I'm afraid what might happen. So will you help me?", [
+                    new TextOption("Yes", getWhatHappened()),
+                    new TextOption("No", new TextDump("Sigh... Okay, I guess we'll see what happens!"))
+                ])),
+                new TextOption("Yes.", new TextDump("Nice, Thanks.", getWhatHappened()))
+            ])),
+            // 3
+            new TextEncounter(new TextDump("Oh my, oh my... Please find the three missing parts Rosie!"))
+        ], decision)
     }
 }

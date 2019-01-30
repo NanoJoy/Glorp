@@ -8,7 +8,7 @@ module MyGame {
     export const START_ISLAND = 4;
     export const CLEAR_SAVE = false;
     export const PLAYER_START_X = 14;
-    export const PLAYER_START_Y = 1;
+    export const PLAYER_START_Y = 20;
 
     export var States = {
         Boot: "Boot",
@@ -92,6 +92,7 @@ module MyGame {
         OptionsBackground = "options_background";
         Oven = "oven";
         OvenBattle = "oven_battle";
+        Path = "path";
         ProjectileDisplay = "projectile_display";
         Rug = "rug";
         Sign = "sign";
