@@ -8,8 +8,6 @@ module MyGame {
         type: string;
         collidesWith: string[];
         barriers: Phaser.Sprite[];
-        uniqueUpdate: () => void;
-        uniqueOnStageBuilt: () => void;
         
         constructor(main: Main, position: Phaser.Point, spriteKey: string, collidesWith?: string[]) {
             this.main = main;
@@ -20,6 +18,9 @@ module MyGame {
             this.sprite.play(this.MOVE);
             this.collidesWith = collidesWith;
         }
+
+        abstract uniqueUpdate(): void;
+        abstract uniqueOnStageBuilt(): void;
 
         onStageBuilt() {
             if (this.collidesWith !== undefined) {
@@ -51,39 +52,55 @@ module MyGame {
             this.sprite.body.velocity.setTo(0, 0);
             this.sprite.anchor.setTo(0.5, 0.5);
             this.sprite.position.add(TILE_WIDTH / 2, TILE_HEIGHT / 2);
-
-            this.uniqueUpdate = () => {
-                this.main.groups.grounds.filter(g => g.hasBody).forEach(g => {
-                    this.main.physics.arcade.collide(this.sprite, g.sprite);
-                });
-                this.main.groups.projectiles.filter(p => p instanceof Crumbs).forEach(c => {
-                    let sees = Utils.sees(this.sprite.position, c.sprite.position, Infinity, this.lines);
-                    if (sees.item1 || sees.item2) {
-                        Utils.moveToTarget(this.sprite.body, c.sprite.body.position, Blish.MAX_SPEED, Blish.CUTOFF, sees);
-                    }
-                    let crumbs = c as Crumbs;
-                    this.main.physics.arcade.overlap(this.sprite, c.sprite, (blishSprite: Phaser.Sprite, crumbSprite: Phaser.Sprite) => {
-                        if (crumbs.landed) {
-                            crumbs.dissolve();
-                        }
-                    })
-                });
-                if (this.sprite.body.velocity.y < 0 && this.sprite.rotation !== 0) {
-                    this.sprite.rotation = 0;
-                } else if (this.sprite.body.velocity.y > 0 && this.sprite.rotation !== Math.PI) {
-                    this.sprite.rotation = Math.PI;
-                } else if (this.sprite.body.velocity.x > 0 && this.sprite.rotation !== Math.PI * 0.5) {
-                    this.sprite.rotation = Math.PI * 0.5;
-                } else if (this.sprite.body.velocity.x < 0 && this.sprite.rotation !== Math.PI * 1.5) {
-                    this.sprite.rotation = Math.PI * 1.5;
-                }
-            };
-
-            this.uniqueOnStageBuilt = () => {
-                let leftSides = this.barriers.map(b => new Phaser.Line(b.left, b.top, b.left, b.bottom));
-                let topSides = this.barriers.map(b => new Phaser.Line(b.left, b.top, b.right, b.top));
-                this.lines = leftSides.concat(topSides);
-            };
         }
+
+        uniqueUpdate() {
+            this.main.groups.grounds.filter(g => g.hasBody).forEach(g => {
+                this.main.physics.arcade.collide(this.sprite, g.sprite);
+            });
+            this.main.groups.projectiles.filter(p => p instanceof Crumbs).forEach(c => {
+                let sees = Utils.sees(this.sprite.position, c.sprite.position, Infinity, this.lines);
+                if (sees.item1 || sees.item2) {
+                    Utils.moveToTarget(this.sprite.body, c.sprite.body.position, Blish.MAX_SPEED, Blish.CUTOFF, sees);
+                }
+                let crumbs = c as Crumbs;
+                this.main.physics.arcade.overlap(this.sprite, c.sprite, (blishSprite: Phaser.Sprite, crumbSprite: Phaser.Sprite) => {
+                    if (crumbs.landed) {
+                        crumbs.dissolve();
+                    }
+                })
+            });
+            if (this.sprite.body.velocity.y < 0 && this.sprite.rotation !== 0) {
+                this.sprite.rotation = 0;
+            } else if (this.sprite.body.velocity.y > 0 && this.sprite.rotation !== Math.PI) {
+                this.sprite.rotation = Math.PI;
+            } else if (this.sprite.body.velocity.x > 0 && this.sprite.rotation !== Math.PI * 0.5) {
+                this.sprite.rotation = Math.PI * 0.5;
+            } else if (this.sprite.body.velocity.x < 0 && this.sprite.rotation !== Math.PI * 1.5) {
+                this.sprite.rotation = Math.PI * 1.5;
+            }
+        }
+
+        uniqueOnStageBuilt() {
+            let leftSides = this.barriers.map(b => new Phaser.Line(b.left, b.top, b.left, b.bottom));
+            let topSides = this.barriers.map(b => new Phaser.Line(b.left, b.top, b.right, b.top));
+            this.lines = leftSides.concat(topSides);
+        };
+    }
+
+    export class Blumpus extends Creature {
+
+        constructor(main: Main, position: Phaser.Point) {
+            super(main, position, Assets.Sprites.Blumpus.key);
+            this.type = Assets.Sprites.Blumpus.key;
+            this.sprite.body.moves = false;
+            this.sprite.body.immovable = true;
+        }
+
+        uniqueUpdate() {
+            this.main.physics.arcade.collide(this.sprite, this.main.player);
+        }
+
+        uniqueOnStageBuilt() {}
     }
 }

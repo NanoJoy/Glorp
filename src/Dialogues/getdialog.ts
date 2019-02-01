@@ -5,7 +5,8 @@ module MyGame {
         ALBERT_FIRST,
         MEEP_GROWL,
         STANLEY,
-        PROFESSOR
+        PROFESSOR,
+        BLUMPUS
     }
 
     export function getSignText(info: string): ITextManager {
@@ -26,6 +27,11 @@ module MyGame {
                 return getStanleyText();
             case Texts.PROFESSOR:
                 return getProfessorText();
+            case Texts.BLUMPUS:
+                return new TextManager([
+                    new TextEncounter(new TextDump("Oh gosh, my pet Blumpus has fallen asleep in the worst spot. If only I had something to make a high pitched sound to wake him up. Though if he wakes up, he might be in the mood to dance.")),
+                    new TextEncounter(new TextDump("Yup, whoever wakes him up better be a pretty good dancer."))
+                ]);
             default:
                 throw new Error(`Cannot find dialog for key '${key}'.`);
         }

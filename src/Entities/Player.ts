@@ -20,7 +20,8 @@ module MyGame {
             state.add.existing(this);
             this.state = state;
             this.health = Utils.isAThing(health) ? health : Player.STARTING_HEALTH;
-            this.inputs.K.onUp.add(this.throwProjectile, this);
+            this.inputs.K.onUp.add(this.useItem, this);
+            this.inputs.shift.onUp.add(this.dropItem, this);
 
             this.itemCount = 0;
         }
@@ -90,9 +91,18 @@ module MyGame {
             Utils.snapToPixels(this);
         }
 
-        throwProjectile() {
+        useItem() {
             if (this.itemCount > 0) {
                 this.itemCount -= useItem(this.itemType, this.state, this.x, this.y, this.direction);
+                this.state.projectileDisplay.updateCount(this.itemCount);
+                StateTransfer.getInstance().heldItems.amount = this.itemCount;
+            }
+        }
+
+        dropItem() {
+            if (this.itemCount > 0) {
+                this.itemCount = 0;
+                dropItem(this.itemType, this.state, this.x, this.y, this.direction);
                 this.state.projectileDisplay.updateCount(this.itemCount);
                 StateTransfer.getInstance().heldItems.amount = this.itemCount;
             }

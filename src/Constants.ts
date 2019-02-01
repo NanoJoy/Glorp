@@ -5,10 +5,10 @@ module MyGame {
     export const TILE_HEIGHT = 32;
 
     export const DEVELOPER_MODE = true;
-    export const START_ISLAND = 4;
+    export const START_ISLAND = 5;
     export const CLEAR_SAVE = false;
-    export const PLAYER_START_X = 14;
-    export const PLAYER_START_Y = 20;
+    export const PLAYER_START_X = 2;
+    export const PLAYER_START_Y = 5;
 
     export var States = {
         Boot: "Boot",
@@ -54,6 +54,7 @@ module MyGame {
         Arrow = new SpriteAsset("arrow", 12, 12);
         Blackness = new SpriteAsset("blackness");
         Blish = new SpriteAsset("blish");
+        Blumpus = new SpriteAsset("blumpus", 56, 32);
         Bush = new SpriteAsset("bush");
         Crumbs = new SpriteAsset("crumbs");
         DoorWay = new SpriteAsset("doorway", 36, 8);

@@ -343,6 +343,8 @@ module MyGame {
             switch (mapCreature.type) {
                 case Assets.Sprites.Blish.key:
                     return new Blish(main, pof(x, y));
+                case Assets.Sprites.Blumpus.key:
+                    return new Blumpus(main, pof(x, y));
                 default:
                     throw new Error(`${mapCreature.type} is not a valid Creature type.`);
             }

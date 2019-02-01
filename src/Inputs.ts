@@ -7,6 +7,7 @@ module MyGame {
         K: Phaser.Key;
         O: Phaser.Key;
         spacebar: Phaser.Key;
+        shift: Phaser.Key;
 
         constructor(game: Phaser.State) {
             this.left = game.input.keyboard.addKey(Phaser.KeyCode.A);
@@ -16,10 +17,11 @@ module MyGame {
             this.O = game.input.keyboard.addKey(Phaser.KeyCode.O);
             this.K = game.input.keyboard.addKey(Phaser.KeyCode.K);
             this.spacebar = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
+            this.shift = game.input.keyboard.addKey(Phaser.KeyCode.SHIFT);
         }
 
         asArray(): Phaser.Key[] {
-            return [this.left, this.right, this.up, this.down, this.K, this.O, this.spacebar];
+            return [this.left, this.right, this.up, this.down, this.K, this.O, this.spacebar, this.shift];
         }
     }
 }

@@ -42,7 +42,7 @@ module MyGame {
             ])
             .setNPCs([
                 { position: pof(11, 9), type: Assets.Images.Sign, text: "The Sploofers", script: null },
-                { position: pof(16, 11), type: Assets.Images.Sign, text: "If you pick something up, you can use it by pressing K.", script: null },
+                { position: pof(16, 11), type: Assets.Images.Sign, text: "If you pick something up, you can use it by pressing K or drop it by pressing SHIFT.", script: null },
                 { position: pof(26, 21), type: Assets.Images.Sign, text: "Edward Dorfusk II", script: null }
             ])
             .setCustomBarriers([
