@@ -104,7 +104,7 @@ module MyGame {
         }
 
         static splitTextIntoPages(text: string): string[] {
-            let lettersInRow = 17;
+            let lettersInRow = 18;
             let rowsInPage = 3;
             let words = text.split(" ");
             let pages = [] as string[];

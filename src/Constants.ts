@@ -50,6 +50,7 @@ module MyGame {
 
     class SpriteAssets {
         [key: string]: SpriteAsset;
+        Airhorn = new SpriteAsset("airhorn");
         Albert = new SpriteAsset("albert");
         Arrow = new SpriteAsset("arrow", 12, 12);
         Blackness = new SpriteAsset("blackness");
@@ -76,6 +77,7 @@ module MyGame {
 
     class ImageAssets {
         [key: string]: string;
+        AirhornIcon = "airhorn_icon";
         BlackScreen = "black_screen";
         BottomTextBackground = "bottom_text_background";
         ButtonPrompt = "button_prompt";

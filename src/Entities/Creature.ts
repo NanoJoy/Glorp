@@ -8,14 +8,13 @@ module MyGame {
         type: string;
         collidesWith: string[];
         barriers: Phaser.Sprite[];
+        animSpeed = 10;
         
         constructor(main: Main, position: Phaser.Point, spriteKey: string, collidesWith?: string[]) {
             this.main = main;
             this.position = position.clone();
             this.sprite = main.add.sprite(position.x * TILE_WIDTH, position.y * TILE_HEIGHT, spriteKey);
-            this.sprite.animations.add(this.MOVE, null, 10, true);
             this.main.physics.arcade.enableBody(this.sprite);
-            this.sprite.play(this.MOVE);
             this.collidesWith = collidesWith;
         }
 
@@ -23,6 +22,8 @@ module MyGame {
         abstract uniqueOnStageBuilt(): void;
 
         onStageBuilt() {
+            this.sprite.animations.add(this.MOVE, null, this.animSpeed, true);
+            this.sprite.play(this.MOVE);
             if (this.collidesWith !== undefined) {
                 this.barriers = this.main.groups.barriers
                     .filter(b => this.collidesWith.indexOf(b.sprite.key as string) !== -1)
@@ -89,6 +90,7 @@ module MyGame {
     }
 
     export class Blumpus extends Creature {
+        animSpeed = 1;
 
         constructor(main: Main, position: Phaser.Point) {
             super(main, position, Assets.Sprites.Blumpus.key);

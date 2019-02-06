@@ -13,7 +13,7 @@ module MyGame {
             this.worldKey = worldKey;
         }
 
-        use(): number {
+        drop(): number {
             let player = this.main.player;
             let rounded = Utils.roundToClosestTile(player.position);
             let x = player.direction === Direction.Left ? rounded.x - TILE_DISTANCE : player.direction === Direction.Right ? rounded.x + TILE_DISTANCE : rounded.x;
@@ -24,13 +24,36 @@ module MyGame {
             }
             return 0;
         }
+
+        use(): number {
+            return this.drop();
+        }
     }
 
     export class Grodule extends Droppable {
         iconKey = Assets.Images.GroduleIcon;
 
-        constructor(main: Main, startPosition: Phaser.Point) {
-            super(main, startPosition, Assets.Sprites.Grodule.key);
+        constructor(main: Main, x: number, y: number) {
+            super(main, pof(x, y), Assets.Sprites.Grodule.key);
+        }
+    }
+
+    export class Airhorn extends Droppable {
+        iconKey = Assets.Images.AirhornIcon;
+
+        private image: Phaser.Image;
+
+        constructor(main: Main, x: number, y: number) {
+            super(main, pof(x, y), Assets.Sprites.Airhorn.key);
+            this.image = main.add.image(0, 0, this.worldKey);
+            this.image.animations.add("blow", Utils.animationArray(1, 2), 10, true);
+            this.image.visible = false;
+        }
+
+        use(): number {
+            this.image.visible = true;
+            this.image.position.setTo(this.main.player.x + TILE_WIDTH, this.main.player.y);
+            return 0;
         }
     }
 }

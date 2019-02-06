@@ -32,6 +32,7 @@ module MyGame {
             switch (type) {
                 case Assets.Images.CrumbsSource:
                     return new CrumbSource(main, x, y);
+                case Assets.Sprites.Airhorn.key:
                 case Assets.Sprites.Grodule.key:
                     return new SingleSource(main, x, y, type);
             }
