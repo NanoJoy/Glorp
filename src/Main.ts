@@ -238,10 +238,9 @@ module MyGame {
             this.player = new Player(this, playerPosition, stateTransfer.health === -1 ? 100 : stateTransfer.health);
             this.projectileDisplay = new HoldableDisplay(this);
             if (stateTransfer.heldItems) {
-                this.player.itemCount = stateTransfer.heldItems.amount;
-                this.player.itemType = stateTransfer.heldItems.type;
-                this.projectileDisplay.updateIcon(this.player.itemType + "_" + ICON);
-                this.projectileDisplay.updateCount(this.player.itemCount);
+                this.player.itemManager.changeItem(stateTransfer.heldItems.type, stateTransfer.heldItems.amount);
+                this.projectileDisplay.updateIcon(stateTransfer.heldItems.type + "_" + ICON);
+                this.projectileDisplay.updateCount(stateTransfer.heldItems.amount);
             }
             this.setDepths();
         }

@@ -53,6 +53,8 @@ module MyGame {
         use(): number {
             this.image.visible = true;
             this.image.position.setTo(this.main.player.x + TILE_WIDTH, this.main.player.y);
+            this.image.play("blow");
+            this.main.time.events.add(2000, () => { this.image.visible = false; });
             return 0;
         }
     }

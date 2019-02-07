@@ -7,9 +7,7 @@ module MyGame {
         inputs: Inputs;
         state: Main;
         hasCollided: boolean;
-
-        itemType: string;
-        itemCount: number;
+        itemManager: IItemManager;
 
         constructor(state: Main, position: Phaser.Point, health?: number) {
             super(state.game, position.x * TILE_WIDTH, position.y * TILE_HEIGHT, Assets.Sprites.Player.key, 0);
@@ -20,10 +18,9 @@ module MyGame {
             state.add.existing(this);
             this.state = state;
             this.health = Utils.isAThing(health) ? health : Player.STARTING_HEALTH;
-            this.inputs.K.onUp.add(this.useItem, this);
-            this.inputs.shift.onUp.add(this.dropItem, this);
-
-            this.itemCount = 0;
+            this.inputs.K.onDown.add(this.useItem, this);
+            this.inputs.shift.onDown.add(this.dropItem, this);
+            this.itemManager = new ItemManager();
         }
 
         onStageBuilt() {
@@ -87,25 +84,20 @@ module MyGame {
             if (this.animations.currentAnim.name !== animName) {
                 this.play(animName);
             }
-            
+
             Utils.snapToPixels(this);
         }
 
         useItem() {
-            if (this.itemCount > 0) {
-                this.itemCount -= useItem(this.itemType, this.state, this.x, this.y, this.direction);
-                this.state.projectileDisplay.updateCount(this.itemCount);
-                StateTransfer.getInstance().heldItems.amount = this.itemCount;
-            }
+            this.itemManager.useItem(this.state, this.x, this.y, this.direction);
+            this.state.projectileDisplay.updateCount(this.itemManager.getCount());
+            StateTransfer.getInstance().heldItems.amount = this.itemManager.getCount();
         }
 
         dropItem() {
-            if (this.itemCount > 0) {
-                this.itemCount = 0;
-                dropItem(this.itemType, this.state, this.x, this.y, this.direction);
-                this.state.projectileDisplay.updateCount(this.itemCount);
-                StateTransfer.getInstance().heldItems.amount = this.itemCount;
-            }
+            this.itemManager.dropItems(this.state, this.x, this.y, this.direction);
+            this.state.projectileDisplay.updateCount(this.itemManager.getCount());
+            StateTransfer.getInstance().heldItems.amount = this.itemManager.getCount();
         }
     }
 }

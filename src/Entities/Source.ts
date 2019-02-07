@@ -14,8 +14,7 @@ module MyGame {
 
             this.onCollision = (playerSprite: Phaser.Sprite, barrierSprite: Phaser.Sprite) => {
                 let stateTransfer = StateTransfer.getInstance();
-                this.main.player.itemType = this.type;
-                this.main.player.itemCount = this.amount;
+                this.main.player.itemManager.changeItem(this.type, this.amount);
                 this.main.projectileDisplay.updateCount(this.amount);
                 this.main.projectileDisplay.updateIcon(this.type + "_" + ICON);
                 stateTransfer.heldItems = { type: this.type, amount: this.amount };
@@ -33,8 +32,9 @@ module MyGame {
                 case Assets.Images.CrumbsSource:
                     return new CrumbSource(main, x, y);
                 case Assets.Sprites.Airhorn.key:
+                    return new SingleSource(main, x, y, type, false);
                 case Assets.Sprites.Grodule.key:
-                    return new SingleSource(main, x, y, type);
+                    return new SingleSource(main, x, y, type, true);
             }
             throw new Error(`Source type ${type} is invalid.`);
         }
@@ -47,10 +47,12 @@ module MyGame {
     }
 
     export class SingleSource extends Source {
-        constructor(main: Main, x: number, y: number, key: string) {
+        constructor(main: Main, x: number, y: number, key: string, animate = true) {
             super(key, main, x, y, false, 1, true);
-            this.sprite.animations.add("anim", null, 5, true);
-            this.sprite.play("anim");
+            if (animate) {
+                this.sprite.animations.add("anim", null, 5, true);
+                this.sprite.play("anim");
+            }
         }
     }
 }
