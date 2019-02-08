@@ -13,7 +13,7 @@ module MyGame {
                 "****       oo            ",
                 "*         oooo           ",
                 "*         oooo           ",
-                "w          oo            ",
+                "w    s     oo            ",
                 "w          oo            ",
                 "w       oooooooooo       ",
                 "w      ooooooooooo       ",
@@ -40,7 +40,8 @@ module MyGame {
             .setSources([
                 { type: Assets.Sprites.Airhorn.key, x: 1, y: 7 },
                 { type: Assets.Images.CrumbsSource, x: 12, y: 2 },
-                { type: Assets.Images.CrumbsSource, x: 11, y: 20 }
+                { type: Assets.Images.CrumbsSource, x: 11, y: 20 },
+                { type: Assets.Sprites.Grodule.key, x: 5, y: 11 }
             ])
             .setNPCs([
                 { position: pof(5, 5), type: Assets.Images.Sign, text: "Path to Tuttle Village", script: null },

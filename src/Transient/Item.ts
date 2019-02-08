@@ -30,19 +30,20 @@ module MyGame {
             if (this.count === 0) {
                 return null;
             }
-            if (!this.currentItem) {
-                switch (this.currentType) {
-                    case Assets.Sprites.Airhorn.key:
+            switch (this.currentType) {
+                case Assets.Sprites.Airhorn.key:
+                    if (!this.currentItem) {
                         this.currentItem = new Airhorn(main, x, y);
-                        break;
-                    case Crumbs.type:
-                        this.currentItem = new Crumbs(main, x, y, direction);
-                        break;
-                    case Assets.Sprites.Grodule.key:
-                        this.currentItem = new Grodule(main, x, y);
-                    default:
-                        throw new Error(`Item type ${this.currentType} is invalid.`);
-                }
+                    }
+                    break;
+                case Crumbs.type:
+                    this.currentItem = new Crumbs(main, x, y, direction);
+                    break;
+                case Assets.Sprites.Grodule.key:
+                    this.currentItem = new Grodule(main, x, y);
+                    break;
+                default:
+                    throw new Error(`Item type ${this.currentType} is invalid.`);
             }
             return this.currentItem;
         }
@@ -51,7 +52,7 @@ module MyGame {
             if (this.count === 0) {
                 return;
             }
-            let amount = this.getItem(main, x, y, direction).use();
+            let amount = this.getItem(main, x, y, direction).use(direction);
             this.count = Math.max(this.count - amount, 0);
             return amount;
         }
@@ -77,6 +78,6 @@ module MyGame {
         startPosition: Phaser.Point;
         iconKey: string;
         drop: () => number;
-        use: () => number;
+        use: (direction: Direction) => number;
     }
 }

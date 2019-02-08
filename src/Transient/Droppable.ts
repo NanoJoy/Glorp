@@ -25,7 +25,7 @@ module MyGame {
             return 0;
         }
 
-        use(): number {
+        use(direction: Direction): number {
             return this.drop();
         }
     }
@@ -50,9 +50,12 @@ module MyGame {
             this.image.visible = false;
         }
 
-        use(): number {
+        use(direction: Direction): number {
             this.image.visible = true;
-            this.image.position.setTo(this.main.player.x + TILE_WIDTH, this.main.player.y);
+            let xAdd = direction === Direction.Right ? TILE_WIDTH : direction === Direction.Left ? -TILE_WIDTH : 0;
+            let yAdd = direction === Direction.Down ? TILE_HEIGHT : direction === Direction.Up ? -TILE_HEIGHT : 0;
+            this.image.position.setTo(this.main.player.x + xAdd, this.main.player.y + yAdd);
+            this.image.scale.x = direction === Direction.Left ? -1 : 1;
             this.image.play("blow");
             this.main.time.events.add(2000, () => { this.image.visible = false; });
             return 0;
