@@ -5,12 +5,14 @@ module MyGame {
         main: Main;
         startPosition: Phaser.Point;
         worldKey: string;
+        inUse: boolean;
         abstract iconKey: string;
 
         constructor(main: Main, startPosition: Phaser.Point, worldKey: string) {
             this.main = main;
             this.startPosition = startPosition.clone();
             this.worldKey = worldKey;
+            this.inUse = false;
         }
 
         drop(): number {
@@ -28,7 +30,10 @@ module MyGame {
         use(direction: Direction): number {
             return this.drop();
         }
+
+        update(): void { }
     }
+
 
     export class Grodule extends Droppable {
         iconKey = Assets.Images.GroduleIcon;
@@ -41,6 +46,9 @@ module MyGame {
     export class Airhorn extends Droppable {
         iconKey = Assets.Images.AirhornIcon;
 
+        private direction: Direction;
+        private xAdd: number;
+        private yAdd: number;
         private image: Phaser.Image;
 
         constructor(main: Main, x: number, y: number) {
@@ -51,14 +59,33 @@ module MyGame {
         }
 
         use(direction: Direction): number {
+            if (this.image.visible) {
+                return;
+            }
             this.image.visible = true;
-            let xAdd = direction === Direction.Right ? TILE_WIDTH : direction === Direction.Left ? -TILE_WIDTH : 0;
-            let yAdd = direction === Direction.Down ? TILE_HEIGHT : direction === Direction.Up ? -TILE_HEIGHT : 0;
-            this.image.position.setTo(this.main.player.x + xAdd, this.main.player.y + yAdd);
-            this.image.scale.x = direction === Direction.Left ? -1 : 1;
+            this.setPosition(this.main.player, direction);
+            this.main.sound.play(Assets.Audio.Airhorn.key);
             this.image.play("blow");
-            this.main.time.events.add(2000, () => { this.image.visible = false; });
+            this.inUse = true;
+            this.main.time.events.add(1500, () => { 
+                this.image.visible = false;
+                this.inUse = true;
+            });
             return 0;
+        }
+
+        update(): void {
+            this.setPosition(this.main.player, this.main.player.direction);
+        }
+
+        private setPosition(player: Player, direction: Direction) {
+            if (direction !== this.direction) {
+                this.xAdd = direction === Direction.Right ? TILE_WIDTH : 0;
+                this.yAdd = direction === Direction.Down ? TILE_HEIGHT : direction === Direction.Up ? -TILE_HEIGHT : 0;
+                this.image.scale.x = direction === Direction.Left ? -1 : 1;
+            }
+            this.direction = direction;
+            this.image.position.setTo(player.x + this.xAdd, player.y + this.yAdd);
         }
     }
 }

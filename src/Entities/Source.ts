@@ -23,6 +23,7 @@ module MyGame {
                     this.sprite.destroy();
                     this.main.groups.barriers = this.main.groups.barriers.filter(b => b !== this);
                     stateTransfer.addedItems = stateTransfer.addedItems.filter(i => !i.location.equals(new Location(this.main.island.num, this.position.x, this.position.y)));
+                    WorldManager.getInstance().changeLayout(this.main.island.num, this.position, " ");
                 }
             }
         }

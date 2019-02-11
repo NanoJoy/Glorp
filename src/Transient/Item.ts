@@ -4,6 +4,7 @@ module MyGame {
         getItem(main: Main, x: number, y: number, direction: Direction): Holdable;
         useItem(main: Main, x: number, y: number, direction: Direction): number;
         dropItems(main: Main, x: number, y: number, direction: Direction): void;
+        update(): void;
         getCount(): number;
     }
 
@@ -62,14 +63,11 @@ module MyGame {
             this.count = 0;
             this.currentItem = null;
         }
-    }
 
-    export function dropItem(type: string, main: Main, x: number, y: number, direction: Direction): void {
-        switch (type) {
-            case Assets.Sprites.Grodule.key:
-                new Grodule(main, x, y).drop();
-            case Assets.Sprites.Airhorn.key:
-                new Airhorn(main, x, y).drop();
+        update(): void {
+            if (this.currentItem && this.currentItem.inUse) {
+                this.currentItem.update();
+            }
         }
     }
 
@@ -77,7 +75,9 @@ module MyGame {
         main: Main;
         startPosition: Phaser.Point;
         iconKey: string;
+        inUse: boolean;
         drop: () => number;
         use: (direction: Direction) => number;
+        update: () => void;
     }
 }

@@ -7,6 +7,7 @@ module MyGame {
         range: number;
         direction: Direction;
         speed: number;
+        inUse: boolean;
         animations: {
             start: string,
             moving: string,
@@ -31,6 +32,7 @@ module MyGame {
             this.state = ProjectileState.WAITING;
 
             this.main.groups.projectiles.push(this);
+            this.inUse = false;
         }
 
         update() {

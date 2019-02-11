@@ -86,6 +86,7 @@ module MyGame {
             }
 
             Utils.snapToPixels(this);
+            this.itemManager.update();
         }
 
         useItem() {

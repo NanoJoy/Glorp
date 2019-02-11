@@ -107,7 +107,7 @@ module MyGame {
         key: string;
         measures: number;
 
-        constructor(key: string, measures: number) {
+        constructor(key: string, measures?: number) {
             this.key = key;
             this.measures = measures;
         }
@@ -115,6 +115,7 @@ module MyGame {
 
     class AudioAssets {
         [key: string]: AudioAsset;
+        Airhorn = new AudioAsset("airhorn");
         JamBot = new AudioAsset("jambot", 4);
         JamBug = new AudioAsset("jambug", 8);
     }
