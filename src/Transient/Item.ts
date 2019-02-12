@@ -6,6 +6,7 @@ module MyGame {
         dropItems(main: Main, x: number, y: number, direction: Direction): void;
         update(): void;
         getCount(): number;
+        peekItem(): Holdable;
     }
 
     export class ItemManager implements IItemManager {
@@ -68,6 +69,10 @@ module MyGame {
             if (this.currentItem && this.currentItem.inUse) {
                 this.currentItem.update();
             }
+        }
+
+        peekItem(): Holdable {
+            return this.currentItem;
         }
     }
 

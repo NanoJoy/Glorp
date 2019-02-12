@@ -89,18 +89,33 @@ module MyGame {
         };
     }
 
+    enum BlumpusState {
+        SLEEPING, AWAKE
+    }
+
     export class Blumpus extends Creature {
         animSpeed = 1;
+        private state: BlumpusState;
 
         constructor(main: Main, position: Phaser.Point) {
             super(main, position, Assets.Sprites.Blumpus.key);
             this.type = Assets.Sprites.Blumpus.key;
             this.sprite.body.moves = false;
             this.sprite.body.immovable = true;
+            this.state = BlumpusState.SLEEPING;
+            this.sprite.animations.add("wakeup", Utils.animationArray(1, 7), 7, false);
         }
 
         uniqueUpdate() {
             this.main.physics.arcade.collide(this.sprite, this.main.player);
+            if (this.state === BlumpusState.SLEEPING) {
+                let playerItem = this.main.player.itemManager.peekItem();
+                if (playerItem instanceof Airhorn && playerItem.inUse) {
+                    this.state = BlumpusState.AWAKE;
+                    this.sprite.play("wakeup");
+                    this.sprite.animations.currentAnim.onComplete.add(() => {this.sprite.position.x += 25;});
+                }
+            }
         }
 
         uniqueOnStageBuilt() {}
