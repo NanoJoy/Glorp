@@ -9,7 +9,8 @@ module MyGame {
         collidesWith: string[];
         barriers: Phaser.Sprite[];
         animSpeed = 10;
-        
+        idleFrames: number[];
+
         constructor(main: Main, position: Phaser.Point, spriteKey: string, collidesWith?: string[]) {
             this.main = main;
             this.position = position.clone();
@@ -22,7 +23,7 @@ module MyGame {
         abstract uniqueOnStageBuilt(): void;
 
         onStageBuilt() {
-            this.sprite.animations.add(this.MOVE, null, this.animSpeed, true);
+            this.sprite.animations.add(this.MOVE, this.idleFrames, this.animSpeed, true);
             this.sprite.play(this.MOVE);
             if (this.collidesWith !== undefined) {
                 this.barriers = this.main.groups.barriers
@@ -43,7 +44,7 @@ module MyGame {
     export class Blish extends Creature {
         private static MAX_SPEED = 100;
         private static CUTOFF = 2;
-        
+
         lines: Phaser.Line[];
 
         constructor(main: Main, position: Phaser.Point) {
@@ -96,6 +97,8 @@ module MyGame {
     export class Blumpus extends Creature {
         animSpeed = 1;
         private state: BlumpusState;
+        private wakeTime: number;
+        idleFrames = [0, 1];
 
         constructor(main: Main, position: Phaser.Point) {
             super(main, position, Assets.Sprites.Blumpus.key);
@@ -104,6 +107,10 @@ module MyGame {
             this.sprite.body.immovable = true;
             this.state = BlumpusState.SLEEPING;
             this.sprite.animations.add("wakeup", Utils.animationArray(1, 7), 7, false);
+            this.sprite.animations.add("gotosleep", Utils.animationArray(7, 1), 7, false);
+            this.sprite.animations.add("idle", Utils.animationArray(6, 7), 3, true);
+            this.sprite.animations.add("sleep", this.idleFrames, 1, true);
+            this.wakeTime = Infinity;
         }
 
         uniqueUpdate() {
@@ -113,11 +120,23 @@ module MyGame {
                 if (playerItem instanceof Airhorn && playerItem.inUse) {
                     this.state = BlumpusState.AWAKE;
                     this.sprite.play("wakeup");
-                    this.sprite.animations.currentAnim.onComplete.add(() => {this.sprite.position.x += 25;});
+                    this.sprite.animations.currentAnim.onComplete.add(() => { 
+                        this.sprite.play("idle");
+                        this.wakeTime = new Date().getTime();
+                    }, this);
+                }
+            } else if (this.state === BlumpusState.AWAKE) {
+                if (new Date().getTime() > this.wakeTime + 5000) {
+                    this.state = BlumpusState.SLEEPING;
+                    this.sprite.play("gotosleep");
+                    this.sprite.animations.currentAnim.onComplete.add(() => {
+                        this.sprite.play("sleep");
+                    }, this);
+                    this.wakeTime = Infinity;
                 }
             }
         }
 
-        uniqueOnStageBuilt() {}
+        uniqueOnStageBuilt() { }
     }
 }

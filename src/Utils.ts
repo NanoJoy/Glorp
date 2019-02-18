@@ -53,12 +53,15 @@ module MyGame {
         }
 
         static animationArray(start: number, finish: number): number[] {
-            if (finish < start) {
-                throw new Error("finish must be greater than or equal to start.");
-            }
             let result = [];
-            for (let i = start; i <= finish; i++) {
-                result.push(i);
+            if (finish < start) {
+                for (let i = start; i >= finish; i--) {
+                    result.push(i);
+                }
+            } else {
+                for (let i = start; i <= finish; i++) {
+                    result.push(i);
+                }
             }
             return result;
         }

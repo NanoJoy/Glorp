@@ -69,7 +69,7 @@ module MyGame {
             this.inUse = true;
             this.main.time.events.add(1500, () => { 
                 this.image.visible = false;
-                this.inUse = true;
+                this.inUse = false;
             });
             return 0;
         }
