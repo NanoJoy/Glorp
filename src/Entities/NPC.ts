@@ -227,6 +227,12 @@ module MyGame {
         }
     }
 
+    export class ChuFeng extends NPC {
+        constructor(main: Main, position: Phaser.Point, textManager: ITextManager, movementScript: MovementScript) {
+            super(main, position, textManager, movementScript, 750, 6, Assets.Sprites.ChuFeng.key);
+        }
+    }
+
     export class TheMeep extends NPC {
         constructor(main: Main, position: Phaser.Point, textManager: ITextManager) {
             super(main, position, textManager, null, 0, 0, Assets.Sprites.TheMeep.key, true);

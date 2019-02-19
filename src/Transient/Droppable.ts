@@ -19,8 +19,10 @@ module MyGame {
             let player = this.main.player;
             let rounded = Utils.roundToClosestTile(player.position);
             let x = player.direction === Direction.Left ? rounded.x - TILE_DISTANCE : player.direction === Direction.Right ? rounded.x + TILE_DISTANCE : rounded.x;
+            let betweenX = player.direction === Direction.Left ? rounded.x - 1 : player.direction === Direction.Right ? rounded.x + 1 : rounded.x;
             let y = player.direction === Direction.Up ? rounded.y - TILE_DISTANCE : player.direction === Direction.Down ? rounded.y + TILE_DISTANCE : rounded.y;
-            if (Utils.tileisClear(x, y, this.main)) {
+            let betweenY = player.direction === Direction.Up ? rounded.y - 1 : player.direction === Direction.Down ? rounded.y + 1 : rounded.y;
+            if (Utils.tileisClear(x, y, this.main) && Utils.tileisClear(betweenX, betweenY, this.main)) {
                 this.main.addItem(x, y, this.worldKey);
                 return 1;
             }

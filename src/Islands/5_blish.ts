@@ -9,11 +9,11 @@ module MyGame {
                 "****   oooooooooo        ",
                 "   **n  oooooooo         ",
                 "   c       oo            ",
-                " sn**      oo            ",
+                "  n**      oo            ",
                 "****       oo            ",
                 "*         oooo           ",
                 "*         oooo           ",
-                "w    s     oo            ",
+                "w          oo            ",
                 "w          oo            ",
                 "w       oooooooooo       ",
                 "w      ooooooooooo       ",
@@ -38,10 +38,8 @@ module MyGame {
                 { type: Assets.Sprites.Blumpus.key, x: 3, y: 6 }
             ])
             .setSources([
-                { type: Assets.Sprites.Airhorn.key, x: 1, y: 7 },
                 { type: Assets.Images.CrumbsSource, x: 12, y: 2 },
-                { type: Assets.Images.CrumbsSource, x: 11, y: 20 },
-                { type: Assets.Sprites.Grodule.key, x: 5, y: 11 }
+                { type: Assets.Images.CrumbsSource, x: 11, y: 20 }
             ])
             .setNPCs([
                 { position: pof(5, 5), type: Assets.Images.Sign, text: "Path to Tuttle Village", script: null },

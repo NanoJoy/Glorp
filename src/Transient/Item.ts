@@ -60,9 +60,10 @@ module MyGame {
         }
 
         dropItems(main: Main, x: number, y: number, direction: Direction): void {
-            this.getItem(main, x, y, direction).drop();
-            this.count = 0;
-            this.currentItem = null;
+            if (this.getItem(main, x, y, direction).drop() > 0) {
+                this.count = 0;
+                this.currentItem = null;
+            }
         }
 
         update(): void {

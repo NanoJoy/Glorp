@@ -310,6 +310,9 @@ module MyGame {
                 case Assets.Sprites.Albert.key:
                     npc = new Albert(main, pcop(mapNPC.position), textManager, Utils.makeMovementScript(mapNPC.position, mapNPC.script));
                     break;
+                case Assets.Sprites.ChuFeng.key:
+                    npc = new ChuFeng(main, pcop(mapNPC.position), textManager, Utils.makeMovementScript(mapNPC.position, mapNPC.script));
+                    break;
                 case Assets.Sprites.OldMan.key:
                     npc = new OldMan(main, pcop(mapNPC.position), textManager, Utils.makeMovementScript(mapNPC.position, mapNPC.script));
                     break;

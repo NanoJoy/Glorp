@@ -96,9 +96,10 @@ module MyGame {
 
     export class Blumpus extends Creature {
         animSpeed = 1;
+        idleFrames = [0, 1];
         private state: BlumpusState;
         private wakeTime: number;
-        idleFrames = [0, 1];
+        private hasWoken: boolean;
 
         constructor(main: Main, position: Phaser.Point) {
             super(main, position, Assets.Sprites.Blumpus.key);
@@ -118,6 +119,7 @@ module MyGame {
             if (this.state === BlumpusState.SLEEPING) {
                 let playerItem = this.main.player.itemManager.peekItem();
                 if (playerItem instanceof Airhorn && playerItem.inUse) {
+                    this.hasWoken = true;
                     this.state = BlumpusState.AWAKE;
                     this.sprite.play("wakeup");
                     this.sprite.animations.currentAnim.onComplete.add(() => { 
@@ -138,5 +140,9 @@ module MyGame {
         }
 
         uniqueOnStageBuilt() { }
+
+        getHasWoken(): boolean {
+            return this.hasWoken;
+        }
     }
 }
