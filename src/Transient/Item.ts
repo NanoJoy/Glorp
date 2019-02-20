@@ -60,7 +60,8 @@ module MyGame {
         }
 
         dropItems(main: Main, x: number, y: number, direction: Direction): void {
-            if (this.getItem(main, x, y, direction).drop() > 0) {
+            let item = this.getItem(main, x, y, direction);
+            if (item && item.drop() > 0) {
                 this.count = 0;
                 this.currentItem = null;
             }

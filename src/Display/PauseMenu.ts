@@ -30,8 +30,9 @@ module MyGame {
             this.main = main;
             this.background = this.main.add.image(main.camera.x, main.camera.y, Assets.Images.MenuBackground);
             this.background.fixedToCamera = true;
-            this.pointer = this.main.add.image(LEFT_PADDING, 0, Assets.Sprites.Arrow.key);
-            this.pointer.frame = 2;
+            this.pointer = this.main.add.image(main.camera.x + LEFT_PADDING, main.camera.y, Assets.Sprites.Arrow.key);
+            this.pointer.frame = Frames.Arrow.RIGHT;
+            this.pointer.fixedToCamera = true;
 
             this.options = [
                 {
@@ -58,7 +59,7 @@ module MyGame {
                         this.texts[this.cursor].x -= LEFT_INDENT;
                         this.cursor -= 1;
                         this.texts[this.cursor].x += LEFT_INDENT;
-                        this.pointer.y = OPTION_SPACING * this.cursor + TOP_PADDING + POINTER_PADDING;
+                        this.pointer.y = OPTION_SPACING * this.cursor + TOP_PADDING + POINTER_PADDING + this.main.camera.y;
                     }
                     break;
                 case Phaser.KeyCode.S:
@@ -66,7 +67,7 @@ module MyGame {
                         this.texts[this.cursor].x -= LEFT_INDENT;
                         this.cursor += 1;
                         this.texts[this.cursor].x += LEFT_INDENT;
-                        this.pointer.y = OPTION_SPACING * this.cursor + TOP_PADDING + POINTER_PADDING;
+                        this.pointer.y = OPTION_SPACING * this.cursor + TOP_PADDING + POINTER_PADDING + this.main.camera.y;
                     }
             }
         }
@@ -105,7 +106,7 @@ module MyGame {
             }
 
             this.texts[0].x += LEFT_INDENT;
-            this.pointer.y = TOP_PADDING;
+            this.pointer.y = TOP_PADDING + this.main.camera.y;
             this.cursor = 0;
         }
 

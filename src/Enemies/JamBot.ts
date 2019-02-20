@@ -73,7 +73,7 @@ module MyGame {
         music = Assets.Audio.JamBot;
 
         constructor(main: Main, position: Phaser.Point, movementScript: MovementScript) {
-            super(main, position, movementScript, 100, Assets.Sprites.JamBotWorld.key);
+            super(main, position, movementScript, 200, Assets.Sprites.JamBotWorld.key);
             this.name = "JamBot";
             this.minNumNotes = 4;
             this.maxNumNotes = 4;
@@ -81,7 +81,7 @@ module MyGame {
             this.beatLength = 2;
             this.tempo = 125;
             this.worldSpriteKey = Assets.Sprites.JamBotWorld.key;
-            this.hitPoints = 100;
+            this.hitPoints = 200;
             this.speed = 1000;
 
             this.calculateDamage = (pattern: PatternNote[], notePresses: NotePress[]) => {

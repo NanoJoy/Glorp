@@ -274,7 +274,7 @@ module MyGame {
                 return false;
             }
             let tile = layout[y].charAt(x);
-            if (tile === " ") {
+            if (tile === " " || tile === "#") {
                 return true;
             }
             if (tile === "x") {
