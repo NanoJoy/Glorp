@@ -85,6 +85,7 @@ module MyGame {
         tempo = 140;
         hitPoints = 300;
         health = 300;
+        music = Assets.Audio.Oven;
 
         constructor(main: Main) {
             super();

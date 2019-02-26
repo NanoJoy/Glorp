@@ -52,6 +52,7 @@ module MyGame {
             let worldManager = WorldManager.getInstance();
             let stateTransfer = StateTransfer.getInstance();
             let saveState = gameSaver.loadGame();
+            let fromLink = false;
             // Load from save.
             if ((stateTransfer.reason === TransferReason.DEATH || stateTransfer.reason === TransferReason.NONE) && saveState) {
                 stateTransfer.loadFromSave(saveState);
@@ -59,6 +60,7 @@ module MyGame {
                 worldManager.importDialogs(this, saveState.dialogs);
                 // Coming from link.
             } else if (stateTransfer.reason === TransferReason.LINK && stateTransfer.island !== -1) {
+                fromLink = true;
                 var tween = this.add.tween(this.world).to({ alpha: 1 }, 500, Phaser.Easing.Linear.None, true);
                 tween.onComplete.add(function () {
                     this.unstopPlayer();
@@ -74,7 +76,7 @@ module MyGame {
                 this.island = worldManager.getIsland(START_ISLAND);
             }
 
-            this.setupLevel(this.island, saveState);
+            this.setupLevel(this.island, saveState, fromLink);
             this.groups.enemies.forEach(e => { e.onStageBuilt(); });
             this.groups.npcs.forEach(n => { n.onStageBuilt(); });
             this.groups.creatures.forEach(c => { c.onStageBuilt(); });
@@ -109,7 +111,7 @@ module MyGame {
             }
         }
 
-        private setupLevel(island: Island, savedGame?: SaveState) {
+        private setupLevel(island: Island, savedGame: SaveState, fromLink: boolean) {
             this.stage.backgroundColor = island.type === IslandType.INSIDE ? Colors.BLACK : Colors.GRAY;
             this.game.world.setBounds(0, 0, island.layout[0].length * TILE_WIDTH,
                 island.layout.length * TILE_HEIGHT);
@@ -241,6 +243,9 @@ module MyGame {
                 this.player.itemManager.changeItem(stateTransfer.heldItems.type, stateTransfer.heldItems.amount);
                 this.projectileDisplay.updateIcon(stateTransfer.heldItems.type + "_" + ICON);
                 this.projectileDisplay.updateCount(stateTransfer.heldItems.amount);
+            }
+            if (fromLink) {
+                this.stopPlayer();
             }
             this.setDepths();
         }
