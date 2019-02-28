@@ -117,9 +117,9 @@ module MyGame {
     class AudioAssets {
         [key: string]: AudioAsset;
         Airhorn = new AudioAsset("airhorn");
+        Blumpus = new AudioAsset("blumpus", 8);
         JamBot = new AudioAsset("jambot", 8);
         JamBug = new AudioAsset("jambug", 8);
-        Oven = new AudioAsset("oven", 8);
     }
 
     export var Assets = {
