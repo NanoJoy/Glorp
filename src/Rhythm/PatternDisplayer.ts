@@ -28,7 +28,7 @@ module MyGame {
             }
             this.isDisplaying = true;
             this.noteDisplays = [];
-            var numNotes = Math.floor(Math.random() + (this.maxNumNotes - this.minNumNotes)) + this.minNumNotes;
+            var numNotes = Math.floor(Math.random() * (this.maxNumNotes - this.minNumNotes)) + this.minNumNotes;
             this.currentPattern = this.generator.generate(numNotes);
             for (let i = 0; i < this.generator.length; i++) {
                 this.game.time.events.add(this.tempo * i, this.showNote, this, i);

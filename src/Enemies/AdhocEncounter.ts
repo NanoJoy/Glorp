@@ -124,4 +124,82 @@ module MyGame {
             this.alive = false;
         }
     }
+
+    export class BlumpusEncounter extends AdhocEncounter {
+        main: Main;
+        name = "Oven";
+        music = Assets.Audio.Blumpus;
+        battleSpriteKey = Assets.Images.OvenBattle;
+        minNumNotes = 5;
+        maxNumNotes = 7;
+        patternLength = 8;
+        beatLength = 4;
+        tempo = 150;
+        hitPoints = 300;
+        health = 300;
+
+        constructor(main: Main) {
+            super();
+            this.main = main;
+            this.transferPosition = pof(2, 6);
+        }
+
+        calculateDamage(pattern: PatternNote[], notePresses: NotePress[]): number {
+            function getRightKey(key: Phaser.KeyCode): Phaser.KeyCode {
+                switch (key) {
+                    case Phaser.KeyCode.W:
+                        return Phaser.KeyCode.S;
+                    case Phaser.KeyCode.S:
+                        return Phaser.KeyCode.W;
+                    case Phaser.KeyCode.A:
+                        return Phaser.KeyCode.D;
+                    case Phaser.KeyCode.D:
+                        return Phaser.KeyCode.A;
+                }
+                return key;
+            }
+            if (pattern.length !== notePresses.length) {
+                return 0;
+            }
+            let sortedPattern = pattern.sort(function (a, b) { return a.position - b.position });
+            let sortedPresses = notePresses.sort(function (a, b) { return a.position - b.position });
+            let damage = 0;
+            for (let i = 0; i < sortedPattern.length; i++) {
+                if (getRightKey(sortedPattern[i].key) !== sortedPresses[i].note) {
+                    return 0;
+                }
+                damage += Math.round((500 - sortedPresses[i].distance) / 33);
+            }
+            return damage;
+        }
+
+        getAttackPoints(pattern: PatternNote[]) {
+            return Math.floor((pattern.length * 25) / 2);
+        }
+
+        noteComparer(pattern: Phaser.KeyCode[], pressed: number, pressedCount: number): boolean {
+            function getRightKey(key: Phaser.KeyCode): Phaser.KeyCode {
+                switch (key) {
+                    case Phaser.KeyCode.W:
+                        return Phaser.KeyCode.S;
+                    case Phaser.KeyCode.S:
+                        return Phaser.KeyCode.W;
+                    case Phaser.KeyCode.A:
+                        return Phaser.KeyCode.D;
+                    case Phaser.KeyCode.D:
+                        return Phaser.KeyCode.A;
+                }
+                return key;
+            }
+            var noNulls = pattern.filter(p => Utils.isAThing(p));
+            if (pressedCount > noNulls.length) {
+                return false;
+            }
+            return getRightKey(noNulls[pressedCount]) === pressed;
+        }
+
+        die() {
+            this.alive = false;
+        }
+    }
 }

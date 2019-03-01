@@ -115,7 +115,12 @@ module MyGame {
         }
 
         uniqueUpdate() {
-            this.main.physics.arcade.collide(this.sprite, this.main.player);
+            this.main.physics.arcade.collide(this.sprite, this.main.player, (sprite: Phaser.Sprite, player: Phaser.Sprite) => {
+                if (this.state === BlumpusState.AWAKE) {
+                    let enemy = new BlumpusEncounter(this.main);
+                    enemy.startBattle(this.main);
+                }
+            });
             if (this.state === BlumpusState.SLEEPING) {
                 let playerItem = this.main.player.itemManager.peekItem();
                 if (playerItem instanceof Airhorn && playerItem.inUse) {
