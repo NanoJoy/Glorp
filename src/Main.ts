@@ -43,6 +43,8 @@ module MyGame {
         projectileDisplay: HoldableDisplay;
 
         create() {
+            this.time.reset();
+            this.time.events.removeAll();
             this.playerStopped = false;
             let gameSaver = GameSaver.getInstance();
             if (DEVELOPER_MODE && CLEAR_SAVE) {

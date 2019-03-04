@@ -52,7 +52,7 @@ module MyGame {
 
         useItem(main: Main, x: number, y: number, direction: Direction): number {
             if (this.count === 0) {
-                return;
+                return 0;
             }
             let amount = this.getItem(main, x, y, direction).use(direction);
             this.count = Math.max(this.count - amount, 0);

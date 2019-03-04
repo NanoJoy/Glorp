@@ -91,7 +91,7 @@ module MyGame {
     }
 
     enum BlumpusState {
-        SLEEPING, AWAKE
+        SLEEPING, AWAKE, MOVING
     }
 
     export class Blumpus extends Creature {
@@ -100,11 +100,12 @@ module MyGame {
         private state: BlumpusState;
         private wakeTime: number;
         private hasWoken: boolean;
+        private defeated: boolean;
+        private startPosition: Phaser.Point;
 
         constructor(main: Main, position: Phaser.Point) {
             super(main, position, Assets.Sprites.Blumpus.key);
             this.type = Assets.Sprites.Blumpus.key;
-            this.sprite.body.moves = false;
             this.sprite.body.immovable = true;
             this.state = BlumpusState.SLEEPING;
             this.sprite.animations.add("wakeup", Utils.animationArray(1, 7), 7, false);
@@ -112,11 +113,13 @@ module MyGame {
             this.sprite.animations.add("idle", Utils.animationArray(6, 7), 3, true);
             this.sprite.animations.add("sleep", this.idleFrames, 1, true);
             this.wakeTime = Infinity;
+            this.defeated = false;
+            this.startPosition = this.sprite.position.clone();
         }
 
         uniqueUpdate() {
             this.main.physics.arcade.collide(this.sprite, this.main.player, (sprite: Phaser.Sprite, player: Phaser.Sprite) => {
-                if (this.state === BlumpusState.AWAKE) {
+                if (this.state === BlumpusState.AWAKE && !this.defeated) {
                     let enemy = new BlumpusEncounter(this.main);
                     enemy.startBattle(this.main);
                 }
@@ -141,6 +144,13 @@ module MyGame {
                     }, this);
                     this.wakeTime = Infinity;
                 }
+            } else if (this.state === BlumpusState.MOVING) {
+                if (this.sprite.body.position.x >= this.startPosition.x + (TILE_WIDTH * 3)) {
+                    this.sprite.x = this.startPosition.x + (TILE_WIDTH * 3);
+                    this.sprite.body.velocity.x = 0;
+                    this.state = BlumpusState.SLEEPING;
+                    this.sprite.animations.play("gotosleep");
+                }
             }
         }
 
@@ -148,6 +158,12 @@ module MyGame {
 
         getHasWoken(): boolean {
             return this.hasWoken;
+        }
+
+        moveRight(): void {
+            this.defeated = true;
+            this.state = BlumpusState.MOVING;
+            this.sprite.body.velocity.x = 20;
         }
     }
 }

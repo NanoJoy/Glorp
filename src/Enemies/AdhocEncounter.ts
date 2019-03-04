@@ -142,6 +142,10 @@ module MyGame {
             super();
             this.main = main;
             this.transferPosition = pof(2, 6);
+            this.afterDeath = function(main: Main) {
+                let blumpus = main.groups.creatures.filter(c => c instanceof Blumpus)[0] as Blumpus;
+                blumpus.moveRight();
+            }
         }
 
         calculateDamage(pattern: PatternNote[], notePresses: NotePress[]): number {

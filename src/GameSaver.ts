@@ -9,7 +9,8 @@ module MyGame {
         npcs: NPCInfo[];
         health: number;
         items: { location: Location, type: string }[];
-        heldItems: { type: string, amount: number }
+        heldItems: { type: string, amount: number };
+        
     }
 
     export interface IGameSaver {

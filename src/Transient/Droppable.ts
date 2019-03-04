@@ -62,7 +62,7 @@ module MyGame {
 
         use(direction: Direction): number {
             if (this.image.visible) {
-                return;
+                return 0;
             }
             this.image.visible = true;
             this.setPosition(this.main.player, direction);
@@ -73,6 +73,7 @@ module MyGame {
                 this.image.visible = false;
                 this.inUse = false;
             });
+            this.main.time.events.start();
             return 0;
         }
 
