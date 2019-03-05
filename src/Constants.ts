@@ -14,7 +14,8 @@ module MyGame {
         Boot: "Boot",
         Preloader: "Preloader",
         Main: "Main",
-        Battle: "Battle"
+        Battle: "Battle",
+        MainMenu: "MainMenu"
     };
 
     export var Colors = {
@@ -92,6 +93,7 @@ module MyGame {
         HealthBarContainer = "healthbar_container";
         JamBotBattle = "jambot_battle";
         Lillypad = "lillypad";
+        LoadingBar = "loading_bar";
         MenuBackground = "menu_background";
         OptionsBackground = "options_background";
         Oven = "oven";

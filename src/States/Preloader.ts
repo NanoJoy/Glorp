@@ -7,7 +7,7 @@ module MyGame {
 		ready: boolean = false;
 
 		preload() {
-			this.preloadBar = this.add.sprite(300, 400, "preloadBar");
+			this.preloadBar = this.add.sprite(300, 400, Assets.Images.LoadingBar);
 			this.load.setPreloadSprite(this.preloadBar);
 
 			let spriteAssets = Object.getOwnPropertyNames(Assets.Sprites)
@@ -32,7 +32,7 @@ module MyGame {
 		}
 
 		create() {
-			this.game.state.start(States.Main);
+			this.game.state.start(States.MainMenu);
 		}
 	}
 }

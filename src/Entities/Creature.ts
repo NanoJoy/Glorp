@@ -94,6 +94,8 @@ module MyGame {
         SLEEPING, AWAKE, MOVING
     }
 
+    const BLUMPUS_FLAG = "BLUMPUS_FLAG";
+
     export class Blumpus extends Creature {
         animSpeed = 1;
         idleFrames = [0, 1];
@@ -107,14 +109,21 @@ module MyGame {
             super(main, position, Assets.Sprites.Blumpus.key);
             this.type = Assets.Sprites.Blumpus.key;
             this.sprite.body.immovable = true;
+            this.sprite.anchor.setTo(0.5, 0);
+            this.sprite.x += this.sprite.width / 2;
             this.state = BlumpusState.SLEEPING;
             this.sprite.animations.add("wakeup", Utils.animationArray(1, 7), 7, false);
-            this.sprite.animations.add("gotosleep", Utils.animationArray(7, 1), 7, false);
+            this.sprite.animations.add("gotosleep", Utils.animationArray(5, 1), 7, false);
             this.sprite.animations.add("idle", Utils.animationArray(6, 7), 3, true);
             this.sprite.animations.add("sleep", this.idleFrames, 1, true);
+            this.sprite.animations.add("walk", Utils.animationArray(8, 12), 5, true);
             this.wakeTime = Infinity;
             this.defeated = false;
             this.startPosition = this.sprite.position.clone();
+            if (StateTransfer.getInstance().flags[BLUMPUS_FLAG]) {
+                this.moveRight();
+                this.sprite.x = this.startPosition.x + (TILE_WIDTH * 3);
+            }
         }
 
         uniqueUpdate() {
@@ -145,7 +154,7 @@ module MyGame {
                     this.wakeTime = Infinity;
                 }
             } else if (this.state === BlumpusState.MOVING) {
-                if (this.sprite.body.position.x >= this.startPosition.x + (TILE_WIDTH * 3)) {
+                if (this.sprite.x >= this.startPosition.x + (TILE_WIDTH * 3)) {
                     this.sprite.x = this.startPosition.x + (TILE_WIDTH * 3);
                     this.sprite.body.velocity.x = 0;
                     this.state = BlumpusState.SLEEPING;
@@ -164,6 +173,9 @@ module MyGame {
             this.defeated = true;
             this.state = BlumpusState.MOVING;
             this.sprite.body.velocity.x = 20;
+            this.sprite.scale.x = -1;
+            this.sprite.play("walk");
+            StateTransfer.getInstance().flags[BLUMPUS_FLAG] = true;
         }
     }
 }

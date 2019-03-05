@@ -10,7 +10,7 @@ module MyGame {
         health: number;
         items: { location: Location, type: string }[];
         heldItems: { type: string, amount: number };
-        
+        flags: Flags;
     }
 
     export interface IGameSaver {
@@ -79,7 +79,8 @@ module MyGame {
                 npcs: npcs,
                 health: stateTransfer.health,
                 items: stateTransfer.addedItems,
-                heldItems: stateTransfer.heldItems
+                heldItems: stateTransfer.heldItems,
+                flags: stateTransfer.flags
             } as SaveState
             localStorage.setItem(SAVE_FILE_NAME, JSON.stringify(saveState));
             this.cached = saveState;

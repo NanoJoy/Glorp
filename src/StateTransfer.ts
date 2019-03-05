@@ -1,4 +1,7 @@
 module MyGame {
+    export class Flags {
+        [key: string]: boolean;
+    }
     export class StateTransfer {
         enemy: Enemy;
         island: number;
@@ -11,6 +14,7 @@ module MyGame {
         funcs: (main: Main) => void;
         addedItems: { location: Location, type: string }[];
         heldItems: { type: string, amount: number }
+        flags: Flags;
         private static instance: StateTransfer;
 
         private constructor() {
@@ -25,6 +29,7 @@ module MyGame {
             this.funcs = null;
             this.addedItems = [];
             this.heldItems = null;
+            this.flags = new Flags();
         }
 
         static getInstance() {
@@ -37,6 +42,7 @@ module MyGame {
             this.health = saveState.health;
             this.addedItems = saveState.items;
             this.heldItems = saveState.heldItems;
+            this.flags = saveState.flags;
         }
     }
 }
