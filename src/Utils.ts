@@ -388,6 +388,15 @@ module MyGame {
             text.y = (SCREEN_HEIGHT - text.height) / 2;
         }
 
+        static centerImage(image: Phaser.Image, horizontal = true, vertical = true) {
+            if (horizontal) {
+                image.x = (SCREEN_WIDTH - image.width) / 2;
+            }
+            if (vertical) {
+                image.y = (SCREEN_HEIGHT - image.height) / 2;
+            }
+        }
+
         static fadeInFromBlack(state: Phaser.State, time: number, onComplete: () => void, onCompleteContext: object) {
             let spr = state.add.image(state.camera.x, state.camera.y, Assets.Images.BlackScreen);
             state.world.bringToTop(spr);

@@ -7,7 +7,7 @@ module MyGame {
 		ready: boolean = false;
 
 		preload() {
-			this.preloadBar = this.add.sprite(300, 400, Assets.Images.LoadingBar);
+			this.preloadBar = this.add.sprite(300, 400, "loadingBar");
 			this.load.setPreloadSprite(this.preloadBar);
 
 			let spriteAssets = Object.getOwnPropertyNames(Assets.Sprites)

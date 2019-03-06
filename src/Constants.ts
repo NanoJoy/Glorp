@@ -6,7 +6,7 @@ module MyGame {
 
     export const DEVELOPER_MODE = true;
     export const START_ISLAND = 5;
-    export const CLEAR_SAVE = true;
+    export const CLEAR_SAVE = false;
     export const PLAYER_START_X = 1;
     export const PLAYER_START_Y = 6;
 
@@ -103,6 +103,7 @@ module MyGame {
         Rug = "rug";
         Sign = "sign";
         TileFloor = "tile_floor";
+        Title = "title";
         Wall = "wall";
     }
 

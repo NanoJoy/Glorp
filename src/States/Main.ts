@@ -56,18 +56,18 @@ module MyGame {
             let saveState = gameSaver.loadGame();
             let fromLink = false;
             // Load from save.
-            if ((stateTransfer.reason === TransferReason.DEATH || stateTransfer.reason === TransferReason.NONE) && saveState) {
+            if (stateTransfer.flags["USE_SAVE"] && (stateTransfer.reason === TransferReason.DEATH || stateTransfer.reason === TransferReason.NONE) && saveState) {
                 stateTransfer.loadFromSave(saveState);
                 worldManager.importLayouts(saveState.layouts);
                 worldManager.importDialogs(this, saveState.dialogs);
                 // Coming from link.
             } else if (stateTransfer.reason === TransferReason.LINK && stateTransfer.island !== -1) {
                 fromLink = true;
-                var tween = this.add.tween(this.world).to({ alpha: 1 }, 500, Phaser.Easing.Linear.None, true);
-                tween.onComplete.add(function () {
-                    this.unstopPlayer();
-                }, this);
             }
+            var tween = this.add.tween(this.world).to({ alpha: 1 }, 500, Phaser.Easing.Linear.None, true);
+            tween.onComplete.add(function () {
+                this.unstopPlayer();
+            }, this);
             this.inputs = new Inputs(this);
 
             this.groups = new MainGroups();

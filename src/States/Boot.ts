@@ -30,7 +30,7 @@ module MyGame {
 		}
 
 		preload() {
-			this.load.image(Assets.Images.LoadingBar, `assets/visual/${Assets.Images.LoadingBar}.png`);
+			this.load.image("loadingBar", `assets/visual/${Assets.Images.LoadingBar}.png`);
 		}
 
 		create() {
