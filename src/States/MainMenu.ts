@@ -25,7 +25,7 @@ module MyGame {
             this.inputs.shift.onUp.add(this.startGame, this, 0, true);
         }
 
-        startGame(useSave: boolean) {
+        startGame(key: Phaser.Key, useSave: boolean) {
             StateTransfer.getInstance().flags["USE_SAVE"] = useSave;
             let tween = this.add.tween(this.world).to({ alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
             tween.onComplete.add(function () {
