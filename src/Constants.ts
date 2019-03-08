@@ -4,7 +4,7 @@ module MyGame {
     export const TILE_WIDTH = 28;
     export const TILE_HEIGHT = 32;
 
-    export const DEVELOPER_MODE = true;
+    export const DEVELOPER_MODE = false;
     export const START_ISLAND = 5;
     export const CLEAR_SAVE = false;
     export const PLAYER_START_X = 1;

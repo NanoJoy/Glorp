@@ -72,7 +72,7 @@ module MyGame {
 
             this.groups = new MainGroups();
 
-            this.island = worldManager.getIsland(stateTransfer.island === -1 ? 0 : stateTransfer.island);
+            this.island = worldManager.getIsland(stateTransfer.island === -1 ? Islands.TUTORIAL : stateTransfer.island);
 
             if (DEVELOPER_MODE && stateTransfer.island === -1) {
                 this.island = worldManager.getIsland(START_ISLAND);

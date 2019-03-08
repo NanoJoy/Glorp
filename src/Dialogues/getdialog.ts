@@ -6,7 +6,9 @@ module MyGame {
         MEEP_GROWL,
         STANLEY,
         PROFESSOR,
-        BLUMPUS
+        BLUMPUS,
+        TUTORIAL_SIGN,
+        TUTORIAL_PERSON
     }
 
     export function getSignText(info: string): ITextManager {
@@ -29,6 +31,37 @@ module MyGame {
                 return getProfessorText();
             case Texts.BLUMPUS:
                 return getBlumpusText();
+            case Texts.TUTORIAL_SIGN:
+                return new TextManager([
+                    new TextEncounter(new TextDump("Use S to scroll down, and W to scroll up. When you reach the bottom, press O (the letter) to continue. " +
+                        " use WASD to move and O (the letter) to interact with things."), true),
+                    new TextEncounter(new TextDump("Use S to scroll down, and W to scroll up. When you reach the bottom, press O (the letter) to continue. " +
+                        " use WASD to move and O (the letter) to interact with things."))
+                ]);
+            case Texts.TUTORIAL_PERSON:
+                let finish = (main: Main, parent: Entity, result?: string) => {
+                    if (result === "Here you go.") {
+                        main.groups.barriers.filter(b => b instanceof Gate)[0].sprite.destroy();
+                        WorldManager.getInstance().changeLayout(9, pof(4, 4), " ");
+                    }
+                };
+                let decision = (lastViewed: number, main: Main, parent: Entity, lastResult?: string) => {
+                    if (lastViewed === -1) {
+                        return 0;
+                    }
+                    if (lastViewed === 0) {
+                        return lastResult === "No." ? 0 : 1;
+                    }
+                    return 1;
+                };
+                return new TextManager([
+                    new TextEncounter(new TextDump("When you are given a prompt, use A and D to view your options, and O to select an option after you have read the entire prompt.",
+                        new TextPrompt("Would you like me to open this gate?", [
+                            new TextOption("No.", new TextDump("Suit yourself.")),
+                            new TextOption("Yes please.", new TextDump("Here you go."))
+                        ])), false, finish),
+                    new TextEncounter(new TextDump("Go on ahead then."))
+                ], decision);
             default:
                 throw new Error(`Cannot find dialog for key '${key}'.`);
         }
