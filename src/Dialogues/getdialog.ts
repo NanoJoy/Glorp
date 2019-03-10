@@ -42,7 +42,7 @@ module MyGame {
                 let finish = (main: Main, parent: Entity, result?: string) => {
                     if (result === "Here you go.") {
                         main.groups.barriers.filter(b => b instanceof Gate)[0].sprite.destroy();
-                        WorldManager.getInstance().changeLayout(9, pof(4, 4), " ");
+                        WorldManager.getInstance().changeLayout(9, main.island.getAdjustedPosition(pof(4, 4)), " ");
                     }
                 };
                 let decision = (lastViewed: number, main: Main, parent: Entity, lastResult?: string) => {
@@ -50,7 +50,7 @@ module MyGame {
                         return 0;
                     }
                     if (lastViewed === 0) {
-                        return lastResult === "No." ? 0 : 1;
+                        return lastResult === "Suit yourself." ? 0 : 1;
                     }
                     return 1;
                 };

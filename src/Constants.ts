@@ -35,6 +35,10 @@ module MyGame {
             OUTSIDE: 0,
             INSIDE: 1
         }
+        static readonly Gate = {
+            VERTICAL: 0,
+            HORIZONTAL: 1
+        }
     }
 
     export class SpriteAsset {
@@ -61,6 +65,7 @@ module MyGame {
         ChuFeng = new SpriteAsset("chu_feng");
         Crumbs = new SpriteAsset("crumbs");
         DoorWay = new SpriteAsset("doorway", 36, 8);
+        Gate = new SpriteAsset("gate");
         Grodule = new SpriteAsset("grodule");
         Grounds = new SpriteAsset("grounds");
         House = new SpriteAsset("house", 112, 96);
@@ -88,7 +93,6 @@ module MyGame {
         CrumbsSource = "crumbs_source";
         Door = "door";
         FruitStand = "fruit_stand";
-        Gate = "gate";
         GroduleIcon = "grodule_icon";
         HealthBarContainer = "healthbar_container";
         JamBotBattle = "jambot_battle";

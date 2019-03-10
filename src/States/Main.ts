@@ -64,10 +64,8 @@ module MyGame {
             } else if (stateTransfer.reason === TransferReason.LINK && stateTransfer.island !== -1) {
                 fromLink = true;
             }
-            var tween = this.add.tween(this.world).to({ alpha: 1 }, 500, Phaser.Easing.Linear.None, true);
-            tween.onComplete.add(function () {
-                this.unstopPlayer();
-            }, this);
+            let tween = this.add.tween(this.world).to({ alpha: 1 }, 500, Phaser.Easing.Linear.None, true);
+            tween.onComplete.add(() => { this.unstopPlayer(); }, this);
             this.inputs = new Inputs(this);
 
             this.groups = new MainGroups();
@@ -219,10 +217,10 @@ module MyGame {
             }
 
             stateTransfer.addedItems.filter(i => i.location.island === this.island.num)
-            .forEach(i => {
-                let source = Source.makeSource(this, i.location.x, i.location.y, i.type);
-                this.groups.barriers.push(source);
-            })
+                .forEach(i => {
+                    let source = Source.makeSource(this, i.location.x, i.location.y, i.type);
+                    this.groups.barriers.push(source);
+                })
 
             let playerPosition = null as Phaser.Point;
             if (stateTransfer.position) {
@@ -246,9 +244,7 @@ module MyGame {
                 this.projectileDisplay.updateIcon(stateTransfer.heldItems.type + "_" + ICON);
                 this.projectileDisplay.updateCount(stateTransfer.heldItems.amount);
             }
-            if (fromLink) {
-                this.stopPlayer();
-            }
+            this.stopPlayer();
             this.setDepths();
         }
 

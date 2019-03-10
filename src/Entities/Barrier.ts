@@ -88,7 +88,10 @@ module MyGame {
 
     export class Gate extends Barrier {
         constructor(main: Main, position: Phaser.Point) {
-            super(main, position, Assets.Images.Gate, "g");
+            super(main, position, Assets.Sprites.Gate.key, "g");
+            if (main.island.layout[position.y - 1].charAt(position.x) === " ") {
+                this.sprite.frame = Frames.Gate.HORIZONTAL;
+            }
         }
     }
 

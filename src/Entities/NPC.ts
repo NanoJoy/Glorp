@@ -199,7 +199,7 @@ module MyGame {
                 }
                 return false;
             }
-            return this.buttonPrompt.isShowing() && (this.textManager.getNext(this.main, this).autoStart || this.buttonPrompt.buttonIsDown());
+            return this.buttonPrompt.isShowing() && !this.main.playerStopped && (this.textManager.getNext(this.main, this).autoStart || this.buttonPrompt.buttonIsDown());
         }
     }
 
