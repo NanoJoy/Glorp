@@ -229,6 +229,7 @@ module MyGame {
                 enemies.forEach(function (e) { e.position.add(paddingOffset.x, paddingOffset.y); });
                 npcs.forEach(function (n) { n.position.add(paddingOffset.x, paddingOffset.y); });
                 links.forEach(function (l) { l.pos.add(paddingOffset.x, paddingOffset.y); });
+                creatures.forEach(function (c) { c.x += paddingOffset.x; c.y += paddingOffset.y; });
                 outsideBoundsPortals.forEach(function (o) {
                     if (o.side === Direction.Up || o.side === Direction.Down) {
                         o.start += paddingOffset.x;

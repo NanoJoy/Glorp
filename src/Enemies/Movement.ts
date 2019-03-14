@@ -36,6 +36,7 @@ module MyGame {
         private onCompleteContext: object;
         private onCompleteArgs: any[];
         private obj: Moveable;
+        private tileOffset: Phaser.Point;
 
         constructor(game: Phaser.Game, script: MovementScript, obj: Moveable) {
             this.game = game;
@@ -48,13 +49,14 @@ module MyGame {
             this.hasTrigger = this.triggerName && this.triggerName !== "";
             this.currentNum = -1;
             this.interruptable = true;
+            this.tileOffset = pof(0, 0);
         }
 
         start(resetToOriginalPosition = false) {
             if (resetToOriginalPosition) {
                 this.sprite.position.setTo(this.script.start.x * TILE_WIDTH, this.script.start.y * TILE_HEIGHT);
                 if (this.sprite.body) {
-                    this.sprite.body.position.setTo(this.script.start.x * TILE_WIDTH, this.script.start.y * TILE_HEIGHT);
+                    this.sprite.body.position.setTo((this.script.start.x + this.tileOffset.x) * TILE_WIDTH, (this.script.start.y + this.tileOffset.y) * TILE_HEIGHT);
                 }
             }
             let destinations = [] as Phaser.Point[];
@@ -137,6 +139,10 @@ module MyGame {
 
         currentlyStationary() {
             return this.currentNum === -1 || this.script.directions[this.currentNum] === null;
+        }
+
+        setTileOffset(x: number, y: number) {
+            this.tileOffset.setTo(x, y);
         }
     }
 }

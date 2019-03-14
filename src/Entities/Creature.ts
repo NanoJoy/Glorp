@@ -41,11 +41,15 @@ module MyGame {
         }
     }
 
-    export class Blish extends Creature {
-        private static MAX_SPEED = 100;
+    export class Blish extends Creature implements Moveable {
+        private static MAX_SPEED = 500;
         private static CUTOFF = 2;
 
         lines: Phaser.Line[];
+        movementManager: MovementManager;
+        currentTarget: { crumbs: Crumbs, route: Direction[] };
+        direction: Direction;
+        speed: number;
 
         constructor(main: Main, position: Phaser.Point) {
             super(main, position, Assets.Sprites.Blish.key, [Assets.Images.Lillypad, Assets.Sprites.Grounds.key]);
@@ -54,25 +58,41 @@ module MyGame {
             this.sprite.body.velocity.setTo(0, 0);
             this.sprite.anchor.setTo(0.5, 0.5);
             this.sprite.position.add(TILE_WIDTH / 2, TILE_HEIGHT / 2);
+            this.speed = Blish.MAX_SPEED;
         }
 
         uniqueUpdate() {
             this.main.groups.grounds.filter(g => g.hasBody).forEach(g => {
                 this.main.physics.arcade.collide(this.sprite, g.sprite);
             });
-            this.main.groups.projectiles.filter(p => p instanceof Crumbs).forEach(c => {
-                let sees = Utils.sees(this.sprite.position, c.sprite.position, Infinity, this.lines);
-                if (sees.item1 || sees.item2) {
-                    Utils.moveToTarget(this.sprite.body, c.sprite.body.position, Blish.MAX_SPEED, Blish.CUTOFF, sees);
+            let gridPos = Utils.roundToClosestTile(this.sprite.body.position);
+            let possibleTargets = this.main.groups.projectiles.filter(p => {
+                if (!(p instanceof Crumbs)) {
+                    return false;
                 }
-                let crumbs = c as Crumbs;
-                this.main.physics.arcade.overlap(this.sprite, c.sprite, (blishSprite: Phaser.Sprite, crumbSprite: Phaser.Sprite) => {
-                    if (crumbs.landed) {
-                        crumbs.dissolve();
+                let c = p as Crumbs;
+                return !c.dissolved && c.landed;
+            }).map(p => {
+                return {
+                    crumbs: p as Crumbs,
+                    route: this.getRouteToTarget(gridPos, Utils.roundToClosestTile(p.sprite.position), this.main.island.layout)
+                };
+            }).filter(r => r.route);
+            let ordered = possibleTargets.sort(r => r.route.length);
+            if (ordered.length > 0) {
+                let shortest = ordered[0];
+                if (!this.currentTarget || (this.currentTarget.crumbs !== shortest.crumbs && (this.currentTarget.crumbs.dissolved || this.currentTarget.route.length > shortest.route.length))) {
+                    this.currentTarget = shortest;
+                    if (this.movementManager) {
+                        this.movementManager.pause();
                     }
-                })
-            });
-            if (this.sprite.body.velocity.y < 0 && this.sprite.rotation !== 0) {
+
+                    let script = new MovementScript(gridPos, shortest.route, false);
+                    this.movementManager = new MovementManager(this.main.game, script, this);
+                    this.movementManager.start(true);
+                }
+            }
+            /*if (this.sprite.body.velocity.y < 0 && this.sprite.rotation !== 0) {
                 this.sprite.rotation = 0;
             } else if (this.sprite.body.velocity.y > 0 && this.sprite.rotation !== Math.PI) {
                 this.sprite.rotation = Math.PI;
@@ -80,13 +100,58 @@ module MyGame {
                 this.sprite.rotation = Math.PI * 0.5;
             } else if (this.sprite.body.velocity.x < 0 && this.sprite.rotation !== Math.PI * 1.5) {
                 this.sprite.rotation = Math.PI * 1.5;
+            }*/
+        }
+
+        private getRouteToTarget(start: Phaser.Point, target: Phaser.Point, layout: string[]): Direction[] {
+            function blockedX(position: Phaser.Point, sign: number) {
+                return (sign === -1 && (position.x === 0 || layout[position.y].charAt(position.x - 1) !== "o"))
+                    || (sign === 1 && (position.x === layout[position.y].length - 1 || layout[position.y].charAt(position.x - 1) !== "o"));
             }
+
+            function blockedY(position: Phaser.Point, sign: number) {
+                return (sign === -1 && (position.y === 0 || layout[position.y - 1].charAt(position.x) !== "o"))
+                    || (sign === 1 && (position.y === layout.length - 1 || layout[position.y + 1].charAt(position.x) !== "o"));
+            }
+
+            let directions = [] as Direction[];
+            let current = start.clone();
+            let signX = start.x < target.x ? 1 : start.x > target.x ? -1 : 0;
+            let signY = start.y < target.y ? 1 : start.y > target.y ? -1 : 0;
+            let directionX = signX === 1 ? Direction.Right : signX === -1 ? Direction.Left : null;
+            let directionY = signY === 1 ? Direction.Down : signY === -1 ? Direction.Up : null;
+            let horizontal = true;
+            while (!current.equals(target) && !(blockedX(current, signX) && blockedY(current, signY))) {
+                if (horizontal) {
+                    if (blockedX(current, signX) || current.x === target.x) {
+                        horizontal = false;
+                    } else {
+                        directions.push(directionX);
+                        current.x += signX;
+                    }
+                } else {
+                    if (blockedY(current, signY) || current.y === target.y) {
+                        horizontal = true;
+                    } else {
+                        directions.push(directionY);
+                        current.y += signY;
+                    }
+                }
+            }
+
+            if (current.equals(target)) {
+                return directions;
+            }
+            return null;
         }
 
         uniqueOnStageBuilt() {
-            let leftSides = this.barriers.map(b => new Phaser.Line(b.left, b.top, b.left, b.bottom));
-            let topSides = this.barriers.map(b => new Phaser.Line(b.left, b.top, b.right, b.top));
-            this.lines = leftSides.concat(topSides);
+            let sightBlockers = this.barriers;//.concat(this.main.groups.grounds.map(g => g.sprite));
+            let leftSides = sightBlockers.map(b => new Phaser.Line(b.left, b.top, b.left, b.bottom));
+            let topSides = sightBlockers.map(b => new Phaser.Line(b.left, b.top, b.right, b.top));
+            let rightSides = sightBlockers.map(b => new Phaser.Line(b.right, b.top, b.right, b.bottom));
+            let bottomSides = sightBlockers.map(b => new Phaser.Line(b.left, b.bottom, b.right, b.bottom));
+            this.lines = leftSides.concat(topSides).concat(rightSides).concat(bottomSides);
         };
     }
 
@@ -139,7 +204,7 @@ module MyGame {
                     this.hasWoken = true;
                     this.state = BlumpusState.AWAKE;
                     this.sprite.play("wakeup");
-                    this.sprite.animations.currentAnim.onComplete.add(() => { 
+                    this.sprite.animations.currentAnim.onComplete.add(() => {
                         this.sprite.play("idle");
                         this.wakeTime = new Date().getTime();
                     }, this);

@@ -321,7 +321,7 @@ module MyGame {
             }
 
             body.velocity.x = sees.item1 ? this.signOf(distance.x) * speed : 0;
-            body.velocity.y = sees.item2 && !sees.item1 ? this.signOf(distance.y) * speed : 0;
+            body.velocity.y = sees.item2 && body.velocity.x === 0 ? this.signOf(distance.y) * speed : 0;
         }
 
         static accelerateToTarget(target: number, currentPosition: number, currentVelocity: number, acceleration: number, maxSpeed?: number): number {
