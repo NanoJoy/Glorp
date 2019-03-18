@@ -92,6 +92,11 @@ module MyGame {
                     this.movementManager.start(true);
                 }
             }
+            this.main.groups.projectiles.filter(p => p instanceof Crumbs).forEach(c => {
+                this.main.physics.arcade.collide(this.sprite, c.sprite, (bs: Phaser.Sprite, cs: Phaser.Sprite) => {
+                    (c as Crumbs).dissolve();
+                });
+            });
             /*if (this.sprite.body.velocity.y < 0 && this.sprite.rotation !== 0) {
                 this.sprite.rotation = 0;
             } else if (this.sprite.body.velocity.y > 0 && this.sprite.rotation !== Math.PI) {
@@ -106,7 +111,7 @@ module MyGame {
         private getRouteToTarget(start: Phaser.Point, target: Phaser.Point, layout: string[]): Direction[] {
             function blockedX(position: Phaser.Point, sign: number) {
                 return (sign === -1 && (position.x === 0 || layout[position.y].charAt(position.x - 1) !== "o"))
-                    || (sign === 1 && (position.x === layout[position.y].length - 1 || layout[position.y].charAt(position.x - 1) !== "o"));
+                    || (sign === 1 && (position.x === layout[position.y].length - 1 || layout[position.y].charAt(position.x + 1) !== "o"));
             }
 
             function blockedY(position: Phaser.Point, sign: number) {
@@ -121,16 +126,20 @@ module MyGame {
             let directionX = signX === 1 ? Direction.Right : signX === -1 ? Direction.Left : null;
             let directionY = signY === 1 ? Direction.Down : signY === -1 ? Direction.Up : null;
             let horizontal = true;
-            while (!current.equals(target) && !(blockedX(current, signX) && blockedY(current, signY))) {
+            let doneX = false;
+            let doneY = false;
+            while (!current.equals(target) && !(doneX && doneY)) {
+                doneX = blockedX(current, signX) || current.x === target.x;
+                doneY = blockedY(current, signY) || current.y === target.y;
                 if (horizontal) {
-                    if (blockedX(current, signX) || current.x === target.x) {
+                    if (doneX) {
                         horizontal = false;
                     } else {
                         directions.push(directionX);
                         current.x += signX;
                     }
                 } else {
-                    if (blockedY(current, signY) || current.y === target.y) {
+                    if (doneY) {
                         horizontal = true;
                     } else {
                         directions.push(directionY);

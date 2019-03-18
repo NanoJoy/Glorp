@@ -91,7 +91,7 @@ module MyGame {
         iconKey = Assets.Images.CrumbsIcon;
 
         constructor(main: Main, x: number, y: number, direction: Direction) {
-            super(main, x, y, Crumbs.type, direction, 150, 3);
+            super(main, Utils.roundToClosestTile(pof(x, y)).x * TILE_WIDTH, Utils.roundToClosestTile(pof(x, y)).y * TILE_HEIGHT, Crumbs.type, direction, 150, 3);
             this.sprite.animations.add("start", Utils.animationArray(0, 3), 8, false);
             this.animations.start = "start";
             this.sprite.animations.add("end", Utils.animationArray(4, 6), 2, false);
