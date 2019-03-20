@@ -90,22 +90,23 @@ module MyGame {
                     let script = new MovementScript(gridPos, shortest.route, false);
                     this.movementManager = new MovementManager(this.main.game, script, this);
                     this.movementManager.start(true);
+                    this.sprite.body.position.setTo((gridPos.x + 0.5) * TILE_WIDTH, (gridPos.y + 0.5) * TILE_HEIGHT);
                 }
             }
             this.main.groups.projectiles.filter(p => p instanceof Crumbs).forEach(c => {
-                this.main.physics.arcade.collide(this.sprite, c.sprite, (bs: Phaser.Sprite, cs: Phaser.Sprite) => {
+                this.main.physics.arcade.overlap(this.sprite, c.sprite, (bs: Phaser.Sprite, cs: Phaser.Sprite) => {
                     (c as Crumbs).dissolve();
                 });
             });
-            /*if (this.sprite.body.velocity.y < 0 && this.sprite.rotation !== 0) {
+            if (this.direction === Direction.Up && this.sprite.rotation !== 0) {
                 this.sprite.rotation = 0;
-            } else if (this.sprite.body.velocity.y > 0 && this.sprite.rotation !== Math.PI) {
+            } else if (this.direction === Direction.Down && this.sprite.rotation !== Math.PI) {
                 this.sprite.rotation = Math.PI;
-            } else if (this.sprite.body.velocity.x > 0 && this.sprite.rotation !== Math.PI * 0.5) {
+            } else if (this.direction === Direction.Right && this.sprite.rotation !== Math.PI * 0.5) {
                 this.sprite.rotation = Math.PI * 0.5;
-            } else if (this.sprite.body.velocity.x < 0 && this.sprite.rotation !== Math.PI * 1.5) {
+            } else if (this.direction === Direction.Left && this.sprite.rotation !== Math.PI * 1.5) {
                 this.sprite.rotation = Math.PI * 1.5;
-            }*/
+            }
         }
 
         private getRouteToTarget(start: Phaser.Point, target: Phaser.Point, layout: string[]): Direction[] {

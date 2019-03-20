@@ -54,7 +54,7 @@ module MyGame {
 
         start(resetToOriginalPosition = false) {
             if (resetToOriginalPosition) {
-                this.sprite.position.setTo(this.script.start.x * TILE_WIDTH, this.script.start.y * TILE_HEIGHT);
+                this.sprite.position.setTo((this.script.start.x + this.tileOffset.x) * TILE_WIDTH, (this.script.start.y + this.tileOffset.y) * TILE_HEIGHT);
                 if (this.sprite.body) {
                     this.sprite.body.position.setTo((this.script.start.x + this.tileOffset.x) * TILE_WIDTH, (this.script.start.y + this.tileOffset.y) * TILE_HEIGHT);
                 }
