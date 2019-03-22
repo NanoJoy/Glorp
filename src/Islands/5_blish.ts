@@ -1,6 +1,5 @@
 module MyGame {
-    islandGetters[5] = () => {
-        return new IslandBuilder(5, IslandType.OUTSIDE)
+    islandGetters[5] = () => {return new IslandBuilder(5, IslandType.OUTSIDE)
             .setLayout([
                 "*t t t t t t t t t t t t ",
                 "*                        ",

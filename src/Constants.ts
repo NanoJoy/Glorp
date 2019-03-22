@@ -39,6 +39,10 @@ module MyGame {
             VERTICAL: 0,
             HORIZONTAL: 1
         }
+        static readonly Button = {
+            OFF: 0,
+            ON: 1
+        }
     }
 
     export class SpriteAsset {
@@ -62,6 +66,7 @@ module MyGame {
         Blish = new SpriteAsset("blish");
         Blumpus = new SpriteAsset("blumpus", 56, 32);
         Bush = new SpriteAsset("bush");
+        Button = new SpriteAsset("button");
         ChuFeng = new SpriteAsset("chu_feng");
         Crumbs = new SpriteAsset("crumbs");
         DoorWay = new SpriteAsset("doorway", 36, 8);

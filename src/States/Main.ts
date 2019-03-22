@@ -17,6 +17,7 @@ module MyGame {
         projectiles: Projectile[];
         signs: Sign[];
         frontOfPlayer: Entity[];
+        buttons: Button[];
 
         constructor() {
             this.barriers = [];
@@ -29,6 +30,7 @@ module MyGame {
             this.projectiles = [];
             this.signs = [];
             this.frontOfPlayer = [];
+            this.buttons = [];
         }
     }
 
@@ -80,6 +82,7 @@ module MyGame {
             this.groups.enemies.forEach(e => { e.onStageBuilt(); });
             this.groups.npcs.forEach(n => { n.onStageBuilt(); });
             this.groups.creatures.forEach(c => { c.onStageBuilt(); });
+            this.groups.buttons.forEach(b => { b.onStageBuilt(); });
             this.player.onStageBuilt();
 
             if (stateTransfer.funcs) {
@@ -96,7 +99,7 @@ module MyGame {
             if (!this.playerStopped) {
                 this.triggers.forEach(t => t.checkPlayerOverlap());
 
-                let groupsToUpdate = [this.groups.enemies, this.groups.houses, this.groups.npcs, this.groups.portals, this.groups.creatures, this.groups.projectiles];
+                let groupsToUpdate = [this.groups.enemies, this.groups.houses, this.groups.npcs, this.groups.portals, this.groups.creatures, this.groups.projectiles, this.groups.buttons];
                 for (let i = 0; i < groupsToUpdate.length; i++) {
                     let grp = groupsToUpdate[i];
                     for (let j = 0; j < grp.length; j++) {
@@ -130,6 +133,10 @@ module MyGame {
                             break;
                         case "#":
                             this.groups.barriers.push(new Path(this, pof(x, y)));
+                            break;
+                        case "?":
+                            let mapButton = this.getThingAtPosition(island.buttons, x, y, "button") as MapButton;
+                            this.groups.buttons.push(new Button(this, x, y, mapButton.direction, mapButton.action));
                             break;
                         case "b":
                             this.groups.barriers.push(new Blackness(this, pof(x, y)));

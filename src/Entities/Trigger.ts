@@ -51,7 +51,51 @@ module MyGame {
         }
     }
 
+    export class Button implements Entity {
+        sprite: Phaser.Sprite;
+        main: Main;
+        position: Phaser.Point;
+        private triggered: boolean;
+        action: (main: Main) => void;
+        private colliders: Phaser.Sprite[];
+        private direction: Direction;
+
+
+        constructor(main: Main, x: number, y: number, direction: Direction, action: (main: Main) => void) {
+            this.main = main;
+            this.position = pof(x, y);
+
+            this.sprite = main.add.sprite((x + 0.5) * TILE_WIDTH, y * TILE_HEIGHT, Assets.Sprites.Button.key, Frames.Button.OFF);
+            this.sprite.anchor.x = 0.5;
+            if (direction === Direction.Left) {
+                this.sprite.scale.x = -1;
+            }
+            main.physics.arcade.enable(this.sprite);
+            this.sprite.body.moves = false;
+            this.sprite.body.immovable = true;
+            this.action = action;
+            this.direction = direction;
+            this.triggered = false;
+        }
+
+        onStageBuilt() {
+            this.colliders = this.main.groups.creatures.filter(c => c instanceof Blish).map(b => b.sprite);
+            this.colliders.push(this.main.player);
+        }
+
+        update() {
+            let collide = (sp: Phaser.Sprite, otherSp: Phaser.Sprite) => {
+                if (!this.triggered && (this.direction === Direction.Right && otherSp.left >= sp.right) || (this.direction === Direction.Left && otherSp.right <= sp.left)) {
+                    this.action(this.main);
+                    this.sprite.frame = Frames.Button.ON;
+                    this.triggered = true;
+                }
+            }
+            this.main.physics.arcade.collide(this.sprite, this.colliders, collide, null, this);
+        }
+    }
+
     export enum TriggerType {
-        MOVE_NPC, REGULAR
+        MOVE_NPC, REGULAR,
     }
 }

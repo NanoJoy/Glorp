@@ -49,6 +49,11 @@ module MyGame {
         y: number;
     }
 
+    export class MapButton extends StringPos {
+        action: (main: Main) => void;
+        direction: Direction;
+    }
+
     export class MapCustomBarrier extends StringPos {
         playerCollides: boolean;
     }
@@ -75,6 +80,7 @@ module MyGame {
         private sources: StringPos[];
         private houseLinks: MapLink[];
         private customBarriers: MapCustomBarrier[];
+        private buttons: MapButton[];
 
         constructor(num: number, type: IslandType) {
             this.num = num;
@@ -90,6 +96,7 @@ module MyGame {
             this.otherLinks = [];
             this.houseLinks = [];
             this.creatures = [];
+            this.buttons = [];
         }
 
         setLayout(layout: string[]): IslandBuilder {
@@ -157,6 +164,11 @@ module MyGame {
             return this;
         }
 
+        setButtons(buttons: MapButton[]): IslandBuilder {
+            this.buttons = buttons;
+            return this;
+        }
+
         build(): Island {
             let island = new Island(this.num, this.type, this.layout, this.additions, this.enemies, this.npcs,
                 this.playerStart, this.outsideBoundsPortals, this.links, this.triggers, this.otherLinks,
@@ -164,6 +176,7 @@ module MyGame {
             island.sources = this.sources;
             island.houseLinks = this.houseLinks;
             island.customBarriers = this.customBarriers;
+            island.buttons = this.buttons;
             return island;
         }
     }
@@ -187,6 +200,7 @@ module MyGame {
         creatures: StringPos[];
         sources: StringPos[];
         customBarriers: MapCustomBarrier[];
+        buttons: MapButton[];
 
         constructor(num: number, type: IslandType, layout: string[], additions: StringPos[],
             enemies: MapEnemy[], npcs: MapNPC[], playerStart: Phaser.Point, outsideBoundsPortals: MapOutsideBoundsPortal[],

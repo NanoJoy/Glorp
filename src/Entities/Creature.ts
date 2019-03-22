@@ -42,7 +42,7 @@ module MyGame {
     }
 
     export class Blish extends Creature implements Moveable {
-        private static MAX_SPEED = 500;
+        private static MAX_SPEED = 300;
         private static CUTOFF = 2;
 
         lines: Phaser.Line[];
@@ -110,14 +110,18 @@ module MyGame {
         }
 
         private getRouteToTarget(start: Phaser.Point, target: Phaser.Point, layout: string[]): Direction[] {
+            function positionIsGood(x: number, y: number) {
+                return layout[y].charAt(x) === "o" || layout[y].charAt(x) === "?";
+            }
+
             function blockedX(position: Phaser.Point, sign: number) {
-                return (sign === -1 && (position.x === 0 || layout[position.y].charAt(position.x - 1) !== "o"))
-                    || (sign === 1 && (position.x === layout[position.y].length - 1 || layout[position.y].charAt(position.x + 1) !== "o"));
+                return (sign === -1 && (position.x === 0 || !positionIsGood(position.x - 1, position.y)))
+                    || (sign === 1 && (position.x === layout[position.y].length - 1 || !positionIsGood(position.x + 1, position.y)));
             }
 
             function blockedY(position: Phaser.Point, sign: number) {
-                return (sign === -1 && (position.y === 0 || layout[position.y - 1].charAt(position.x) !== "o"))
-                    || (sign === 1 && (position.y === layout.length - 1 || layout[position.y + 1].charAt(position.x) !== "o"));
+                return (sign === -1 && (position.y === 0 || !positionIsGood(position.x, position.y - 1)))
+                    || (sign === 1 && (position.y === layout.length - 1 || !positionIsGood(position.x, position.y + 1)));
             }
 
             let directions = [] as Direction[];
@@ -150,6 +154,9 @@ module MyGame {
             }
 
             if (current.equals(target)) {
+                if (layout[target.y].charAt(target.x) === "?") {
+                    directions.pop();
+                }
                 return directions;
             }
             return null;

@@ -1,12 +1,16 @@
 module MyGame {
     islandGetters[9] = function (): Island {
+        function myPoop(main: Main): void {
+            console.log("hi sam");
+        }
+
         return new IslandBuilder(Islands.TUTORIAL, IslandType.WATER)
             .setLayout([
                 "oocoooooooooooo",
                 "           oooo",
                 "s          oooo",
                 "        ooooooo",
-                "oooogoooooooooo",
+                "oooog?ooooooooo",
                 "ooo  nooooooooo",
                 "oo    ooooooooo",
                 "oo    ooooooooo",
@@ -22,6 +26,9 @@ module MyGame {
             ])
             .setSources([
                 { type: Assets.Images.CrumbsSource, x: 0, y: 2 }
+            ])
+            .setButtons([
+                { type: Assets.Sprites.Button.key, x: 5, y: 4, action: myPoop, direction: Direction.Right }
             ])
             .build();
     }
