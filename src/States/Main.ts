@@ -49,9 +49,6 @@ module MyGame {
             this.time.events.removeAll();
             this.playerStopped = false;
             let gameSaver = GameSaver.getInstance();
-            if (DEVELOPER_MODE && CLEAR_SAVE) {
-                gameSaver.clearData();
-            }
 
             let worldManager = WorldManager.getInstance();
             let stateTransfer = StateTransfer.getInstance();
@@ -134,9 +131,12 @@ module MyGame {
                         case "#":
                             this.groups.barriers.push(new Path(this, pof(x, y)));
                             break;
+                        case "|":
+                            this.groups.barriers.push(new Bridge(this, pof(x, y)));
+                            break;
                         case "?":
                             let mapButton = this.getThingAtPosition(island.buttons, x, y, "button") as MapButton;
-                            this.groups.buttons.push(new Button(this, x, y, mapButton.direction, mapButton.action));
+                            this.groups.buttons.push(new Button(this, x, y, mapButton.direction, mapButton.action, mapButton.backgroundType));
                             break;
                         case "b":
                             this.groups.barriers.push(new Blackness(this, pof(x, y)));
@@ -263,6 +263,7 @@ module MyGame {
                     this.game.world.bringToTop(b.sprite);
                 }
             }, this);
+            this.groups.buttons.forEach((b) => { this.game.world.bringToTop(b.sprite); }, this);
             this.groups.creatures.forEach((c) => { this.game.world.bringToTop(c.sprite); }, this);
             this.groups.houses.forEach(function (ho) { this.game.world.bringToTop(ho.sprite); }, this);
             this.groups.npcs.forEach(function (n) { this.game.world.bringToTop(n.sprite); }, this);

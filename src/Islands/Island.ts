@@ -52,6 +52,7 @@ module MyGame {
     export class MapButton extends StringPos {
         action: (main: Main) => void;
         direction: Direction;
+        backgroundType: IslandType;
     }
 
     export class MapCustomBarrier extends StringPos {

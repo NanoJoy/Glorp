@@ -61,7 +61,7 @@ module MyGame {
         private direction: Direction;
 
 
-        constructor(main: Main, x: number, y: number, direction: Direction, action: (main: Main) => void) {
+        constructor(main: Main, x: number, y: number, direction: Direction, action: (main: Main) => void, backgroundType: IslandType) {
             this.main = main;
             this.position = pof(x, y);
 
@@ -73,9 +73,17 @@ module MyGame {
             main.physics.arcade.enable(this.sprite);
             this.sprite.body.moves = false;
             this.sprite.body.immovable = true;
+            this.sprite.body.setSize(TILE_WIDTH * 1.2, TILE_HEIGHT, 0, direction === Direction.Right ? 0 : -(TILE_WIDTH * 0.2));
             this.action = action;
             this.direction = direction;
             this.triggered = false;
+
+            switch (backgroundType) {
+                case IslandType.WATER:
+                    main.groups.barriers.push(new Water(main, pof(x, y)));
+                default:
+                    main.groups.grounds.push(Ground.makeGround(main, backgroundType, pof(x, y), false));
+            }
         }
 
         onStageBuilt() {

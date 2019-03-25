@@ -112,4 +112,10 @@ module MyGame {
             super(main, position, spriteKey, "x", playerCollides);
         }
     }
+
+    export class Bridge extends Barrier {
+        constructor(main: Main, position: Phaser.Point) {
+            super(main, position, Assets.Images.Bridge, '|', false);
+        }
+    }
 }

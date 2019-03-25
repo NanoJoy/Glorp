@@ -6,7 +6,6 @@ module MyGame {
         private inputs: Inputs;
 
         create() {
-
             this.stage.backgroundColor = Colors.GRAY;
             this.title = this.add.image(0, 50, Assets.Images.Title);
             Utils.centerImage(this.title, true, false);
@@ -16,13 +15,20 @@ module MyGame {
             this.artwork.animations.add("sleep", [0, 1], 2, true);
             this.artwork.animations.play("sleep");
 
-            this.directions = this.add.bitmapText(0, 0, Assets.FontName, "SPACEBAR: new game\n   SHIFT: load game", Assets.FontSize);
+            if (DEVELOPER_MODE && CLEAR_SAVE) {
+                GameSaver.getInstance().clearData();
+            }
+            let savedGame = GameSaver.getInstance().loadGame()
+            let directionText = savedGame ? "SPACEBAR: new game\n   SHIFT: load game" : "SPACEBAR: new game";
+            this.directions = this.add.bitmapText(0, 0, Assets.FontName, directionText, Assets.FontSize);
             Utils.centerInScreen(this.directions);
             this.directions.y = SCREEN_HEIGHT - 100;
 
             this.inputs = new Inputs(this);
             this.inputs.spacebar.onUp.add(this.startGame, this, 0, false);
-            this.inputs.shift.onUp.add(this.startGame, this, 0, true);
+            if (savedGame) {
+                this.inputs.shift.onUp.add(this.startGame, this, 0, true);
+            }
         }
 
         startGame(key: Phaser.Key, useSave: boolean) {
