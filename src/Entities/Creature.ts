@@ -44,6 +44,7 @@ module MyGame {
     export class Blish extends Creature implements Moveable {
         private static MAX_SPEED = 300;
         private static CUTOFF = 2;
+        private wasIdle = false;
 
         lines: Phaser.Line[];
         movementManager: MovementManager;
@@ -71,7 +72,7 @@ module MyGame {
                     return false;
                 }
                 let c = p as Crumbs;
-                return !c.dissolved && c.landed;
+                return c.state !== ProjectileState.DONE && c.landed;
             }).map(p => {
                 return {
                     crumbs: p as Crumbs,
@@ -88,10 +89,23 @@ module MyGame {
                     }
 
                     let script = new MovementScript(gridPos, shortest.route, false);
+                    this.speed = 300;
                     this.movementManager = new MovementManager(this.main.game, script, this);
                     this.movementManager.start(true);
                     this.sprite.body.position.setTo((gridPos.x + 0.5) * TILE_WIDTH, (gridPos.y + 0.5) * TILE_HEIGHT);
                 }
+                this.wasIdle = false;
+            } else if (!this.wasIdle) {
+                if (this.movementManager) {
+                    this.movementManager.pause();
+                }
+
+                let script = new MovementScript(gridPos, [Direction.Right, Direction.Left], true);
+                this.speed = 600;
+                this.movementManager = new MovementManager(this.main.game, script, this);
+                this.movementManager.start(true);
+                this.sprite.body.position.setTo((gridPos.x + 0.5) * TILE_WIDTH, (gridPos.y + 0.5) * TILE_HEIGHT);
+                this.wasIdle = true;
             }
             this.main.groups.projectiles.filter(p => p instanceof Crumbs).forEach(c => {
                 this.main.physics.arcade.overlap(this.sprite, c.sprite, (bs: Phaser.Sprite, cs: Phaser.Sprite) => {

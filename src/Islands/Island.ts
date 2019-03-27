@@ -341,6 +341,9 @@ module MyGame {
                 case Assets.Sprites.TheMeep.key:
                     npc = new TheMeep(main, pcop(mapNPC.position), textManager);
                     break;
+                case Assets.Sprites.Monster.key:
+                    npc = new Monster(main, pcop(mapNPC.position), textManager);
+                    break;
                 default:
                     throw new Error(`${mapNPC.type} is not a valid NPC type.`);
             }

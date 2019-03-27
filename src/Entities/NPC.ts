@@ -240,4 +240,12 @@ module MyGame {
             this.sprite.animations.play("plop");
         }
     }
+
+    export class Monster extends NPC {
+        constructor(main: Main, position: Phaser.Point, textManager: ITextManager) {
+            super(main, position, textManager, null, 0, 0, Assets.Sprites.Monster.key, true);
+            this.sprite.animations.add("stand", null, 5, true);
+            this.sprite.animations.play("stand");
+        }
+    }
 }

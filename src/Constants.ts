@@ -76,6 +76,7 @@ module MyGame {
         House = new SpriteAsset("house", 112, 96);
         JamBotWorld = new SpriteAsset("jambot_world");
         JamBugWorld = new SpriteAsset("jambug_world");
+        Monster = new SpriteAsset("monster", 40, 46);
         OldMan = new SpriteAsset("old_man");
         Player = new SpriteAsset("player");
         PlayerBattle = new SpriteAsset("player_battle", 136, 136)
