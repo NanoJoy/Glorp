@@ -206,4 +206,55 @@ module MyGame {
             this.alive = false;
         }
     }
+
+    export class MonsterEncounter extends AdhocEncounter {
+        main: Main;
+        name = "Monster";
+        music = Assets.Audio.Monster;
+        battleSpriteKey = Assets.Sprites.Monster.key;
+        minNumNotes = 4;
+        maxNumNotes = 4;
+        patternLength = 4;
+        beatLength = 4;
+        tempo = 200;
+        hitPoints = 300;
+        health = 300;
+
+        constructor(main: Main) {
+            super();
+            this.main = main;
+        }
+
+        calculateDamage(pattern: PatternNote[], notePresses: NotePress[]): number {
+            if (pattern.length !== notePresses.length) {
+                return 0;
+            }
+            let sortedPattern = pattern.sort(function (a, b) { return a.position - b.position });
+            let sortedPresses = notePresses.sort(function (a, b) { return a.position - b.position });
+            let damage = 0;
+            for (let i = 0; i < sortedPattern.length; i++) {
+                if (sortedPattern[i].key !== sortedPresses[i].note || sortedPattern[i].position !== sortedPresses[i].position) {
+                    return 0;
+                }
+                damage += Math.round((500 - sortedPresses[i].distance) / 200);
+            }
+            return damage;
+        }
+
+        getAttackPoints(pattern: PatternNote[]) {
+            return Math.floor((pattern.length * 25) / 4);
+        }
+
+        die() {
+            this.alive = false;
+        }
+
+        noteComparer(pattern: Phaser.KeyCode[], pressed: number, pressedCount: number): boolean {
+            var noNulls = pattern.filter(p => Utils.isAThing(p));
+            if (pressedCount > noNulls.length) {
+                return false;
+            }
+            return noNulls[pressedCount] === pressed;
+        }
+    }
 }

@@ -8,7 +8,8 @@ module MyGame {
         PROFESSOR,
         BLUMPUS,
         TUTORIAL_SIGN,
-        TUTORIAL_PERSON
+        TUTORIAL_PERSON,
+        MONSTER
     }
 
     export function getSignText(info: string): ITextManager {
@@ -62,6 +63,14 @@ module MyGame {
                         ])), false, finish),
                     new TextEncounter(new TextDump("Go on ahead then."))
                 ], decision);
+            case Texts.MONSTER:
+                let monsFin = (main: Main, parent: Entity, result?: string) => {
+                    let monster = parent as Monster;
+                    monster.doMouth();
+                };
+                return new TextManager([
+                    new TextEncounter(new TextDump("Don't let them all die, Rosie."), false, monsFin)
+                ]);
             default:
                 throw new Error(`Cannot find dialog for key '${key}'.`);
         }

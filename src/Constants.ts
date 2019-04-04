@@ -134,6 +134,7 @@ module MyGame {
         Blumpus = new AudioAsset("blumpus", 8);
         JamBot = new AudioAsset("jambot", 8);
         JamBug = new AudioAsset("jambug", 8);
+        Monster = new AudioAsset("monster", 4);
     }
 
     export var Assets = {

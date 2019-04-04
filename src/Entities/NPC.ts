@@ -244,8 +244,22 @@ module MyGame {
     export class Monster extends NPC {
         constructor(main: Main, position: Phaser.Point, textManager: ITextManager) {
             super(main, position, textManager, null, 0, 0, Assets.Sprites.Monster.key, true);
-            this.sprite.animations.add("stand", null, 5, true);
+            this.sprite.animations.add("stand", Utils.animationArray(0, 4), 5, true);
+            this.sprite.animations.add("mouth", Utils.animationArray(5, 8), 5, false);
             this.sprite.animations.play("stand");
+        }
+
+        doMouth(): void {
+            this.sprite.play("mouth");
+            let stateTransfer = StateTransfer.getInstance();
+            stateTransfer.heldItems = null;
+            stateTransfer.island = Islands.START;
+            stateTransfer.position = pof(3, 1);
+            this.main.stopPlayer();
+            this.main.time.events.add(2000, () => {
+                let monster = new MonsterEncounter(this.main);
+                monster.startBattle(this.main);
+            }, this);
         }
     }
 }

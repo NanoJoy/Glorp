@@ -33,7 +33,7 @@ module MyGame {
                 { position: pof(5, 9), script: null, textKey: Texts.TUTORIAL_PERSON, type: Assets.Sprites.ChuFeng.key },
                 { position: pof(5, 12), script: null, textKey: Texts.TUTORIAL_SIGN, type: Assets.Images.Sign },
                 { position: pof(10, 6), script: null, text: "Press K to use something you are holding", type: Assets.Images.Sign },
-                { position: pof(8, 1), script: null, text: "Rosie, they are all dead. What happened here Rosie?", type: Assets.Sprites.Monster.key, }
+                { position: pof(8, 1), script: null, textKey: Texts.MONSTER, type: Assets.Sprites.Monster.key, }
             ])
             .setCreatures([
                 { type: Assets.Sprites.Blish.key, x: 2, y: 2 }
