@@ -107,8 +107,9 @@ module MyGame {
                 this.playerHealthDisplay.updateHitPoints(this.playerHealth);
                 if (this.playerHealth === 0) {
                     this.music.stop();
-                    StateTransfer.getInstance().reason = TransferReason.DEATH;
-                    StateTransfer.getInstance().health = -1;
+                    let stateTransfer = StateTransfer.getInstance();
+                    stateTransfer.reason = TransferReason.DEATH;
+                    stateTransfer.health = -1;
                     this.game.state.start(States.Main);
                 }
                 return;

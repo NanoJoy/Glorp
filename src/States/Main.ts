@@ -54,6 +54,9 @@ module MyGame {
             let stateTransfer = StateTransfer.getInstance();
             let saveState = gameSaver.loadGame();
             let fromLink = false;
+            if (stateTransfer.interlude) {
+                this.state.start(States.Interlude);
+            }
             // Load from save.
             if (stateTransfer.flags["USE_SAVE"] && (stateTransfer.reason === TransferReason.DEATH || stateTransfer.reason === TransferReason.NONE) && saveState) {
                 stateTransfer.loadFromSave(saveState);

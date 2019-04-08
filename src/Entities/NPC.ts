@@ -42,7 +42,7 @@ module MyGame {
 
             this.notDefaultAnims = notDefaultAnims;
             this.textManager = textManager;
-            this.textDisplay = new BottomTextDisplay(main, this);
+            this.textDisplay = new BottomTextDisplay(main, main.inputs, this);
             this.buttonPrompt = new ButtonPrompt(this, main.inputs.O, -4);
 
             if (movementScript) {
@@ -255,8 +255,9 @@ module MyGame {
             stateTransfer.heldItems = null;
             stateTransfer.island = Islands.START;
             stateTransfer.position = pof(3, 1);
+            stateTransfer.interlude = Texts.TUTORIAL_SIGN;
             this.main.stopPlayer();
-            this.main.time.events.add(2000, () => {
+            this.main.time.events.add(1500, () => {
                 let monster = new MonsterEncounter(this.main);
                 monster.startBattle(this.main);
             }, this);

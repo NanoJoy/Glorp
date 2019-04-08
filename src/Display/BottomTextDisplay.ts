@@ -1,6 +1,7 @@
 module MyGame {
     export class BottomTextDisplay implements TextDisplay {
-        game: Main;
+        game: Phaser.State;
+        inputs: Inputs;
         textBackground: Phaser.Image;
         upArrow: Phaser.Image;
         downArrow: Phaser.Image;
@@ -16,8 +17,9 @@ module MyGame {
         readonly spriteHeight = 80;
         readonly fontStyle = { font: "14px okeydokey", fill: "#000000" };
 
-        constructor(game: Main, parent: Entity) {
+        constructor(game: Phaser.State, inputs: Inputs, parent: Entity) {
             this.game = game;
+            this.inputs = inputs;
             this.parent = parent;
             this.name = name;
         }
@@ -80,28 +82,30 @@ module MyGame {
                 this.optionsDisplay.destroy();
                 if (this.downArrow) this.downArrow.destroy();
                 if (this.upArrow) this.upArrow.destroy();
-                this.game.unstopPlayer();
-                this.textEncounter.lastResult = result;
-                this.textEncounter.onFinish(this.game, this.parent, result);
+                if (this.game instanceof Main) {
+                    this.game.unstopPlayer();
+                    this.textEncounter.lastResult = result;
+                    this.textEncounter.onFinish(this.game, this.parent, result);
+                }
                 this.textEncounter.reset();
-                this.game.inputs.O.onUp.remove(this.addOnDownListener, this);
-                this.game.inputs.O.onDown.remove(this.makeChoice, this);
-                this.game.inputs.down.onDown.remove(this.scrollDown, this);
-                this.game.inputs.up.onDown.remove(this.scrollUp, this);
-                this.game.inputs.O.onUp.addOnce(function () {this.isDisplaying  = false;}, this);
+                this.inputs.O.onUp.remove(this.addOnDownListener, this);
+                this.inputs.O.onDown.remove(this.makeChoice, this);
+                this.inputs.down.onDown.remove(this.scrollDown, this);
+                this.inputs.up.onDown.remove(this.scrollUp, this);
+                this.inputs.O.onUp.addOnce(function () {this.isDisplaying  = false;}, this);
                 return;
             }
             if (!next.hasOptions) {
                 this.optionsDisplay.setOptions(null);
                 this.optionsDisplay.hide();
-                this.game.inputs.right.onDown.remove(this.scrollRight, this);
-                this.game.inputs.left.onDown.remove(this.scrollLeft, this);
+                this.inputs.right.onDown.remove(this.scrollRight, this);
+                this.inputs.left.onDown.remove(this.scrollLeft, this);
                 this.text.text = next.text[0];
                 this.pageNumber = 0;
                 this.upArrow.visible = false;
                 this.setDownArrowFrame(this.textEncounter.getCurrentPage().text.length > 1);
                 this.currentRead = this.downArrow.frame === Frames.Arrow.O;
-                this.game.inputs.O.onUp.add(this.addOnDownListener, this);
+                this.inputs.O.onUp.add(this.addOnDownListener, this);
                 return;
             }
             let nextPrompt = (next as TextPrompt);
@@ -112,14 +116,13 @@ module MyGame {
             this.upArrow.visible = false;
             this.setDownArrowFrame(nextPrompt.text.length > 1);
             this.currentRead = this.downArrow.frame === Frames.Arrow.O;
-            this.game.inputs.left.onDown.add(this.scrollLeft, this);
-            this.game.inputs.right.onDown.add(this.scrollRight, this);
-            
-            this.game.inputs.O.onUp.add(this.addOnDownListener, this);
+            this.inputs.left.onDown.add(this.scrollLeft, this);
+            this.inputs.right.onDown.add(this.scrollRight, this);
+            this.inputs.O.onUp.add(this.addOnDownListener, this);
         }
 
         addOnDownListener() {
-            this.game.inputs.O.onDown.add(this.makeChoice, this);
+            this.inputs.O.onDown.add(this.makeChoice, this);
         }
 
         start(textEncounter: ITextEncounter) {
@@ -127,7 +130,9 @@ module MyGame {
                 return;
             }
             this.textEncounter = textEncounter;
-            this.game.stopPlayer();
+            if (this.game instanceof Main) {
+                this.game.stopPlayer();
+            }
 
             this.textBackground = this.game.add.image(0, 0, Assets.Images.BottomTextBackground);
             this.upArrow = this.game.add.image(SCREEN_WIDTH - 22, 8, Assets.Sprites.Arrow.key, Frames.Arrow.UP);
@@ -145,15 +150,15 @@ module MyGame {
             this.pageNumber = 0;
             this.isDisplaying = true;
             
-            this.game.inputs.down.onDown.add(this.scrollDown, this);
-            this.game.inputs.up.onDown.add(this.scrollUp, this);
+            this.inputs.down.onDown.add(this.scrollDown, this);
+            this.inputs.up.onDown.add(this.scrollUp, this);
             this.optionsDisplay = new OptionsDisplay(this.game, this.textBackground.height);
-            this.game.inputs.O.onDown.add(this.makeChoice, this);
+            this.inputs.O.onDown.add(this.makeChoice, this);
             if (this.textEncounter.getCurrentPage().hasOptions) {
                 var textPrompt = this.textEncounter.getCurrentPage() as TextPrompt;
                 this.optionsDisplay.setOptions(textPrompt.options);
-                this.game.inputs.left.onDown.add(this.scrollLeft, this);
-                this.game.inputs.right.onDown.add(this.scrollRight, this);
+                this.inputs.left.onDown.add(this.scrollLeft, this);
+                this.inputs.right.onDown.add(this.scrollRight, this);
                 this.optionsDisplay.show();
             } else {
                 this.optionsDisplay.setOptions(null);
@@ -167,7 +172,7 @@ module MyGame {
     }
 
     class OptionsDisplay implements Display {
-        private main: Main;
+        private main: Phaser.State;
         private background: Phaser.Image;
         private rightArrow: Phaser.Image;
         private leftArrow: Phaser.Image;
@@ -177,7 +182,7 @@ module MyGame {
         private options: TextOption[];
         private currentOption: number;
         
-        constructor(main: Main, baseY: number) {
+        constructor(main: Phaser.State, baseY: number) {
             this.main = main;
 
             this.background = this.main.add.image(0, baseY, Assets.Images.OptionsBackground);

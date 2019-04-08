@@ -90,7 +90,8 @@ module MyGame {
     }
 
     export interface TextDisplay {
-        game: Main;
+        game: Phaser.State;
+        inputs: Inputs;
         name: string;
         textEncounter: ITextEncounter;
         isDisplaying: boolean;

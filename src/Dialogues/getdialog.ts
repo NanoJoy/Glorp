@@ -9,7 +9,8 @@ module MyGame {
         BLUMPUS,
         TUTORIAL_SIGN,
         TUTORIAL_PERSON,
-        MONSTER
+        MONSTER,
+        INTERLUDE
     }
 
     export function getSignText(info: string): ITextManager {

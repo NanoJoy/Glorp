@@ -15,6 +15,7 @@ module MyGame {
         addedItems: { location: Location, type: string }[];
         heldItems: { type: string, amount: number }
         flags: Flags;
+        interlude: Texts;
         private static instance: StateTransfer;
 
         private constructor() {
@@ -30,6 +31,7 @@ module MyGame {
             this.addedItems = [];
             this.heldItems = null;
             this.flags = new Flags();
+            this.interlude = null;
         }
 
         static getInstance() {

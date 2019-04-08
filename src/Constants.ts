@@ -15,7 +15,8 @@ module MyGame {
         Preloader: "Preloader",
         Main: "Main",
         Battle: "Battle",
-        MainMenu: "MainMenu"
+        MainMenu: "MainMenu",
+        Interlude: "Interlude"
     };
 
     export var Colors = {
