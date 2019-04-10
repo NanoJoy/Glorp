@@ -8,7 +8,7 @@ module MyGame {
     }
 
     export enum TransferReason {
-        NONE, LINK, DEATH, VICTORY
+        NONE, LINK, DEATH, VICTORY, INTERLUDE
     }
 
     export enum ProjectileState {

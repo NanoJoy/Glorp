@@ -53,7 +53,6 @@ module MyGame {
             let worldManager = WorldManager.getInstance();
             let stateTransfer = StateTransfer.getInstance();
             let saveState = gameSaver.loadGame();
-            let fromLink = false;
             if (stateTransfer.interlude) {
                 this.state.start(States.Interlude);
             }
@@ -63,10 +62,9 @@ module MyGame {
                 worldManager.importLayouts(saveState.layouts);
                 worldManager.importDialogs(this, saveState.dialogs);
                 // Coming from link.
-            } else if (stateTransfer.reason === TransferReason.LINK && stateTransfer.island !== -1) {
-                fromLink = true;
             }
-            let tween = this.add.tween(this.world).to({ alpha: 1 }, 500, Phaser.Easing.Linear.None, true);
+            this.world.alpha = 0;
+            let tween = this.add.tween(this.world).to({ alpha: 1 }, stateTransfer.reason === TransferReason.INTERLUDE ? 3000 : 500, Phaser.Easing.Linear.None, true);
             tween.onComplete.add(() => { this.unstopPlayer(); }, this);
             this.inputs = new Inputs(this);
 
@@ -78,7 +76,7 @@ module MyGame {
                 this.island = worldManager.getIsland(START_ISLAND);
             }
 
-            this.setupLevel(this.island, saveState, fromLink);
+            this.setupLevel(this.island, saveState);
             this.groups.enemies.forEach(e => { e.onStageBuilt(); });
             this.groups.npcs.forEach(n => { n.onStageBuilt(); });
             this.groups.creatures.forEach(c => { c.onStageBuilt(); });
@@ -114,7 +112,7 @@ module MyGame {
             }
         }
 
-        private setupLevel(island: Island, savedGame: SaveState, fromLink: boolean) {
+        private setupLevel(island: Island, savedGame: SaveState) {
             this.stage.backgroundColor = island.type === IslandType.INSIDE ? Colors.BLACK : Colors.GRAY;
             this.game.world.setBounds(0, 0, island.layout[0].length * TILE_WIDTH,
                 island.layout.length * TILE_HEIGHT);

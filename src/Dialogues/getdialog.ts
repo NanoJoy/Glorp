@@ -72,6 +72,9 @@ module MyGame {
                 return new TextManager([
                     new TextEncounter(new TextDump("Don't let them all die, Rosie."), false, monsFin)
                 ]);
+            case Texts.INTERLUDE:
+                return new TextManager([new TextEncounter(new TextDump("What was that?", new TextDump("...",
+                new TextDump("Oh, I guess it was just a dream. But I feel like I've seen that thing before somewhere."))))]);
             default:
                 throw new Error(`Cannot find dialog for key '${key}'.`);
         }

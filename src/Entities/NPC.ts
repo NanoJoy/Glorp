@@ -256,10 +256,12 @@ module MyGame {
             stateTransfer.island = Islands.START;
             stateTransfer.position = pof(3, 1);
             stateTransfer.interlude = {
-                text: Texts.TUTORIAL_SIGN,
+                text: Texts.INTERLUDE,
                 nextIsland: Islands.START,
                 startX: 3,
-                startY: 1
+                startY: 1,
+                spriteKey: Assets.Sprites.Player.key,
+                frames: [0, 5, 10, 14]
             };
             this.main.stopPlayer();
             this.main.time.events.add(1500, () => {
