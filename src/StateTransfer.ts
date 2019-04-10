@@ -15,7 +15,7 @@ module MyGame {
         addedItems: { location: Location, type: string }[];
         heldItems: { type: string, amount: number }
         flags: Flags;
-        interlude: Texts;
+        interlude: InterludeSpec;
         private static instance: StateTransfer;
 
         private constructor() {

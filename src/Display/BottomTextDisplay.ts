@@ -82,10 +82,12 @@ module MyGame {
                 this.optionsDisplay.destroy();
                 if (this.downArrow) this.downArrow.destroy();
                 if (this.upArrow) this.upArrow.destroy();
+                this.textEncounter.lastResult = result;
                 if (this.game instanceof Main) {
                     this.game.unstopPlayer();
-                    this.textEncounter.lastResult = result;
                     this.textEncounter.onFinish(this.game, this.parent, result);
+                } else {
+                    this.textEncounter.onFinish(null, null, result);
                 }
                 this.textEncounter.reset();
                 this.inputs.O.onUp.remove(this.addOnDownListener, this);

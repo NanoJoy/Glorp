@@ -255,7 +255,12 @@ module MyGame {
             stateTransfer.heldItems = null;
             stateTransfer.island = Islands.START;
             stateTransfer.position = pof(3, 1);
-            stateTransfer.interlude = Texts.TUTORIAL_SIGN;
+            stateTransfer.interlude = {
+                text: Texts.TUTORIAL_SIGN,
+                nextIsland: Islands.START,
+                startX: 3,
+                startY: 1
+            };
             this.main.stopPlayer();
             this.main.time.events.add(1500, () => {
                 let monster = new MonsterEncounter(this.main);

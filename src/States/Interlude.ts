@@ -11,9 +11,19 @@ module MyGame {
         private textDisplay: BottomTextDisplay;
 
         create() {
+            let stateTransfer = StateTransfer.getInstance();
+            let interlude = stateTransfer.interlude;
             this.stage.backgroundColor = Colors.BLACK;
             this.textDisplay = new BottomTextDisplay(this, new Inputs(this), null);
-            this.textDisplay.start(getDialog(StateTransfer.getInstance().interlude).getNext(null, null));
+            let encounter = getDialog(interlude.text).getNext(null, null);
+            encounter.onFinish = (main: Main, parent: Entity, result?: string) => {
+                stateTransfer.island = interlude.nextIsland;
+                stateTransfer.position = pof(interlude.startX, interlude.startY);
+                stateTransfer.reason = TransferReason.LINK;
+                stateTransfer.interlude = null;
+                this.state.start(States.Main);
+            };
+            this.textDisplay.start(encounter);
         }
     }
 }
