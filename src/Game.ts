@@ -12,6 +12,7 @@ module MyGame {
 			this.state.add(States.Battle, Battle, false);
 			this.state.add(States.MainMenu, MainMenu, false);
 			this.state.add(States.Interlude, Interlude, false);
+			this.state.add(States.Result, Result, false);
 
 			this.state.start(States.Boot);
 		}

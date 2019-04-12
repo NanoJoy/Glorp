@@ -110,7 +110,7 @@ module MyGame {
                     let stateTransfer = StateTransfer.getInstance();
                     stateTransfer.reason = TransferReason.DEATH;
                     stateTransfer.health = -1;
-                    this.game.state.start(States.Main);
+                    this.game.state.start(States.Result);
                 }
                 return;
             }
@@ -136,7 +136,7 @@ module MyGame {
             stateTransfer.funcs = this.enemy.afterDeath;
             stateTransfer.reason = TransferReason.VICTORY;
             stateTransfer.health = this.playerHealth;
-            this.state.start(States.Main);
+            this.state.start(States.Result);
         }
     }
 

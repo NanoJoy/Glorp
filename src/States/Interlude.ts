@@ -30,7 +30,8 @@ module MyGame {
                 stateTransfer.position = pof(interlude.startX, interlude.startY);
                 stateTransfer.reason = TransferReason.INTERLUDE;
                 stateTransfer.interlude = null;
-                this.state.start(States.Main);
+                let tween = this.add.tween(this.world).to({ alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
+                tween.onComplete.add(() => { this.state.start(States.Main); }, this)
             };
             this.textDisplay.start(encounter);
         }

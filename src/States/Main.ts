@@ -64,7 +64,7 @@ module MyGame {
                 // Coming from link.
             }
             this.world.alpha = 0;
-            let tween = this.add.tween(this.world).to({ alpha: 1 }, stateTransfer.reason === TransferReason.INTERLUDE ? 3000 : 500, Phaser.Easing.Linear.None, true);
+            let tween = this.add.tween(this.world).to({ alpha: 1 }, 500, Phaser.Easing.Linear.None, true);
             tween.onComplete.add(() => { this.unstopPlayer(); }, this);
             this.inputs = new Inputs(this);
 

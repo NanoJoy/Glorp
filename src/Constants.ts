@@ -4,9 +4,9 @@ module MyGame {
     export const TILE_WIDTH = 28;
     export const TILE_HEIGHT = 32;
 
-    export const DEVELOPER_MODE = false;
+    export const DEVELOPER_MODE = true;
     export const START_ISLAND = -1;
-    export const CLEAR_SAVE = true;
+    export const CLEAR_SAVE = false;
     export const PLAYER_START_X = -1;
     export const PLAYER_START_Y = -1;
 
@@ -16,7 +16,8 @@ module MyGame {
         Main: "Main",
         Battle: "Battle",
         MainMenu: "MainMenu",
-        Interlude: "Interlude"
+        Interlude: "Interlude",
+        Result: "Result"
     };
 
     export var Colors = {
@@ -43,6 +44,10 @@ module MyGame {
         static readonly Button = {
             OFF: 0,
             ON: 1
+        }
+        static readonly ResultText = {
+            LOSE: 0,
+            WIN: 1
         }
     }
 
@@ -80,7 +85,8 @@ module MyGame {
         Monster = new SpriteAsset("monster", 40, 46);
         OldMan = new SpriteAsset("old_man");
         Player = new SpriteAsset("player");
-        PlayerBattle = new SpriteAsset("player_battle", 136, 136)
+        PlayerBattle = new SpriteAsset("player_battle", 136, 136);
+        ResultText = new SpriteAsset("result_text", 64, 28);
         RhythmSymbols = new SpriteAsset("rhythm_symbols", 24, 24);
         Stanley = new SpriteAsset("stanley");
         StoneWall = new SpriteAsset("stone_wall");
@@ -112,6 +118,7 @@ module MyGame {
         OvenBattle = "oven_battle";
         Path = "path";
         ProjectileDisplay = "projectile_display";
+        RosieDead = "rosie_dead";
         Rug = "rug";
         Sign = "sign";
         TileFloor = "tile_floor";
@@ -136,6 +143,7 @@ module MyGame {
         JamBot = new AudioAsset("jambot", 8);
         JamBug = new AudioAsset("jambug", 8);
         Monster = new AudioAsset("monster", 4);
+        VictoryJingle = new AudioAsset("victory_jingle");
     }
 
     export var Assets = {
