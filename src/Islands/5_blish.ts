@@ -6,7 +6,7 @@ module MyGame {
                 "*           s            ",
                 "*       oooooooo         ",
                 "****   oooooooooo        ",
-                "  s**n  oooooooo         ",
+                "   **n  oooooooo         ",
                 "   c       oo            ",
                 "  n**      oo            ",
                 "****       oo            ",
@@ -37,7 +37,6 @@ module MyGame {
                 { type: Assets.Sprites.Blumpus.key, x: 3, y: 6 }
             ])
             .setSources([
-                { type: Assets.Sprites.Airhorn.key, x: 2, y: 5 },
                 { type: Assets.Images.CrumbsSource, x: 12, y: 2 },
                 { type: Assets.Images.CrumbsSource, x: 11, y: 20 }
             ])

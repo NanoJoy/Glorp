@@ -4,7 +4,7 @@ module MyGame {
     export const TILE_WIDTH = 28;
     export const TILE_HEIGHT = 32;
 
-    export const DEVELOPER_MODE = true;
+    export const DEVELOPER_MODE = false;
     export const START_ISLAND = -1;
     export const CLEAR_SAVE = false;
     export const PLAYER_START_X = -1;
@@ -139,11 +139,15 @@ module MyGame {
     class AudioAssets {
         [key: string]: AudioAsset;
         Airhorn = new AudioAsset("airhorn");
+        Beep = new AudioAsset("beep");
         Blumpus = new AudioAsset("blumpus", 8);
+        DeathJingle = new AudioAsset("death_jingle");
+        Doodle = new AudioAsset("doodle");
         JamBot = new AudioAsset("jambot", 8);
         JamBug = new AudioAsset("jambug", 8);
         Monster = new AudioAsset("monster", 4);
         VictoryJingle = new AudioAsset("victory_jingle");
+        World = new AudioAsset("world");
     }
 
     export var Assets = {

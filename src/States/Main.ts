@@ -91,6 +91,7 @@ module MyGame {
             this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
 
             this.inputs.spacebar.onDown.add(this.spacebarDown, this);
+            this.sound.play(Assets.Audio.World.key, 1, true);
         }
 
         update() {

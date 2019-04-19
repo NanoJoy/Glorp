@@ -46,6 +46,7 @@ module MyGame {
                 this.text.text = this.textEncounter.getCurrentPage().text[this.pageNumber];
                 this.setDownArrowFrame(true);
                 this.upArrow.visible = this.pageNumber > 0;
+                this.game.sound.play(Assets.Audio.Beep.key);
             }
         }
 
@@ -59,6 +60,7 @@ module MyGame {
                 if (this.currentRead && this.optionsDisplay.getCurrentOption() !== -1) {
                     this.optionsDisplay.show();
                 }
+                this.game.sound.play(Assets.Audio.Beep.key);
             }
         }
 
@@ -74,6 +76,7 @@ module MyGame {
             if (!this.currentRead) {
                 return;
             }
+            this.game.sound.play(Assets.Audio.Beep.key);
             var next = this.textEncounter.getResponse(this.optionsDisplay.getCurrentOption());
             if (!next) {
                 this.textBackground.destroy();
@@ -166,6 +169,8 @@ module MyGame {
                 this.optionsDisplay.setOptions(null);
                 this.optionsDisplay.hide();
             }
+
+            this.game.sound.play(Assets.Audio.Doodle.key);
         }
 
         private setDownArrowFrame(showDownArrow: boolean): void {
@@ -251,6 +256,7 @@ module MyGame {
                 this.currentOption += 1;
                 this.text.text = this.options[this.currentOption].text;
                 this.setArrowVisibility();
+                this.main.sound.play(Assets.Audio.Beep.key);
             }
         }
 
@@ -259,6 +265,7 @@ module MyGame {
                 this.currentOption -= 1;
                 this.text.text = this.options[this.currentOption].text;
                 this.setArrowVisibility();
+                this.main.sound.play(Assets.Audio.Beep.key);
             }
         }
 
