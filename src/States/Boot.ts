@@ -1,5 +1,4 @@
 module MyGame {
-
 	export class Boot extends Phaser.State {
 
 		init() {

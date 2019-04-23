@@ -53,6 +53,10 @@ module MyGame {
             let worldManager = WorldManager.getInstance();
             let stateTransfer = StateTransfer.getInstance();
             let saveState = gameSaver.loadGame();
+            if (stateTransfer.reason !== TransferReason.LINK) {
+                this.sound.stopAll();
+                this.sound.play(Assets.Audio.World.key, 1, true);
+            }
             if (stateTransfer.interlude) {
                 this.state.start(States.Interlude);
             }
@@ -91,7 +95,6 @@ module MyGame {
             this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
 
             this.inputs.spacebar.onDown.add(this.spacebarDown, this);
-            this.sound.play(Assets.Audio.World.key, 1, true);
         }
 
         update() {

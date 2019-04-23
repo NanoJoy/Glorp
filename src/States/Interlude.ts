@@ -13,6 +13,7 @@ module MyGame {
         private textDisplay: BottomTextDisplay;
 
         create() {
+            this.sound.stopAll();
             let stateTransfer = StateTransfer.getInstance();
             let interlude = stateTransfer.interlude;
             this.world.alpha = 1;

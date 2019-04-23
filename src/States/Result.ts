@@ -1,6 +1,7 @@
 module MyGame {
     export class Result extends Phaser.State {
         create() {
+            this.sound.stopAll();
             let stateTransfer = StateTransfer.getInstance();
             this.stage.backgroundColor = Colors.GRAY;
             this.sound.play(stateTransfer.reason === TransferReason.DEATH ? Assets.Audio.DeathJingle.key : Assets.Audio.VictoryJingle.key);

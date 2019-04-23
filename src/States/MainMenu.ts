@@ -6,6 +6,7 @@ module MyGame {
         private inputs: Inputs;
 
         create() {
+            this.sound.stopAll();
             this.stage.backgroundColor = Colors.GRAY;
             this.title = this.add.image(0, 50, Assets.Images.Title);
             Utils.centerImage(this.title, true, false);

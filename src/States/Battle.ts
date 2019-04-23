@@ -14,6 +14,7 @@ module MyGame {
         enemyDisplay: CharacterDisplay;
 
         create() {
+            this.sound.stopAll();
             this.inputs = new Inputs(this);
             this.sound.boot();
             if (DEVELOPER_MODE) {
