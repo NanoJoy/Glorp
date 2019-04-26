@@ -43,8 +43,10 @@ module MyGame {
         triggers: Trigger[];
         groups: MainGroups;
         projectileDisplay: HoldableDisplay;
+        cinematicBars: CinematicBars;
 
         create() {
+            this.game.renderer.renderSession.roundPixels = true;
             this.time.reset();
             this.time.events.removeAll();
             this.playerStopped = false;
@@ -87,14 +89,14 @@ module MyGame {
             this.groups.buttons.forEach(b => { b.onStageBuilt(); });
             this.player.onStageBuilt();
 
+            this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
+
+            this.inputs.spacebar.onDown.add(this.spacebarDown, this);
+
             if (stateTransfer.funcs) {
                 stateTransfer.funcs(this);
                 stateTransfer.funcs = null;
             }
-
-            this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
-
-            this.inputs.spacebar.onDown.add(this.spacebarDown, this);
         }
 
         update() {
@@ -203,28 +205,30 @@ module MyGame {
             this.triggers = island.makeTriggers(this);
             let stateTransfer = StateTransfer.getInstance();
 
-            let npcsToImport = savedGame ? savedGame.npcs : stateTransfer.npcs;
-            for (let npc of npcsToImport.filter(t => t.old.island === island.num)) {
-                let matches = this.groups.npcs.filter(n => n.startX === npc.old.x && n.startY === npc.old.y);
-                if (matches.length === 0) {
-                    throw new Error(`No matching npc found with start position ${npc.old.x} ${npc.old.y}`);
+            if (stateTransfer.flags["USE_SAVE"]) {
+                let npcsToImport = savedGame ? savedGame.npcs : stateTransfer.npcs;
+                for (let npc of npcsToImport.filter(t => t.old.island === island.num)) {
+                    let matches = this.groups.npcs.filter(n => n.startX === npc.old.x && n.startY === npc.old.y);
+                    if (matches.length === 0) {
+                        throw new Error(`No matching npc found with start position ${npc.old.x} ${npc.old.y}`);
+                    }
+                    let match = matches[0];
+                    if (npc.now) {
+                        match.setPosition(npc.now);
+                    }
+                    if (npc.script) {
+                        match.doScript(Utils.reverseMovementScript(npc.script), npc.script.start, true);
+                    }
+                    if (npc.speed) {
+                        match.setSpeed(npc.speed);
+                    }
                 }
-                let match = matches[0];
-                if (npc.now) {
-                    match.setPosition(npc.now);
-                }
-                if (npc.script) {
-                    match.doScript(Utils.reverseMovementScript(npc.script), npc.script.start, true);
-                }
-                if (npc.speed) {
-                    match.setSpeed(npc.speed);
-                }
-            }
 
-            let triggersToImport = savedGame ? savedGame.triggers : stateTransfer.triggers;
-            for (let saveTrigger of triggersToImport.filter(t => t.island === island.num)) {
-                for (let matchingTrigger of this.triggers.filter(t => t.x === saveTrigger.x && t.y === saveTrigger.y)) {
-                    matchingTrigger.active = false;
+                let triggersToImport = savedGame ? savedGame.triggers : stateTransfer.triggers;
+                for (let saveTrigger of triggersToImport.filter(t => t.island === island.num)) {
+                    for (let matchingTrigger of this.triggers.filter(t => t.x === saveTrigger.x && t.y === saveTrigger.y)) {
+                        matchingTrigger.active = false;
+                    }
                 }
             }
 
@@ -232,7 +236,7 @@ module MyGame {
                 .forEach(i => {
                     let source = Source.makeSource(this, i.location.x, i.location.y, i.type);
                     this.groups.barriers.push(source);
-                })
+                });
 
             let playerPosition = null as Phaser.Point;
             if (stateTransfer.position) {
@@ -311,6 +315,7 @@ module MyGame {
         }
 
         unstopPlayer() {
+            if (StateTransfer.getInstance().flags["LOCK_PLAYER"]) return;
             this.playerStopped = false;
             this.groups.enemies.forEach(e => {
                 if (e.movementManager) {
@@ -346,6 +351,24 @@ module MyGame {
                 location: new Location(this.island.num, x, y),
                 type: key
             });
+        }
+
+        startCinematic(follow: Phaser.Sprite) {
+            var bars = this.cinematicBars ? this.cinematicBars : (this.cinematicBars = new CinematicBars(this));
+            bars.show();
+            bars.bringToTop();
+            this.camera.unfollow();
+            this.camera.follow(follow, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
+            StateTransfer.getInstance().flags["LOCK_PLAYER"] = true;
+            this.stopPlayer();
+        }
+
+        endCinematic() {
+            this.cinematicBars.hide();
+            StateTransfer.getInstance().flags["LOCK_PLAYER"] = false;
+            this.camera.unfollow();
+            this.camera.follow(this.player, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
+            this.unstopPlayer();
         }
     }
 }

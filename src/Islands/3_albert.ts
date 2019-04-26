@@ -4,12 +4,12 @@ module MyGame {
             let albert = main.groups.npcs.filter(n => n instanceof Albert)[0];
             albert.sprite.position.setTo(5 * TILE_WIDTH, 2 * TILE_HEIGHT);
             if (main.groups.enemies.filter(e => e instanceof JamBot && e.alive).length === 0) {
-                main.stopPlayer();
+                main.startCinematic(albert.sprite);
                 main.player.position.setTo(5 * TILE_WIDTH, 7 * TILE_HEIGHT);
                 albert.setDialogState(0);
                 albert.doScript("d=lddddddddrrr;l=false", pof(5, 2));
                 albert.movementManager.setOnComplete(function() {
-                    this.playerStopped = false;
+                    main.endCinematic();
                     main.groups.barriers.filter(b => b instanceof Gate)[0].sprite.destroy();
                     WorldManager.getInstance().changeLayout(3, pof(8, 11), " ");
                 }, main);
@@ -21,12 +21,12 @@ module MyGame {
             let albert = main.groups.npcs.filter(n => n instanceof Albert)[0];
             albert.sprite.position.setTo(7 * TILE_WIDTH, 10 * TILE_HEIGHT);
             if (main.groups.enemies.filter(e => e instanceof JamBug && e.alive).length === 0) {
-                main.stopPlayer();
+                main.startCinematic(albert.sprite);
                 main.player.position.setTo(19 * TILE_WIDTH, 10 * TILE_HEIGHT);
                 albert.setDialogState(2);
                 albert.doScript("d=rrrrrru;l=false", pof(19, 11));
                 albert.movementManager.setOnComplete(function() {
-                    this.playerStopped = false;
+                    main.endCinematic();
                     main.groups.barriers.filter(b => b instanceof Gate)[0].sprite.destroy();
                     WorldManager.getInstance().changeLayout(3, pof(26, 11), " ");
                 }, main);
