@@ -55,13 +55,13 @@ module MyGame {
         sprite: Phaser.Sprite;
         main: Main;
         position: Phaser.Point;
-        private triggered: boolean;
-        action: (main: Main) => void;
+        private on: boolean;
+        action: (main: Main, button: Button) => void;
         private colliders: Phaser.Sprite[];
         private direction: Direction;
 
 
-        constructor(main: Main, x: number, y: number, direction: Direction, action: (main: Main) => void, backgroundType: IslandType) {
+        constructor(main: Main, x: number, y: number, direction: Direction, action: (main: Main, button: Button) => void, backgroundType: IslandType) {
             this.main = main;
             this.position = pof(x, y);
 
@@ -76,7 +76,7 @@ module MyGame {
             this.sprite.body.setSize(TILE_WIDTH * 1.2, TILE_HEIGHT, 0, direction === Direction.Right ? 0 : -(TILE_WIDTH * 0.2));
             this.action = action;
             this.direction = direction;
-            this.triggered = false;
+            this.on = false;
 
             switch (backgroundType) {
                 case IslandType.WATER:
@@ -93,13 +93,26 @@ module MyGame {
 
         update() {
             let collide = (sp: Phaser.Sprite, otherSp: Phaser.Sprite) => {
-                if (!this.triggered && (this.direction === Direction.Right && otherSp.left >= sp.right) || (this.direction === Direction.Left && otherSp.right <= sp.left)) {
-                    this.action(this.main);
-                    this.sprite.frame = Frames.Button.ON;
-                    this.triggered = true;
+                if (!this.on && (this.direction === Direction.Right && otherSp.left >= sp.right) || (this.direction === Direction.Left && otherSp.right <= sp.left)) {
+                    this.action(this.main, this);
+                    this.turnOn();
                 }
             }
             this.main.physics.arcade.collide(this.sprite, this.colliders, collide, null, this);
+        }
+
+        turnOn() {
+            this.on = true;
+            this.sprite.frame = Frames.Button.ON;
+        }
+
+        turnOff() {
+            this.on = false;
+            this.sprite.frame = Frames.Button.OFF;
+        }
+
+        isOn(): boolean {
+            return this.on;
         }
     }
 

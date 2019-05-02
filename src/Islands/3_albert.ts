@@ -24,7 +24,7 @@ module MyGame {
                 main.startCinematic(albert.sprite);
                 main.player.position.setTo(19 * TILE_WIDTH, 10 * TILE_HEIGHT);
                 albert.setDialogState(2);
-                albert.doScript("d=rrrrrru;l=false", pof(19, 11));
+                albert.doScript("d=drrrrrrrrrrrrrrrrrru;l=false", pof(7, 10));
                 albert.movementManager.setOnComplete(function() {
                     main.endCinematic();
                     main.groups.barriers.filter(b => b instanceof Gate)[0].sprite.destroy();

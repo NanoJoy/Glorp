@@ -50,7 +50,7 @@ module MyGame {
     }
 
     export class MapButton extends StringPos {
-        action: (main: Main) => void;
+        action: (main: Main, button: Button) => void;
         direction: Direction;
         backgroundType: IslandType;
     }

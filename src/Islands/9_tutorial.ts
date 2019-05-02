@@ -1,6 +1,6 @@
 module MyGame {
     islandGetters[9] = function (): Island {
-        function makeBridge(main: Main): void {
+        function makeBridge(main: Main, button: Button): void {
             let adjusted1 = main.island.getAdjustedPosition(pof(8, 4));
             let adjusted2 = main.island.getAdjustedPosition(pof(9, 4));
             main.groups.barriers.filter(b => b.position.equals(adjusted1))[0].sprite.destroy();

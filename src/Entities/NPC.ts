@@ -205,7 +205,7 @@ module MyGame {
 
     export class Albert extends NPC {
         constructor(main: Main, position: Phaser.Point, textManager: ITextManager, movementScript: MovementScript) {
-            super(main, position, textManager, movementScript, 750, 5, Assets.Sprites.Albert.key);
+            super(main, position, textManager, movementScript, 600, 5, Assets.Sprites.Albert.key);
         }
     }
 

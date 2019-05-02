@@ -364,11 +364,14 @@ module MyGame {
         }
 
         endCinematic() {
-            this.cinematicBars.hide();
             StateTransfer.getInstance().flags["LOCK_PLAYER"] = false;
             this.camera.unfollow();
-            this.camera.follow(this.player, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
-            this.unstopPlayer();
+            var tween = this.add.tween(this.camera).to({ x: this.player.x - (SCREEN_WIDTH / 2), y: this.player.y - (SCREEN_HEIGHT / 2) }, 1000, Phaser.Easing.Linear.None, true);
+            tween.onComplete.add(() => {
+                this.cinematicBars.hide();
+                this.camera.follow(this.player, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
+                this.unstopPlayer();
+            }, this);
         }
     }
 }
