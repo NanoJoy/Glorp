@@ -55,10 +55,11 @@ module MyGame {
         sprite: Phaser.Sprite;
         main: Main;
         position: Phaser.Point;
-        private on: boolean;
         action: (main: Main, button: Button) => void;
+        private on: boolean;
         private colliders: Phaser.Sprite[];
         private direction: Direction;
+        private wasColliding: boolean;
 
 
         constructor(main: Main, x: number, y: number, direction: Direction, action: (main: Main, button: Button) => void, backgroundType: IslandType) {
@@ -77,6 +78,7 @@ module MyGame {
             this.action = action;
             this.direction = direction;
             this.on = false;
+            this.wasColliding = false;
 
             switch (backgroundType) {
                 case IslandType.WATER:
@@ -92,13 +94,18 @@ module MyGame {
         }
 
         update() {
+            let collidedThisTime = false;
             let collide = (sp: Phaser.Sprite, otherSp: Phaser.Sprite) => {
                 if (!this.on && (this.direction === Direction.Right && otherSp.left >= sp.right) || (this.direction === Direction.Left && otherSp.right <= sp.left)) {
-                    this.action(this.main, this);
                     this.turnOn();
+                    this.action(this.main, this);
+                    collidedThisTime = true;
                 }
             }
-            this.main.physics.arcade.collide(this.sprite, this.colliders, collide, null, this);
+            this.main.physics.arcade.collide(this.sprite, this.colliders, collide, (sp: Phaser.Sprite, otherSp: Phaser.Sprite) => {
+                return !this.wasColliding;
+            }, this);
+            this.wasColliding = collidedThisTime;
         }
 
         turnOn() {

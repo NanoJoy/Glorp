@@ -1,17 +1,22 @@
 module MyGame {
-    let pressed = 0;
+    let pressed = -1;
+    let lastPressedY = -1;
 
     function checkOrder(main: Main, button: Button) {
+        if (lastPressedY !== button.position.y) {
+            pressed++;
+            lastPressedY = button.position.y;
+        }
         let correctOrder = [3,5,4,2];
         if (correctOrder[pressed] !== button.position.y) {
-            pressed = 0;
+            pressed = -1;
+            lastPressedY = -1;
             main.groups.buttons.forEach((button) => {
                 button.turnOff();
             })
             return;
         }
-        pressed++;
-        if (pressed === 4) {
+        if (pressed === 3) {
             main.groups.barriers.push(new Water(main, pof(19, 6)));
             WorldManager.getInstance().changeLayout(Islands.BLISH, pof(19, 6), "o");
             main.groups.barriers.push(new Water(main, pof(19, 7)));
