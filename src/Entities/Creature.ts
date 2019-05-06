@@ -100,7 +100,11 @@ module MyGame {
                     this.movementManager.pause();
                 }
 
-                let script = new MovementScript(gridPos, [Direction.Right, Direction.Left], true);
+                let directions = Blish.positionIsGood(gridPos.x + 1, gridPos.y, this.main.island.layout) ? [Direction.Right, Direction.Left]
+                    : Blish.positionIsGood(gridPos.x, gridPos.y + 1, this.main.island.layout) ? [Direction.Down, Direction.Up]
+                    : Blish.positionIsGood(gridPos.x - 1, gridPos.y, this.main.island.layout) ? [Direction.Left, Direction.Right]
+                    : Blish.positionIsGood(gridPos.x, gridPos.y - 1, this.main.island.layout) ? [Direction.Up, Direction.Down] : [];
+                let script = new MovementScript(gridPos, directions, true);
                 this.speed = 600;
                 this.movementManager = new MovementManager(this.main.game, script, this);
                 this.movementManager.start(true);
@@ -123,19 +127,20 @@ module MyGame {
             }
         }
 
+        static positionIsGood(x: number, y: number, layout: string[]) {
+            return layout[y].charAt(x) === "o";// || layout[y].charAt(x) === "?";
+        }
+
         private getRouteToTarget(start: Phaser.Point, target: Phaser.Point, layout: string[]): Direction[] {
-            function positionIsGood(x: number, y: number) {
-                return layout[y].charAt(x) === "o" || layout[y].charAt(x) === "?";
-            }
 
             function blockedX(position: Phaser.Point, sign: number) {
-                return (sign === -1 && (position.x === 0 || !positionIsGood(position.x - 1, position.y)))
-                    || (sign === 1 && (position.x === layout[position.y].length - 1 || !positionIsGood(position.x + 1, position.y)));
+                return (sign === -1 && (position.x === 0 || !Blish.positionIsGood(position.x - 1, position.y, layout)))
+                    || (sign === 1 && (position.x === layout[position.y].length - 1 || !Blish.positionIsGood(position.x + 1, position.y, layout)));
             }
 
             function blockedY(position: Phaser.Point, sign: number) {
-                return (sign === -1 && (position.y === 0 || !positionIsGood(position.x, position.y - 1)))
-                    || (sign === 1 && (position.y === layout.length - 1 || !positionIsGood(position.x, position.y + 1)));
+                return (sign === -1 && (position.y === 0 || !Blish.positionIsGood(position.x, position.y - 1, layout)))
+                    || (sign === 1 && (position.y === layout.length - 1 || !Blish.positionIsGood(position.x, position.y + 1, layout)));
             }
 
             let directions = [] as Direction[];

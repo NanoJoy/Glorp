@@ -21,6 +21,11 @@ module MyGame {
             WorldManager.getInstance().changeLayout(Islands.BLISH, pof(19, 6), "o");
             main.groups.barriers.push(new Water(main, pof(19, 7)));
             WorldManager.getInstance().changeLayout(Islands.BLISH, pof(19, 7), "o");
+            main.groups.barriers.push(new Water(main, pof(18, 6)));
+            WorldManager.getInstance().changeLayout(Islands.BLISH, pof(18, 6), "o");
+            main.groups.barriers.push(new Water(main, pof(18, 7)));
+            WorldManager.getInstance().changeLayout(Islands.BLISH, pof(18, 7), "o");
+            main.setDepths();
         }
     }
 
@@ -28,15 +33,15 @@ module MyGame {
             .setLayout([
                 "wt t t t t t t t t t t t ",
                 "w                       w",
-                "w **     *     cooo?*   w",
+                "w * *    *     cooo?*   w",
                 "w     *        ?oooo    w",
                 "wwww    *  *   oooo?   *w",
                 "   wwn  *      ?oooo *  w",
                 "   c             s      w",
                 "  nww                   w",
-                "wwww                    w",
-                "w                       w",
-                "w                       w",
+                "wwww        oooooooo    w",
+                "w           oooooooo    w",
+                "w           oooooooo    w",
                 "w                       w",
                 "w                       w",
                 "w                       w",
