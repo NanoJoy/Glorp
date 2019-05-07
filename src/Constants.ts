@@ -7,8 +7,8 @@ module MyGame {
     export const DEVELOPER_MODE = true;
     export const START_ISLAND = 5;
     export const CLEAR_SAVE = true;
-    export const PLAYER_START_X = 1;
-    export const PLAYER_START_Y = 1;
+    export const PLAYER_START_X = 15;
+    export const PLAYER_START_Y = 6;
 
     export var States = {
         Boot: "Boot",
@@ -147,8 +147,10 @@ module MyGame {
         JamBot = new AudioAsset("jambot", 8);
         JamBug = new AudioAsset("jambug", 8);
         Monster = new AudioAsset("monster", 4);
+        Right = new AudioAsset("right");
         VictoryJingle = new AudioAsset("victory_jingle");
         World = new AudioAsset("world");
+        Wrong = new AudioAsset("wrong");
     }
 
     export var Assets = {

@@ -3,12 +3,16 @@ module MyGame {
     let lastPressedY = -1;
 
     function checkOrder(main: Main, button: Button) {
+        if (pressed === -2) return;
         if (lastPressedY !== button.position.y) {
             pressed++;
             lastPressedY = button.position.y;
         }
         let correctOrder = [3,5,4,2];
         if (correctOrder[pressed] !== button.position.y) {
+            if (pressed > 0) {
+                main.sound.play(Assets.Audio.Wrong.key);
+            }
             pressed = -1;
             lastPressedY = -1;
             main.groups.buttons.forEach((button) => {
@@ -17,6 +21,7 @@ module MyGame {
             return;
         }
         if (pressed === 3) {
+            main.sound.play(Assets.Audio.Right.key);
             main.groups.barriers.push(new Water(main, pof(19, 6)));
             WorldManager.getInstance().changeLayout(Islands.BLISH, pof(19, 6), "o");
             main.groups.barriers.push(new Water(main, pof(19, 7)));
@@ -26,6 +31,7 @@ module MyGame {
             main.groups.barriers.push(new Water(main, pof(18, 7)));
             WorldManager.getInstance().changeLayout(Islands.BLISH, pof(18, 7), "o");
             main.setDepths();
+            pressed = -2;
         }
     }
 
@@ -33,10 +39,10 @@ module MyGame {
             .setLayout([
                 "wt t t t t t t t t t t t ",
                 "w                       w",
-                "w * *    *     cooo?*   w",
-                "w     *        ?oooo    w",
-                "wwww    *  *   oooo?   *w",
-                "   wwn  *      ?oooo *  w",
+                "w # #    #     cooo?#   w",
+                "w     #        ?oooo    w",
+                "wwww    #  #   oooo?   #w",
+                "   wwn  #      ?oooo #  w",
                 "   c             s      w",
                 "  nww                   w",
                 "wwww        oooooooo    w",

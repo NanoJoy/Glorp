@@ -6,7 +6,6 @@ module MyGame {
         direction: Direction;
         inputs: Inputs;
         state: Main;
-        hasCollided: boolean;
         itemManager: IItemManager;
 
         constructor(state: Main, position: Phaser.Point, health?: number) {
@@ -34,10 +33,6 @@ module MyGame {
             }
             var player = this;
             var game = this.game;
-            this.hasCollided = false;
-            this.state.groups.barriers.filter(b => b.playerCollides && b.hasBody).forEach(function (barrier) {
-                game.physics.arcade.collide(player, barrier.sprite, barrier.onCollision, null, barrier);
-            });
 
             var directionDown = 1;
             if (this.inputs.up.isDown) {
@@ -86,6 +81,9 @@ module MyGame {
             }
 
             Utils.snapToPixels(this);
+            this.state.groups.barriers.filter(b => b.playerCollides && b.hasBody).forEach(function (barrier) {
+                game.physics.arcade.collide(player, barrier.sprite, barrier.onCollision, null, barrier);
+            });
             this.itemManager.update();
         }
 

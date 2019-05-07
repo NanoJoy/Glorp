@@ -56,7 +56,7 @@ module MyGame {
                 this.text.text = this.textEncounter.getCurrentPage().text[this.pageNumber];
                 this.upArrow.visible = true;
                 this.setDownArrowFrame(this.pageNumber < this.textEncounter.getCurrentPage().text.length - 1);
-                this.currentRead = this.downArrow.frame === Frames.Arrow.O;
+                this.currentRead = this.currentRead || this.downArrow.frame === Frames.Arrow.O;
                 if (this.currentRead && this.optionsDisplay.getCurrentOption() !== -1) {
                     this.optionsDisplay.show();
                 }
@@ -109,7 +109,7 @@ module MyGame {
                 this.pageNumber = 0;
                 this.upArrow.visible = false;
                 this.setDownArrowFrame(this.textEncounter.getCurrentPage().text.length > 1);
-                this.currentRead = this.downArrow.frame === Frames.Arrow.O;
+                this.currentRead = this.currentRead || this.downArrow.frame === Frames.Arrow.O;
                 this.inputs.O.onUp.add(this.addOnDownListener, this);
                 return;
             }
@@ -120,7 +120,7 @@ module MyGame {
             this.text.text = next.text[0];
             this.upArrow.visible = false;
             this.setDownArrowFrame(nextPrompt.text.length > 1);
-            this.currentRead = this.downArrow.frame === Frames.Arrow.O;
+            this.currentRead = this.currentRead || this.downArrow.frame === Frames.Arrow.O;
             this.inputs.left.onDown.add(this.scrollLeft, this);
             this.inputs.right.onDown.add(this.scrollRight, this);
             this.inputs.O.onUp.add(this.addOnDownListener, this);
@@ -145,7 +145,7 @@ module MyGame {
             this.upArrow.visible = false;
             this.downArrow = this.game.add.image(SCREEN_WIDTH - 22, this.textBackground.height - 20, Assets.Sprites.Arrow.key);
             this.setDownArrowFrame(this.textEncounter.getCurrentPage().text.length > 1);
-            this.currentRead = this.downArrow.frame === Frames.Arrow.O;
+            this.currentRead = this.currentRead || this.downArrow.frame === Frames.Arrow.O;
             this.upArrow.fixedToCamera = true;
             this.downArrow.fixedToCamera = true;
 
