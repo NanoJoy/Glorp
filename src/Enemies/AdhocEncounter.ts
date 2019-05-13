@@ -45,6 +45,7 @@ module MyGame {
                 }
             });
             stateTransfer.health = main.player.health;
+            stateTransfer.flags["USE_SAVE"] = true;
             main.stopPlayer();
             Utils.fadeToBlack(main, 500, States.Battle);
         }
@@ -77,10 +78,11 @@ module MyGame {
     export class OvenEncounter extends AdhocEncounter {
         main: Main;
         name = "Oven";
+        music = Assets.Audio.Oven;
         battleSpriteKey = Assets.Images.OvenBattle;
         minNumNotes = 4;
         maxNumNotes = 6;
-        patternLength = 9;
+        patternLength = 6;
         beatLength = 3;
         tempo = 140;
         hitPoints = 300;

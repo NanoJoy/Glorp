@@ -44,6 +44,7 @@ module MyGame {
         groups: MainGroups;
         projectileDisplay: HoldableDisplay;
         cinematicBars: CinematicBars;
+        healthBar: HealthBar;
 
         create() {
             this.game.renderer.renderSession.roundPixels = true;
@@ -260,6 +261,7 @@ module MyGame {
                 this.projectileDisplay.updateIcon(stateTransfer.heldItems.type + "_" + ICON);
                 this.projectileDisplay.updateCount(stateTransfer.heldItems.amount);
             }
+            this.healthBar = new HealthBar(this, stateTransfer.health === -1 ? 100 : stateTransfer.health);
             this.stopPlayer();
             this.setDepths();
         }
@@ -280,6 +282,7 @@ module MyGame {
             this.game.world.bringToTop(this.player);
             this.groups.frontOfPlayer.forEach(f => this.game.world.bringToTop(f.sprite));
             this.projectileDisplay.bringToTop();
+            this.healthBar.bringToTop();
         }
 
         paused() {

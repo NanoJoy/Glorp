@@ -44,7 +44,7 @@ module MyGame {
         }
 
         getAttackPoints(pattern: PatternNote[]) {
-            return Math.floor((pattern.length * 25) / 2);
+            return Math.floor((pattern.length * 25) / 4);
         }
 
         playerOverlap(sp: Phaser.Sprite, pl: Player) {

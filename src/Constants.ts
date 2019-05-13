@@ -5,10 +5,10 @@ module MyGame {
     export const TILE_HEIGHT = 32;
 
     export const DEVELOPER_MODE = true;
-    export const START_ISLAND = 5;
+    export const START_ISLAND = 3;
     export const CLEAR_SAVE = true;
-    export const PLAYER_START_X = 15;
-    export const PLAYER_START_Y = 6;
+    export const PLAYER_START_X = 5;
+    export const PLAYER_START_Y = 1;
 
     export var States = {
         Boot: "Boot",
@@ -22,7 +22,9 @@ module MyGame {
 
     export var Colors = {
         BLACK: 0x000000,
-        GRAY: 0xEAEAEA
+        GRAY: 0xEAEAEA,
+        PURPLE: 0x648BFF,
+        RED: 0xE22D2D
     };
 
     export class Frames {
@@ -147,6 +149,7 @@ module MyGame {
         JamBot = new AudioAsset("jambot", 8);
         JamBug = new AudioAsset("jambug", 8);
         Monster = new AudioAsset("monster", 4);
+        Oven = new AudioAsset("oven", 8);
         Right = new AudioAsset("right");
         VictoryJingle = new AudioAsset("victory_jingle");
         World = new AudioAsset("world");
