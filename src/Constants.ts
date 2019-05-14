@@ -5,9 +5,9 @@ module MyGame {
     export const TILE_HEIGHT = 32;
 
     export const DEVELOPER_MODE = true;
-    export const START_ISLAND = 3;
+    export const START_ISLAND = 6;
     export const CLEAR_SAVE = true;
-    export const PLAYER_START_X = 5;
+    export const PLAYER_START_X = 16;
     export const PLAYER_START_Y = 1;
 
     export var States = {
@@ -144,6 +144,7 @@ module MyGame {
         Airhorn = new AudioAsset("airhorn");
         Beep = new AudioAsset("beep");
         Blumpus = new AudioAsset("blumpus", 8);
+        Collide = new AudioAsset("collide");
         DeathJingle = new AudioAsset("death_jingle");
         Doodle = new AudioAsset("doodle");
         JamBot = new AudioAsset("jambot", 8);

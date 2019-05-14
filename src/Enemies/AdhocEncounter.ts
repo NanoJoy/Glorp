@@ -111,7 +111,7 @@ module MyGame {
         }
 
         getAttackPoints(pattern: PatternNote[]) {
-            return Math.floor((pattern.length * 25) / 2);
+            return Math.floor((pattern.length * 25) / 5);
         }
 
         noteComparer(pattern: Phaser.KeyCode[], pressed: number, pressedCount: number): boolean {

@@ -23,6 +23,9 @@ module MyGame {
             this.group.add(redBar);
             this.updateHealth(health);
             this.bringToTop();
+            if (health === 100) {
+                this.hide();
+            }
         }
 
         bringToTop() {

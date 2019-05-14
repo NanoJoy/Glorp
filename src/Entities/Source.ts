@@ -13,6 +13,10 @@ module MyGame {
             this.amount = amount;
 
             this.onCollision = (playerSprite: Phaser.Sprite, barrierSprite: Phaser.Sprite) => {
+                if (this.main.player.itemManager.getCount() > 0) {
+                    this.main.sound.play(Assets.Audio.Collide.key);
+                    return;
+                }
                 let stateTransfer = StateTransfer.getInstance();
                 this.main.player.itemManager.changeItem(this.type, this.amount);
                 this.main.projectileDisplay.updateCount(this.amount);
