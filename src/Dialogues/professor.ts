@@ -1,8 +1,48 @@
 module MyGame {
     export function getProfessorText(): ITextManager {
 
+        let stateTransfer = StateTransfer.getInstance();
+        let itemNames = ["grodule", "plorpus", "dinklepoofer"];
+
         function ctns(str: string, ...vals: string[]) {
             return vals.some(v => str.indexOf(v) !== -1);
+        }
+
+        function getItemsText(): string {
+            let foundItems = itemNames.filter(n => stateTransfer.flags[n.toUpperCase() + "_FOUND"]);
+            let notFoundItems = itemNames.filter(n => foundItems.indexOf(n) === -1);
+            
+            return `Wow, you found the ${foundItems.join(" and the ")}, but you still need to find the ${notFoundItems.join(" and the ")}.`;
+        }
+
+        function removeFoundItems(main: Main) {
+            let foundItems = itemNames.filter(n => stateTransfer.flags[n.toUpperCase() + "_FOUND"]);
+            foundItems.forEach(n => {
+                let matchingBarriers = main.groups.barriers.filter(s => s instanceof Source && (s as Source).type === n).map(s => s as Source);
+                matchingBarriers.forEach(s => {
+                    s.remove();
+                });
+            });
+        }
+
+        function afterYesDecision(main: Main, professor: NPC): number {
+            let sources = main.groups.barriers.filter(s => s instanceof Source 
+                && Math.abs(professor.position.x - s.position.x) < 3 && Math.abs(professor.position.x - s.position.x) < 3).map(s => s as Source);
+            
+            for (let source of sources) {
+                if (source.type === Assets.Sprites.Grodule.key) {
+                    stateTransfer.flags["GRODULE_FOUND"] = true;
+                }
+            }
+            let foundItems = itemNames.filter(n => stateTransfer.flags[n.toUpperCase() + "_FOUND"]);
+            switch (foundItems.length) {
+                case 0:
+                    return 3;
+                case 3:
+                    return 5;
+                default:
+                    return 4;
+            }
         }
 
         function decision(lastViewed: number, main: Main, parent: Entity, lastResult?: string): number {
@@ -16,12 +56,12 @@ module MyGame {
                 } else if (ctns(lastResult, "hand.")) {
                     return 1;
                 }
-                return 3;
+                return afterYesDecision(main, parent as NPC);
             }
-            if (lastViewed === 1 || lastViewed === 2) {
-                return ctns(lastResult, "now.", "happens!", "hand.", "reconsider!") ? 2 : 3; 
+            if ((lastViewed === 1 || lastViewed === 2) && ctns(lastResult, "now.", "happens!", "hand.", "reconsider!")) {
+                return 2;
             }
-            return 3
+            return afterYesDecision(main, parent as NPC);
         }
 
         function getWhatHappened() {
@@ -78,7 +118,11 @@ module MyGame {
                 new TextOption("Yes.", new TextDump("Nice, Thanks.", getWhatHappened()))
             ])),
             // 3
-            new TextEncounter(new TextDump("Oh my, oh my... Please find the three missing parts Rosie!"))
-        ], decision)
+            new TextEncounter(new TextDump("Oh my, oh my... Please find the three missing parts Rosie!")),
+            // 4
+            new TextEncounter(new LazyTextDump(getItemsText, this), false, removeFoundItems),
+            // 5
+            new TextEncounter(new TextDump("You found them all."))
+        ], decision);
     }
 }

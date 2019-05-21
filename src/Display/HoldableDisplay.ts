@@ -13,9 +13,10 @@ module MyGame {
 
         constructor(main: Main, iconKey?: string, startingCount = 0) {
             this.main = main;
-            this.background = main.add.image(SCREEN_WIDTH - WIDTH - PADDING, PADDING, Assets.Images.ProjectileDisplay);
+            this.background = main.add.image(SCREEN_WIDTH - WIDTH - PADDING, PADDING, Assets.Sprites.ProjectileDisplay.key);
             this.text = main.add.bitmapText(this.background.x + TEXT_PADDING, this.background.y + TEXT_PADDING, Assets.FontName, startingCount.toString(), Assets.FontSize);
             this.icon = this.main.add.image(this.background.x + (WIDTH / 2) + TEXT_PADDING, this.background.y + TEXT_PADDING, iconKey);
+            this.background.animations.add("flash", [0, 1, 0, 1, 0, 1, 0, 1, 0], 10, false);
             this.background.fixedToCamera = true;
             this.text.fixedToCamera = true;
             this.icon.fixedToCamera = true;
@@ -60,6 +61,10 @@ module MyGame {
             if (this.showing) return;
             this.displayGroup.visible = true;
             this.showing = true;
+        }
+
+        flash() {
+            this.background.play("flash");
         }
     }
 }

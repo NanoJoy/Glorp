@@ -46,7 +46,7 @@ module MyGame {
                 "  w    ew                   **",
                 "  w  *  w        *   *       *",
                 "  we    wwwwwwwwww   wwwwwwwww",
-                "  w     w    e   *   * e  wwww",
+                "  w     w    e   *   * e  wppw",
                 "  w     g      e          g  w",
                 "  w    www                w  w",
                 "  wwwwwwwwwwwwwwwwwwwwwwwww  w"

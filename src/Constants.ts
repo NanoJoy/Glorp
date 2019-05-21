@@ -6,7 +6,7 @@ module MyGame {
 
     export const DEVELOPER_MODE = true;
     export const START_ISLAND = 6;
-    export const CLEAR_SAVE = true;
+    export const CLEAR_SAVE = false;
     export const PLAYER_START_X = 16;
     export const PLAYER_START_Y = 1;
 
@@ -88,6 +88,7 @@ module MyGame {
         OldMan = new SpriteAsset("old_man");
         Player = new SpriteAsset("player");
         PlayerBattle = new SpriteAsset("player_battle", 136, 136);
+        ProjectileDisplay = new SpriteAsset("projectile_display", 56, 32);
         ResultText = new SpriteAsset("result_text", 64, 28);
         RhythmSymbols = new SpriteAsset("rhythm_symbols", 24, 24);
         Stanley = new SpriteAsset("stanley");
@@ -120,7 +121,6 @@ module MyGame {
         Oven = "oven";
         OvenBattle = "oven_battle";
         Path = "path";
-        ProjectileDisplay = "projectile_display";
         RosieDead = "rosie_dead";
         Rug = "rug";
         Sign = "sign";

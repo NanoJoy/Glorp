@@ -4,6 +4,7 @@ module MyGame {
         renewing: boolean;
         amount: number;
         type: string;
+        sound: Phaser.Sound;
 
         constructor(type: string, main: Main, x: number, y: number, renewing: boolean, amount: number, typeAsSource = false) {
             let sourceKey = typeAsSource ? type : type + "_" + SOURCE;
@@ -11,10 +12,14 @@ module MyGame {
             this.type = type;
             this.renewing = renewing;
             this.amount = amount;
+            this.sound = main.add.sound(Assets.Audio.Collide.key);
 
             this.onCollision = (playerSprite: Phaser.Sprite, barrierSprite: Phaser.Sprite) => {
                 if (this.main.player.itemManager.getCount() > 0) {
-                    this.main.sound.play(Assets.Audio.Collide.key);
+                    if (!this.sound.isPlaying) {
+                        this.sound.play();
+                    }
+                    this.main.projectileDisplay.flash();
                     return;
                 }
                 let stateTransfer = StateTransfer.getInstance();
@@ -24,12 +29,17 @@ module MyGame {
                 stateTransfer.heldItems = { type: this.type, amount: this.amount };
 
                 if (!this.renewing) {
-                    this.sprite.destroy();
-                    this.main.groups.barriers = this.main.groups.barriers.filter(b => b !== this);
-                    stateTransfer.addedItems = stateTransfer.addedItems.filter(i => !i.location.equals(new Location(this.main.island.num, this.position.x, this.position.y)));
-                    WorldManager.getInstance().changeLayout(this.main.island.num, this.position, " ");
+                    this.remove();
                 }
             }
+        }
+
+        remove() {
+            let stateTransfer = StateTransfer.getInstance();
+            this.sprite.destroy();
+            this.main.groups.barriers = this.main.groups.barriers.filter(b => b !== this);
+            stateTransfer.addedItems = stateTransfer.addedItems.filter(i => !i.location.equals(new Location(this.main.island.num, this.position.x, this.position.y)));
+            WorldManager.getInstance().changeLayout(this.main.island.num, this.position, " ");
         }
 
         static makeSource(main: Main, x: number, y: number, type: string): Source {

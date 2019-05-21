@@ -43,7 +43,7 @@ module MyGame {
         scrollUp() {
             if (this.upArrow.visible) {
                 this.pageNumber -= 1;
-                this.text.text = this.textEncounter.getCurrentPage().text[this.pageNumber];
+                this.text.text = this.textEncounter.getCurrentPage().getText()[this.pageNumber];
                 this.setDownArrowFrame(true);
                 this.upArrow.visible = this.pageNumber > 0;
                 this.game.sound.play(Assets.Audio.Beep.key);
@@ -53,9 +53,9 @@ module MyGame {
         scrollDown() {
             if (this.downArrow.frame === Frames.Arrow.DOWN) {
                 this.pageNumber += 1;
-                this.text.text = this.textEncounter.getCurrentPage().text[this.pageNumber];
+                this.text.text = this.textEncounter.getCurrentPage().getText()[this.pageNumber];
                 this.upArrow.visible = true;
-                this.setDownArrowFrame(this.pageNumber < this.textEncounter.getCurrentPage().text.length - 1);
+                this.setDownArrowFrame(this.pageNumber < this.textEncounter.getCurrentPage().getText().length - 1);
                 this.currentRead = this.currentRead || this.downArrow.frame === Frames.Arrow.O;
                 if (this.currentRead && this.optionsDisplay.getCurrentOption() !== -1) {
                     this.optionsDisplay.show();
@@ -105,10 +105,10 @@ module MyGame {
                 this.optionsDisplay.hide();
                 this.inputs.right.onDown.remove(this.scrollRight, this);
                 this.inputs.left.onDown.remove(this.scrollLeft, this);
-                this.text.text = next.text[0];
+                this.text.text = next.getText()[0];
                 this.pageNumber = 0;
                 this.upArrow.visible = false;
-                this.setDownArrowFrame(this.textEncounter.getCurrentPage().text.length > 1);
+                this.setDownArrowFrame(this.textEncounter.getCurrentPage().getText().length > 1);
                 this.currentRead = this.currentRead || this.downArrow.frame === Frames.Arrow.O;
                 this.inputs.O.onUp.add(this.addOnDownListener, this);
                 return;
@@ -117,9 +117,9 @@ module MyGame {
             this.optionsDisplay.setOptions(nextPrompt.options);
             this.optionsDisplay.show();
             this.pageNumber = 0;
-            this.text.text = next.text[0];
+            this.text.text = next.getText()[0];
             this.upArrow.visible = false;
-            this.setDownArrowFrame(nextPrompt.text.length > 1);
+            this.setDownArrowFrame(nextPrompt.getText().length > 1);
             this.currentRead = this.currentRead || this.downArrow.frame === Frames.Arrow.O;
             this.inputs.left.onDown.add(this.scrollLeft, this);
             this.inputs.right.onDown.add(this.scrollRight, this);
@@ -144,12 +144,13 @@ module MyGame {
             this.textBackground.fixedToCamera = true;
             this.upArrow.visible = false;
             this.downArrow = this.game.add.image(SCREEN_WIDTH - 22, this.textBackground.height - 20, Assets.Sprites.Arrow.key);
-            this.setDownArrowFrame(this.textEncounter.getCurrentPage().text.length > 1);
+            let page = this.textEncounter.getCurrentPage();
+            this.setDownArrowFrame(page.getText().length > 1);
             this.currentRead = this.currentRead || this.downArrow.frame === Frames.Arrow.O;
             this.upArrow.fixedToCamera = true;
             this.downArrow.fixedToCamera = true;
 
-            this.text = this.game.add.bitmapText(8, this.textBackground.y + 8, Assets.FontName, this.textEncounter.getCurrentPage().text[0], 14);
+            this.text = this.game.add.bitmapText(8, this.textBackground.y + 8, Assets.FontName, this.textEncounter.getCurrentPage().getText()[0], 14);
             this.text.maxWidth = SCREEN_WIDTH - 24;
             this.text.fixedToCamera = true;
             this.pageNumber = 0;

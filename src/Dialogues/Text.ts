@@ -14,12 +14,12 @@ module MyGame {
     }
 
     export interface TextPage {
-        text: string[];
+        getText(): string[];
         hasOptions: boolean;
     }
 
     export class TextPrompt implements TextPage {
-        text: string[];
+        private text: string[];
         hasOptions: boolean;
         options: TextOption[];
 
@@ -31,10 +31,14 @@ module MyGame {
             this.hasOptions = true;
             this.options = options;
         }
+
+        getText() {
+            return this.text;
+        }
     }
 
     export class TextDump implements TextPage {
-        text: string[];
+        private text: string[];
         hasOptions: boolean;
         next: TextPage;
         
@@ -42,6 +46,25 @@ module MyGame {
             this.text = Utils.splitTextIntoPages(text);
             this.hasOptions = false;
             this.next = next;
+        }
+
+        getText() {
+            return this.text;
+        }
+    }
+
+    export class LazyTextDump implements TextPage {
+        hasOptions: boolean;
+        next: TextPage;
+        textGet: () => string;
+
+        constructor(getText: () => string, getTextContext: object, next = null as TextPage) {
+            this.next = next;
+            this.textGet = getText.bind(getTextContext);
+        }
+
+        getText() {
+            return Utils.splitTextIntoPages(this.textGet());
         }
     }
 
