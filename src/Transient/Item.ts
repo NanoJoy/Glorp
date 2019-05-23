@@ -7,6 +7,7 @@ module MyGame {
         update(): void;
         getCount(): number;
         peekItem(): Holdable;
+        getCurrentType(): string;
     }
 
     export class ItemManager implements IItemManager {
@@ -75,6 +76,10 @@ module MyGame {
 
         peekItem(): Holdable {
             return this.currentItem;
+        }
+
+        getCurrentType(): string {
+            return this.currentType;
         }
     }
 

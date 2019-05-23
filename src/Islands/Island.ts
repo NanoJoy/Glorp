@@ -53,6 +53,7 @@ module MyGame {
         action: (main: Main, button: Button) => void;
         direction: Direction;
         backgroundType: IslandType;
+        resetTime? = -1;
     }
 
     export class MapCustomBarrier extends StringPos {

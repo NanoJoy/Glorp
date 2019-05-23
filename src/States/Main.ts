@@ -144,7 +144,7 @@ module MyGame {
                             break;
                         case "?":
                             let mapButton = this.getThingAtPosition(island.buttons, x, y, "button") as MapButton;
-                            this.groups.buttons.push(new Button(this, x, y, mapButton.direction, mapButton.action, mapButton.backgroundType));
+                            this.groups.buttons.push(new Button(this, x, y, mapButton.direction, mapButton.action, mapButton.backgroundType, mapButton.resetTime));
                             break;
                         case "b":
                             this.groups.barriers.push(new Blackness(this, pof(x, y)));

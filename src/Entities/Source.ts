@@ -15,7 +15,7 @@ module MyGame {
             this.sound = main.add.sound(Assets.Audio.Collide.key);
 
             this.onCollision = (playerSprite: Phaser.Sprite, barrierSprite: Phaser.Sprite) => {
-                if (this.main.player.itemManager.getCount() > 0) {
+                if (this.main.player.itemManager.getCount() > 0 && !(this.main.player.itemManager.getCurrentType() === this.type && amount > 1)) {
                     if (!this.sound.isPlaying) {
                         this.sound.play();
                     }

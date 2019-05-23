@@ -443,5 +443,10 @@ module MyGame {
         static getHouseStart(x: number, y: number): Phaser.Point {
             return pof(x + 4, y + 7);
         }
+
+        static firstOrDefault<T>(list: T[], predicate: (item: T) => boolean): T {
+            let filtered = list.filter(predicate);
+            return filtered.length > 0 ? filtered[0] : null;
+        }
     }
 }

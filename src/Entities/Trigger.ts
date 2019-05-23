@@ -59,10 +59,10 @@ module MyGame {
         private on: boolean;
         private colliders: Phaser.Sprite[];
         private direction: Direction;
-        private wasColliding: boolean;
+        private resetTime: number;
 
 
-        constructor(main: Main, x: number, y: number, direction: Direction, action: (main: Main, button: Button) => void, backgroundType: IslandType) {
+        constructor(main: Main, x: number, y: number, direction: Direction, action: (main: Main, button: Button) => void, backgroundType: IslandType, resetTime = -1) {
             this.main = main;
             this.position = pof(x, y);
 
@@ -78,7 +78,7 @@ module MyGame {
             this.action = action;
             this.direction = direction;
             this.on = false;
-            this.wasColliding = false;
+            this.resetTime = resetTime;
 
             switch (backgroundType) {
                 case IslandType.WATER:
@@ -94,18 +94,16 @@ module MyGame {
         }
 
         update() {
-            let collidedThisTime = false;
             let collide = (sp: Phaser.Sprite, otherSp: Phaser.Sprite) => {
                 if (!this.on && (this.direction === Direction.Right && otherSp.left >= sp.right) || (this.direction === Direction.Left && otherSp.right <= sp.left)) {
                     this.turnOn();
                     this.action(this.main, this);
-                    collidedThisTime = true;
+                    if (this.resetTime !== -1) {
+                        this.main.time.events.add(this.resetTime, this.turnOff, this);
+                    }
                 }
             }
-            this.main.physics.arcade.collide(this.sprite, this.colliders, collide, (sp: Phaser.Sprite, otherSp: Phaser.Sprite) => {
-                return !this.wasColliding;
-            }, this);
-            this.wasColliding = collidedThisTime;
+            this.main.physics.arcade.collide(this.sprite, this.colliders, collide, null, this);
         }
 
         turnOn() {
@@ -120,6 +118,11 @@ module MyGame {
 
         isOn(): boolean {
             return this.on;
+        }
+
+        keepOn() {
+            this.turnOn();
+            this.resetTime = -1;
         }
     }
 
