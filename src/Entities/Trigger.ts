@@ -59,6 +59,7 @@ module MyGame {
         private on: boolean;
         private colliders: Phaser.Sprite[];
         private direction: Direction;
+        private originalResetTime: number;
         private resetTime: number;
 
 
@@ -78,7 +79,7 @@ module MyGame {
             this.action = action;
             this.direction = direction;
             this.on = false;
-            this.resetTime = resetTime;
+            this.resetTime = this.originalResetTime = resetTime;
 
             switch (backgroundType) {
                 case IslandType.WATER:
@@ -114,6 +115,7 @@ module MyGame {
         turnOff() {
             this.on = false;
             this.sprite.frame = Frames.Button.OFF;
+            this.resetTime = this.originalResetTime;
         }
 
         isOn(): boolean {

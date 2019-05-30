@@ -82,7 +82,7 @@ module MyGame {
 
             Utils.snapToPixels(this);
             this.state.groups.barriers.filter(b => b.playerCollides && b.hasBody).forEach(function (barrier) {
-                game.physics.arcade.collide(player, barrier.sprite, barrier.onCollision, null, barrier);
+                game.physics.arcade.collide(player, barrier.sprite, barrier.onCollision, barrier.checkCollision, barrier);
             });
             this.itemManager.update();
         }

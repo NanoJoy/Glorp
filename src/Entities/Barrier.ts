@@ -7,7 +7,9 @@ module MyGame {
         playerCollides: boolean;
         island: number;
 
-        onCollision: (playerSprite: Phaser.Sprite, barrierSprite: Phaser.Sprite) => void;
+        onCollision(playerSprite: Phaser.Sprite, barrierSprite: Phaser.Sprite): void {}
+        checkCollision(playerSprite: Phaser.Sprite, barrierSprite: Phaser.Sprite): boolean { return true; }
+        onStageBuilt(): void {}
 
         constructor(main: Main, position: Phaser.Point, key: string, char: string, playerCollides = true) {
             this.main = main;
@@ -37,6 +39,13 @@ module MyGame {
             super(main, position, Assets.Sprites.Water.key, "o");
             this.sprite.animations.add("wave", Utils.animationArray(0, 4), 2, true);
             this.sprite.play("wave");
+        }
+
+        onStageBuilt(): void {
+            let bridges = this.main.groups.barriers.filter(b => b instanceof Bridge).map(b => b as Bridge);
+            if (Utils.firstOrDefault(bridges, b => b.position.equals(pof(this.position.x, this.position.y + 1)))) {
+                this.playerCollides = false;
+            }
         }
     }
 
@@ -97,7 +106,7 @@ module MyGame {
 
     export class Lillypad extends Barrier {
         constructor(main: Main, position: Phaser.Point) {
-            super(main, position, Assets.Images.Lillypad, "p", false);
+            super(main, position, Assets.Images.Lillypad, "p");
         }
     }
 

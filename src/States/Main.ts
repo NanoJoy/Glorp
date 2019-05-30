@@ -88,6 +88,7 @@ module MyGame {
             this.groups.npcs.forEach(n => { n.onStageBuilt(); });
             this.groups.creatures.forEach(c => { c.onStageBuilt(); });
             this.groups.buttons.forEach(b => { b.onStageBuilt(); });
+            this.groups.barriers.forEach(b => { b.onStageBuilt(); });
             this.player.onStageBuilt();
 
             this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);

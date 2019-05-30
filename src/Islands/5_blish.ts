@@ -21,6 +21,8 @@ module MyGame {
                 }
             })
             return;
+        } else {
+            button.keepOn();
         }
         if (pressed === 3) {
             main.sound.play(Assets.Audio.Right.key);
@@ -42,19 +44,22 @@ module MyGame {
         positions.forEach(pos => {
             let lillypad = Utils.firstOrDefault(lillypads, l => l.position.equals(pos));
             if (lillypad) {
-                lillypads = lillypads.filter(l => l !== lillypad);
+                main.groups.barriers = main.groups.barriers.filter(l => l !== lillypad);
                 main.groups.barriers.push(new Bridge(main, pos));
                 worldManager.changeLayout(Islands.BLISH, pos, "|");
             }
             else {
                 let bridge = Utils.firstOrDefault(bridges, b => b.position.equals(pos));
                 if (bridge) {
-                    bridges = bridges.filter(b => b !== bridge);
+                    main.groups.barriers = main.groups.barriers.filter(b => b !== bridge);
                     main.groups.barriers.push(new Lillypad(main, pos));
                     worldManager.changeLayout(Islands.BLISH, pos, "p");
                 }
             }
         });
+        main.setDepths();
+        let waters = main.groups.barriers.filter(b => b instanceof Water).map(w => w as Water);
+        waters.forEach(w => w.onStageBuilt());
     }
 
     function addBottomBridge(main: Main, button: Button) {
