@@ -1,6 +1,7 @@
 module MyGame {
     let pressed = -1;
     let lastPressedY = -1;
+    let bottomBridgeAdded = false;
 
     function checkOrder(main: Main, button: Button) {
         if (pressed === -2) return;
@@ -38,7 +39,7 @@ module MyGame {
     function swapThings(main: Main, button: Button) {
         main.sound.play(Assets.Audio.Right.key);
         let worldManager = WorldManager.getInstance();
-        let positions = [pof(11, 8), pof(11, 9), pof(12, 12), pof(13, 12), pof(18, 12), pof(19, 12)];
+        let positions = [pof(11, 8), pof(11, 9), pof(12, 12), pof(13, 12)];
         let lillypads = main.groups.barriers.filter(b => b instanceof Lillypad).map(p => p as Lillypad);
         let bridges = main.groups.barriers.filter(b => b instanceof Bridge).map(b => b as Bridge);
         positions.forEach(pos => {
@@ -63,7 +64,14 @@ module MyGame {
     }
 
     function addBottomBridge(main: Main, button: Button) {
-        [pof(14, 20), pof(15, 20), pof(14, 21), pof(15, 21)].forEach(pos => {
+        if (bottomBridgeAdded) return;
+        bottomBridgeAdded = true;
+        main.sound.play(Assets.Audio.Right.key);
+        let waters = main.groups.barriers.filter(b => b instanceof Water).map(w => w as Water);
+        [pof(15, 20), pof(16, 20), pof(15, 21), pof(16, 21)].forEach(pos => {
+            let water = Utils.firstOrDefault(waters, w => w.position.equals(pos));
+            water.sprite.destroy();
+            main.groups.barriers = main.groups.barriers.filter(b => b !== water);
             main.groups.barriers.push(new Bridge(main, pos));
             WorldManager.getInstance().changeLayout(Islands.BLISH, pos, "|");
         });
@@ -80,11 +88,11 @@ module MyGame {
                 "   c             s      w",
                 "  nww                   w",
                 "wwww    ooopoooooooo    w",
-                "w       ?oopoooo?ooo    w",
+                "w       ?oopooo?oooo    w",
                 "w           oooooooo    w",
                 "w           oo s  oo    w",
-                "w           ||    ||    w",
-                "w           oo    oo    w",
+                "w           ||    ##    w",
+                "w           oo    ##    w",
                 "w           oo    oo****w",
                 "w           oo    oo    w",
                 "w           oooooooo    w",
@@ -119,7 +127,7 @@ module MyGame {
                 { type: Assets.Sprites.Button.key, x: 15, y: 3, action: checkOrder, direction: Direction.Right, backgroundType: IslandType.WATER, resetTime: 500 },
                 { type: Assets.Sprites.Button.key, x: 19, y: 4, action: checkOrder, direction: Direction.Left, backgroundType: IslandType.WATER, resetTime: 500 },
                 { type: Assets.Sprites.Button.key, x: 15, y: 5, action: checkOrder, direction: Direction.Right, backgroundType: IslandType.WATER, resetTime: 500 },
-                { type: Assets.Sprites.Button.key, x: 16, y: 9, action: swapThings, direction: Direction.Right, backgroundType: IslandType.WATER, resetTime: 2000 },
+                { type: Assets.Sprites.Button.key, x: 15, y: 9, action: swapThings, direction: Direction.Right, backgroundType: IslandType.WATER, resetTime: 2000 },
                 { type: Assets.Sprites.Button.key, x: 8, y: 9, action: addBottomBridge, direction: Direction.Right, backgroundType: IslandType.WATER }
             ])
             .build();

@@ -43,9 +43,7 @@ module MyGame {
 
         onStageBuilt(): void {
             let bridges = this.main.groups.barriers.filter(b => b instanceof Bridge).map(b => b as Bridge);
-            if (Utils.firstOrDefault(bridges, b => b.position.equals(pof(this.position.x, this.position.y + 1)))) {
-                this.playerCollides = false;
-            }
+            this.playerCollides = !Utils.firstOrDefault(bridges, b => b.position.equals(pof(this.position.x, this.position.y + 1)));
         }
     }
 

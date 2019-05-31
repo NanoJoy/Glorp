@@ -43,7 +43,6 @@ module MyGame {
 
     export class Blish extends Creature implements Moveable {
         private static MAX_SPEED = 300;
-        private static CUTOFF = 2;
         private wasIdle = false;
 
         lines: Phaser.Line[];
@@ -128,7 +127,7 @@ module MyGame {
         }
 
         static positionIsGood(x: number, y: number, layout: string[]) {
-            return layout[y].charAt(x) === "o";// || layout[y].charAt(x) === "?";
+            return layout[y].charAt(x) === "o" || layout[y].charAt(x) === "|";
         }
 
         private getRouteToTarget(start: Phaser.Point, target: Phaser.Point, layout: string[]): Direction[] {
