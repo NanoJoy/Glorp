@@ -2,6 +2,7 @@ module MyGame {
     let pressed = -1;
     let lastPressedY = -1;
     let bottomBridgeAdded = false;
+    let lillypadsToLeft = false;
 
     function checkOrder(main: Main, button: Button) {
         if (pressed === -2) return;
@@ -37,6 +38,9 @@ module MyGame {
     }
 
     function swapThings(main: Main, button: Button) {
+        if ((lillypadsToLeft && button.position.y === 10) || (!lillypadsToLeft && button.position.y === 9)) {
+            return;
+        }
         main.sound.play(Assets.Audio.Right.key);
         let worldManager = WorldManager.getInstance();
         let positions = [pof(11, 8), pof(11, 9), pof(12, 12), pof(13, 12)];
@@ -58,6 +62,7 @@ module MyGame {
                 }
             }
         });
+        lillypadsToLeft = !lillypadsToLeft;
         main.setDepths();
         let waters = main.groups.barriers.filter(b => b instanceof Water).map(w => w as Water);
         waters.forEach(w => w.onStageBuilt());
@@ -89,7 +94,7 @@ module MyGame {
                 "  nww                   w",
                 "wwww    ooopoooooooo    w",
                 "w       ?oopooo?oooo    w",
-                "w           oooooooo    w",
+                "w           ooo?oooo    w",
                 "w           oo s  oo    w",
                 "w           ||    ##    w",
                 "w           oo    ##    w",
@@ -128,6 +133,7 @@ module MyGame {
                 { type: Assets.Sprites.Button.key, x: 19, y: 4, action: checkOrder, direction: Direction.Left, backgroundType: IslandType.WATER, resetTime: 500 },
                 { type: Assets.Sprites.Button.key, x: 15, y: 5, action: checkOrder, direction: Direction.Right, backgroundType: IslandType.WATER, resetTime: 500 },
                 { type: Assets.Sprites.Button.key, x: 15, y: 9, action: swapThings, direction: Direction.Right, backgroundType: IslandType.WATER, resetTime: 2000 },
+                { type: Assets.Sprites.Button.key, x: 15, y: 10, action: swapThings, direction: Direction.Right, backgroundType: IslandType.WATER, resetTime: 2000 },
                 { type: Assets.Sprites.Button.key, x: 8, y: 9, action: addBottomBridge, direction: Direction.Right, backgroundType: IslandType.WATER }
             ])
             .build();
