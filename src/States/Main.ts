@@ -276,12 +276,12 @@ module MyGame {
                 }
             }, this);
             this.groups.buttons.forEach((b) => { this.game.world.bringToTop(b.sprite); }, this);
+            this.groups.creatures.forEach((c) => { this.game.world.bringToTop(c.sprite); }, this);
             this.groups.barriers.forEach(b => {
                 if (b.sprite.key === Assets.Images.Bridge) {
                     this.game.world.bringToTop(b.sprite);
                 }
             })
-            this.groups.creatures.forEach((c) => { this.game.world.bringToTop(c.sprite); }, this);
             this.groups.houses.forEach(function (ho) { this.game.world.bringToTop(ho.sprite); }, this);
             this.groups.npcs.forEach(function (n) { this.game.world.bringToTop(n.sprite); }, this);
             this.groups.enemies.forEach(function (en) { this.game.world.bringToTop(en.worldSprite); }, this);

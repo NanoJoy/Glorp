@@ -107,7 +107,7 @@ module MyGame {
     }
 
     export class JamBug extends Jammer {
-        battleSpriteKey = Assets.Images.JamBotBattle;
+        battleSpriteKey = Assets.Sprites.JamBugBattle.key;
         music = Assets.Audio.JamBug;
 
         constructor(main: Main, position: Phaser.Point, movementScript: MovementScript) {

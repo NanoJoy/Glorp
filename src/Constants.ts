@@ -7,8 +7,8 @@ module MyGame {
     export const DEVELOPER_MODE = true;
     export const START_ISLAND = 5;
     export const CLEAR_SAVE = false;
-    export const PLAYER_START_X = 6;
-    export const PLAYER_START_Y = 6;
+    export const PLAYER_START_X = 4;
+    export const PLAYER_START_Y = 3;
 
     export var States = {
         Boot: "Boot",
@@ -82,6 +82,7 @@ module MyGame {
         Grodule = new SpriteAsset("grodule");
         Grounds = new SpriteAsset("grounds");
         House = new SpriteAsset("house", 112, 96);
+        JamBugBattle = new SpriteAsset("jambug_battle", 136, 136);
         JamBotWorld = new SpriteAsset("jambot_world");
         JamBugWorld = new SpriteAsset("jambug_world");
         Monster = new SpriteAsset("monster", 40, 46);

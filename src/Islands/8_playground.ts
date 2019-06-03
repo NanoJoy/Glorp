@@ -14,7 +14,7 @@ module MyGame {
                 "wwwwwwwwww  ",
             ])
             .setOutsideBoundsPortals([
-                { side: Direction.Right, start: 4, end: 7, playerStart: pof(1, 23), link: Islands.TOWN }
+                { side: Direction.Right, start: 4, end: 7, playerStart: pof(1, 24), link: Islands.TOWN }
             ])
             .setNPCs([
                 { position: pof(2, 5), type: Assets.Sprites.ChuFeng.key, script: "uu    r   dd   l  ", text: "hello there" }

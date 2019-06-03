@@ -82,6 +82,10 @@ module MyGame {
         });
     }
 
+    function makePlorpus(main:Main, button: Button) {
+        
+    }
+
     islandGetters[5] = () => {return new IslandBuilder(5, IslandType.OUTSIDE)
             .setLayout([
                 "wt t t t t t t t t t t t ",
@@ -94,21 +98,21 @@ module MyGame {
                 "  nww                   w",
                 "wwww    ooopoooooooo    w",
                 "w       ?oopooo?oooo    w",
-                "w           ooo?oooo    w",
-                "w           oo s  oo    w",
-                "w           ||    ##    w",
-                "w           oo    ##    w",
-                "w           oo    oo****w",
-                "w           oo    oo    w",
-                "w           oooooooo    w",
-                "w           ooppppoo    w",
-                "w           oop  poo    w",
-                "w           oop  poo    w",
-                "w           oooooooo    w",
-                "w           oooooooo    w",
-                "w                       w",
-                "w                       w",
-                "w                       w",
+                "w       w   ooo?oooo    w",
+                "w       w   oo s  oo    w",
+                "w       w   ||    ##    w",
+                "w       w   oo    ##    w",
+                "w       w   oo    oo****w",
+                "w       w   oo    oo    w",
+                "w       w   oooooooo    w",
+                "w       w   ooppppoo    w",
+                "w       w   oop ?poo    w",
+                "w       w   oop  poo    w",
+                "w       w   oooooooo    w",
+                "w       w   oooooooo    w",
+                "w                  w    w",
+                "w                  w    w",
+                "w          wwwwwwwww    w",
                 "w                       w",
                 "wwwwwwwwwwwwwwwwwwwwwwwww"
             ])
@@ -134,7 +138,8 @@ module MyGame {
                 { type: Assets.Sprites.Button.key, x: 15, y: 5, action: checkOrder, direction: Direction.Right, backgroundType: IslandType.WATER, resetTime: 500 },
                 { type: Assets.Sprites.Button.key, x: 15, y: 9, action: swapThings, direction: Direction.Right, backgroundType: IslandType.WATER, resetTime: 2000 },
                 { type: Assets.Sprites.Button.key, x: 15, y: 10, action: swapThings, direction: Direction.Right, backgroundType: IslandType.WATER, resetTime: 2000 },
-                { type: Assets.Sprites.Button.key, x: 8, y: 9, action: addBottomBridge, direction: Direction.Right, backgroundType: IslandType.WATER }
+                { type: Assets.Sprites.Button.key, x: 8, y: 9, action: addBottomBridge, direction: Direction.Right, backgroundType: IslandType.WATER },
+                { type: Assets.Sprites.Button.key, x: 16, y: 18, action: addBottomBridge, direction: Direction.Left, backgroundType: IslandType.OUTSIDE }
             ])
             .build();
     };
