@@ -82,8 +82,18 @@ module MyGame {
         });
     }
 
-    function makePlorpus(main:Main, button: Button) {
-        
+    function openGates(main:Main, button: Button) {
+        let topY = 22;
+        let x = button.position.x === 16 ? 17 : 8;
+        let gates = main.groups.barriers.filter(b => b instanceof Gate).map(g => g as Gate);
+        for (let i = 0; i < 2; i++) {
+            let pos = pof(x, topY + i);
+            let gate = Utils.firstOrDefault(gates, g => g.position.equals(pos));
+            gate.sprite.destroy();
+            main.groups.barriers = main.groups.barriers.filter(b => b !== gate);
+            main.groups.grounds.push(new Grass(main, pos));
+            WorldManager.getInstance().changeLayout(Islands.BLISH, pos, " ");
+        }
     }
 
     islandGetters[5] = () => {return new IslandBuilder(5, IslandType.OUTSIDE)
@@ -96,8 +106,8 @@ module MyGame {
                 "   wwn  #      ?oooo #  w",
                 "   c             s      w",
                 "  nww                   w",
-                "wwww    ooopoooooooo    w",
-                "w       ?oopooo?oooo    w",
+                "wwww    ?oopoooooooo    w",
+                "w       ooopooo?oooo    w",
                 "w       w   ooo?oooo    w",
                 "w       w   oo s  oo    w",
                 "w       w   ||    ##    w",
@@ -109,10 +119,10 @@ module MyGame {
                 "w       w   oop ?poo    w",
                 "w       w   oop  poo    w",
                 "w       w   oooooooo    w",
-                "w       w   oooooooo    w",
-                "w                  w    w",
-                "w                  w    w",
-                "w          wwwwwwwww    w",
+                "w       ws  ooooooo?    w",
+                "w       g        gsw    w",
+                "w       g        g w    w",
+                "wwwwwwwwwwwwwwwwwwww    w",
                 "w                       w",
                 "wwwwwwwwwwwwwwwwwwwwwwwww"
             ])
@@ -125,7 +135,9 @@ module MyGame {
             ])
             .setSources([
                 { type: Assets.Images.CrumbsSource, x: 17, y: 6 },
-                { type: Assets.Images.CrumbsSource, x: 15, y: 11}
+                { type: Assets.Images.CrumbsSource, x: 15, y: 11},
+                { type: Assets.Images.CrumbsSource, x: 9, y: 21},
+                { type: Assets.Sprites.Grodule.key, x: 18, y: 22 }
             ])
             .setNPCs([
                 { position: pof(5, 5), type: Assets.Images.Sign, text: "Path to Tuttle Village", script: null },
@@ -138,8 +150,9 @@ module MyGame {
                 { type: Assets.Sprites.Button.key, x: 15, y: 5, action: checkOrder, direction: Direction.Right, backgroundType: IslandType.WATER, resetTime: 500 },
                 { type: Assets.Sprites.Button.key, x: 15, y: 9, action: swapThings, direction: Direction.Right, backgroundType: IslandType.WATER, resetTime: 2000 },
                 { type: Assets.Sprites.Button.key, x: 15, y: 10, action: swapThings, direction: Direction.Right, backgroundType: IslandType.WATER, resetTime: 2000 },
-                { type: Assets.Sprites.Button.key, x: 8, y: 9, action: addBottomBridge, direction: Direction.Right, backgroundType: IslandType.WATER },
-                { type: Assets.Sprites.Button.key, x: 16, y: 18, action: addBottomBridge, direction: Direction.Left, backgroundType: IslandType.OUTSIDE }
+                { type: Assets.Sprites.Button.key, x: 8, y: 8, action: addBottomBridge, direction: Direction.Right, backgroundType: IslandType.WATER },
+                { type: Assets.Sprites.Button.key, x: 16, y: 18, action: openGates, direction: Direction.Left, backgroundType: IslandType.OUTSIDE },
+                { type: Assets.Sprites.Button.key, x: 19, y: 21, action: openGates, direction: Direction.Left, backgroundType: IslandType.WATER }
             ])
             .build();
     };

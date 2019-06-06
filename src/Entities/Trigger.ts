@@ -96,7 +96,7 @@ module MyGame {
 
         update() {
             let collide = (sp: Phaser.Sprite, otherSp: Phaser.Sprite) => {
-                if (!this.on && (this.direction === Direction.Right && otherSp.left >= sp.right) || (this.direction === Direction.Left && otherSp.right <= sp.left)) {
+                if (!this.on && ((this.direction === Direction.Right && otherSp.left >= sp.right) || (this.direction === Direction.Left && otherSp.right <= sp.left))) {
                     this.turnOn();
                     this.action(this.main, this);
                     if (this.resetTime !== -1) {

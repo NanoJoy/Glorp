@@ -7,8 +7,8 @@ module MyGame {
     export const DEVELOPER_MODE = true;
     export const START_ISLAND = 5;
     export const CLEAR_SAVE = false;
-    export const PLAYER_START_X = 4;
-    export const PLAYER_START_Y = 3;
+    export const PLAYER_START_X = 15;
+    export const PLAYER_START_Y = 19;
 
     export var States = {
         Boot: "Boot",

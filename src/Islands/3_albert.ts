@@ -48,7 +48,7 @@ module MyGame {
                 "  we    wwwwwwwwww   wwwwwwwww",
                 "  w     w    e   *   * e  wppw",
                 "  w     g      e          g  w",
-                "  w    www                w  w",
+                "  w     ww                w  w",
                 "  wwwwwwwwwwwwwwwwwwwwwwwww  w"
             ])
             .setPlayerStart(pof(5, 0))

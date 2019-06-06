@@ -119,7 +119,7 @@ module MyGame {
             if (!this.landed) {
                 this.sprite.body.velocity.setTo(0, 0);
                 this.landed = true;
-                this.main.time.events.add(5000, this.dissolve, this);
+                this.main.time.events.add(10000, this.dissolve, this);
             }
         }
     }
