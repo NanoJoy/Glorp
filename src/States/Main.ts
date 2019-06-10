@@ -382,5 +382,26 @@ module MyGame {
                 this.unstopPlayer();
             }, this);
         }
+
+        removeBarrier(pos: Phaser.Point, backgroundType: IslandType) {
+            let barrier = Utils.firstOrDefault(this.groups.barriers, b => b.position.equals(pos));
+            barrier.sprite.destroy();
+            this.groups.barriers = this.groups.barriers.filter(b => b !== barrier);
+            switch (backgroundType) {
+                case IslandType.INSIDE:
+                    this.groups.barriers.push(new Blackness(this, pos));
+                    WorldManager.getInstance().changeLayout(this.island.num, pos, "b");
+                    break;
+                case IslandType.OUTSIDE:
+                    this.groups.grounds.push(new Grass(this, pos));
+                    WorldManager.getInstance().changeLayout(this.island.num, pos, " ");
+                    break;
+                case IslandType.WATER:
+                    this.groups.barriers.push(new Water(this, pos));
+                    WorldManager.getInstance().changeLayout(this.island.num, pos, "o");
+                    break;
+            }
+            this.setDepths();
+        }
     }
 }

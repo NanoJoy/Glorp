@@ -3,6 +3,7 @@ module MyGame {
     let lastPressedY = -1;
     let bottomBridgeAdded = false;
     let lillypadsToLeft = false;
+    let rightGateOpen = false;
 
     function checkOrder(main: Main, button: Button) {
         if (pressed === -2) return;
@@ -10,7 +11,7 @@ module MyGame {
             pressed++;
             lastPressedY = button.position.y;
         }
-        let correctOrder = [3,5,4,2];
+        let correctOrder = [3, 5, 4, 2];
         if (correctOrder[pressed] !== button.position.y) {
             if (pressed > 0) {
                 main.sound.play(Assets.Audio.Wrong.key);
@@ -80,23 +81,36 @@ module MyGame {
             main.groups.barriers.push(new Bridge(main, pos));
             WorldManager.getInstance().changeLayout(Islands.BLISH, pos, "|");
         });
+        main.setDepths();
     }
 
-    function openGates(main:Main, button: Button) {
+    function openGates(main: Main, button: Button) {
         let topY = 22;
         let x = button.position.x === 16 ? 17 : 8;
-        let gates = main.groups.barriers.filter(b => b instanceof Gate).map(g => g as Gate);
+        let worldManager = WorldManager.getInstance();
         for (let i = 0; i < 2; i++) {
-            let pos = pof(x, topY + i);
-            let gate = Utils.firstOrDefault(gates, g => g.position.equals(pos));
-            gate.sprite.destroy();
-            main.groups.barriers = main.groups.barriers.filter(b => b !== gate);
-            main.groups.grounds.push(new Grass(main, pos));
-            WorldManager.getInstance().changeLayout(Islands.BLISH, pos, " ");
+            if (x === 17) {
+                let leftX = 12;
+                if (rightGateOpen) {
+                    main.removeBarrier(pof(leftX, topY + i), IslandType.OUTSIDE);
+                    main.groups.barriers.push(new Gate(main, pof(x, topY + i)));
+
+                } else {
+                    main.removeBarrier(pof(x, topY + i), IslandType.OUTSIDE);
+                    main.groups.barriers.push(new Gate(main, pof(leftX, topY + i)));
+                }
+            } else {
+                main.removeBarrier(pof(x, topY + i), IslandType.OUTSIDE);
+            }
+        }
+
+        if (x === 17) {
+            rightGateOpen = !rightGateOpen;
         }
     }
 
-    islandGetters[5] = () => {return new IslandBuilder(5, IslandType.OUTSIDE)
+    islandGetters[5] = () => {
+        return new IslandBuilder(5, IslandType.OUTSIDE)
             .setLayout([
                 "wt t t t t t t t t t t t ",
                 "w                       w",
@@ -117,12 +131,12 @@ module MyGame {
                 "w       w   oooooooo    w",
                 "w       w   ooppppoo    w",
                 "w       w   oop ?poo    w",
-                "w       w   oop  poo    w",
-                "w       w   oooooooo    w",
-                "w       ws  ooooooo?    w",
-                "w       g        gsw    w",
-                "w       g        g w    w",
-                "wwwwwwwwwwwwwwwwwwww    w",
+                "w       w   oop  pooooo?w",
+                "w       w   oooooooooooow",
+                "w       ws  oooooooooooow",
+                "w       g        gs     w",
+                "w       g        g      w",
+                "wwwwwwwwwwwwwwwwwwwwwwwww",
                 "w                       w",
                 "wwwwwwwwwwwwwwwwwwwwwwwww"
             ])
@@ -135,8 +149,8 @@ module MyGame {
             ])
             .setSources([
                 { type: Assets.Images.CrumbsSource, x: 17, y: 6 },
-                { type: Assets.Images.CrumbsSource, x: 15, y: 11},
-                { type: Assets.Images.CrumbsSource, x: 9, y: 21},
+                { type: Assets.Images.CrumbsSource, x: 15, y: 11 },
+                { type: Assets.Images.CrumbsSource, x: 9, y: 21 },
                 { type: Assets.Sprites.Grodule.key, x: 18, y: 22 }
             ])
             .setNPCs([
@@ -151,8 +165,8 @@ module MyGame {
                 { type: Assets.Sprites.Button.key, x: 15, y: 9, action: swapThings, direction: Direction.Right, backgroundType: IslandType.WATER, resetTime: 2000 },
                 { type: Assets.Sprites.Button.key, x: 15, y: 10, action: swapThings, direction: Direction.Right, backgroundType: IslandType.WATER, resetTime: 2000 },
                 { type: Assets.Sprites.Button.key, x: 8, y: 8, action: addBottomBridge, direction: Direction.Right, backgroundType: IslandType.WATER },
-                { type: Assets.Sprites.Button.key, x: 16, y: 18, action: openGates, direction: Direction.Left, backgroundType: IslandType.OUTSIDE },
-                { type: Assets.Sprites.Button.key, x: 19, y: 21, action: openGates, direction: Direction.Left, backgroundType: IslandType.WATER }
+                { type: Assets.Sprites.Button.key, x: 16, y: 18, action: openGates, direction: Direction.Left, backgroundType: IslandType.OUTSIDE, resetTime: 2000 },
+                { type: Assets.Sprites.Button.key, x: 23, y: 19, action: openGates, direction: Direction.Left, backgroundType: IslandType.WATER }
             ])
             .build();
     };
