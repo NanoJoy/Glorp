@@ -57,6 +57,7 @@ module MyGame {
         readonly key: string;
         readonly width: number;
         readonly height: number;
+        readonly frames: number;
 
         constructor(key: string, width?: number, height?: number) {
             this.key = key;
@@ -89,6 +90,7 @@ module MyGame {
         OldMan = new SpriteAsset("old_man");
         Player = new SpriteAsset("player");
         PlayerBattle = new SpriteAsset("player_battle", 136, 136);
+        Plorpus = new SpriteAsset("plorpus");
         ProjectileDisplay = new SpriteAsset("projectile_display", 56, 32);
         ResultText = new SpriteAsset("result_text", 64, 28);
         RhythmSymbols = new SpriteAsset("rhythm_symbols", 24, 24);
@@ -122,6 +124,7 @@ module MyGame {
         Oven = "oven";
         OvenBattle = "oven_battle";
         Path = "path";
+        PlorpusIcon = "plorpus_icon";
         RosieDead = "rosie_dead";
         Rug = "rug";
         Sign = "sign";

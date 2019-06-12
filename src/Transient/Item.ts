@@ -45,6 +45,9 @@ module MyGame {
                 case Assets.Sprites.Grodule.key:
                     this.currentItem = new Grodule(main, x, y);
                     break;
+                case Assets.Sprites.Plorpus.key:
+                    this.currentItem = new Plorpus(main, x, y);
+                    break;
                 default:
                     throw new Error(`Item type ${this.currentType} is invalid.`);
             }

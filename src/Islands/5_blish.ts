@@ -3,7 +3,7 @@ module MyGame {
     let lastPressedY = -1;
     let bottomBridgeAdded = false;
     let lillypadsToLeft = false;
-    let rightGateOpen = false;
+    let innerGateOpen = false;
 
     function checkOrder(main: Main, button: Button) {
         if (pressed === -2) return;
@@ -87,17 +87,19 @@ module MyGame {
     function openGates(main: Main, button: Button) {
         let topY = 22;
         let x = button.position.x === 16 ? 17 : 8;
-        let worldManager = WorldManager.getInstance();
+        if (x === 17 && (main.island.layout[topY][x] === "s" || main.island.layout[topY + 1][x] === "s")) {
+            return;
+        }
         for (let i = 0; i < 2; i++) {
             if (x === 17) {
                 let leftX = 12;
-                if (rightGateOpen) {
+                if (innerGateOpen) {
                     main.removeBarrier(pof(leftX, topY + i), IslandType.OUTSIDE);
-                    main.groups.barriers.push(new Gate(main, pof(x, topY + i)));
+                    main.addBarrier(new Gate(main, pof(x, topY + i)));
 
                 } else {
                     main.removeBarrier(pof(x, topY + i), IslandType.OUTSIDE);
-                    main.groups.barriers.push(new Gate(main, pof(leftX, topY + i)));
+                    main.addBarrier(new Gate(main, pof(leftX, topY + i)));
                 }
             } else {
                 main.removeBarrier(pof(x, topY + i), IslandType.OUTSIDE);
@@ -105,7 +107,7 @@ module MyGame {
         }
 
         if (x === 17) {
-            rightGateOpen = !rightGateOpen;
+            innerGateOpen = !innerGateOpen;
         }
     }
 
@@ -136,8 +138,6 @@ module MyGame {
                 "w       ws  oooooooooooow",
                 "w       g        gs     w",
                 "w       g        g      w",
-                "wwwwwwwwwwwwwwwwwwwwwwwww",
-                "w                       w",
                 "wwwwwwwwwwwwwwwwwwwwwwwww"
             ])
             .setOutsideBoundsPortals([
@@ -151,7 +151,7 @@ module MyGame {
                 { type: Assets.Images.CrumbsSource, x: 17, y: 6 },
                 { type: Assets.Images.CrumbsSource, x: 15, y: 11 },
                 { type: Assets.Images.CrumbsSource, x: 9, y: 21 },
-                { type: Assets.Sprites.Grodule.key, x: 18, y: 22 }
+                { type: Assets.Sprites.Plorpus.key, x: 18, y: 22 }
             ])
             .setNPCs([
                 { position: pof(5, 5), type: Assets.Images.Sign, text: "Path to Tuttle Village", script: null },

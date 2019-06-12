@@ -403,5 +403,10 @@ module MyGame {
             }
             this.setDepths();
         }
+
+        addBarrier(barrier: Barrier) {
+            this.groups.barriers.push(barrier);
+            WorldManager.getInstance().changeLayout(this.island.num, barrier.position, barrier.char);
+        }
     }
 }

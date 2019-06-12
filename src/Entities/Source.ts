@@ -50,6 +50,8 @@ module MyGame {
                     return new SingleSource(main, x, y, type, false);
                 case Assets.Sprites.Grodule.key:
                     return new SingleSource(main, x, y, type, true);
+                case Assets.Sprites.Plorpus.key:
+                    return new SingleSource(main, x, y, type, true);
             }
             throw new Error(`Source type ${type} is invalid.`);
         }

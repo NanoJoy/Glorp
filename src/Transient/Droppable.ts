@@ -45,6 +45,14 @@ module MyGame {
         }
     }
 
+    export class Plorpus extends Droppable {
+        iconKey = Assets.Images.PlorpusIcon;
+
+        constructor(main: Main, x: number, y: number) {
+            super(main, pof(x, y), Assets.Sprites.Plorpus.key);
+        }
+    }
+
     export class Airhorn extends Droppable {
         iconKey = Assets.Images.AirhornIcon;
 
