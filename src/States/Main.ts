@@ -191,6 +191,11 @@ module MyGame {
                             this.groups.grounds.push(Ground.makeGround(this, island.type, pof(x, y)));
                             this.groups.frontOfPlayer.push(tree)
                             break;
+                        case "v":
+                            let tallGrass = new TallGrass(this, pof(x, y))
+                            this.groups.barriers.push(tallGrass);
+                            this.groups.frontOfPlayer.push(tallGrass);
+                            break;
                         case "w":
                             this.groups.barriers.push(new StoneWall(this, pof(x, y), island.getNeighborhood(pof(x, y))));
                             break;

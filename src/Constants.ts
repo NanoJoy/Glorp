@@ -97,6 +97,7 @@ module MyGame {
         Stanley = new SpriteAsset("stanley");
         StoneWall = new SpriteAsset("stone_wall");
         TheMeep = new SpriteAsset("the_meep", 224, 320);
+        TallGrass = new SpriteAsset("tall_grass");
         Tree = new SpriteAsset("tree", 56, 64);
         Water = new SpriteAsset("water");
     }
@@ -113,6 +114,7 @@ module MyGame {
         CrumbsIcon = "crumbs_icon";
         CrumbsSource = "crumbs_source";
         Door = "door";
+        Fruit = "fruit";
         FruitStand = "fruit_stand";
         GroduleIcon = "grodule_icon";
         HealthBarContainer = "healthbar_container";

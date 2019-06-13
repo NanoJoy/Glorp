@@ -127,4 +127,11 @@ module MyGame {
             super(main, position, Assets.Images.Bridge, '|', false);
         }
     }
+
+    export class TallGrass extends Barrier {
+        constructor(main: Main, position: Phaser.Point) {
+            super(main, position, Assets.Sprites.TallGrass.key, "v", false);
+            this.sprite.frame = Math.floor(Math.random() * 3);
+        }
+    }
 }

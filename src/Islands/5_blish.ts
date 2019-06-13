@@ -116,10 +116,10 @@ module MyGame {
             .setLayout([
                 "wt t t t t t t t t t t t ",
                 "w                       w",
-                "w # #    #     cooo?#   w",
-                "w     #        ?oooo    w",
-                "wwww    #  #   oooo?   #w",
-                "   wwn  #      ?oooo #  w",
+                "w xxxx         cooo?    w",
+                "w       x      ?oooo    w",
+                "wwww     xxx   oooo?    w",
+                "   wwn xx      ?oooo    w",
                 "   c             s      w",
                 "  nww                   w",
                 "wwww    ?oopoooooooo    w",
@@ -134,14 +134,15 @@ module MyGame {
                 "w       w   ooppppoo    w",
                 "w       w   oop ?poo    w",
                 "w       w   oop  pooooo?w",
-                "w       w   oooooooooooow",
-                "w       ws  oooooooooooow",
-                "w       g        gs     w",
-                "w       g        g      w",
+                "w*******w   oooooooooooow",
+                "        ws  oooooooooooow",
+                "        g        gs     w",
+                "        g        g      w",
                 "wwwwwwwwwwwwwwwwwwwwwwwww"
             ])
             .setOutsideBoundsPortals([
-                { side: Direction.Left, start: 4, end: 7, link: 3, playerStart: pof(28, 4) }
+                { side: Direction.Left, start: 4, end: 7, link: Islands.ALBERT, playerStart: pof(28, 4) },
+                { side: Direction.Left, start: 20, end: 23, link: Islands.CORRIDOR, playerStart: pof(20, 2) }
             ])
             .setCreatures([
                 { type: Assets.Sprites.Blish.key, x: 15, y: 2 },
@@ -167,6 +168,18 @@ module MyGame {
                 { type: Assets.Sprites.Button.key, x: 8, y: 8, action: addBottomBridge, direction: Direction.Right, backgroundType: IslandType.WATER },
                 { type: Assets.Sprites.Button.key, x: 16, y: 18, action: openGates, direction: Direction.Left, backgroundType: IslandType.OUTSIDE, resetTime: 2000 },
                 { type: Assets.Sprites.Button.key, x: 23, y: 19, action: openGates, direction: Direction.Left, backgroundType: IslandType.WATER }
+            ])
+            .setCustomBarriers([
+                { x: 2, y: 2, type: Assets.Images.Fruit, playerCollides: true },
+                { x: 3, y: 2, type: Assets.Images.Fruit, playerCollides: true },
+                { x: 4, y: 2, type: Assets.Images.Fruit, playerCollides: true },
+                { x: 5, y: 2, type: Assets.Images.Fruit, playerCollides: true },
+                { x: 8, y: 3, type: Assets.Images.Fruit, playerCollides: true },
+                { x: 9, y: 4, type: Assets.Images.Fruit, playerCollides: true },
+                { x: 10, y: 4, type: Assets.Images.Fruit, playerCollides: true },
+                { x: 11, y: 4, type: Assets.Images.Fruit, playerCollides: true },
+                { x: 7, y: 5, type: Assets.Images.Fruit, playerCollides: true },
+                { x: 8, y: 5, type: Assets.Images.Fruit, playerCollides: true }
             ])
             .build();
     };
