@@ -91,7 +91,7 @@ module MyGame {
                 } else {
                     this.direction = Direction.Right;
                 }
-                if (!(this instanceof Sign) && !this.notDefaultAnims) {
+                if (!this.notDefaultAnims) {
                     this.sprite.play(Utils.getIdleAnimName(this.direction));
                 }
             } else {
@@ -217,7 +217,13 @@ module MyGame {
 
     export class Sign extends NPC {
         constructor(main: Main, position: Phaser.Point, textManager: ITextManager) {
-            super (main, position, textManager, null, 0, 0, Assets.Images.Sign);
+            super(main, position, textManager, null, 0, 0, Assets.Images.Sign, true);
+        }
+    }
+
+    export class Book extends NPC {
+        constructor(main: Main, position: Phaser.Point, textManager: ITextManager) {
+            super(main, position, textManager, null, 0, 0, Assets.Images.Book, true);
         }
     }
 

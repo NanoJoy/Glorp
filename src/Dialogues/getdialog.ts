@@ -10,11 +10,24 @@ module MyGame {
         TUTORIAL_SIGN,
         TUTORIAL_PERSON,
         MONSTER,
-        INTERLUDE
+        INTERLUDE,
+        ANIMAL_BEHAVIOR
     }
 
     export function getSignText(info: string): ITextManager {
         return new TextManager([new TextEncounter(new TextDump(info))]);
+    }
+
+    export function getBookText(...pages: string[]): ITextManager {
+        let dump = new TextDump(pages[pages.length - 1]);
+        for (let i = pages.length - 2; i >= 0; i--) {
+            let choice = new TextPrompt("Keep reading?", [
+                new TextOption("Yes", dump),
+                new TextOption("No")
+            ]);
+            dump = new TextDump(pages[i], choice);
+        }
+        return new TextManager([new TextEncounter(dump)]);
     }
 
     export function getDialog(key: Texts): ITextManager {
@@ -75,6 +88,13 @@ module MyGame {
             case Texts.INTERLUDE:
                 return new TextManager([new TextEncounter(new TextDump("What was that?", new TextDump("...",
                 new TextDump("Oh, I guess it was just a dream. But I feel like I've seen that thing before somewhere."))))]);
+            case Texts.ANIMAL_BEHAVIOR:
+                return getBookText("Creature Behavior: Section 25 - The Blumpus", "A blumpus is a stubborn creature that demands a high level of respect from its owner. " +
+                "If properly managed a Blumpus' natural charge can be used a power a home for at least two people. In order to stabilize its large body, the Blumpus contains two " + 
+                "gyroscopic organs which spin in opposite directions. If kept on their natural diet of Bigberries, these organs will spin fast enough to act as generators.", 
+                "When a mother Blumpus feeds its children the first child to take a bite will be badly beaten afterwards. Usually these beatings will continue until only one or two offspring remain. " + 
+                "This selects for the children with the greatest patience or intelligence. Despite the initial frailness of the surviving children in comparison to their more eager siblings " + 
+                "eventually they will grow to be massive and fit.", "eeep");
             default:
                 throw new Error(`Cannot find dialog for key '${key}'.`);
         }

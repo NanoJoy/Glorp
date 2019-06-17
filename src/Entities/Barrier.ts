@@ -129,9 +129,14 @@ module MyGame {
     }
 
     export class TallGrass extends Barrier {
+        bottomSprite: Phaser.Sprite
+
         constructor(main: Main, position: Phaser.Point) {
             super(main, position, Assets.Sprites.TallGrass.key, "v", false);
-            this.sprite.frame = Math.floor(Math.random() * 3);
+            let frame = Math.floor(Math.random() * 3);
+            frame = frame === 2 ? 4 : frame;
+            this.sprite.frame = frame;
+            this.bottomSprite = main.add.sprite(position.x * TILE_WIDTH, (position.y + 0.5) * TILE_HEIGHT, Assets.Sprites.TallGrass.key, frame + 2);
         }
     }
 }

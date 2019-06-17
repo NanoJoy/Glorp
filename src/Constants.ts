@@ -5,10 +5,10 @@ module MyGame {
     export const TILE_HEIGHT = 32;
 
     export const DEVELOPER_MODE = true;
-    export const START_ISLAND = 5;
+    export const START_ISLAND = 7;
     export const CLEAR_SAVE = false;
     export const PLAYER_START_X = 1;
-    export const PLAYER_START_Y = 2;
+    export const PLAYER_START_Y = 1;
 
     export var States = {
         Boot: "Boot",
@@ -97,7 +97,7 @@ module MyGame {
         Stanley = new SpriteAsset("stanley");
         StoneWall = new SpriteAsset("stone_wall");
         TheMeep = new SpriteAsset("the_meep", 224, 320);
-        TallGrass = new SpriteAsset("tall_grass");
+        TallGrass = new SpriteAsset("tall_grass", 28, 16);
         Tree = new SpriteAsset("tree", 56, 64);
         Water = new SpriteAsset("water");
     }
@@ -107,6 +107,7 @@ module MyGame {
         AirhornIcon = "airhorn_icon";
         Bar = "bar";
         BlackScreen = "black_screen";
+        Book = "book";
         BottomTextBackground = "bottom_text_background";
         Bridge = "bridge";
         ButtonPrompt = "button_prompt";
