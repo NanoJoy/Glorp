@@ -12,9 +12,9 @@ module MyGame {
         hitPoints: number;
         health: number;
         alive: boolean;
-        movementManager: MovementManager;
         transferPosition: Phaser.Point;
         music: AudioAsset;
+        movementManager: IMovementManager;
         abstract onStageBuilt(): void;
         abstract update(): void;
         abstract afterDeath(main: Main): void;

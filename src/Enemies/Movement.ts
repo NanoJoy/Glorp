@@ -1,8 +1,13 @@
 module MyGame {
+    export interface IMovementManager {
+        pause(): void;
+        resume(): void;
+    }
+
     export interface Moveable {
         sprite: Phaser.Sprite;
         direction: Direction;
-        speed: number;
+        readonly speed: number;
     }
 
     export class MovementScript {
@@ -19,7 +24,7 @@ module MyGame {
         }
     }
 
-    export class MovementManager {
+    export class MovementManager implements IMovementManager {
         game: Phaser.Game;
         script: MovementScript;
         sprite: Phaser.Sprite;

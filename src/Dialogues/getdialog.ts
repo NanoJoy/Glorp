@@ -94,7 +94,10 @@ module MyGame {
                 "gyroscopic organs which spin in opposite directions. If kept on their natural diet of Bigberries, these organs will spin fast enough to act as generators.", 
                 "When a mother Blumpus feeds its children the first child to take a bite will be badly beaten afterwards. Usually these beatings will continue until only one or two offspring remain. " + 
                 "This selects for the children with the greatest patience or intelligence. Despite the initial frailness of the surviving children in comparison to their more eager siblings " + 
-                "eventually they will grow to be massive and fit.", "eeep");
+                "eventually they will grow to be massive and fit.", "Blumpuses are most vulnerable during sleep when their usually rock hard skin softens to be repaired. In order to defend themselves " + 
+                "they have adapted to become sensitive to loud sounds, and to become very aggressive when they are woken.",
+                "If you are unlucky enough to wake a Blumpus, you will have to dance with it. Importantly, you must use the opposite directions that the Blumpus uses. For example, if the Blumpus goes " + 
+                "UP, you must press DOWN on the corresponding beat, or if the Blumpus goes LEFT, you must press RIGHT on the corresponding beat.");
             default:
                 throw new Error(`Cannot find dialog for key '${key}'.`);
         }

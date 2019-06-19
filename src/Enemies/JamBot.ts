@@ -16,7 +16,6 @@ module MyGame {
         sprite: Phaser.Sprite;
         direction: Direction;
         speed: number;
-        movementManager: MovementManager;
         alive: boolean;
         transferPosition: Phaser.Point;
         afterDeath: (main: Main) => void;
@@ -40,7 +39,7 @@ module MyGame {
         }
 
         onStageBuilt() {
-            this.movementManager.start();
+            (this.movementManager as MovementManager).start();
         }
 
         getAttackPoints(pattern: PatternNote[]) {
@@ -55,7 +54,7 @@ module MyGame {
             if (!this.alive) {
                 return;
             }
-            this.movementManager.playNext();
+            (this.movementManager as MovementManager).playNext();
             this.main.physics.arcade.overlap(this.worldSprite, this.main.player, this.playerOverlap, null, this);
             if (Utils.isAThing(this.specificUpdate)) {
                 this.specificUpdate();

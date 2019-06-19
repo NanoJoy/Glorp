@@ -5,10 +5,10 @@ module MyGame {
     export const TILE_HEIGHT = 32;
 
     export const DEVELOPER_MODE = true;
-    export const START_ISLAND = 7;
-    export const CLEAR_SAVE = false;
-    export const PLAYER_START_X = 1;
-    export const PLAYER_START_Y = 1;
+    export const START_ISLAND = 10;
+    export const CLEAR_SAVE = true;
+    export const PLAYER_START_X = 20;
+    export const PLAYER_START_Y = 2;
 
     export var States = {
         Boot: "Boot",
@@ -77,6 +77,7 @@ module MyGame {
         Bush = new SpriteAsset("bush");
         Button = new SpriteAsset("button");
         ChuFeng = new SpriteAsset("chu_feng");
+        Croller = new SpriteAsset("croller");
         Crumbs = new SpriteAsset("crumbs");
         DoorWay = new SpriteAsset("doorway", 36, 8);
         Gate = new SpriteAsset("gate");

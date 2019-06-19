@@ -311,6 +311,10 @@ module MyGame {
                     let jambug = new JamBug(main, pcop(enemy.position), Utils.makeMovementScript(enemy.position, enemy.script));
                     jambug.afterDeath = enemy.afterDeath;
                     return jambug;
+                case Assets.Sprites.Croller.key:
+                    let croller = new Croller(main, pcop(enemy.position));
+                    croller.afterDeath = enemy.afterDeath;
+                    return croller;
             }
             throw new Error(`${enemy.type} is not a valid enemy type.`);
         }
