@@ -2,11 +2,10 @@ module MyGame {
     export class Croller extends Enemy implements Moveable {
         sprite: Phaser.Sprite;
         direction: Direction;
-        speed: 100;
+        speed = 100;
         main: Main;
         position: Phaser.Point;
         movementManager: IMovementManager;
-        onStageBuilt(): void { }
         afterDeath(main: Main): void { }
 
         constructor(main: Main, position: Phaser.Point) {
@@ -18,13 +17,15 @@ module MyGame {
             this.worldSprite = this.sprite;
             let blockers = main.groups.barriers.filter(b => b.playerCollides);
             this.movementManager = new TargetMover(this, blockers);
-            (this.movementManager as TargetMover).followTarget(main.player);
         }
 
         update(): void {
             (this.movementManager as TargetMover).update();
         }
 
+        onStageBuilt() {
+            (this.movementManager as TargetMover).followTarget(this.main.player);
+        }
     
         calculateDamage(pattern: PatternNote[], notePresses: NotePress[]): number {
             return this.health;
