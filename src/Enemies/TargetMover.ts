@@ -30,13 +30,15 @@ module MyGame {
 
             if (roundedSubjectPos.x !== roundedTargetPos.x) {
                 if (!blockerPos.some(p => p.y === roundedSubjectPos.y)) {
-                    this.getBody().velocity.setTo(this.subject.speed, 0);
+                    let multiplier = roundedTargetPos.x > roundedSubjectPos.x ? 1 : -1;
+                    this.getBody().velocity.setTo(this.subject.speed * multiplier, 0);
                     return;
                 }
             }
             if (roundedSubjectPos.y !== roundedTargetPos.y) {
                 if (!blockerPos.some(p => p.x === roundedSubjectPos.x)) {
-                    this.getBody().velocity.setTo(0, this.subject.speed);
+                    let multiplier = roundedTargetPos.y > roundedSubjectPos.y ? 1 : -1;
+                    this.getBody().velocity.setTo(0, this.subject.speed * multiplier);
                     return;
                 }
             }

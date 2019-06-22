@@ -2,7 +2,7 @@ module MyGame {
     export class Croller extends Enemy implements Moveable {
         sprite: Phaser.Sprite;
         direction: Direction;
-        speed = 100;
+        speed = 200;
         main: Main;
         position: Phaser.Point;
         movementManager: IMovementManager;
@@ -17,10 +17,20 @@ module MyGame {
             this.worldSprite = this.sprite;
             let blockers = main.groups.barriers.filter(b => b.playerCollides);
             this.movementManager = new TargetMover(this, blockers);
+
+            this.sprite.animations.add("walk", Utils.animationArray(0, 5), 8, true);
+            this.sprite.animations.add("stand", [0], 4);
         }
 
         update(): void {
             (this.movementManager as TargetMover).update();
+            if ((this.sprite.body as Phaser.Physics.Arcade.Body).velocity.isZero()) {
+                if (this.sprite.animations.currentAnim.name === "walk") {
+                    this.sprite.play("stand");
+                }
+            } else if (this.sprite.animations.currentAnim.name === "stand") {
+                this.sprite.play("walk", 8, true);
+            }
         }
 
         onStageBuilt() {

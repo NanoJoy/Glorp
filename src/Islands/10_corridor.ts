@@ -3,9 +3,15 @@ module MyGame {
         return new IslandBuilder(10, IslandType.OUTSIDE)
             .setLayout([
                 "wwwwwwwwwwwwwwwwwwwwww",
+                "    vvvvvvvvvvvvv*    ",
+                "    vvvvvvvvvvvvv*    ",
+                "e   vvvvvvvvvvvvv*    ",
+                "    vvvvvvvvvvvvv*    ",
+                "    vvv   * **** v    ",
+                "    vvv   *      v    ",
+                "    vvv   *      v    ",
                 "    vvvvvvvvvvvvvv    ",
                 "    vvvvvvvvvvvvvv    ",
-                "e   vvvvvvvvvvvvvv    ",
                 "wwwwwwwwwwwwwwwwwwwwww"
             ])
             .setOutsideBoundsPortals([
