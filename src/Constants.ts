@@ -78,6 +78,7 @@ module MyGame {
         Button = new SpriteAsset("button");
         ChuFeng = new SpriteAsset("chu_feng");
         Croller = new SpriteAsset("croller");
+        CrollerBattle = new SpriteAsset("croller_battle", 136, 136);
         Crumbs = new SpriteAsset("crumbs");
         DoorWay = new SpriteAsset("doorway", 36, 8);
         Gate = new SpriteAsset("gate");

@@ -23,7 +23,7 @@ module MyGame {
         abstract calculateDamage(pattern: PatternNote[], notePresses: NotePress[]): number;
         abstract getAttackPoints(pattern: PatternNote[]): number;
         abstract die(): void;
-        abstract noteComparer(pattern: Phaser.KeyCode[], pressed: number, pressedCount: number): boolean;
+        abstract noteComparer(pattern: Phaser.KeyCode[], pressed: number, pressedCount: number, beatPos: number): boolean;
 
         startBattle(main: Main) {
             let stateTransfer = StateTransfer.getInstance();
@@ -48,6 +48,29 @@ module MyGame {
             stateTransfer.flags["USE_SAVE"] = true;
             main.stopPlayer();
             Utils.fadeToBlack(main, 500, States.Battle);
+        }
+
+        onNoteDisplay(game: Battle, noteOrNull: Phaser.KeyCode, beatPos: number) {
+            switch (noteOrNull) {
+                case game.inputs.down.keyCode:
+                    game.enemyDisplay.moveDown();
+                    break;
+                case game.inputs.up.keyCode:
+                    game.enemyDisplay.moveUp();
+                    break;
+                case game.inputs.left.keyCode:
+                    game.enemyDisplay.moveLeft();
+                    break;
+                case game.inputs.right.keyCode:
+                    game.enemyDisplay.moveRight();
+                    break;
+                case game.inputs.O.keyCode:
+                    game.enemyDisplay.pressO();
+                    break;
+                case game.inputs.K.keyCode:
+                    game.enemyDisplay.pressK();
+            }
+            game.time.events.add(Utils.bpmToMilliseconds(this.tempo) / 2, game.enemyDisplay.reset, game.enemyDisplay);
         }
     }
 

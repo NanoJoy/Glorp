@@ -1,18 +1,18 @@
 module MyGame {
     export class TargetMover implements IMovementManager {
         private subject: Moveable;
-        private blockers: Barrier[];
+        private blockerPos: Phaser.Point[];
         private target: Phaser.Sprite;
         private paused: boolean;
 
         constructor(subject: Moveable, blockers: Barrier[]) {
             this.subject = subject;
-            this.blockers = blockers;
+            this.blockerPos = blockers.map(b => b.position);
             this.paused = false;
         }
 
         setBlockers(blockers: Barrier[]) {
-            this.blockers = blockers;
+            this.blockerPos = blockers.map(b => b.position);
         }
 
         followTarget(target: Phaser.Sprite) {
@@ -26,17 +26,16 @@ module MyGame {
             if (this.paused || !this.target) return;
             let roundedTargetPos = Utils.roundToClosestTile(this.target.position);
             let roundedSubjectPos = Utils.roundToClosestTile(this.subject.sprite.position);
-            let blockerPos = this.blockers.map(b => Utils.roundToClosestTile(b.position));
 
-            if (roundedSubjectPos.x !== roundedTargetPos.x) {
-                if (!blockerPos.some(p => p.y === roundedSubjectPos.y)) {
+            if (!this.blockerPos.some(p => p.y === roundedSubjectPos.y && this.betweenThings(p.x, roundedSubjectPos.x, roundedTargetPos.x))
+                && !this.blockerPos.some(p => p.x === roundedSubjectPos.x && this.betweenThings(p.y, roundedSubjectPos.y, roundedTargetPos.y))) {
+
+                if (roundedSubjectPos.x !== roundedTargetPos.x) {
                     let multiplier = roundedTargetPos.x > roundedSubjectPos.x ? 1 : -1;
                     this.getBody().velocity.setTo(this.subject.speed * multiplier, 0);
                     return;
                 }
-            }
-            if (roundedSubjectPos.y !== roundedTargetPos.y) {
-                if (!blockerPos.some(p => p.x === roundedSubjectPos.x)) {
+                if (roundedSubjectPos.y !== roundedTargetPos.y) {
                     let multiplier = roundedTargetPos.y > roundedSubjectPos.y ? 1 : -1;
                     this.getBody().velocity.setTo(0, this.subject.speed * multiplier);
                     return;
@@ -61,6 +60,13 @@ module MyGame {
 
         private getBody(): Phaser.Physics.Arcade.Body {
             return this.subject.sprite.body as Phaser.Physics.Arcade.Body;
+        }
+
+        private betweenThings(p: number, end1: number, end2: number): boolean {
+            if (end1 <= end2) {
+                return p >= end1 && p <= end2;
+            }
+            return p <= end1 && p >= end2;
         }
     }
 }

@@ -58,26 +58,8 @@ module MyGame {
                 new NoteDisplay(this.game, noteOrNull, position % this.generator.beatLength === 0,
                      true, position, this.generator.length)
             );
-            switch (noteOrNull) {
-                case this.game.inputs.down.keyCode:
-                    this.game.enemyDisplay.moveDown();
-                    break;
-                case this.game.inputs.up.keyCode:
-                    this.game.enemyDisplay.moveUp();
-                    break;
-                case this.game.inputs.left.keyCode:
-                    this.game.enemyDisplay.moveLeft();
-                    break;
-                case this.game.inputs.right.keyCode:
-                    this.game.enemyDisplay.moveRight();
-                    break;
-                case this.game.inputs.O.keyCode:
-                    this.game.enemyDisplay.pressO();
-                    break;
-                case this.game.inputs.K.keyCode:
-                    this.game.enemyDisplay.pressK();
-            }
-            this.game.time.events.add(this.tempo / 2, this.game.enemyDisplay.reset, this.game.enemyDisplay);
+
+            this.game.enemy.onNoteDisplay(this.game, noteOrNull, position);
         }
     }
 

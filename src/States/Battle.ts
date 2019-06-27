@@ -7,7 +7,7 @@ module MyGame {
         private playerHealth: number;
         private playerHealthDisplay: HealthDisplay;
         private enemyHealthDisplay: HealthDisplay;
-        private enemy: Enemy;
+        enemy: Enemy;
         private music: Phaser.Sound;
         private passedMeasures: number;
         playerDisplay: CharacterDisplay;
@@ -191,6 +191,13 @@ module MyGame {
 
         pressK() {
             this.image.scale.setTo(0.9, 0.9);
+        }
+
+        playAnim(name: string, frames: number[], speed: number) {
+            if (!this.image.animations.getAnimation(name)) {
+                this.image.animations.add(name, frames, speed);
+            }
+            this.image.play(name);
         }
     }
 
