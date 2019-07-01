@@ -60,11 +60,14 @@ module MyGame {
         }
     
         calculateDamage(pattern: PatternNote[], notePresses: NotePress[]): number {
+            if (notePresses.length < this.minNumNotes) {
+                return 0;
+            }
             return this.health / 4;
         }
 
         getAttackPoints(pattern: PatternNote[]): number {
-            return 100;
+            return 34;
         }
 
         die(): void {
@@ -73,7 +76,8 @@ module MyGame {
         }
 
         noteComparer(pattern: Phaser.KeyCode[], pressed: number, pressedCount: number, beatPos: number): boolean {
-            return PatternUtil.getNthNote(pattern, pressedCount) === pressed;
+            let orderedPositions = this.positions.sort();
+            return orderedPositions[pressedCount] === beatPos && PatternUtil.getNthNote(pattern, pressedCount) === pressed;
         }
 
         onNoteDisplay(game: Battle, noteOrNull: Phaser.KeyCode, beatPos: number) {

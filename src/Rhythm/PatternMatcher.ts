@@ -12,7 +12,6 @@ module MyGame {
         inputAllowed: boolean;
         noteDisplays: NoteDisplay[];
         notesPressed: NotePress[];
-        comparer: (pattern: Phaser.KeyCode[], pressed: number, pressedCount: number, beatPos: number) => boolean;
         begin: (pattern: PatternNote[]) => void;
         reset: () => void;
     }
@@ -31,7 +30,6 @@ module MyGame {
         noteDisplays: NoteDisplay[];
         notesPressed: NotePress[];
         pressCount: number;
-        comparer: (pattern: Phaser.KeyCode[], pressed: number, pressedCount: number, beatPos: number) => boolean;
 
         constructor(game: Battle, enemy: Enemy) {
             this.game = game;
@@ -41,14 +39,6 @@ module MyGame {
             this.active = false;
             this.inputAllowed = false;
             this.numMils = enemy.patternLength * this.tempo;
-
-            if (enemy.noteComparer) {
-                this.comparer = enemy.noteComparer;
-            } else {
-                this.comparer = (pattern: Phaser.KeyCode[], pressed: number, pressedCount: number, beatPos: number) => {
-                    return PatternUtil.getNthNote(pattern, pressedCount) === pressed;
-                }
-            }
         }
 
         begin(pattern: PatternNote[]) {
@@ -113,7 +103,7 @@ module MyGame {
             } else {
                 this.noteDisplays[position].updateFrame(keyCode, isBeat);
             }
-            if (!this.comparer(this.currentPattern, keyCode, this.pressCount, position)) {
+            if (!this.game.enemy.noteComparer(this.currentPattern, keyCode, this.pressCount, position)) {
                 this.inputAllowed = false;
                 this.noteDisplays[position].tint = 0xFF0000;
                 return;

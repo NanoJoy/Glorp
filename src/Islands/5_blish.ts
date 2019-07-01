@@ -142,7 +142,7 @@ module MyGame {
             ])
             .setOutsideBoundsPortals([
                 { side: Direction.Left, start: 4, end: 7, link: Islands.ALBERT, playerStart: pof(28, 4) },
-                { side: Direction.Left, start: 20, end: 23, link: Islands.CORRIDOR, playerStart: pof(20, 2) }
+                { side: Direction.Left, start: 20, end: 23, link: Islands.CORRIDOR, playerStart: pof(33, 2) }
             ])
             .setCreatures([
                 { type: Assets.Sprites.Blish.key, x: 15, y: 2 },

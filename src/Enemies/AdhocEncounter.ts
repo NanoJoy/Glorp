@@ -18,7 +18,6 @@ module MyGame {
         abstract onStageBuilt(): void;
         abstract update(): void;
         abstract afterDeath(main: Main): void;
-
         
         abstract calculateDamage(pattern: PatternNote[], notePresses: NotePress[]): number;
         abstract getAttackPoints(pattern: PatternNote[]): number;
