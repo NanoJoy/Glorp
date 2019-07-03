@@ -5,9 +5,9 @@ module MyGame {
     export const TILE_HEIGHT = 32;
 
     export const DEVELOPER_MODE = true;
-    export const START_ISLAND = 4;
+    export const START_ISLAND = 10;
     export const CLEAR_SAVE = true;
-    export const PLAYER_START_X = 2;
+    export const PLAYER_START_X = 32;
     export const PLAYER_START_Y = 2;
 
     export var States = {

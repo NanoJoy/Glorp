@@ -7,16 +7,16 @@ module MyGame {
         return new IslandBuilder(10, IslandType.OUTSIDE)
             .setLayout([
                 "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
-                "w                              n    ",
-                "w                                   ",
-                "w                                   ",
-                "w                                  w",
-                "w                                  w",
-                "w                                  w",
-                "w                                  w",
-                "w                                  w",
-                "w                                  w",
-                "w                                  w",
+                "wvvvvvvvvvvvvvvvv*  vv    ev*       ",
+                "wvevvvvvvvvvvvvev*      vvvv* ##    ",
+                "wvvv          vvv*  vvvvvvvv* ##    ",
+                "w     t     ****** #   *v##v* ##  nw",
+                "w                *  #  *v##v* ##   w",
+                "w           **** * ##  *v##v* ##   w",
+                "w              * * ##  *v##v* ##   w",
+                "wvvv        vvv* *  #  *v#######   w",
+                "wvevvvvvvvvvvev*       *v#######   w",
+                "wvvvvvvvvvvvvvv*   #  n*vv         w",
                 "w           wwwwwwwwwwwwwwwwwwwwwwww",
                 "w                                  w",
                 "w                                  w",
@@ -43,7 +43,15 @@ module MyGame {
             ])
             .setNPCs([
                 { type: Assets.Images.Sign, position: pof(8, 31), script: null, text: "Tuttle Village" },
-                { type: Assets.Images.Sign, position: pof(31, 1), script: null, text: "Tuttle Village" }
+                { type: Assets.Images.Sign, position: pof(34, 4), script: null, text: "Lully Pond" },
+                { type: Assets.Images.Book, position: pof(22, 10), script: null, textKey: Texts.PARK_BOOK }
+            ])
+            .setEnemies([
+                { type: Assets.Sprites.Croller.key, position: pof(26, 1), script: null },
+                { type: Assets.Sprites.Croller.key, position: pof(2, 2), script: null },
+                { type: Assets.Sprites.Croller.key, position: pof(15, 2), script: null },
+                { type: Assets.Sprites.Croller.key, position: pof(2, 9), script: null },
+                { type: Assets.Sprites.Croller.key, position: pof(13, 9), script: null }
             ])
             .setOutsideBoundsPortals([
                 { side: Direction.Right, start: 0, end: 4, link: Islands.BLISH, playerStart: pof(1, 22) },

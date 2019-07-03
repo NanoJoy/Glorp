@@ -11,7 +11,8 @@ module MyGame {
         TUTORIAL_PERSON,
         MONSTER,
         INTERLUDE,
-        ANIMAL_BEHAVIOR
+        ANIMAL_BEHAVIOR,
+        PARK_BOOK
     }
 
     export function getSignText(info: string): ITextManager {
@@ -98,6 +99,8 @@ module MyGame {
                 "they have adapted to become sensitive to loud sounds, and to become very aggressive when they are woken.",
                 "If you are unlucky enough to wake a Blumpus, you will have to dance with it. Importantly, you must use the opposite directions that the Blumpus uses. For example, if the Blumpus goes " + 
                 "UP, you must press DOWN on the corresponding beat, or if the Blumpus goes LEFT, you must press RIGHT on the corresponding beat.");
+            case Texts.PARK_BOOK:
+                return getBookText("yup yup yup yup");
             default:
                 throw new Error(`Cannot find dialog for key '${key}'.`);
         }
