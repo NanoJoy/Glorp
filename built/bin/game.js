@@ -13,56 +13,29 @@ var __extends = (this && this.__extends) || (function () {
 })();
 var MyGame;
 (function (MyGame) {
-    var Boot = (function (_super) {
-        __extends(Boot, _super);
-        function Boot() {
-            return _super !== null && _super.apply(this, arguments) || this;
-        }
-        Boot.prototype.init = function () {
-            this.input.maxPointers = 0;
-            this.stage.disableVisibilityChange = false;
-            this.game.physics.startSystem(Phaser.Physics.ARCADE);
-            this.stage.setBackgroundColor(0x000000);
-            if (this.game.device.desktop) {
-                this.scale.pageAlignHorizontally = true;
-            }
-            else {
-                this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-                this.scale.setMinMax(480, 260, 1024, 768);
-                this.scale.forceLandscape = true;
-                this.scale.pageAlignHorizontally = true;
-            }
-        };
-        Boot.prototype.preload = function () {
-            this.load.image("preloadBar", "assets/visual/loading_bar.png");
-        };
-        Boot.prototype.create = function () {
-            this.game.state.start(MyGame.States.Preloader);
-        };
-        return Boot;
-    }(Phaser.State));
-    MyGame.Boot = Boot;
-})(MyGame || (MyGame = {}));
-var MyGame;
-(function (MyGame) {
     MyGame.SCREEN_WIDTH = 288;
     MyGame.SCREEN_HEIGHT = 320;
     MyGame.TILE_WIDTH = 28;
     MyGame.TILE_HEIGHT = 32;
     MyGame.DEVELOPER_MODE = false;
-    MyGame.START_ISLAND = 3;
+    MyGame.START_ISLAND = 10;
     MyGame.CLEAR_SAVE = false;
-    MyGame.PLAYER_START_X = 5;
-    MyGame.PLAYER_START_Y = 6;
+    MyGame.PLAYER_START_X = 32;
+    MyGame.PLAYER_START_Y = 2;
     MyGame.States = {
         Boot: "Boot",
         Preloader: "Preloader",
         Main: "Main",
-        Battle: "Battle"
+        Battle: "Battle",
+        MainMenu: "MainMenu",
+        Interlude: "Interlude",
+        Result: "Result"
     };
     MyGame.Colors = {
         BLACK: 0x000000,
-        GRAY: 0xEAEAEA
+        GRAY: 0xEAEAEA,
+        PURPLE: 0x648BFF,
+        RED: 0xE22D2D
     };
     var Frames = (function () {
         function Frames() {
@@ -78,6 +51,18 @@ var MyGame;
             OUTSIDE: 0,
             INSIDE: 1
         };
+        Frames.Gate = {
+            VERTICAL: 0,
+            HORIZONTAL: 1
+        };
+        Frames.Button = {
+            OFF: 0,
+            ON: 1
+        };
+        Frames.ResultText = {
+            LOSE: 0,
+            WIN: 1
+        };
         return Frames;
     }());
     MyGame.Frames = Frames;
@@ -92,25 +77,38 @@ var MyGame;
     MyGame.SpriteAsset = SpriteAsset;
     var SpriteAssets = (function () {
         function SpriteAssets() {
+            this.Airhorn = new SpriteAsset("airhorn");
             this.Albert = new SpriteAsset("albert");
             this.Arrow = new SpriteAsset("arrow", 12, 12);
             this.Blackness = new SpriteAsset("blackness");
             this.Blish = new SpriteAsset("blish");
+            this.Blumpus = new SpriteAsset("blumpus", 56, 32);
             this.Bush = new SpriteAsset("bush");
+            this.Button = new SpriteAsset("button");
+            this.ChuFeng = new SpriteAsset("chu_feng");
+            this.Croller = new SpriteAsset("croller");
+            this.CrollerBattle = new SpriteAsset("croller_battle", 136, 136);
             this.Crumbs = new SpriteAsset("crumbs");
             this.DoorWay = new SpriteAsset("doorway", 36, 8);
+            this.Gate = new SpriteAsset("gate");
             this.Grodule = new SpriteAsset("grodule");
             this.Grounds = new SpriteAsset("grounds");
             this.House = new SpriteAsset("house", 112, 96);
+            this.JamBugBattle = new SpriteAsset("jambug_battle", 136, 136);
             this.JamBotWorld = new SpriteAsset("jambot_world");
             this.JamBugWorld = new SpriteAsset("jambug_world");
+            this.Monster = new SpriteAsset("monster", 40, 46);
             this.OldMan = new SpriteAsset("old_man");
             this.Player = new SpriteAsset("player");
             this.PlayerBattle = new SpriteAsset("player_battle", 136, 136);
+            this.Plorpus = new SpriteAsset("plorpus");
+            this.ProjectileDisplay = new SpriteAsset("projectile_display", 56, 32);
+            this.ResultText = new SpriteAsset("result_text", 64, 28);
             this.RhythmSymbols = new SpriteAsset("rhythm_symbols", 24, 24);
             this.Stanley = new SpriteAsset("stanley");
             this.StoneWall = new SpriteAsset("stone_wall");
             this.TheMeep = new SpriteAsset("the_meep", 224, 320);
+            this.TallGrass = new SpriteAsset("tall_grass", 28, 16);
             this.Tree = new SpriteAsset("tree", 56, 64);
             this.Water = new SpriteAsset("water");
         }
@@ -118,27 +116,35 @@ var MyGame;
     }());
     var ImageAssets = (function () {
         function ImageAssets() {
+            this.AirhornIcon = "airhorn_icon";
+            this.Bar = "bar";
             this.BlackScreen = "black_screen";
+            this.Book = "book";
             this.BottomTextBackground = "bottom_text_background";
+            this.Bridge = "bridge";
             this.ButtonPrompt = "button_prompt";
             this.Couch = "couch";
             this.CrumbsIcon = "crumbs_icon";
             this.CrumbsSource = "crumbs_source";
             this.Door = "door";
+            this.Fruit = "fruit";
             this.FruitStand = "fruit_stand";
-            this.Gate = "gate";
             this.GroduleIcon = "grodule_icon";
             this.HealthBarContainer = "healthbar_container";
             this.JamBotBattle = "jambot_battle";
             this.Lillypad = "lillypad";
+            this.LoadingBar = "loading_bar";
             this.MenuBackground = "menu_background";
             this.OptionsBackground = "options_background";
             this.Oven = "oven";
             this.OvenBattle = "oven_battle";
-            this.ProjectileDisplay = "projectile_display";
+            this.Path = "path";
+            this.PlorpusIcon = "plorpus_icon";
+            this.RosieDead = "rosie_dead";
             this.Rug = "rug";
             this.Sign = "sign";
             this.TileFloor = "tile_floor";
+            this.Title = "title";
             this.Wall = "wall";
         }
         return ImageAssets;
@@ -150,9 +156,23 @@ var MyGame;
         }
         return AudioAsset;
     }());
+    MyGame.AudioAsset = AudioAsset;
     var AudioAssets = (function () {
         function AudioAssets() {
-            this.JamBot = new AudioAsset("jambot", 4);
+            this.Airhorn = new AudioAsset("airhorn");
+            this.Beep = new AudioAsset("beep");
+            this.Blumpus = new AudioAsset("blumpus", 8);
+            this.Collide = new AudioAsset("collide");
+            this.DeathJingle = new AudioAsset("death_jingle");
+            this.Doodle = new AudioAsset("doodle");
+            this.JamBot = new AudioAsset("jambot", 8);
+            this.JamBug = new AudioAsset("jambug", 8);
+            this.Monster = new AudioAsset("monster", 4);
+            this.Oven = new AudioAsset("oven", 8);
+            this.Right = new AudioAsset("right");
+            this.VictoryJingle = new AudioAsset("victory_jingle");
+            this.World = new AudioAsset("world");
+            this.Wrong = new AudioAsset("wrong");
         }
         return AudioAssets;
     }());
@@ -193,6 +213,7 @@ var MyGame;
         TransferReason[TransferReason["LINK"] = 1] = "LINK";
         TransferReason[TransferReason["DEATH"] = 2] = "DEATH";
         TransferReason[TransferReason["VICTORY"] = 3] = "VICTORY";
+        TransferReason[TransferReason["INTERLUDE"] = 4] = "INTERLUDE";
     })(TransferReason = MyGame.TransferReason || (MyGame.TransferReason = {}));
     var ProjectileState;
     (function (ProjectileState) {
@@ -207,11 +228,14 @@ var MyGame;
     var Game = (function (_super) {
         __extends(Game, _super);
         function Game() {
-            var _this = _super.call(this, 288, 320, Phaser.AUTO, 'content', null) || this;
+            var _this = _super.call(this, MyGame.SCREEN_WIDTH, MyGame.SCREEN_HEIGHT, Phaser.AUTO, 'content', null) || this;
             _this.state.add(MyGame.States.Boot, MyGame.Boot, false);
             _this.state.add(MyGame.States.Preloader, MyGame.Preloader, false);
             _this.state.add(MyGame.States.Main, MyGame.Main, false);
             _this.state.add(MyGame.States.Battle, MyGame.Battle, false);
+            _this.state.add(MyGame.States.MainMenu, MyGame.MainMenu, false);
+            _this.state.add(MyGame.States.Interlude, MyGame.Interlude, false);
+            _this.state.add(MyGame.States.Result, MyGame.Result, false);
             _this.state.start(MyGame.States.Boot);
             return _this;
         }
@@ -291,7 +315,8 @@ var MyGame;
                 npcs: npcs,
                 health: stateTransfer.health,
                 items: stateTransfer.addedItems,
-                heldItems: stateTransfer.heldItems
+                heldItems: stateTransfer.heldItems,
+                flags: stateTransfer.flags
             };
             localStorage.setItem(MyGame.SAVE_FILE_NAME, JSON.stringify(saveState));
             this.cached = saveState;
@@ -339,9 +364,10 @@ var MyGame;
             this.O = game.input.keyboard.addKey(Phaser.KeyCode.O);
             this.K = game.input.keyboard.addKey(Phaser.KeyCode.K);
             this.spacebar = game.input.keyboard.addKey(Phaser.KeyCode.SPACEBAR);
+            this.shift = game.input.keyboard.addKey(Phaser.KeyCode.SHIFT);
         }
         Inputs.prototype.asArray = function () {
-            return [this.left, this.right, this.up, this.down, this.K, this.O, this.spacebar];
+            return [this.left, this.right, this.up, this.down, this.K, this.O, this.spacebar, this.shift];
         };
         return Inputs;
     }());
@@ -349,350 +375,12 @@ var MyGame;
 })(MyGame || (MyGame = {}));
 var MyGame;
 (function (MyGame) {
-    var Neighborhood = (function () {
-        function Neighborhood() {
+    var Flags = (function () {
+        function Flags() {
         }
-        return Neighborhood;
+        return Flags;
     }());
-    MyGame.Neighborhood = Neighborhood;
-    var MainGroups = (function () {
-        function MainGroups() {
-            this.barriers = [];
-            this.creatures = [];
-            this.enemies = [];
-            this.grounds = [];
-            this.houses = [];
-            this.npcs = [];
-            this.portals = [];
-            this.projectiles = [];
-            this.signs = [];
-            this.frontOfPlayer = [];
-        }
-        return MainGroups;
-    }());
-    var Main = (function (_super) {
-        __extends(Main, _super);
-        function Main() {
-            return _super !== null && _super.apply(this, arguments) || this;
-        }
-        Main.prototype.create = function () {
-            this.playerStopped = false;
-            var gameSaver = MyGame.GameSaver.getInstance();
-            if (MyGame.DEVELOPER_MODE && MyGame.CLEAR_SAVE) {
-                gameSaver.clearData();
-            }
-            var worldManager = MyGame.WorldManager.getInstance();
-            var stateTransfer = MyGame.StateTransfer.getInstance();
-            var saveState = gameSaver.loadGame();
-            if ((stateTransfer.reason === MyGame.TransferReason.DEATH || stateTransfer.reason === MyGame.TransferReason.NONE) && saveState) {
-                stateTransfer.loadFromSave(saveState);
-                worldManager.importLayouts(saveState.layouts);
-                worldManager.importDialogs(this, saveState.dialogs);
-            }
-            else if (stateTransfer.reason === MyGame.TransferReason.LINK && stateTransfer.island !== -1) {
-                var tween = this.add.tween(this.world).to({ alpha: 1 }, 500, Phaser.Easing.Linear.None, true);
-                tween.onComplete.add(function () {
-                    this.unstopPlayer();
-                }, this);
-            }
-            this.inputs = new MyGame.Inputs(this);
-            this.groups = new MainGroups();
-            this.island = worldManager.getIsland(stateTransfer.island === -1 ? 0 : stateTransfer.island);
-            if (MyGame.DEVELOPER_MODE && stateTransfer.island === -1) {
-                this.island = worldManager.getIsland(MyGame.START_ISLAND);
-            }
-            this.setupLevel(this.island, saveState);
-            this.groups.enemies.forEach(function (e) { e.onStageBuilt(); });
-            this.groups.npcs.forEach(function (n) { n.onStageBuilt(); });
-            this.groups.creatures.forEach(function (c) { c.onStageBuilt(); });
-            this.player.onStageBuilt();
-            if (stateTransfer.funcs) {
-                stateTransfer.funcs(this);
-                stateTransfer.funcs = null;
-            }
-            this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
-            this.inputs.spacebar.onDown.add(this.spacebarDown, this);
-        };
-        Main.prototype.update = function () {
-            if (!this.playerStopped) {
-                this.triggers.forEach(function (t) { return t.checkPlayerOverlap(); });
-                var groupsToUpdate = [this.groups.enemies, this.groups.houses, this.groups.npcs, this.groups.portals, this.groups.creatures, this.groups.projectiles];
-                for (var i = 0; i < groupsToUpdate.length; i++) {
-                    var grp = groupsToUpdate[i];
-                    for (var j = 0; j < grp.length; j++) {
-                        grp[j].update();
-                    }
-                }
-            }
-            else {
-                for (var _i = 0, _a = this.groups.npcs; _i < _a.length; _i++) {
-                    var npc = _a[_i];
-                    npc.playerStoppedUpdate();
-                }
-            }
-        };
-        Main.prototype.setupLevel = function (island, savedGame) {
-            var _this = this;
-            this.stage.backgroundColor = island.type === MyGame.IslandType.INSIDE ? MyGame.Colors.BLACK : MyGame.Colors.GRAY;
-            this.game.world.setBounds(0, 0, island.layout[0].length * MyGame.TILE_WIDTH, island.layout.length * MyGame.TILE_HEIGHT);
-            for (var y = 0; y < island.layout.length; y++) {
-                var line = island.layout[y];
-                for (var x = 0; x < line.length; x++) {
-                    switch (line.charAt(x)) {
-                        case " ":
-                        case "-":
-                            this.groups.grounds.push(MyGame.Ground.makeGround(this, island.type, MyGame.pof(x, y)));
-                            break;
-                        case "*":
-                            this.groups.barriers.push(new MyGame.Bush(this, MyGame.pof(x, y)));
-                            this.groups.grounds.push(MyGame.Ground.makeGround(this, island.type, MyGame.pof(x, y)));
-                            break;
-                        case "b":
-                            this.groups.barriers.push(new MyGame.Blackness(this, MyGame.pof(x, y)));
-                            break;
-                        case "c":
-                            this.groups.creatures.push(island.getCreature(this, x, y));
-                            break;
-                        case "d":
-                            this.groups.portals.push(island.makeDoorway(this, MyGame.pof(x, y)));
-                            this.groups.grounds.push(MyGame.Ground.makeGround(this, island.type, MyGame.pof(x, y)));
-                            break;
-                        case "e":
-                            this.groups.grounds.push(MyGame.Ground.makeGround(this, island.type, MyGame.pof(x, y)));
-                            this.groups.enemies.push(island.getEnemy(this, MyGame.pof(x, y)));
-                            break;
-                        case "g":
-                            this.groups.barriers.push(new MyGame.Gate(this, MyGame.pof(x, y)));
-                            this.groups.grounds.push(MyGame.Ground.makeGround(this, island.type, MyGame.pof(x, y)));
-                            break;
-                        case "h":
-                            var house = new MyGame.House(this, MyGame.pof(x, y));
-                            this.groups.houses.push(house);
-                            this.groups.grounds.push(MyGame.Ground.makeGround(this, island.type, MyGame.pof(x, y)));
-                            this.groups.frontOfPlayer.push(house);
-                            break;
-                        case "n":
-                            this.groups.grounds.push(MyGame.Ground.makeGround(this, island.type, MyGame.pof(x, y)));
-                            this.groups.npcs.push(island.getNPC(this, MyGame.pof(x, y)));
-                            break;
-                        case "o":
-                            this.groups.barriers.push(new MyGame.Water(this, MyGame.pof(x, y)));
-                            break;
-                        case "p":
-                            this.groups.barriers.push(new MyGame.Lillypad(this, MyGame.pof(x, y)));
-                            break;
-                        case "s":
-                            var type = this.getTypeOfThing(island.sources, x, y, "Source");
-                            this.groups.barriers.push(MyGame.Source.makeSource(this, x, y, type));
-                            break;
-                        case "t":
-                            var tree = new MyGame.Tree(this, MyGame.pof(x, y));
-                            this.groups.barriers.push(tree);
-                            this.groups.grounds.push(MyGame.Ground.makeGround(this, island.type, MyGame.pof(x, y)));
-                            this.groups.frontOfPlayer.push(tree);
-                            break;
-                        case "w":
-                            this.groups.barriers.push(new MyGame.StoneWall(this, MyGame.pof(x, y), island.getNeighborhood(MyGame.pof(x, y))));
-                            break;
-                        case "x":
-                            var customBarrier = this.getThingAtPosition(island.customBarriers, x, y, "Custom Barrier");
-                            var barrier = new MyGame.CustomBarrier(this, MyGame.pof(x, y), customBarrier.type, customBarrier.playerCollides);
-                            this.groups.barriers.push(barrier);
-                            this.groups.grounds.push(MyGame.Ground.makeGround(this, island.type, MyGame.pof(x, y)));
-                    }
-                }
-            }
-            this.groups.portals = this.groups.portals.concat(island.getPortals(this), island.makeOtherLinks(this));
-            this.triggers = island.makeTriggers(this);
-            var stateTransfer = MyGame.StateTransfer.getInstance();
-            var npcsToImport = savedGame ? savedGame.npcs : stateTransfer.npcs;
-            var _loop_3 = function (npc) {
-                var matches = this_1.groups.npcs.filter(function (n) { return n.startX === npc.old.x && n.startY === npc.old.y; });
-                if (matches.length === 0) {
-                    throw new Error("No matching npc found with start position " + npc.old.x + " " + npc.old.y);
-                }
-                var match = matches[0];
-                if (npc.now) {
-                    match.setPosition(npc.now);
-                }
-                if (npc.script) {
-                    match.doScript(MyGame.Utils.reverseMovementScript(npc.script), npc.script.start, true);
-                }
-                if (npc.speed) {
-                    match.setSpeed(npc.speed);
-                }
-            };
-            var this_1 = this;
-            for (var _i = 0, _a = npcsToImport.filter(function (t) { return t.old.island === island.num; }); _i < _a.length; _i++) {
-                var npc = _a[_i];
-                _loop_3(npc);
-            }
-            var triggersToImport = savedGame ? savedGame.triggers : stateTransfer.triggers;
-            var _loop_4 = function (saveTrigger) {
-                for (var _i = 0, _a = this_2.triggers.filter(function (t) { return t.x === saveTrigger.x && t.y === saveTrigger.y; }); _i < _a.length; _i++) {
-                    var matchingTrigger = _a[_i];
-                    matchingTrigger.active = false;
-                }
-            };
-            var this_2 = this;
-            for (var _b = 0, _c = triggersToImport.filter(function (t) { return t.island === island.num; }); _b < _c.length; _b++) {
-                var saveTrigger = _c[_b];
-                _loop_4(saveTrigger);
-            }
-            stateTransfer.addedItems.filter(function (i) { return i.location.island === _this.island.num; })
-                .forEach(function (i) {
-                var source = MyGame.Source.makeSource(_this, i.location.x, i.location.y, i.type);
-                _this.groups.barriers.push(source);
-            });
-            var playerPosition = null;
-            if (stateTransfer.position) {
-                if (stateTransfer.reason === MyGame.TransferReason.LINK || stateTransfer.reason === MyGame.TransferReason.DEATH || stateTransfer.reason === MyGame.TransferReason.VICTORY) {
-                    playerPosition = island.getAdjustedPosition(stateTransfer.position.clone());
-                }
-                else {
-                    playerPosition = stateTransfer.position.clone();
-                }
-            }
-            else {
-                playerPosition = island.getAdjustedPosition(island.playerStart.clone());
-            }
-            if (MyGame.DEVELOPER_MODE && !stateTransfer.position) {
-                playerPosition = island.getAdjustedPosition(MyGame.pof(MyGame.PLAYER_START_X, MyGame.PLAYER_START_Y));
-            }
-            this.player = new MyGame.Player(this, playerPosition, stateTransfer.health === -1 ? 100 : stateTransfer.health);
-            this.projectileDisplay = new MyGame.HoldableDisplay(this);
-            if (stateTransfer.heldItems) {
-                this.player.itemCount = stateTransfer.heldItems.amount;
-                this.player.itemType = stateTransfer.heldItems.type;
-                this.projectileDisplay.updateIcon(this.player.itemType + "_" + MyGame.ICON);
-                this.projectileDisplay.updateCount(this.player.itemCount);
-            }
-            this.setDepths();
-        };
-        Main.prototype.setDepths = function () {
-            var _this = this;
-            this.groups.grounds.forEach(function (gr) { this.game.world.bringToTop(gr); }, this);
-            this.groups.portals.forEach(function (p) { this.game.world.bringToTop(p.sprite); }, this);
-            this.groups.barriers.forEach(function (b) {
-                if (b.sprite.key !== "blackness") {
-                    _this.game.world.bringToTop(b.sprite);
-                }
-            }, this);
-            this.groups.creatures.forEach(function (c) { _this.game.world.bringToTop(c.sprite); }, this);
-            this.groups.houses.forEach(function (ho) { this.game.world.bringToTop(ho.sprite); }, this);
-            this.groups.npcs.forEach(function (n) { this.game.world.bringToTop(n.sprite); }, this);
-            this.groups.enemies.forEach(function (en) { this.game.world.bringToTop(en.worldSprite); }, this);
-            this.game.world.bringToTop(this.player);
-            this.groups.frontOfPlayer.forEach(function (f) { return _this.game.world.bringToTop(f.sprite); });
-            this.projectileDisplay.bringToTop();
-        };
-        Main.prototype.paused = function () {
-        };
-        Main.prototype.spacebarDown = function () {
-            if (this.playerStopped)
-                return;
-            this.game.paused = !this.game.paused;
-            if (!this.game.paused) {
-                this.pauseMenu.exit();
-                return;
-            }
-            this.pauseMenu = new MyGame.PauseMenu(this);
-            this.inputs.down.onDown.add(this.pauseMenu.changeSelection, this.pauseMenu);
-            this.inputs.up.onDown.add(this.pauseMenu.changeSelection, this.pauseMenu);
-            this.inputs.O.onDown.add(this.pauseMenu.select, this.pauseMenu);
-        };
-        Main.prototype.saveGame = function () {
-            var gameSaver = MyGame.GameSaver.getInstance();
-            gameSaver.saveGame(this, MyGame.WorldManager.getInstance());
-        };
-        Main.prototype.stopPlayer = function () {
-            this.playerStopped = true;
-            this.player.body.velocity.setTo(0, 0);
-            this.groups.enemies.forEach(function (e) {
-                if (e.movementManager) {
-                    e.movementManager.pause();
-                }
-            });
-        };
-        Main.prototype.unstopPlayer = function () {
-            this.playerStopped = false;
-            this.groups.enemies.forEach(function (e) {
-                if (e.movementManager) {
-                    e.movementManager.resume();
-                }
-            });
-        };
-        Main.prototype.getTypeOfThing = function (things, x, y, thingType) {
-            if (thingType === void 0) { thingType = "thing"; }
-            return this.getThingAtPosition(things, x, y, thingType).type;
-        };
-        Main.prototype.getThingAtPosition = function (things, x, y, thingType) {
-            var _this = this;
-            if (thingType === void 0) { thingType = "thing"; }
-            var matching = things.filter(function (t) {
-                var adjusted = _this.island.getAdjustedPosition(MyGame.pof(t.x, t.y));
-                return adjusted.x === x && adjusted.y === y;
-            });
-            if (matching.length === 0) {
-                throw new Error(thingType + " information could not be found at x: " + x + ", y: " + y + ".");
-            }
-            return matching[0];
-        };
-        Main.prototype.bringGroupToTop = function (group) {
-            var _this = this;
-            group.forEach(function (g) { _this.world.bringToTop(g.sprite); });
-            this.projectileDisplay.bringToTop();
-        };
-        Main.prototype.addItem = function (x, y, key) {
-            var source = MyGame.Source.makeSource(this, x, y, key);
-            this.groups.barriers.push(source);
-            MyGame.StateTransfer.getInstance().addedItems.push({
-                location: new MyGame.Location(this.island.num, x, y),
-                type: key
-            });
-        };
-        return Main;
-    }(Phaser.State));
-    MyGame.Main = Main;
-})(MyGame || (MyGame = {}));
-var MyGame;
-(function (MyGame) {
-    var Preloader = (function (_super) {
-        __extends(Preloader, _super);
-        function Preloader() {
-            var _this = _super !== null && _super.apply(this, arguments) || this;
-            _this.ready = false;
-            return _this;
-        }
-        Preloader.prototype.preload = function () {
-            this.preloadBar = this.add.sprite(300, 400, "preloadBar");
-            this.load.setPreloadSprite(this.preloadBar);
-            var spriteAssets = Object.getOwnPropertyNames(MyGame.Assets.Sprites);
-            for (var i = 0; i < spriteAssets.length; i++) {
-                var a = MyGame.Assets.Sprites[spriteAssets[i]];
-                this.load.spritesheet(a.key, MyGame.VISUAL_ASSETS_PATH + "/" + a.key + "." + MyGame.PNG, a.width, a.height);
-            }
-            var imageAssets = Object.getOwnPropertyNames(MyGame.Assets.Images);
-            for (var i = 0; i < imageAssets.length; i++) {
-                var a = MyGame.Assets.Images[imageAssets[i]];
-                this.load.image(a, MyGame.VISUAL_ASSETS_PATH + "/" + a + "." + MyGame.PNG);
-            }
-            var audioAssets = Object.getOwnPropertyNames(MyGame.Assets.Audio);
-            for (var i = 0; i < audioAssets.length; i++) {
-                var a = MyGame.Assets.Audio[audioAssets[i]];
-                this.load.audio(a.key, MyGame.AUDIO_ASSETS_PATH + "/" + a.key + "." + MyGame.MP3);
-            }
-            this.load.bitmapFont("testbitmap", "assets/fonts/okeydokey_0.png", "assets/fonts/okeydokey.xml");
-        };
-        Preloader.prototype.create = function () {
-            this.game.state.start(MyGame.States.Main);
-        };
-        return Preloader;
-    }(Phaser.State));
-    MyGame.Preloader = Preloader;
-})(MyGame || (MyGame = {}));
-var MyGame;
-(function (MyGame) {
+    MyGame.Flags = Flags;
     var StateTransfer = (function () {
         function StateTransfer() {
             this.enemy = null;
@@ -706,6 +394,8 @@ var MyGame;
             this.funcs = null;
             this.addedItems = [];
             this.heldItems = null;
+            this.flags = new Flags();
+            this.interlude = null;
         }
         StateTransfer.getInstance = function () {
             return StateTransfer.instance || (StateTransfer.instance = new StateTransfer);
@@ -716,6 +406,9 @@ var MyGame;
             this.health = saveState.health;
             this.addedItems = saveState.items;
             this.heldItems = saveState.heldItems;
+            var useSave = this.flags["USE_SAVE"];
+            this.flags = saveState.flags;
+            this.flags["USE_SAVE"] = useSave;
         };
         return StateTransfer;
     }());
@@ -777,12 +470,16 @@ var MyGame;
             }
         };
         Utils.animationArray = function (start, finish) {
-            if (finish < start) {
-                throw new Error("finish must be greater than or equal to start.");
-            }
             var result = [];
-            for (var i = start; i <= finish; i++) {
-                result.push(i);
+            if (finish < start) {
+                for (var i = start; i >= finish; i--) {
+                    result.push(i);
+                }
+            }
+            else {
+                for (var i = start; i <= finish; i++) {
+                    result.push(i);
+                }
             }
             return result;
         };
@@ -823,7 +520,7 @@ var MyGame;
             }
         };
         Utils.splitTextIntoPages = function (text) {
-            var lettersInRow = 17;
+            var lettersInRow = 18;
             var rowsInPage = 3;
             var words = text.split(" ");
             var pages = [];
@@ -979,7 +676,7 @@ var MyGame;
                 return false;
             }
             var tile = layout[y].charAt(x);
-            if (tile === " ") {
+            if (tile === " " || tile === "#") {
                 return true;
             }
             if (tile === "x") {
@@ -1019,7 +716,7 @@ var MyGame;
                 sees.item2 = false;
             }
             body.velocity.x = sees.item1 ? this.signOf(distance.x) * speed : 0;
-            body.velocity.y = sees.item2 && !sees.item1 ? this.signOf(distance.y) * speed : 0;
+            body.velocity.y = sees.item2 && body.velocity.x === 0 ? this.signOf(distance.y) * speed : 0;
         };
         Utils.accelerateToTarget = function (target, currentPosition, currentVelocity, acceleration, maxSpeed) {
             var multiplier = 1;
@@ -1079,6 +776,16 @@ var MyGame;
             text.x = (MyGame.SCREEN_WIDTH - text.width) / 2;
             text.y = (MyGame.SCREEN_HEIGHT - text.height) / 2;
         };
+        Utils.centerImage = function (image, horizontal, vertical) {
+            if (horizontal === void 0) { horizontal = true; }
+            if (vertical === void 0) { vertical = true; }
+            if (horizontal) {
+                image.x = (MyGame.SCREEN_WIDTH - image.width) / 2;
+            }
+            if (vertical) {
+                image.y = (MyGame.SCREEN_HEIGHT - image.height) / 2;
+            }
+        };
         Utils.fadeInFromBlack = function (state, time, onComplete, onCompleteContext) {
             var spr = state.add.image(state.camera.x, state.camera.y, MyGame.Assets.Images.BlackScreen);
             state.world.bringToTop(spr);
@@ -1119,206 +826,13 @@ var MyGame;
         Utils.getHouseStart = function (x, y) {
             return pof(x + 4, y + 7);
         };
+        Utils.firstOrDefault = function (list, predicate) {
+            var filtered = list.filter(predicate);
+            return filtered.length > 0 ? filtered[0] : null;
+        };
         return Utils;
     }());
     MyGame.Utils = Utils;
-})(MyGame || (MyGame = {}));
-var MyGame;
-(function (MyGame) {
-    var Battle = (function (_super) {
-        __extends(Battle, _super);
-        function Battle() {
-            return _super !== null && _super.apply(this, arguments) || this;
-        }
-        Battle.prototype.create = function () {
-            this.inputs = new MyGame.Inputs(this);
-            if (MyGame.DEVELOPER_MODE) {
-                this.inputs.spacebar.onUp.add(this.enemyDeath, this);
-            }
-            this.time.reset();
-            this.time.events.removeAll();
-            this.stage.backgroundColor = 0xEAEAEA;
-            var stateTransfer = MyGame.StateTransfer.getInstance();
-            this.playerHealth = stateTransfer.health === -1 ? 100 : stateTransfer.health;
-            var playerKey = MyGame.WorldManager.getInstance().getIsland(stateTransfer.island).type === MyGame.IslandType.INSIDE ? MyGame.Frames.PlayerBattle.INSIDE : MyGame.Frames.PlayerBattle.OUTSIDE;
-            this.playerDisplay = new CharacterDisplay(this, 10, MyGame.SCREEN_HEIGHT - 146, MyGame.Assets.Sprites.PlayerBattle.key, playerKey);
-            this.playerHealthDisplay = new HealthDisplay(this, 146, MyGame.SCREEN_HEIGHT - 50, "You", MyGame.Player.STARTING_HEALTH);
-            this.playerHealthDisplay.updateHitPoints(this.playerHealth);
-            if (!MyGame.Utils.isAThing(stateTransfer.enemy)) {
-                throw new Error("enemy is not set for battle.");
-            }
-            this.enemy = stateTransfer.enemy;
-            var topY = MyGame.Assets.Sprites.RhythmSymbols.height * 2 + 20;
-            this.enemyDisplay = new CharacterDisplay(this, MyGame.SCREEN_WIDTH - 146, topY, this.enemy.battleSpriteKey);
-            this.enemyHealthDisplay = new HealthDisplay(this, 10, topY, this.enemy.name, this.enemy.hitPoints);
-            this.patternDisplayer = new MyGame.PatternDisplayer(this, this.enemy);
-            this.patternChecker = new MyGame.PatternMatcher(this, this.enemy);
-            this.passedMeasures = -2;
-            MyGame.Utils.fadeInFromBlack(this, 500, this.startCountdown, this);
-        };
-        Battle.prototype.startCountdown = function () {
-            var _this = this;
-            this.music = this.sound.play(MyGame.Assets.Audio.JamBot.key);
-            var count = this.enemy.beatLength === 2 ? 3 : this.enemy.beatLength - 1;
-            var display = this.add.bitmapText(0, 22, MyGame.Assets.FontName, count.toString(), MyGame.Assets.FontSize);
-            this.updateCount(count, display);
-            var millis = MyGame.Utils.bpmToMilliseconds(this.enemy.tempo);
-            var introLength = ((count + 1) * millis) / 1000;
-            this.music.addMarker("hi", introLength, this.music.totalDuration - introLength);
-            var _loop_5 = function (i) {
-                this_3.time.events.add(millis * (count - i), function () {
-                    _this.updateCount(i, display);
-                    if (i === 3) {
-                        _this.playerDisplay.slideIn(true, millis);
-                    }
-                    else if (i === 2) {
-                        _this.enemyDisplay.slideIn(false, millis);
-                    }
-                }, this_3);
-            };
-            var this_3 = this;
-            for (var i = 0; i <= count; i++) {
-                _loop_5(i);
-            }
-            this.time.events.add(millis * (count + 1), function () {
-                _this.startBattle();
-                display.visible = false;
-            }, this);
-            this.time.events.start();
-        };
-        Battle.prototype.updateCount = function (count, display) {
-            display.text = count === 0 ? "GO!!!" : count.toString();
-            MyGame.Utils.centerInScreen(display);
-        };
-        Battle.prototype.startBattle = function () {
-            this.startPattern();
-            this.time.events.loop(this.patternDisplayer.tempo * this.enemy.patternLength * 2, this.startPattern, this);
-            this.time.events.start();
-        };
-        Battle.prototype.startChecker = function () {
-            this.patternChecker.begin(this.currentPattern);
-        };
-        Battle.prototype.startPattern = function () {
-            this.passedMeasures = (this.passedMeasures + 2) % MyGame.Assets.Audio.JamBot.measures;
-            if (this.passedMeasures === 0) {
-                this.music.play("hi");
-            }
-            if (MyGame.Utils.isAThing(this.patternChecker.notesPressed)) {
-                this.afterRound();
-            }
-            this.patternDisplayer.reset();
-            this.patternChecker.reset();
-            this.currentPattern = this.patternDisplayer.display();
-            this.time.events.add((this.enemy.patternLength - 1) * this.patternDisplayer.tempo, this.startChecker, this);
-        };
-        Battle.prototype.afterRound = function () {
-            var damage = this.enemy.calculateDamage(this.currentPattern, this.patternChecker.notesPressed);
-            if (damage === 0) {
-                var playerDamage = this.playerHealth - this.enemy.getAttackPoints(this.currentPattern);
-                this.playerHealth = Math.max(playerDamage, 0);
-                this.playerHealthDisplay.updateHitPoints(this.playerHealth);
-                if (this.playerHealth === 0) {
-                    MyGame.StateTransfer.getInstance().reason = MyGame.TransferReason.DEATH;
-                    MyGame.StateTransfer.getInstance().health = -1;
-                    this.game.state.start(MyGame.States.Main);
-                }
-                return;
-            }
-            this.enemy.health = Math.max(this.enemy.health - damage, 0);
-            this.enemyHealthDisplay.updateHitPoints(this.enemy.health);
-            if (this.enemy.health === 0) {
-                this.enemyDeath();
-            }
-        };
-        Battle.prototype.enemyDeath = function () {
-            this.game.time.events.stop(true);
-            var stateTransfer = MyGame.StateTransfer.getInstance();
-            stateTransfer.enemy = null;
-            this.enemy.die();
-            if (MyGame.Utils.isAThing(this.enemy.transferPosition)) {
-                stateTransfer.position = this.enemy.transferPosition;
-            }
-            else {
-                stateTransfer.position = new Phaser.Point(Math.floor(this.enemy.worldSprite.position.x / MyGame.TILE_WIDTH), Math.floor(this.enemy.worldSprite.position.y / MyGame.TILE_HEIGHT));
-            }
-            stateTransfer.funcs = this.enemy.afterDeath;
-            stateTransfer.reason = MyGame.TransferReason.VICTORY;
-            stateTransfer.health = this.playerHealth;
-            this.state.start(MyGame.States.Main);
-        };
-        return Battle;
-    }(Phaser.State));
-    MyGame.Battle = Battle;
-    var MOVEMENT_AMOUNT = 6;
-    var CharacterDisplay = (function () {
-        function CharacterDisplay(battle, x, y, key, frame) {
-            if (frame === void 0) { frame = 0; }
-            this.battle = battle;
-            this.image = battle.add.image(x, y, key, frame);
-            this.image.anchor.setTo(0.5, 0.5);
-            this.image.position.setTo(x + this.image.width / 2, y + this.image.height / 2);
-            this.startX = this.image.position.x;
-            this.startY = this.image.position.y;
-            this.image.visible = false;
-        }
-        CharacterDisplay.prototype.slideIn = function (fromLeft, millis) {
-            this.image.visible = true;
-            var startPos = fromLeft ? this.image.width * -1 : MyGame.SCREEN_WIDTH + this.image.width;
-            this.battle.add.tween(this.image.position).from({ x: startPos }, millis / 2, Phaser.Easing.Linear.None, true, millis / 2);
-        };
-        CharacterDisplay.prototype.reset = function () {
-            this.image.position.setTo(this.startX, this.startY);
-            this.image.scale.setTo(1, 1);
-        };
-        CharacterDisplay.prototype.moveUp = function () {
-            this.image.position.y -= MOVEMENT_AMOUNT;
-        };
-        CharacterDisplay.prototype.moveDown = function () {
-            this.image.position.y += MOVEMENT_AMOUNT;
-        };
-        CharacterDisplay.prototype.moveLeft = function () {
-            this.image.position.x -= MOVEMENT_AMOUNT;
-        };
-        CharacterDisplay.prototype.moveRight = function () {
-            this.image.position.x += MOVEMENT_AMOUNT;
-        };
-        CharacterDisplay.prototype.pressO = function () {
-            this.image.scale.setTo(1.1, 1.1);
-        };
-        CharacterDisplay.prototype.pressK = function () {
-            this.image.scale.setTo(0.9, 0.9);
-        };
-        return CharacterDisplay;
-    }());
-    var HealthDisplay = (function () {
-        function HealthDisplay(battle, x, y, name, hitPoints) {
-            this.battle = battle;
-            this.x = x;
-            this.y = y;
-            this.hitPoints = hitPoints;
-            this.text = battle.add.bitmapText(x, y, MyGame.Assets.FontName, name, MyGame.Assets.FontSize);
-            this.healthBarContainer = battle.add.image(x, y + 18, MyGame.Assets.Images.HealthBarContainer);
-            this.healthBar = null;
-            this.updateHitPoints(hitPoints);
-        }
-        HealthDisplay.prototype.updateHitPoints = function (hp) {
-            if (hp > this.hitPoints || hp < 0) {
-                throw new Error("Hit points not in valid range: " + hp + ".");
-            }
-            if (this.healthBar !== null) {
-                this.healthBar.destroy();
-                this.healthBar = null;
-            }
-            var width = Math.round((hp / this.hitPoints) * ((this.healthBarContainer.width - 4) / 2)) * 2;
-            var bmd = this.battle.add.bitmapData(width, this.healthBarContainer.height - 4);
-            bmd.ctx.beginPath();
-            bmd.ctx.rect(0, 0, width, this.healthBarContainer.height - 4);
-            bmd.ctx.fillStyle = "#606060";
-            bmd.ctx.fill();
-            this.healthBar = this.battle.add.sprite(this.healthBarContainer.x + 2, this.healthBarContainer.y + 2, bmd);
-        };
-        return HealthDisplay;
-    }());
 })(MyGame || (MyGame = {}));
 var MyGame;
 (function (MyGame) {
@@ -1344,6 +858,9 @@ var MyGame;
             this.hasOptions = true;
             this.options = options;
         }
+        TextPrompt.prototype.getText = function () {
+            return this.text;
+        };
         return TextPrompt;
     }());
     MyGame.TextPrompt = TextPrompt;
@@ -1354,9 +871,24 @@ var MyGame;
             this.hasOptions = false;
             this.next = next;
         }
+        TextDump.prototype.getText = function () {
+            return this.text;
+        };
         return TextDump;
     }());
     MyGame.TextDump = TextDump;
+    var LazyTextDump = (function () {
+        function LazyTextDump(getText, getTextContext, next) {
+            if (next === void 0) { next = null; }
+            this.next = next;
+            this.textGet = getText.bind(getTextContext);
+        }
+        LazyTextDump.prototype.getText = function () {
+            return MyGame.Utils.splitTextIntoPages(this.textGet());
+        };
+        return LazyTextDump;
+    }());
+    MyGame.LazyTextDump = LazyTextDump;
     var TextEncounter = (function () {
         function TextEncounter(startPage, autoStart, onFinish) {
             if (autoStart === void 0) { autoStart = false; }
@@ -1494,6 +1026,30 @@ var MyGame;
 })(MyGame || (MyGame = {}));
 var MyGame;
 (function (MyGame) {
+    function getBlumpusText() {
+        var blumpus = null;
+        function decision(lastViewed, main, parent, lastResult) {
+            if (blumpus === null) {
+                blumpus = main.groups.creatures.filter(function (c) { return c instanceof MyGame.Blumpus; })[0];
+            }
+            if (blumpus.getHasWoken()) {
+                return 2;
+            }
+            if (lastViewed === 0) {
+                return 1;
+            }
+            return 0;
+        }
+        return new MyGame.TextManager([
+            new MyGame.TextEncounter(new MyGame.TextDump("Oh gosh, my pet Blumpus has fallen asleep in the worst spot. If only I had something to make a high pitched sound to wake him up. Though if he wakes up, he might be in the mood to dance.")),
+            new MyGame.TextEncounter(new MyGame.TextDump("Yup, whoever wakes him up better be a pretty good dancer.")),
+            new MyGame.TextEncounter(new MyGame.TextDump("Well, you figured out how to get him up, but he probably won't move until you prove your dominance in dancing."))
+        ], decision);
+    }
+    MyGame.getBlumpusText = getBlumpusText;
+})(MyGame || (MyGame = {}));
+var MyGame;
+(function (MyGame) {
     var Texts;
     (function (Texts) {
         Texts[Texts["GRANDPA"] = 0] = "GRANDPA";
@@ -1501,11 +1057,35 @@ var MyGame;
         Texts[Texts["ALBERT_FIRST"] = 2] = "ALBERT_FIRST";
         Texts[Texts["MEEP_GROWL"] = 3] = "MEEP_GROWL";
         Texts[Texts["STANLEY"] = 4] = "STANLEY";
+        Texts[Texts["PROFESSOR"] = 5] = "PROFESSOR";
+        Texts[Texts["BLUMPUS"] = 6] = "BLUMPUS";
+        Texts[Texts["TUTORIAL_SIGN"] = 7] = "TUTORIAL_SIGN";
+        Texts[Texts["TUTORIAL_PERSON"] = 8] = "TUTORIAL_PERSON";
+        Texts[Texts["MONSTER"] = 9] = "MONSTER";
+        Texts[Texts["INTERLUDE"] = 10] = "INTERLUDE";
+        Texts[Texts["ANIMAL_BEHAVIOR"] = 11] = "ANIMAL_BEHAVIOR";
+        Texts[Texts["PARK_BOOK"] = 12] = "PARK_BOOK";
     })(Texts = MyGame.Texts || (MyGame.Texts = {}));
     function getSignText(info) {
         return new MyGame.TextManager([new MyGame.TextEncounter(new MyGame.TextDump(info))]);
     }
     MyGame.getSignText = getSignText;
+    function getBookText() {
+        var pages = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            pages[_i] = arguments[_i];
+        }
+        var dump = new MyGame.TextDump(pages[pages.length - 1]);
+        for (var i = pages.length - 2; i >= 0; i--) {
+            var choice = new MyGame.TextPrompt("Keep reading?", [
+                new MyGame.TextOption("Yes", dump),
+                new MyGame.TextOption("No")
+            ]);
+            dump = new MyGame.TextDump(pages[i], choice);
+        }
+        return new MyGame.TextManager([new MyGame.TextEncounter(dump)]);
+    }
+    MyGame.getBookText = getBookText;
     function getDialog(key) {
         switch (key) {
             case Texts.ALBERT_FIRST:
@@ -1518,6 +1098,60 @@ var MyGame;
                 return MyGame.getTheMeepText();
             case Texts.STANLEY:
                 return MyGame.getStanleyText();
+            case Texts.PROFESSOR:
+                return MyGame.getProfessorText();
+            case Texts.BLUMPUS:
+                return MyGame.getBlumpusText();
+            case Texts.TUTORIAL_SIGN:
+                return new MyGame.TextManager([
+                    new MyGame.TextEncounter(new MyGame.TextDump("Use S to scroll down, and W to scroll up. When you reach the bottom, press O (the letter) to continue. " +
+                        " use WASD to move and O (the letter) to interact with things."), true),
+                    new MyGame.TextEncounter(new MyGame.TextDump("Use S to scroll down, and W to scroll up. When you reach the bottom, press O (the letter) to continue. " +
+                        " use WASD to move and O (the letter) to interact with things."))
+                ]);
+            case Texts.TUTORIAL_PERSON:
+                var finish = function (main, parent, result) {
+                    if (result === "Here you go.") {
+                        main.groups.barriers.filter(function (b) { return b instanceof MyGame.Gate; })[0].sprite.destroy();
+                        MyGame.WorldManager.getInstance().changeLayout(9, main.island.getAdjustedPosition(MyGame.pof(4, 4)), " ");
+                    }
+                };
+                var decision = function (lastViewed, main, parent, lastResult) {
+                    if (lastViewed === -1) {
+                        return 0;
+                    }
+                    if (lastViewed === 0) {
+                        return lastResult === "Suit yourself." ? 0 : 1;
+                    }
+                    return 1;
+                };
+                return new MyGame.TextManager([
+                    new MyGame.TextEncounter(new MyGame.TextDump("When you are given a prompt, use A and D to view your options, and O to select an option after you have read the entire prompt.", new MyGame.TextPrompt("Would you like me to open this gate?", [
+                        new MyGame.TextOption("No.", new MyGame.TextDump("Suit yourself.")),
+                        new MyGame.TextOption("Yes please.", new MyGame.TextDump("Here you go."))
+                    ])), false, finish),
+                    new MyGame.TextEncounter(new MyGame.TextDump("Go on ahead then."))
+                ], decision);
+            case Texts.MONSTER:
+                var monsFin = function (main, parent, result) {
+                    var monster = parent;
+                    monster.doMouth();
+                };
+                return new MyGame.TextManager([
+                    new MyGame.TextEncounter(new MyGame.TextDump("Don't let them all die, Rosie."), false, monsFin)
+                ]);
+            case Texts.INTERLUDE:
+                return new MyGame.TextManager([new MyGame.TextEncounter(new MyGame.TextDump("What was that?", new MyGame.TextDump("...", new MyGame.TextDump("Oh, I guess it was just a dream. But I feel like I've seen that thing before somewhere."))))]);
+            case Texts.ANIMAL_BEHAVIOR:
+                return getBookText("Creature Behavior: Section 25 - The Blumpus", "A blumpus is a stubborn creature that demands a high level of respect from its owner. " +
+                    "If properly managed a Blumpus' natural charge can be used a power a home for at least two people. In order to stabilize its large body, the Blumpus contains two " +
+                    "gyroscopic organs which spin in opposite directions. If kept on their natural diet of Bigberries, these organs will spin fast enough to act as generators.", "When a mother Blumpus feeds its children the first child to take a bite will be badly beaten afterwards. Usually these beatings will continue until only one or two offspring remain. " +
+                    "This selects for the children with the greatest patience or intelligence. Despite the initial frailness of the surviving children in comparison to their more eager siblings " +
+                    "eventually they will grow to be massive and fit.", "Blumpuses are most vulnerable during sleep when their usually rock hard skin softens to be repaired. In order to defend themselves " +
+                    "they have adapted to become sensitive to loud sounds, and to become very aggressive when they are woken.", "If you are unlucky enough to wake a Blumpus, you will have to dance with it. Importantly, you must use the opposite directions that the Blumpus uses. For example, if the Blumpus goes " +
+                    "UP, you must press DOWN on the corresponding beat, or if the Blumpus goes LEFT, you must press RIGHT on the corresponding beat.");
+            case Texts.PARK_BOOK:
+                return getBookText("yup yup yup yup");
             default:
                 throw new Error("Cannot find dialog for key '" + key + "'.");
         }
@@ -1562,6 +1196,121 @@ var MyGame;
         ]);
     }
     MyGame.getGrandpaText = getGrandpaText;
+})(MyGame || (MyGame = {}));
+var MyGame;
+(function (MyGame) {
+    function getProfessorText() {
+        var stateTransfer = MyGame.StateTransfer.getInstance();
+        var itemNames = ["grodule", "plorpus", "dinklepoofer"];
+        function ctns(str) {
+            var vals = [];
+            for (var _i = 1; _i < arguments.length; _i++) {
+                vals[_i - 1] = arguments[_i];
+            }
+            return vals.some(function (v) { return str.indexOf(v) !== -1; });
+        }
+        function getItemsText() {
+            var foundItems = itemNames.filter(function (n) { return stateTransfer.flags[n.toUpperCase() + "_FOUND"]; });
+            var notFoundItems = itemNames.filter(function (n) { return foundItems.indexOf(n) === -1; });
+            return "Wow, you found the " + foundItems.join(" and the ") + ", but you still need to find the " + notFoundItems.join(" and the ") + ".";
+        }
+        function removeFoundItems(main) {
+            var foundItems = itemNames.filter(function (n) { return stateTransfer.flags[n.toUpperCase() + "_FOUND"]; });
+            foundItems.forEach(function (n) {
+                var matchingBarriers = main.groups.barriers.filter(function (s) { return s instanceof MyGame.Source && s.type === n; }).map(function (s) { return s; });
+                matchingBarriers.forEach(function (s) {
+                    s.remove();
+                });
+            });
+        }
+        function afterYesDecision(main, professor) {
+            var sources = main.groups.barriers.filter(function (s) { return s instanceof MyGame.Source
+                && Math.abs(professor.position.x - s.position.x) < 3 && Math.abs(professor.position.x - s.position.x) < 3; }).map(function (s) { return s; });
+            for (var _i = 0, sources_1 = sources; _i < sources_1.length; _i++) {
+                var source = sources_1[_i];
+                if (source.type === MyGame.Assets.Sprites.Grodule.key) {
+                    stateTransfer.flags["GRODULE_FOUND"] = true;
+                }
+            }
+            var foundItems = itemNames.filter(function (n) { return stateTransfer.flags[n.toUpperCase() + "_FOUND"]; });
+            switch (foundItems.length) {
+                case 0:
+                    return 3;
+                case 3:
+                    return 5;
+                default:
+                    return 4;
+            }
+        }
+        function decision(lastViewed, main, parent, lastResult) {
+            if (lastViewed === -1) {
+                return 0;
+            }
+            if (lastViewed === 0) {
+                if (ctns(lastResult, "reconsider!")) {
+                    return 2;
+                }
+                else if (ctns(lastResult, "hand.")) {
+                    return 1;
+                }
+                return afterYesDecision(main, parent);
+            }
+            if ((lastViewed === 1 || lastViewed === 2) && ctns(lastResult, "now.", "happens!", "hand.", "reconsider!")) {
+                return 2;
+            }
+            return afterYesDecision(main, parent);
+        }
+        function getWhatHappened() {
+            return new MyGame.TextPrompt("This morning when I came in, three important parts were missing from my machine. I checked my security footage but all I was a blur in one frame, then the machine was broken in the next. "
+                + "I can't leave my house because I have to monitor another one of my experiments for today or else it may explode. I need you to ask around and see if anyone has seen weird technology lying around. Also if you find anything " +
+                "can you bring it back here?", [
+                new MyGame.TextOption("Sure thing."),
+                new MyGame.TextOption("Nah.", new MyGame.TextDump("Please reconsider!"))
+            ]);
+        }
+        function getYesResponse() {
+            return new MyGame.TextPrompt("Great. I have been working a machine for the past five years that I hope can help us communicate with the Beasts. I've been analyzing their noises " +
+                "and they seem to be used at least partially to indicate to the other Beasts the position, size and shape of the Beast making the noise. I'm hoping that if we send out a consistent signal that indicates what we are like, " +
+                "They might at least acknowledge us in some way. That would be really exciting!", [
+                new MyGame.TextOption("Sounds cool.", new MyGame.TextDump("I know. I really think it can bring us into a new age, and maybe soon we can reconnect with other worlds! But there's a big problem.", getWhatHappened())),
+                new MyGame.TextOption("Sounds dangerous.", new MyGame.TextDump("Haven't you heard the stories about ancient times? A long time ago, the Beasts used to be our friends and guides to other worlds, an important bond to the primal side of ourselves. " +
+                    "I think that reconnecting with them now could lead to new age for us. Besides that, Remember when Daniel went missing in the woods a few years ago, then turned up in town unhurt? The doctor found chemicals on his skin that are consistent with the readings " +
+                    "we get from the Beasts when they fly over. So I really think there is no reason to assume they would want to harm us.", getWhatHappened()))
+            ]);
+        }
+        function getNoResponse() {
+            return new MyGame.TextDump("Uh... I guess I understand, we all have a lot to do today. I guess I can ask Stacy since you don't want to give your old professor a hand.");
+        }
+        return new MyGame.TextManager([
+            new MyGame.TextEncounter(new MyGame.TextPrompt("Rosie! I see your mother told you I needed you.", [
+                new MyGame.TextOption("I saw Albert.", new MyGame.TextPrompt("Oh yeah, He's having some problems today too isn't he? Very strange. But can you help me with my problems?", [
+                    new MyGame.TextOption("Sure, why not.", getYesResponse()),
+                    new MyGame.TextOption("Not really.", getNoResponse())
+                ])),
+                new MyGame.TextOption("Sure.", new MyGame.TextPrompt("Cool, I'm glad. Can you help me with some big problems I'm having?", [
+                    new MyGame.TextOption("Sure, why not.", getYesResponse()),
+                    new MyGame.TextOption("Not really.", getNoResponse())
+                ]))
+            ])),
+            new MyGame.TextEncounter(new MyGame.TextPrompt("Hello again. Have you changed your mind? Will you help me?", [
+                new MyGame.TextOption("Yes.", getYesResponse()),
+                new MyGame.TextOption("Not yet.", new MyGame.TextDump("Okay, then I really don't have time to talk right now."))
+            ])),
+            new MyGame.TextEncounter(new MyGame.TextPrompt("Hello again. Have you changed your mind? Will you help me?", [
+                new MyGame.TextOption("Please re-explain.", getYesResponse()),
+                new MyGame.TextOption("I have objections.", new MyGame.TextPrompt("I understand that you are worried about how the Beasts will respond. How about this? I promise I won't use the machine this year, " +
+                    "and I will wait until more studies are completed. But I still really need those parts, because having my machine broken like this puts my lab into a very unstable state, and I'm afraid what might happen. So will you help me?", [
+                    new MyGame.TextOption("Yes", getWhatHappened()),
+                    new MyGame.TextOption("No", new MyGame.TextDump("Sigh... Okay, I guess we'll see what happens!"))
+                ])),
+                new MyGame.TextOption("Yes.", new MyGame.TextDump("Nice, Thanks.", getWhatHappened()))
+            ])),
+            new MyGame.TextEncounter(new MyGame.TextDump("Oh my, oh my... Please find the three missing parts Rosie!")),
+            new MyGame.TextEncounter(new MyGame.LazyTextDump(getItemsText, this), false, removeFoundItems),
+            new MyGame.TextEncounter(new MyGame.TextDump("You found them all."))
+        ], decision);
+    }
+    MyGame.getProfessorText = getProfessorText;
 })(MyGame || (MyGame = {}));
 var MyGame;
 (function (MyGame) {
@@ -1658,10 +1407,11 @@ var MyGame;
 var MyGame;
 (function (MyGame) {
     var BottomTextDisplay = (function () {
-        function BottomTextDisplay(game, parent) {
+        function BottomTextDisplay(game, inputs, parent) {
             this.spriteHeight = 80;
             this.fontStyle = { font: "14px okeydokey", fill: "#000000" };
             this.game = game;
+            this.inputs = inputs;
             this.parent = parent;
             this.name = name;
         }
@@ -1683,21 +1433,23 @@ var MyGame;
         BottomTextDisplay.prototype.scrollUp = function () {
             if (this.upArrow.visible) {
                 this.pageNumber -= 1;
-                this.text.text = this.textEncounter.getCurrentPage().text[this.pageNumber];
+                this.text.text = this.textEncounter.getCurrentPage().getText()[this.pageNumber];
                 this.setDownArrowFrame(true);
                 this.upArrow.visible = this.pageNumber > 0;
+                this.game.sound.play(MyGame.Assets.Audio.Beep.key);
             }
         };
         BottomTextDisplay.prototype.scrollDown = function () {
             if (this.downArrow.frame === MyGame.Frames.Arrow.DOWN) {
                 this.pageNumber += 1;
-                this.text.text = this.textEncounter.getCurrentPage().text[this.pageNumber];
+                this.text.text = this.textEncounter.getCurrentPage().getText()[this.pageNumber];
                 this.upArrow.visible = true;
-                this.setDownArrowFrame(this.pageNumber < this.textEncounter.getCurrentPage().text.length - 1);
-                this.currentRead = this.downArrow.frame === MyGame.Frames.Arrow.O;
+                this.setDownArrowFrame(this.pageNumber < this.textEncounter.getCurrentPage().getText().length - 1);
+                this.currentRead = this.currentRead || this.downArrow.frame === MyGame.Frames.Arrow.O;
                 if (this.currentRead && this.optionsDisplay.getCurrentOption() !== -1) {
                     this.optionsDisplay.show();
                 }
+                this.game.sound.play(MyGame.Assets.Audio.Beep.key);
             }
         };
         BottomTextDisplay.prototype.scrollRight = function () {
@@ -1710,6 +1462,7 @@ var MyGame;
             if (!this.currentRead) {
                 return;
             }
+            this.game.sound.play(MyGame.Assets.Audio.Beep.key);
             var next = this.textEncounter.getResponse(this.optionsDisplay.getCurrentOption());
             if (!next) {
                 this.textBackground.destroy();
@@ -1720,79 +1473,89 @@ var MyGame;
                     this.downArrow.destroy();
                 if (this.upArrow)
                     this.upArrow.destroy();
-                this.game.unstopPlayer();
                 this.textEncounter.lastResult = result;
-                this.textEncounter.onFinish(this.game, this.parent, result);
+                if (this.game instanceof MyGame.Main) {
+                    this.game.unstopPlayer();
+                    this.textEncounter.onFinish(this.game, this.parent, result);
+                }
+                else {
+                    this.textEncounter.onFinish(null, null, result);
+                }
                 this.textEncounter.reset();
-                this.game.inputs.O.onUp.remove(this.addOnDownListener, this);
-                this.game.inputs.O.onDown.remove(this.makeChoice, this);
-                this.game.inputs.down.onDown.remove(this.scrollDown, this);
-                this.game.inputs.up.onDown.remove(this.scrollUp, this);
-                this.game.inputs.O.onUp.addOnce(function () { this.isDisplaying = false; }, this);
+                this.inputs.O.onUp.remove(this.addOnDownListener, this);
+                this.inputs.O.onDown.remove(this.makeChoice, this);
+                this.inputs.down.onDown.remove(this.scrollDown, this);
+                this.inputs.up.onDown.remove(this.scrollUp, this);
+                this.inputs.O.onUp.addOnce(function () { this.isDisplaying = false; }, this);
                 return;
             }
             if (!next.hasOptions) {
                 this.optionsDisplay.setOptions(null);
                 this.optionsDisplay.hide();
-                this.game.inputs.right.onDown.remove(this.scrollRight, this);
-                this.game.inputs.left.onDown.remove(this.scrollLeft, this);
-                this.text.text = next.text[0];
+                this.inputs.right.onDown.remove(this.scrollRight, this);
+                this.inputs.left.onDown.remove(this.scrollLeft, this);
+                this.text.text = next.getText()[0];
                 this.pageNumber = 0;
                 this.upArrow.visible = false;
-                this.setDownArrowFrame(this.textEncounter.getCurrentPage().text.length > 1);
-                this.currentRead = this.downArrow.frame === MyGame.Frames.Arrow.O;
-                this.game.inputs.O.onUp.add(this.addOnDownListener, this);
+                this.setDownArrowFrame(this.textEncounter.getCurrentPage().getText().length > 1);
+                this.currentRead = this.currentRead || this.downArrow.frame === MyGame.Frames.Arrow.O;
+                this.inputs.O.onUp.add(this.addOnDownListener, this);
                 return;
             }
             var nextPrompt = next;
             this.optionsDisplay.setOptions(nextPrompt.options);
-            this.optionsDisplay.hide();
+            this.optionsDisplay.show();
             this.pageNumber = 0;
-            this.text.text = next.text[0];
+            this.text.text = next.getText()[0];
             this.upArrow.visible = false;
-            this.setDownArrowFrame(nextPrompt.text.length > 1);
-            this.currentRead = this.downArrow.frame === MyGame.Frames.Arrow.O;
-            this.game.inputs.left.onDown.add(this.scrollLeft, this);
-            this.game.inputs.right.onDown.add(this.scrollRight, this);
-            this.game.inputs.O.onUp.add(this.addOnDownListener, this);
+            this.setDownArrowFrame(nextPrompt.getText().length > 1);
+            this.currentRead = this.currentRead || this.downArrow.frame === MyGame.Frames.Arrow.O;
+            this.inputs.left.onDown.add(this.scrollLeft, this);
+            this.inputs.right.onDown.add(this.scrollRight, this);
+            this.inputs.O.onUp.add(this.addOnDownListener, this);
         };
         BottomTextDisplay.prototype.addOnDownListener = function () {
-            this.game.inputs.O.onDown.add(this.makeChoice, this);
+            this.inputs.O.onDown.add(this.makeChoice, this);
         };
         BottomTextDisplay.prototype.start = function (textEncounter) {
             if (this.isDisplaying) {
                 return;
             }
             this.textEncounter = textEncounter;
-            this.game.stopPlayer();
+            if (this.game instanceof MyGame.Main) {
+                this.game.stopPlayer();
+            }
             this.textBackground = this.game.add.image(0, 0, MyGame.Assets.Images.BottomTextBackground);
             this.upArrow = this.game.add.image(MyGame.SCREEN_WIDTH - 22, 8, MyGame.Assets.Sprites.Arrow.key, MyGame.Frames.Arrow.UP);
             this.textBackground.fixedToCamera = true;
             this.upArrow.visible = false;
             this.downArrow = this.game.add.image(MyGame.SCREEN_WIDTH - 22, this.textBackground.height - 20, MyGame.Assets.Sprites.Arrow.key);
-            this.setDownArrowFrame(this.textEncounter.getCurrentPage().text.length > 1);
-            this.currentRead = this.downArrow.frame === MyGame.Frames.Arrow.O;
+            var page = this.textEncounter.getCurrentPage();
+            this.setDownArrowFrame(page.getText().length > 1);
+            this.currentRead = this.currentRead || this.downArrow.frame === MyGame.Frames.Arrow.O;
             this.upArrow.fixedToCamera = true;
             this.downArrow.fixedToCamera = true;
-            this.text = this.game.add.bitmapText(8, this.textBackground.y + 8, MyGame.Assets.FontName, this.textEncounter.getCurrentPage().text[0], 14);
+            this.text = this.game.add.bitmapText(8, this.textBackground.y + 8, MyGame.Assets.FontName, this.textEncounter.getCurrentPage().getText()[0], 14);
             this.text.maxWidth = MyGame.SCREEN_WIDTH - 24;
             this.text.fixedToCamera = true;
             this.pageNumber = 0;
             this.isDisplaying = true;
-            this.game.inputs.down.onDown.add(this.scrollDown, this);
-            this.game.inputs.up.onDown.add(this.scrollUp, this);
+            this.inputs.down.onDown.add(this.scrollDown, this);
+            this.inputs.up.onDown.add(this.scrollUp, this);
             this.optionsDisplay = new OptionsDisplay(this.game, this.textBackground.height);
-            this.game.inputs.O.onDown.add(this.makeChoice, this);
+            this.inputs.O.onDown.add(this.makeChoice, this);
             if (this.textEncounter.getCurrentPage().hasOptions) {
                 var textPrompt = this.textEncounter.getCurrentPage();
                 this.optionsDisplay.setOptions(textPrompt.options);
-                this.game.inputs.left.onDown.add(this.scrollLeft, this);
-                this.game.inputs.right.onDown.add(this.scrollRight, this);
+                this.inputs.left.onDown.add(this.scrollLeft, this);
+                this.inputs.right.onDown.add(this.scrollRight, this);
+                this.optionsDisplay.show();
             }
             else {
                 this.optionsDisplay.setOptions(null);
+                this.optionsDisplay.hide();
             }
-            this.optionsDisplay.hide();
+            this.game.sound.play(MyGame.Assets.Audio.Doodle.key);
         };
         BottomTextDisplay.prototype.setDownArrowFrame = function (showDownArrow) {
             this.downArrow.frame = showDownArrow ? MyGame.Frames.Arrow.DOWN : MyGame.Frames.Arrow.O;
@@ -1823,6 +1586,9 @@ var MyGame;
             if (MyGame.Utils.isAThing(options)) {
                 this.currentOption = 0;
                 this.text.text = options[0].text;
+                if (this.showing) {
+                    this.setArrowVisibility();
+                }
             }
             else {
                 this.currentOption = -1;
@@ -1857,6 +1623,7 @@ var MyGame;
                 this.currentOption += 1;
                 this.text.text = this.options[this.currentOption].text;
                 this.setArrowVisibility();
+                this.main.sound.play(MyGame.Assets.Audio.Beep.key);
             }
         };
         OptionsDisplay.prototype.scrollLeft = function () {
@@ -1864,6 +1631,7 @@ var MyGame;
                 this.currentOption -= 1;
                 this.text.text = this.options[this.currentOption].text;
                 this.setArrowVisibility();
+                this.main.sound.play(MyGame.Assets.Audio.Beep.key);
             }
         };
         OptionsDisplay.prototype.getCurrentOption = function () {
@@ -1887,6 +1655,91 @@ var MyGame;
 })(MyGame || (MyGame = {}));
 var MyGame;
 (function (MyGame) {
+    var CinematicBars = (function () {
+        function CinematicBars(main) {
+            this.main = main;
+            this.top = main.add.image(main.camera.x, main.camera.y, MyGame.Assets.Images.Bar);
+            this.top.scale.y = .75;
+            this.bottom = main.add.image(main.camera.x, main.camera.y + MyGame.SCREEN_HEIGHT - 75, MyGame.Assets.Images.Bar);
+            this.bottom.scale.y = .75;
+            this.top.fixedToCamera = true;
+            this.bottom.fixedToCamera = true;
+        }
+        CinematicBars.prototype.bringToTop = function () {
+            this.main.world.bringToTop(this.top);
+            this.main.world.bringToTop(this.bottom);
+        };
+        CinematicBars.prototype.hide = function () {
+            this.top.visible = false;
+            this.bottom.visible = false;
+        };
+        CinematicBars.prototype.show = function () {
+            this.top.visible = true;
+            this.bottom.visible = true;
+        };
+        return CinematicBars;
+    }());
+    MyGame.CinematicBars = CinematicBars;
+})(MyGame || (MyGame = {}));
+var MyGame;
+(function (MyGame) {
+    var HealthBar = (function () {
+        function HealthBar(main, health) {
+            this.main = main;
+            this.group = main.add.group();
+            this.container = main.add.sprite(MyGame.SCREEN_WIDTH - 64 - 134, 4, MyGame.Assets.Images.HealthBarContainer);
+            this.container.fixedToCamera = true;
+            this.group.add(this.container);
+            var width = this.container.width - 4;
+            var bmd = this.main.add.bitmapData(width, this.container.height - 4);
+            bmd.ctx.beginPath();
+            bmd.ctx.rect(0, 0, width, this.container.height - 4);
+            bmd.ctx.fillStyle = "#" + MyGame.Colors.RED.toString(16);
+            bmd.ctx.fill();
+            var redBar = main.add.sprite(this.container.x + 2, this.container.y + 2, bmd);
+            redBar.fixedToCamera = true;
+            this.group.add(redBar);
+            this.updateHealth(health);
+            this.bringToTop();
+            if (health === 100) {
+                this.hide();
+            }
+        }
+        HealthBar.prototype.bringToTop = function () {
+            this.group.bringToTop(this.bar);
+            this.group.bringToTop(this.container);
+            this.main.world.bringToTop(this.group);
+        };
+        HealthBar.prototype.show = function () {
+            this.group.visible = true;
+        };
+        HealthBar.prototype.hide = function () {
+            this.group.visible = false;
+        };
+        HealthBar.prototype.updateHealth = function (health) {
+            if (this.health === health) {
+                return;
+            }
+            if (this.bar) {
+                this.bar.destroy;
+            }
+            var width = Math.round((health / 100) * ((this.container.width - 4) / 2)) * 2;
+            var bmd = this.main.add.bitmapData(width, this.container.height - 4);
+            bmd.ctx.beginPath();
+            bmd.ctx.rect(0, 0, width, this.container.height - 4);
+            bmd.ctx.fillStyle = "#" + MyGame.Colors.PURPLE.toString(16);
+            bmd.ctx.fill();
+            this.bar = this.main.add.sprite(this.container.x + 2, this.container.y + 2, bmd);
+            this.bar.fixedToCamera = true;
+            this.group.add(this.bar);
+            this.health = health;
+        };
+        return HealthBar;
+    }());
+    MyGame.HealthBar = HealthBar;
+})(MyGame || (MyGame = {}));
+var MyGame;
+(function (MyGame) {
     var WIDTH = 56;
     var PADDING = 4;
     var TEXT_PADDING = 6;
@@ -1894,9 +1747,10 @@ var MyGame;
         function HoldableDisplay(main, iconKey, startingCount) {
             if (startingCount === void 0) { startingCount = 0; }
             this.main = main;
-            this.background = main.add.image(MyGame.SCREEN_WIDTH - WIDTH - PADDING, PADDING, MyGame.Assets.Images.ProjectileDisplay);
+            this.background = main.add.image(MyGame.SCREEN_WIDTH - WIDTH - PADDING, PADDING, MyGame.Assets.Sprites.ProjectileDisplay.key);
             this.text = main.add.bitmapText(this.background.x + TEXT_PADDING, this.background.y + TEXT_PADDING, MyGame.Assets.FontName, startingCount.toString(), MyGame.Assets.FontSize);
             this.icon = this.main.add.image(this.background.x + (WIDTH / 2) + TEXT_PADDING, this.background.y + TEXT_PADDING, iconKey);
+            this.background.animations.add("flash", [0, 1, 0, 1, 0, 1, 0, 1, 0], 10, false);
             this.background.fixedToCamera = true;
             this.text.fixedToCamera = true;
             this.icon.fixedToCamera = true;
@@ -1939,6 +1793,9 @@ var MyGame;
             this.displayGroup.visible = true;
             this.showing = true;
         };
+        HoldableDisplay.prototype.flash = function () {
+            this.background.play("flash");
+        };
         return HoldableDisplay;
     }());
     MyGame.HoldableDisplay = HoldableDisplay;
@@ -1960,8 +1817,9 @@ var MyGame;
             this.main = main;
             this.background = this.main.add.image(main.camera.x, main.camera.y, MyGame.Assets.Images.MenuBackground);
             this.background.fixedToCamera = true;
-            this.pointer = this.main.add.image(LEFT_PADDING, 0, MyGame.Assets.Sprites.Arrow.key);
-            this.pointer.frame = 2;
+            this.pointer = this.main.add.image(main.camera.x + LEFT_PADDING, main.camera.y, MyGame.Assets.Sprites.Arrow.key);
+            this.pointer.frame = MyGame.Frames.Arrow.RIGHT;
+            this.pointer.fixedToCamera = true;
             this.options = [
                 {
                     text: "Save",
@@ -1984,7 +1842,7 @@ var MyGame;
                         this.texts[this.cursor].x -= LEFT_INDENT;
                         this.cursor -= 1;
                         this.texts[this.cursor].x += LEFT_INDENT;
-                        this.pointer.y = OPTION_SPACING * this.cursor + TOP_PADDING + POINTER_PADDING;
+                        this.pointer.y = OPTION_SPACING * this.cursor + TOP_PADDING + POINTER_PADDING + this.main.camera.y;
                     }
                     break;
                 case Phaser.KeyCode.S:
@@ -1992,7 +1850,7 @@ var MyGame;
                         this.texts[this.cursor].x -= LEFT_INDENT;
                         this.cursor += 1;
                         this.texts[this.cursor].x += LEFT_INDENT;
-                        this.pointer.y = OPTION_SPACING * this.cursor + TOP_PADDING + POINTER_PADDING;
+                        this.pointer.y = OPTION_SPACING * this.cursor + TOP_PADDING + POINTER_PADDING + this.main.camera.y;
                     }
             }
         };
@@ -2026,7 +1884,7 @@ var MyGame;
                 this.texts[i].position.add(this.main.camera.x, this.main.camera.y);
             }
             this.texts[0].x += LEFT_INDENT;
-            this.pointer.y = TOP_PADDING;
+            this.pointer.y = TOP_PADDING + this.main.camera.y;
             this.cursor = 0;
         };
         PauseMenu.prototype.showInfo = function (text) {
@@ -2063,8 +1921,31 @@ var MyGame;
                 }
             });
             stateTransfer.health = main.player.health;
+            stateTransfer.flags["USE_SAVE"] = true;
             main.stopPlayer();
             MyGame.Utils.fadeToBlack(main, 500, MyGame.States.Battle);
+        };
+        Enemy.prototype.onNoteDisplay = function (game, noteOrNull, beatPos) {
+            switch (noteOrNull) {
+                case game.inputs.down.keyCode:
+                    game.enemyDisplay.moveDown();
+                    break;
+                case game.inputs.up.keyCode:
+                    game.enemyDisplay.moveUp();
+                    break;
+                case game.inputs.left.keyCode:
+                    game.enemyDisplay.moveLeft();
+                    break;
+                case game.inputs.right.keyCode:
+                    game.enemyDisplay.moveRight();
+                    break;
+                case game.inputs.O.keyCode:
+                    game.enemyDisplay.pressO();
+                    break;
+                case game.inputs.K.keyCode:
+                    game.enemyDisplay.pressK();
+            }
+            game.time.events.add(MyGame.Utils.bpmToMilliseconds(this.tempo) / 2, game.enemyDisplay.reset, game.enemyDisplay);
         };
         return Enemy;
     }());
@@ -2085,10 +1966,11 @@ var MyGame;
         function OvenEncounter(main) {
             var _this = _super.call(this) || this;
             _this.name = "Oven";
+            _this.music = MyGame.Assets.Audio.Oven;
             _this.battleSpriteKey = MyGame.Assets.Images.OvenBattle;
             _this.minNumNotes = 4;
             _this.maxNumNotes = 6;
-            _this.patternLength = 9;
+            _this.patternLength = 6;
             _this.beatLength = 3;
             _this.tempo = 140;
             _this.hitPoints = 300;
@@ -2113,7 +1995,7 @@ var MyGame;
             return damage;
         };
         OvenEncounter.prototype.getAttackPoints = function (pattern) {
-            return Math.floor((pattern.length * 25) / 2);
+            return Math.floor((pattern.length * 25) / 5);
         };
         OvenEncounter.prototype.noteComparer = function (pattern, pressed, pressedCount) {
             var noNulls = pattern.filter(function (p) { return MyGame.Utils.isAThing(p); });
@@ -2128,6 +2010,219 @@ var MyGame;
         return OvenEncounter;
     }(AdhocEncounter));
     MyGame.OvenEncounter = OvenEncounter;
+    var BlumpusEncounter = (function (_super) {
+        __extends(BlumpusEncounter, _super);
+        function BlumpusEncounter(main) {
+            var _this = _super.call(this) || this;
+            _this.name = "Oven";
+            _this.music = MyGame.Assets.Audio.Blumpus;
+            _this.battleSpriteKey = MyGame.Assets.Images.OvenBattle;
+            _this.minNumNotes = 5;
+            _this.maxNumNotes = 7;
+            _this.patternLength = 8;
+            _this.beatLength = 4;
+            _this.tempo = 150;
+            _this.hitPoints = 300;
+            _this.health = 300;
+            _this.main = main;
+            _this.transferPosition = MyGame.pof(2, 6);
+            _this.afterDeath = function (main) {
+                var blumpus = main.groups.creatures.filter(function (c) { return c instanceof MyGame.Blumpus; })[0];
+                blumpus.moveRight();
+            };
+            return _this;
+        }
+        BlumpusEncounter.prototype.calculateDamage = function (pattern, notePresses) {
+            function getRightKey(key) {
+                switch (key) {
+                    case Phaser.KeyCode.W:
+                        return Phaser.KeyCode.S;
+                    case Phaser.KeyCode.S:
+                        return Phaser.KeyCode.W;
+                    case Phaser.KeyCode.A:
+                        return Phaser.KeyCode.D;
+                    case Phaser.KeyCode.D:
+                        return Phaser.KeyCode.A;
+                }
+                return key;
+            }
+            if (pattern.length !== notePresses.length) {
+                return 0;
+            }
+            var sortedPattern = pattern.sort(function (a, b) { return a.position - b.position; });
+            var sortedPresses = notePresses.sort(function (a, b) { return a.position - b.position; });
+            var damage = 0;
+            for (var i = 0; i < sortedPattern.length; i++) {
+                if (getRightKey(sortedPattern[i].key) !== sortedPresses[i].note) {
+                    return 0;
+                }
+                damage += Math.round((500 - sortedPresses[i].distance) / 33);
+            }
+            return damage;
+        };
+        BlumpusEncounter.prototype.getAttackPoints = function (pattern) {
+            return Math.floor((pattern.length * 25) / 2);
+        };
+        BlumpusEncounter.prototype.noteComparer = function (pattern, pressed, pressedCount) {
+            function getRightKey(key) {
+                switch (key) {
+                    case Phaser.KeyCode.W:
+                        return Phaser.KeyCode.S;
+                    case Phaser.KeyCode.S:
+                        return Phaser.KeyCode.W;
+                    case Phaser.KeyCode.A:
+                        return Phaser.KeyCode.D;
+                    case Phaser.KeyCode.D:
+                        return Phaser.KeyCode.A;
+                }
+                return key;
+            }
+            var noNulls = pattern.filter(function (p) { return MyGame.Utils.isAThing(p); });
+            if (pressedCount > noNulls.length) {
+                return false;
+            }
+            return getRightKey(noNulls[pressedCount]) === pressed;
+        };
+        BlumpusEncounter.prototype.die = function () {
+            this.alive = false;
+        };
+        return BlumpusEncounter;
+    }(AdhocEncounter));
+    MyGame.BlumpusEncounter = BlumpusEncounter;
+    var MonsterEncounter = (function (_super) {
+        __extends(MonsterEncounter, _super);
+        function MonsterEncounter(main) {
+            var _this = _super.call(this) || this;
+            _this.name = "Monster";
+            _this.music = MyGame.Assets.Audio.Monster;
+            _this.battleSpriteKey = MyGame.Assets.Sprites.Monster.key;
+            _this.minNumNotes = 4;
+            _this.maxNumNotes = 4;
+            _this.patternLength = 4;
+            _this.beatLength = 4;
+            _this.tempo = 200;
+            _this.hitPoints = 300;
+            _this.health = 300;
+            _this.main = main;
+            return _this;
+        }
+        MonsterEncounter.prototype.calculateDamage = function (pattern, notePresses) {
+            if (pattern.length !== notePresses.length) {
+                return 0;
+            }
+            var sortedPattern = pattern.sort(function (a, b) { return a.position - b.position; });
+            var sortedPresses = notePresses.sort(function (a, b) { return a.position - b.position; });
+            var damage = 0;
+            for (var i = 0; i < sortedPattern.length; i++) {
+                if (sortedPattern[i].key !== sortedPresses[i].note || sortedPattern[i].position !== sortedPresses[i].position) {
+                    return 0;
+                }
+                damage += Math.round((500 - sortedPresses[i].distance) / 200);
+            }
+            return damage;
+        };
+        MonsterEncounter.prototype.getAttackPoints = function (pattern) {
+            return Math.floor((pattern.length * 25) / 4);
+        };
+        MonsterEncounter.prototype.die = function () {
+            this.alive = false;
+        };
+        MonsterEncounter.prototype.noteComparer = function (pattern, pressed, pressedCount) {
+            var noNulls = pattern.filter(function (p) { return MyGame.Utils.isAThing(p); });
+            if (pressedCount > noNulls.length) {
+                return false;
+            }
+            return noNulls[pressedCount] === pressed;
+        };
+        return MonsterEncounter;
+    }(AdhocEncounter));
+    MyGame.MonsterEncounter = MonsterEncounter;
+})(MyGame || (MyGame = {}));
+var MyGame;
+(function (MyGame) {
+    var Croller = (function (_super) {
+        __extends(Croller, _super);
+        function Croller(main, position) {
+            var _this = _super.call(this) || this;
+            _this.speed = 200;
+            _this.battleSpriteKey = MyGame.Assets.Sprites.CrollerBattle.key;
+            _this.music = MyGame.Assets.Audio.Blumpus;
+            _this.minNumNotes = 4;
+            _this.maxNumNotes = 4;
+            _this.patternLength = 8;
+            _this.beatLength = 4;
+            _this.tempo = 150;
+            _this.hitPoints = 300;
+            _this.health = 300;
+            _this.noteCount = 8;
+            _this.main = main;
+            _this.position = position;
+            _this.sprite = main.add.sprite(position.x * MyGame.TILE_WIDTH, position.y * MyGame.TILE_HEIGHT, MyGame.Assets.Sprites.Croller.key);
+            main.physics.arcade.enableBody(_this.sprite);
+            _this.worldSprite = _this.sprite;
+            _this.sprite.animations.add("walk", MyGame.Utils.animationArray(0, 5), 8, true);
+            _this.sprite.animations.add("stand", [0], 4);
+            return _this;
+        }
+        Croller.prototype.afterDeath = function (main) { };
+        Croller.prototype.playerOverlap = function (sp1, sp2) {
+            this.startBattle(this.main);
+        };
+        Croller.prototype.update = function () {
+            this.movementManager.update();
+            this.main.physics.arcade.collide(this.sprite, this.blockers.map(function (b) { return b.sprite; }));
+            this.main.physics.arcade.collide(this.sprite, this.main.player, this.playerOverlap, null, this);
+            if (this.sprite.body.velocity.isZero()) {
+                if (this.sprite.animations.currentAnim.name === "walk") {
+                    this.sprite.play("stand");
+                }
+            }
+            else if (this.sprite.animations.currentAnim.name === "stand") {
+                this.sprite.play("walk", 8, true);
+            }
+        };
+        Croller.prototype.onStageBuilt = function () {
+            this.blockers = this.main.groups.barriers.filter(function (b) { return b.playerCollides; });
+            this.movementManager = new MyGame.TargetMover(this, this.blockers);
+            this.movementManager.followTarget(this.main.player);
+        };
+        Croller.prototype.calculateDamage = function (pattern, notePresses) {
+            if (notePresses.length < this.minNumNotes) {
+                return 0;
+            }
+            return this.health / 4;
+        };
+        Croller.prototype.getAttackPoints = function (pattern) {
+            return 34;
+        };
+        Croller.prototype.die = function () {
+            this.alive = false;
+            MyGame.WorldManager.getInstance().changeLayout(MyGame.StateTransfer.getInstance().island, this.position, "C");
+        };
+        Croller.prototype.noteComparer = function (pattern, pressed, pressedCount, beatPos) {
+            var orderedPositions = this.positions.sort();
+            return orderedPositions[pressedCount] === beatPos && MyGame.PatternUtil.getNthNote(pattern, pressedCount) === pressed;
+        };
+        Croller.prototype.onNoteDisplay = function (game, noteOrNull, beatPos) {
+            if (this.noteCount === this.patternLength) {
+                this.positions = [];
+                for (var i = 0; i < 4; i++) {
+                    var rand = Math.floor(Math.random() * this.patternLength);
+                    while (this.positions.indexOf(rand) !== -1) {
+                        rand = (rand + 1) % this.patternLength;
+                    }
+                    this.positions.push(rand);
+                }
+                this.noteCount = 0;
+            }
+            if (this.positions.indexOf(beatPos) > -1) {
+                game.enemyDisplay.playAnim("spark", [1, 2, 0], 12);
+            }
+            this.noteCount += 1;
+        };
+        return Croller;
+    }(MyGame.Enemy));
+    MyGame.Croller = Croller;
 })(MyGame || (MyGame = {}));
 var MyGame;
 (function (MyGame) {
@@ -2154,7 +2249,7 @@ var MyGame;
             this.movementManager.start();
         };
         Jammer.prototype.getAttackPoints = function (pattern) {
-            return Math.floor((pattern.length * 25) / 2);
+            return Math.floor((pattern.length * 25) / 4);
         };
         Jammer.prototype.playerOverlap = function (sp, pl) {
             this.startBattle(this.main);
@@ -2178,8 +2273,9 @@ var MyGame;
     var JamBot = (function (_super) {
         __extends(JamBot, _super);
         function JamBot(main, position, movementScript) {
-            var _this = _super.call(this, main, position, movementScript, 100, MyGame.Assets.Sprites.JamBotWorld.key) || this;
+            var _this = _super.call(this, main, position, movementScript, 200, MyGame.Assets.Sprites.JamBotWorld.key) || this;
             _this.battleSpriteKey = MyGame.Assets.Images.JamBotBattle;
+            _this.music = MyGame.Assets.Audio.JamBot;
             _this.name = "JamBot";
             _this.minNumNotes = 4;
             _this.maxNumNotes = 4;
@@ -2187,7 +2283,7 @@ var MyGame;
             _this.beatLength = 2;
             _this.tempo = 125;
             _this.worldSpriteKey = MyGame.Assets.Sprites.JamBotWorld.key;
-            _this.hitPoints = 100;
+            _this.hitPoints = 200;
             _this.speed = 1000;
             _this.calculateDamage = function (pattern, notePresses) {
                 if (pattern.length !== notePresses.length) {
@@ -2216,8 +2312,9 @@ var MyGame;
     var JamBug = (function (_super) {
         __extends(JamBug, _super);
         function JamBug(main, position, movementScript) {
-            var _this = _super.call(this, main, position, movementScript, 100, MyGame.Assets.Sprites.JamBugWorld.key) || this;
-            _this.battleSpriteKey = MyGame.Assets.Images.JamBotBattle;
+            var _this = _super.call(this, main, position, movementScript, 200, MyGame.Assets.Sprites.JamBugWorld.key) || this;
+            _this.battleSpriteKey = MyGame.Assets.Sprites.JamBugBattle.key;
+            _this.music = MyGame.Assets.Audio.JamBug;
             _this.name = "JamBug";
             _this.minNumNotes = 4;
             _this.maxNumNotes = 6;
@@ -2225,7 +2322,7 @@ var MyGame;
             _this.beatLength = 2;
             _this.tempo = 150;
             _this.worldSpriteKey = MyGame.Assets.Sprites.JamBugWorld.key;
-            _this.hitPoints = 100;
+            _this.hitPoints = 200;
             _this.speed = 500;
             _this.specificUpdate = function () {
                 if (_this.direction === MyGame.Direction.Up && _this.sprite.rotation !== Math.PI) {
@@ -2287,13 +2384,14 @@ var MyGame;
             this.hasTrigger = this.triggerName && this.triggerName !== "";
             this.currentNum = -1;
             this.interruptable = true;
+            this.tileOffset = MyGame.pof(0, 0);
         }
         MovementManager.prototype.start = function (resetToOriginalPosition) {
             if (resetToOriginalPosition === void 0) { resetToOriginalPosition = false; }
             if (resetToOriginalPosition) {
-                this.sprite.position.setTo(this.script.start.x * MyGame.TILE_WIDTH, this.script.start.y * MyGame.TILE_HEIGHT);
+                this.sprite.position.setTo((this.script.start.x + this.tileOffset.x) * MyGame.TILE_WIDTH, (this.script.start.y + this.tileOffset.y) * MyGame.TILE_HEIGHT);
                 if (this.sprite.body) {
-                    this.sprite.body.position.setTo(this.script.start.x * MyGame.TILE_WIDTH, this.script.start.y * MyGame.TILE_HEIGHT);
+                    this.sprite.body.position.setTo((this.script.start.x + this.tileOffset.x) * MyGame.TILE_WIDTH, (this.script.start.y + this.tileOffset.y) * MyGame.TILE_HEIGHT);
                 }
             }
             var destinations = [];
@@ -2376,9 +2474,74 @@ var MyGame;
         MovementManager.prototype.currentlyStationary = function () {
             return this.currentNum === -1 || this.script.directions[this.currentNum] === null;
         };
+        MovementManager.prototype.setTileOffset = function (x, y) {
+            this.tileOffset.setTo(x, y);
+        };
         return MovementManager;
     }());
     MyGame.MovementManager = MovementManager;
+})(MyGame || (MyGame = {}));
+var MyGame;
+(function (MyGame) {
+    var TargetMover = (function () {
+        function TargetMover(subject, blockers) {
+            this.subject = subject;
+            this.blockerPos = blockers.map(function (b) { return b.position; });
+            this.paused = false;
+        }
+        TargetMover.prototype.setBlockers = function (blockers) {
+            this.blockerPos = blockers.map(function (b) { return b.position; });
+        };
+        TargetMover.prototype.followTarget = function (target) {
+            if (this.target) {
+                this.unfollowTarget();
+            }
+            this.target = target;
+        };
+        TargetMover.prototype.update = function () {
+            var _this = this;
+            if (this.paused || !this.target)
+                return;
+            var roundedTargetPos = MyGame.Utils.roundToClosestTile(this.target.position);
+            var roundedSubjectPos = MyGame.Utils.roundToClosestTile(this.subject.sprite.position);
+            if (!this.blockerPos.some(function (p) { return p.y === roundedSubjectPos.y && _this.betweenThings(p.x, roundedSubjectPos.x, roundedTargetPos.x); })
+                && !this.blockerPos.some(function (p) { return p.x === roundedSubjectPos.x && _this.betweenThings(p.y, roundedSubjectPos.y, roundedTargetPos.y); })) {
+                if (roundedSubjectPos.x !== roundedTargetPos.x) {
+                    var multiplier = roundedTargetPos.x > roundedSubjectPos.x ? 1 : -1;
+                    this.getBody().velocity.setTo(this.subject.speed * multiplier, 0);
+                    return;
+                }
+                if (roundedSubjectPos.y !== roundedTargetPos.y) {
+                    var multiplier = roundedTargetPos.y > roundedSubjectPos.y ? 1 : -1;
+                    this.getBody().velocity.setTo(0, this.subject.speed * multiplier);
+                    return;
+                }
+            }
+            this.getBody().velocity.setTo(0, 0);
+        };
+        TargetMover.prototype.pause = function () {
+            this.paused = true;
+            this.getBody().velocity.setTo(0, 0);
+        };
+        TargetMover.prototype.resume = function () {
+            this.paused = false;
+        };
+        TargetMover.prototype.unfollowTarget = function () {
+            this.target = null;
+            this.getBody().velocity.setTo(0, 0);
+        };
+        TargetMover.prototype.getBody = function () {
+            return this.subject.sprite.body;
+        };
+        TargetMover.prototype.betweenThings = function (p, end1, end2) {
+            if (end1 <= end2) {
+                return p >= end1 && p <= end2;
+            }
+            return p <= end1 && p >= end2;
+        };
+        return TargetMover;
+    }());
+    MyGame.TargetMover = TargetMover;
 })(MyGame || (MyGame = {}));
 var MyGame;
 (function (MyGame) {
@@ -2399,7 +2562,11 @@ var MyGame;
             }
             this.playerCollides = playerCollides;
             this.island = main.island.num;
+            this.char = char;
         }
+        Barrier.prototype.onCollision = function (playerSprite, barrierSprite) { };
+        Barrier.prototype.checkCollision = function (playerSprite, barrierSprite) { return true; };
+        Barrier.prototype.onStageBuilt = function () { };
         return Barrier;
     }());
     MyGame.Barrier = Barrier;
@@ -2419,6 +2586,11 @@ var MyGame;
             _this.sprite.play("wave");
             return _this;
         }
+        Water.prototype.onStageBuilt = function () {
+            var _this = this;
+            var bridges = this.main.groups.barriers.filter(function (b) { return b instanceof Bridge; }).map(function (b) { return b; });
+            this.playerCollides = !MyGame.Utils.firstOrDefault(bridges, function (b) { return b.position.equals(MyGame.pof(_this.position.x, _this.position.y + 1)); });
+        };
         return Water;
     }(Barrier));
     MyGame.Water = Water;
@@ -2482,7 +2654,11 @@ var MyGame;
     var Gate = (function (_super) {
         __extends(Gate, _super);
         function Gate(main, position) {
-            return _super.call(this, main, position, MyGame.Assets.Images.Gate, "g") || this;
+            var _this = _super.call(this, main, position, MyGame.Assets.Sprites.Gate.key, "g") || this;
+            if (main.island.layout[position.y - 1].charAt(position.x) === " ") {
+                _this.sprite.frame = MyGame.Frames.Gate.HORIZONTAL;
+            }
+            return _this;
         }
         return Gate;
     }(Barrier));
@@ -2490,11 +2666,19 @@ var MyGame;
     var Lillypad = (function (_super) {
         __extends(Lillypad, _super);
         function Lillypad(main, position) {
-            return _super.call(this, main, position, MyGame.Assets.Images.Lillypad, "p", false) || this;
+            return _super.call(this, main, position, MyGame.Assets.Images.Lillypad, "p") || this;
         }
         return Lillypad;
     }(Barrier));
     MyGame.Lillypad = Lillypad;
+    var Path = (function (_super) {
+        __extends(Path, _super);
+        function Path(main, position) {
+            return _super.call(this, main, position, MyGame.Assets.Images.Path, "#", false) || this;
+        }
+        return Path;
+    }(Barrier));
+    MyGame.Path = Path;
     var CustomBarrier = (function (_super) {
         __extends(CustomBarrier, _super);
         function CustomBarrier(main, position, spriteKey, playerCollides) {
@@ -2503,6 +2687,27 @@ var MyGame;
         return CustomBarrier;
     }(Barrier));
     MyGame.CustomBarrier = CustomBarrier;
+    var Bridge = (function (_super) {
+        __extends(Bridge, _super);
+        function Bridge(main, position) {
+            return _super.call(this, main, position, MyGame.Assets.Images.Bridge, '|', false) || this;
+        }
+        return Bridge;
+    }(Barrier));
+    MyGame.Bridge = Bridge;
+    var TallGrass = (function (_super) {
+        __extends(TallGrass, _super);
+        function TallGrass(main, position) {
+            var _this = _super.call(this, main, position, MyGame.Assets.Sprites.TallGrass.key, "v", false) || this;
+            var frame = Math.floor(Math.random() * 3);
+            frame = frame === 2 ? 4 : frame;
+            _this.sprite.frame = frame;
+            _this.bottomSprite = main.add.sprite(position.x * MyGame.TILE_WIDTH, (position.y + 0.5) * MyGame.TILE_HEIGHT, MyGame.Assets.Sprites.TallGrass.key, frame + 2);
+            return _this;
+        }
+        return TallGrass;
+    }(Barrier));
+    MyGame.TallGrass = TallGrass;
 })(MyGame || (MyGame = {}));
 var MyGame;
 (function (MyGame) {
@@ -2559,16 +2764,17 @@ var MyGame;
     var Creature = (function () {
         function Creature(main, position, spriteKey, collidesWith) {
             this.MOVE = "move";
+            this.animSpeed = 10;
             this.main = main;
             this.position = position.clone();
             this.sprite = main.add.sprite(position.x * MyGame.TILE_WIDTH, position.y * MyGame.TILE_HEIGHT, spriteKey);
-            this.sprite.animations.add(this.MOVE, null, 10, true);
             this.main.physics.arcade.enableBody(this.sprite);
-            this.sprite.play(this.MOVE);
             this.collidesWith = collidesWith;
         }
         Creature.prototype.onStageBuilt = function () {
             var _this = this;
+            this.sprite.animations.add(this.MOVE, this.idleFrames, this.animSpeed, true);
+            this.sprite.play(this.MOVE);
             if (this.collidesWith !== undefined) {
                 this.barriers = this.main.groups.barriers
                     .filter(function (b) { return _this.collidesWith.indexOf(b.sprite.key) !== -1; })
@@ -2590,52 +2796,232 @@ var MyGame;
         __extends(Blish, _super);
         function Blish(main, position) {
             var _this = _super.call(this, main, position, MyGame.Assets.Sprites.Blish.key, [MyGame.Assets.Images.Lillypad, MyGame.Assets.Sprites.Grounds.key]) || this;
+            _this.wasIdle = false;
             _this.type = MyGame.Assets.Sprites.Blish.key;
             main.groups.barriers.push(new MyGame.Water(main, position));
             _this.sprite.body.velocity.setTo(0, 0);
             _this.sprite.anchor.setTo(0.5, 0.5);
             _this.sprite.position.add(MyGame.TILE_WIDTH / 2, MyGame.TILE_HEIGHT / 2);
-            _this.uniqueUpdate = function () {
-                _this.main.groups.grounds.filter(function (g) { return g.hasBody; }).forEach(function (g) {
-                    _this.main.physics.arcade.collide(_this.sprite, g.sprite);
-                });
-                _this.main.groups.projectiles.filter(function (p) { return p instanceof MyGame.Crumbs; }).forEach(function (c) {
-                    var sees = MyGame.Utils.sees(_this.sprite.position, c.sprite.position, Infinity, _this.lines);
-                    if (sees.item1 || sees.item2) {
-                        MyGame.Utils.moveToTarget(_this.sprite.body, c.sprite.body.position, Blish.MAX_SPEED, Blish.CUTOFF, sees);
-                    }
-                    var crumbs = c;
-                    _this.main.physics.arcade.overlap(_this.sprite, c.sprite, function (blishSprite, crumbSprite) {
-                        if (crumbs.landed) {
-                            crumbs.dissolve();
-                        }
-                    });
-                });
-                if (_this.sprite.body.velocity.y < 0 && _this.sprite.rotation !== 0) {
-                    _this.sprite.rotation = 0;
-                }
-                else if (_this.sprite.body.velocity.y > 0 && _this.sprite.rotation !== Math.PI) {
-                    _this.sprite.rotation = Math.PI;
-                }
-                else if (_this.sprite.body.velocity.x > 0 && _this.sprite.rotation !== Math.PI * 0.5) {
-                    _this.sprite.rotation = Math.PI * 0.5;
-                }
-                else if (_this.sprite.body.velocity.x < 0 && _this.sprite.rotation !== Math.PI * 1.5) {
-                    _this.sprite.rotation = Math.PI * 1.5;
-                }
-            };
-            _this.uniqueOnStageBuilt = function () {
-                var leftSides = _this.barriers.map(function (b) { return new Phaser.Line(b.left, b.top, b.left, b.bottom); });
-                var topSides = _this.barriers.map(function (b) { return new Phaser.Line(b.left, b.top, b.right, b.top); });
-                _this.lines = leftSides.concat(topSides);
-            };
+            _this.speed = Blish.MAX_SPEED;
             return _this;
         }
-        Blish.MAX_SPEED = 100;
-        Blish.CUTOFF = 2;
+        Blish.prototype.uniqueUpdate = function () {
+            var _this = this;
+            this.main.groups.grounds.filter(function (g) { return g.hasBody; }).forEach(function (g) {
+                _this.main.physics.arcade.collide(_this.sprite, g.sprite);
+            });
+            var gridPos = MyGame.Utils.roundToClosestTile(this.sprite.body.position);
+            var possibleTargets = this.main.groups.projectiles.filter(function (p) {
+                if (!(p instanceof MyGame.Crumbs)) {
+                    return false;
+                }
+                var c = p;
+                return c.state !== MyGame.ProjectileState.DONE && c.landed;
+            }).map(function (p) {
+                return {
+                    crumbs: p,
+                    route: _this.getRouteToTarget(gridPos, MyGame.Utils.roundToClosestTile(p.sprite.position), _this.main.island.layout)
+                };
+            }).filter(function (r) { return r.route; });
+            var ordered = possibleTargets.sort(function (r) { return r.route.length; });
+            if (ordered.length > 0) {
+                var shortest = ordered[0];
+                if (!this.currentTarget || (this.currentTarget.crumbs !== shortest.crumbs && (this.currentTarget.crumbs.dissolved || this.currentTarget.route.length > shortest.route.length))) {
+                    this.currentTarget = shortest;
+                    if (this.movementManager) {
+                        this.movementManager.pause();
+                    }
+                    var script = new MyGame.MovementScript(gridPos, shortest.route, false);
+                    this.speed = 300;
+                    this.movementManager = new MyGame.MovementManager(this.main.game, script, this);
+                    this.movementManager.start(true);
+                    this.sprite.body.position.setTo((gridPos.x + 0.5) * MyGame.TILE_WIDTH, (gridPos.y + 0.5) * MyGame.TILE_HEIGHT);
+                }
+                this.wasIdle = false;
+            }
+            else if (!this.wasIdle) {
+                if (this.movementManager) {
+                    this.movementManager.pause();
+                }
+                var directions = Blish.positionIsGood(gridPos.x + 1, gridPos.y, this.main.island.layout) ? [MyGame.Direction.Right, MyGame.Direction.Left]
+                    : Blish.positionIsGood(gridPos.x, gridPos.y + 1, this.main.island.layout) ? [MyGame.Direction.Down, MyGame.Direction.Up]
+                        : Blish.positionIsGood(gridPos.x - 1, gridPos.y, this.main.island.layout) ? [MyGame.Direction.Left, MyGame.Direction.Right]
+                            : Blish.positionIsGood(gridPos.x, gridPos.y - 1, this.main.island.layout) ? [MyGame.Direction.Up, MyGame.Direction.Down] : [];
+                var script = new MyGame.MovementScript(gridPos, directions, true);
+                this.speed = 600;
+                this.movementManager = new MyGame.MovementManager(this.main.game, script, this);
+                this.movementManager.start(true);
+                this.sprite.body.position.setTo((gridPos.x + 0.5) * MyGame.TILE_WIDTH, (gridPos.y + 0.5) * MyGame.TILE_HEIGHT);
+                this.wasIdle = true;
+            }
+            this.main.groups.projectiles.filter(function (p) { return p instanceof MyGame.Crumbs; }).forEach(function (c) {
+                _this.main.physics.arcade.overlap(_this.sprite, c.sprite, function (bs, cs) {
+                    c.dissolve();
+                });
+            });
+            if (this.direction === MyGame.Direction.Up && this.sprite.rotation !== 0) {
+                this.sprite.rotation = 0;
+            }
+            else if (this.direction === MyGame.Direction.Down && this.sprite.rotation !== Math.PI) {
+                this.sprite.rotation = Math.PI;
+            }
+            else if (this.direction === MyGame.Direction.Right && this.sprite.rotation !== Math.PI * 0.5) {
+                this.sprite.rotation = Math.PI * 0.5;
+            }
+            else if (this.direction === MyGame.Direction.Left && this.sprite.rotation !== Math.PI * 1.5) {
+                this.sprite.rotation = Math.PI * 1.5;
+            }
+        };
+        Blish.positionIsGood = function (x, y, layout) {
+            return layout[y].charAt(x) === "o" || layout[y].charAt(x) === "|";
+        };
+        Blish.prototype.getRouteToTarget = function (start, target, layout) {
+            function blockedX(position, sign) {
+                return (sign === -1 && (position.x === 0 || !Blish.positionIsGood(position.x - 1, position.y, layout)))
+                    || (sign === 1 && (position.x === layout[position.y].length - 1 || !Blish.positionIsGood(position.x + 1, position.y, layout)));
+            }
+            function blockedY(position, sign) {
+                return (sign === -1 && (position.y === 0 || !Blish.positionIsGood(position.x, position.y - 1, layout)))
+                    || (sign === 1 && (position.y === layout.length - 1 || !Blish.positionIsGood(position.x, position.y + 1, layout)));
+            }
+            var directions = [];
+            var current = start.clone();
+            var signX = start.x < target.x ? 1 : start.x > target.x ? -1 : 0;
+            var signY = start.y < target.y ? 1 : start.y > target.y ? -1 : 0;
+            var directionX = signX === 1 ? MyGame.Direction.Right : signX === -1 ? MyGame.Direction.Left : null;
+            var directionY = signY === 1 ? MyGame.Direction.Down : signY === -1 ? MyGame.Direction.Up : null;
+            var horizontal = true;
+            var doneX = false;
+            var doneY = false;
+            while (!current.equals(target) && !(doneX && doneY)) {
+                doneX = blockedX(current, signX) || current.x === target.x;
+                doneY = blockedY(current, signY) || current.y === target.y;
+                if (horizontal) {
+                    if (doneX) {
+                        horizontal = false;
+                    }
+                    else {
+                        directions.push(directionX);
+                        current.x += signX;
+                    }
+                }
+                else {
+                    if (doneY) {
+                        horizontal = true;
+                    }
+                    else {
+                        directions.push(directionY);
+                        current.y += signY;
+                    }
+                }
+            }
+            if (current.equals(target)) {
+                if (layout[target.y].charAt(target.x) === "?") {
+                    directions.pop();
+                }
+                return directions;
+            }
+            return null;
+        };
+        Blish.prototype.uniqueOnStageBuilt = function () {
+            var sightBlockers = this.barriers;
+            var leftSides = sightBlockers.map(function (b) { return new Phaser.Line(b.left, b.top, b.left, b.bottom); });
+            var topSides = sightBlockers.map(function (b) { return new Phaser.Line(b.left, b.top, b.right, b.top); });
+            var rightSides = sightBlockers.map(function (b) { return new Phaser.Line(b.right, b.top, b.right, b.bottom); });
+            var bottomSides = sightBlockers.map(function (b) { return new Phaser.Line(b.left, b.bottom, b.right, b.bottom); });
+            this.lines = leftSides.concat(topSides).concat(rightSides).concat(bottomSides);
+        };
+        ;
+        Blish.MAX_SPEED = 300;
         return Blish;
     }(Creature));
     MyGame.Blish = Blish;
+    var BlumpusState;
+    (function (BlumpusState) {
+        BlumpusState[BlumpusState["SLEEPING"] = 0] = "SLEEPING";
+        BlumpusState[BlumpusState["AWAKE"] = 1] = "AWAKE";
+        BlumpusState[BlumpusState["MOVING"] = 2] = "MOVING";
+    })(BlumpusState || (BlumpusState = {}));
+    var BLUMPUS_FLAG = "BLUMPUS_FLAG";
+    var Blumpus = (function (_super) {
+        __extends(Blumpus, _super);
+        function Blumpus(main, position) {
+            var _this = _super.call(this, main, position, MyGame.Assets.Sprites.Blumpus.key) || this;
+            _this.animSpeed = 1;
+            _this.idleFrames = [0, 1];
+            _this.type = MyGame.Assets.Sprites.Blumpus.key;
+            _this.sprite.body.immovable = true;
+            _this.sprite.anchor.setTo(0.5, 0);
+            _this.sprite.x += _this.sprite.width / 2;
+            _this.state = BlumpusState.SLEEPING;
+            _this.sprite.animations.add("wakeup", MyGame.Utils.animationArray(1, 7), 7, false);
+            _this.sprite.animations.add("gotosleep", MyGame.Utils.animationArray(5, 1), 7, false);
+            _this.sprite.animations.add("idle", MyGame.Utils.animationArray(6, 7), 3, true);
+            _this.sprite.animations.add("sleep", _this.idleFrames, 1, true);
+            _this.sprite.animations.add("walk", MyGame.Utils.animationArray(8, 12), 5, true);
+            _this.wakeTime = Infinity;
+            _this.defeated = false;
+            _this.startPosition = _this.sprite.position.clone();
+            if (MyGame.StateTransfer.getInstance().flags[BLUMPUS_FLAG]) {
+                _this.moveRight();
+                _this.sprite.x = _this.startPosition.x + (MyGame.TILE_WIDTH * 3);
+            }
+            return _this;
+        }
+        Blumpus.prototype.uniqueUpdate = function () {
+            var _this = this;
+            this.main.physics.arcade.collide(this.sprite, this.main.player, function (sprite, player) {
+                if (_this.state === BlumpusState.AWAKE && !_this.defeated) {
+                    var enemy = new MyGame.BlumpusEncounter(_this.main);
+                    enemy.startBattle(_this.main);
+                }
+            });
+            if (this.state === BlumpusState.SLEEPING) {
+                var playerItem = this.main.player.itemManager.peekItem();
+                if (playerItem instanceof MyGame.Airhorn && playerItem.inUse) {
+                    this.hasWoken = true;
+                    this.state = BlumpusState.AWAKE;
+                    this.sprite.play("wakeup");
+                    this.sprite.animations.currentAnim.onComplete.add(function () {
+                        _this.sprite.play("idle");
+                        _this.wakeTime = new Date().getTime();
+                    }, this);
+                }
+            }
+            else if (this.state === BlumpusState.AWAKE) {
+                if (new Date().getTime() > this.wakeTime + 5000) {
+                    this.state = BlumpusState.SLEEPING;
+                    this.sprite.play("gotosleep");
+                    this.sprite.animations.currentAnim.onComplete.add(function () {
+                        _this.sprite.play("sleep");
+                    }, this);
+                    this.wakeTime = Infinity;
+                }
+            }
+            else if (this.state === BlumpusState.MOVING) {
+                if (this.sprite.x >= this.startPosition.x + (MyGame.TILE_WIDTH * 3)) {
+                    this.sprite.x = this.startPosition.x + (MyGame.TILE_WIDTH * 3);
+                    this.sprite.body.velocity.x = 0;
+                    this.state = BlumpusState.SLEEPING;
+                    this.sprite.animations.play("gotosleep");
+                }
+            }
+        };
+        Blumpus.prototype.uniqueOnStageBuilt = function () { };
+        Blumpus.prototype.getHasWoken = function () {
+            return this.hasWoken;
+        };
+        Blumpus.prototype.moveRight = function () {
+            this.defeated = true;
+            this.state = BlumpusState.MOVING;
+            this.sprite.body.velocity.x = 20;
+            this.sprite.scale.x = -1;
+            this.sprite.play("walk");
+            MyGame.StateTransfer.getInstance().flags[BLUMPUS_FLAG] = true;
+        };
+        return Blumpus;
+    }(Creature));
+    MyGame.Blumpus = Blumpus;
 })(MyGame || (MyGame = {}));
 var MyGame;
 (function (MyGame) {
@@ -2737,7 +3123,7 @@ var MyGame;
             }
             this.notDefaultAnims = notDefaultAnims;
             this.textManager = textManager;
-            this.textDisplay = new MyGame.BottomTextDisplay(main, this);
+            this.textDisplay = new MyGame.BottomTextDisplay(main, main.inputs, this);
             this.buttonPrompt = new MyGame.ButtonPrompt(this, main.inputs.O, -4);
             if (movementScript) {
                 this.movementManager = new MyGame.MovementManager(main.game, movementScript, this);
@@ -2784,7 +3170,7 @@ var MyGame;
                 else {
                     this.direction = MyGame.Direction.Right;
                 }
-                if (!(this instanceof Sign) && !this.notDefaultAnims) {
+                if (!this.notDefaultAnims) {
                     this.sprite.play(MyGame.Utils.getIdleAnimName(this.direction));
                 }
             }
@@ -2880,7 +3266,7 @@ var MyGame;
                 }
                 return false;
             }
-            return this.buttonPrompt.isShowing() && (this.textManager.getNext(this.main, this).autoStart || this.buttonPrompt.buttonIsDown());
+            return this.buttonPrompt.isShowing() && !this.main.playerStopped && (this.textManager.getNext(this.main, this).autoStart || this.buttonPrompt.buttonIsDown());
         };
         return NPC;
     }());
@@ -2888,7 +3274,7 @@ var MyGame;
     var Albert = (function (_super) {
         __extends(Albert, _super);
         function Albert(main, position, textManager, movementScript) {
-            return _super.call(this, main, position, textManager, movementScript, 750, 5, MyGame.Assets.Sprites.Albert.key) || this;
+            return _super.call(this, main, position, textManager, movementScript, 600, 5, MyGame.Assets.Sprites.Albert.key) || this;
         }
         return Albert;
     }(NPC));
@@ -2904,11 +3290,19 @@ var MyGame;
     var Sign = (function (_super) {
         __extends(Sign, _super);
         function Sign(main, position, textManager) {
-            return _super.call(this, main, position, textManager, null, 0, 0, MyGame.Assets.Images.Sign) || this;
+            return _super.call(this, main, position, textManager, null, 0, 0, MyGame.Assets.Images.Sign, true) || this;
         }
         return Sign;
     }(NPC));
     MyGame.Sign = Sign;
+    var Book = (function (_super) {
+        __extends(Book, _super);
+        function Book(main, position, textManager) {
+            return _super.call(this, main, position, textManager, null, 0, 0, MyGame.Assets.Images.Book, true) || this;
+        }
+        return Book;
+    }(NPC));
+    MyGame.Book = Book;
     var Stanley = (function (_super) {
         __extends(Stanley, _super);
         function Stanley(main, position, textManager, movementScript) {
@@ -2917,6 +3311,14 @@ var MyGame;
         return Stanley;
     }(NPC));
     MyGame.Stanley = Stanley;
+    var ChuFeng = (function (_super) {
+        __extends(ChuFeng, _super);
+        function ChuFeng(main, position, textManager, movementScript) {
+            return _super.call(this, main, position, textManager, movementScript, 750, 6, MyGame.Assets.Sprites.ChuFeng.key) || this;
+        }
+        return ChuFeng;
+    }(NPC));
+    MyGame.ChuFeng = ChuFeng;
     var TheMeep = (function (_super) {
         __extends(TheMeep, _super);
         function TheMeep(main, position, textManager) {
@@ -2928,6 +3330,39 @@ var MyGame;
         return TheMeep;
     }(NPC));
     MyGame.TheMeep = TheMeep;
+    var Monster = (function (_super) {
+        __extends(Monster, _super);
+        function Monster(main, position, textManager) {
+            var _this = _super.call(this, main, position, textManager, null, 0, 0, MyGame.Assets.Sprites.Monster.key, true) || this;
+            _this.sprite.animations.add("stand", MyGame.Utils.animationArray(0, 4), 5, true);
+            _this.sprite.animations.add("mouth", MyGame.Utils.animationArray(5, 8), 5, false);
+            _this.sprite.animations.play("stand");
+            return _this;
+        }
+        Monster.prototype.doMouth = function () {
+            var _this = this;
+            this.sprite.play("mouth");
+            var stateTransfer = MyGame.StateTransfer.getInstance();
+            stateTransfer.heldItems = null;
+            stateTransfer.island = MyGame.Islands.START;
+            stateTransfer.position = MyGame.pof(3, 1);
+            stateTransfer.interlude = {
+                text: MyGame.Texts.INTERLUDE,
+                nextIsland: MyGame.Islands.START,
+                startX: 3,
+                startY: 1,
+                spriteKey: MyGame.Assets.Sprites.Player.key,
+                frames: [0, 5, 10, 14]
+            };
+            this.main.stopPlayer();
+            this.main.time.events.add(1500, function () {
+                var monster = new MyGame.MonsterEncounter(_this.main);
+                monster.startBattle(_this.main);
+            }, this);
+        };
+        return Monster;
+    }(NPC));
+    MyGame.Monster = Monster;
 })(MyGame || (MyGame = {}));
 var MyGame;
 (function (MyGame) {
@@ -2942,8 +3377,9 @@ var MyGame;
             state.add.existing(_this);
             _this.state = state;
             _this.health = MyGame.Utils.isAThing(health) ? health : Player.STARTING_HEALTH;
-            _this.inputs.K.onUp.add(_this.throwProjectile, _this);
-            _this.itemCount = 0;
+            _this.inputs.K.onDown.add(_this.useItem, _this);
+            _this.inputs.shift.onDown.add(_this.dropItem, _this);
+            _this.itemManager = new MyGame.ItemManager();
             return _this;
         }
         Player.prototype.onStageBuilt = function () {
@@ -2956,10 +3392,6 @@ var MyGame;
             }
             var player = this;
             var game = this.game;
-            this.hasCollided = false;
-            this.state.groups.barriers.filter(function (b) { return b.playerCollides && b.hasBody; }).forEach(function (barrier) {
-                game.physics.arcade.collide(player, barrier.sprite, barrier.onCollision, null, barrier);
-            });
             var directionDown = 1;
             if (this.inputs.up.isDown) {
                 directionDown *= 2;
@@ -3006,13 +3438,20 @@ var MyGame;
                 this.play(animName);
             }
             MyGame.Utils.snapToPixels(this);
+            this.state.groups.barriers.filter(function (b) { return b.playerCollides && b.hasBody; }).forEach(function (barrier) {
+                game.physics.arcade.collide(player, barrier.sprite, barrier.onCollision, barrier.checkCollision, barrier);
+            });
+            this.itemManager.update();
         };
-        Player.prototype.throwProjectile = function () {
-            if (this.itemCount > 0) {
-                this.itemCount -= MyGame.useItem(this.itemType, this.state, this.x, this.y, this.direction);
-                this.state.projectileDisplay.updateCount(this.itemCount);
-                MyGame.StateTransfer.getInstance().heldItems.amount = this.itemCount;
-            }
+        Player.prototype.useItem = function () {
+            this.itemManager.useItem(this.state, this.x, this.y, this.direction);
+            this.state.projectileDisplay.updateCount(this.itemManager.getCount());
+            MyGame.StateTransfer.getInstance().heldItems.amount = this.itemManager.getCount();
+        };
+        Player.prototype.dropItem = function () {
+            this.itemManager.dropItems(this.state, this.x, this.y, this.direction);
+            this.state.projectileDisplay.updateCount(this.itemManager.getCount());
+            MyGame.StateTransfer.getInstance().heldItems.amount = this.itemManager.getCount();
         };
         Player.WALKING_SPEED = 100;
         Player.STARTING_HEALTH = 100;
@@ -3112,27 +3551,44 @@ var MyGame;
             _this.type = type;
             _this.renewing = renewing;
             _this.amount = amount;
+            _this.sound = main.add.sound(MyGame.Assets.Audio.Collide.key);
             _this.onCollision = function (playerSprite, barrierSprite) {
+                if (_this.main.player.itemManager.getCount() > 0 && !(_this.main.player.itemManager.getCurrentType() === _this.type && amount > 1)) {
+                    if (!_this.sound.isPlaying) {
+                        _this.sound.play();
+                    }
+                    _this.main.projectileDisplay.flash();
+                    return;
+                }
                 var stateTransfer = MyGame.StateTransfer.getInstance();
-                _this.main.player.itemType = _this.type;
-                _this.main.player.itemCount = _this.amount;
+                _this.main.player.itemManager.changeItem(_this.type, _this.amount);
                 _this.main.projectileDisplay.updateCount(_this.amount);
                 _this.main.projectileDisplay.updateIcon(_this.type + "_" + MyGame.ICON);
                 stateTransfer.heldItems = { type: _this.type, amount: _this.amount };
                 if (!_this.renewing) {
-                    _this.sprite.destroy();
-                    _this.main.groups.barriers = _this.main.groups.barriers.filter(function (b) { return b !== _this; });
-                    stateTransfer.addedItems = stateTransfer.addedItems.filter(function (i) { return !i.location.equals(new MyGame.Location(_this.main.island.num, _this.position.x, _this.position.y)); });
+                    _this.remove();
                 }
             };
             return _this;
         }
+        Source.prototype.remove = function () {
+            var _this = this;
+            var stateTransfer = MyGame.StateTransfer.getInstance();
+            this.sprite.destroy();
+            this.main.groups.barriers = this.main.groups.barriers.filter(function (b) { return b !== _this; });
+            stateTransfer.addedItems = stateTransfer.addedItems.filter(function (i) { return !i.location.equals(new MyGame.Location(_this.main.island.num, _this.position.x, _this.position.y)); });
+            MyGame.WorldManager.getInstance().changeLayout(this.main.island.num, this.position, " ");
+        };
         Source.makeSource = function (main, x, y, type) {
             switch (type) {
                 case MyGame.Assets.Images.CrumbsSource:
                     return new CrumbSource(main, x, y);
+                case MyGame.Assets.Sprites.Airhorn.key:
+                    return new SingleSource(main, x, y, type, false);
                 case MyGame.Assets.Sprites.Grodule.key:
-                    return new SingleSource(main, x, y, type);
+                    return new SingleSource(main, x, y, type, true);
+                case MyGame.Assets.Sprites.Plorpus.key:
+                    return new SingleSource(main, x, y, type, true);
             }
             throw new Error("Source type " + type + " is invalid.");
         };
@@ -3149,10 +3605,13 @@ var MyGame;
     MyGame.CrumbSource = CrumbSource;
     var SingleSource = (function (_super) {
         __extends(SingleSource, _super);
-        function SingleSource(main, x, y, key) {
+        function SingleSource(main, x, y, key, animate) {
+            if (animate === void 0) { animate = true; }
             var _this = _super.call(this, key, main, x, y, false, 1, true) || this;
-            _this.sprite.animations.add("anim", null, 5, true);
-            _this.sprite.play("anim");
+            if (animate) {
+                _this.sprite.animations.add("anim", null, 5, true);
+                _this.sprite.play("anim");
+            }
             return _this;
         }
         return SingleSource;
@@ -3205,6 +3664,67 @@ var MyGame;
         return NPCMoveTrigger;
     }(Trigger));
     MyGame.NPCMoveTrigger = NPCMoveTrigger;
+    var Button = (function () {
+        function Button(main, x, y, direction, action, backgroundType, resetTime) {
+            if (resetTime === void 0) { resetTime = -1; }
+            this.main = main;
+            this.position = MyGame.pof(x, y);
+            this.sprite = main.add.sprite((x + 0.5) * MyGame.TILE_WIDTH, y * MyGame.TILE_HEIGHT, MyGame.Assets.Sprites.Button.key, MyGame.Frames.Button.OFF);
+            this.sprite.anchor.x = 0.5;
+            if (direction === MyGame.Direction.Left) {
+                this.sprite.scale.x = -1;
+            }
+            main.physics.arcade.enable(this.sprite);
+            this.sprite.body.moves = false;
+            this.sprite.body.immovable = true;
+            this.sprite.body.setSize(MyGame.TILE_WIDTH * 1.2, MyGame.TILE_HEIGHT, 0, direction === MyGame.Direction.Right ? 0 : -(MyGame.TILE_WIDTH * 0.2));
+            this.action = action;
+            this.direction = direction;
+            this.on = false;
+            this.resetTime = this.originalResetTime = resetTime;
+            switch (backgroundType) {
+                case MyGame.IslandType.WATER:
+                    main.groups.barriers.push(new MyGame.Water(main, MyGame.pof(x, y)));
+                default:
+                    main.groups.grounds.push(MyGame.Ground.makeGround(main, backgroundType, MyGame.pof(x, y), false));
+            }
+        }
+        Button.prototype.onStageBuilt = function () {
+            this.colliders = this.main.groups.creatures.filter(function (c) { return c instanceof MyGame.Blish; }).map(function (b) { return b.sprite; });
+            this.colliders.push(this.main.player);
+        };
+        Button.prototype.update = function () {
+            var _this = this;
+            var collide = function (sp, otherSp) {
+                if (!_this.on && ((_this.direction === MyGame.Direction.Right && otherSp.left >= sp.right) || (_this.direction === MyGame.Direction.Left && otherSp.right <= sp.left))) {
+                    _this.turnOn();
+                    _this.action(_this.main, _this);
+                    if (_this.resetTime !== -1) {
+                        _this.main.time.events.add(_this.resetTime, _this.turnOff, _this);
+                    }
+                }
+            };
+            this.main.physics.arcade.collide(this.sprite, this.colliders, collide, null, this);
+        };
+        Button.prototype.turnOn = function () {
+            this.on = true;
+            this.sprite.frame = MyGame.Frames.Button.ON;
+        };
+        Button.prototype.turnOff = function () {
+            this.on = false;
+            this.sprite.frame = MyGame.Frames.Button.OFF;
+            this.resetTime = this.originalResetTime;
+        };
+        Button.prototype.isOn = function () {
+            return this.on;
+        };
+        Button.prototype.keepOn = function () {
+            this.turnOn();
+            this.resetTime = -1;
+        };
+        return Button;
+    }());
+    MyGame.Button = Button;
     var TriggerType;
     (function (TriggerType) {
         TriggerType[TriggerType["MOVE_NPC"] = 0] = "MOVE_NPC";
@@ -3223,6 +3743,10 @@ var MyGame;
         Islands[Islands["TOWN"] = 4] = "TOWN";
         Islands[Islands["BLISH"] = 5] = "BLISH";
         Islands[Islands["BROTHER"] = 6] = "BROTHER";
+        Islands[Islands["PROFESSOR"] = 7] = "PROFESSOR";
+        Islands[Islands["PLAYGROUND"] = 8] = "PLAYGROUND";
+        Islands[Islands["TUTORIAL"] = 9] = "TUTORIAL";
+        Islands[Islands["CORRIDOR"] = 10] = "CORRIDOR";
     })(Islands = MyGame.Islands || (MyGame.Islands = {}));
     MyGame.islandGetters[0] = function () {
         return new MyGame.IslandBuilder(0, MyGame.IslandType.OUTSIDE)
@@ -3245,6 +3769,71 @@ var MyGame;
         ])
             .setOutsideBoundsPortals([
             { side: MyGame.Direction.Down, start: 3, end: 6, link: Islands.SADMAN, playerStart: undefined }
+        ])
+            .build();
+    };
+})(MyGame || (MyGame = {}));
+var MyGame;
+(function (MyGame) {
+    MyGame.islandGetters[10] = function () {
+        function openGate(main, button) {
+            main.removeBarrier(MyGame.pof(7, 32), MyGame.IslandType.OUTSIDE);
+        }
+        return new MyGame.IslandBuilder(10, MyGame.IslandType.OUTSIDE)
+            .setLayout([
+            "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+            "wvvvvvvvvvvvvvvvv*  vv    ev*       ",
+            "wvevvvvvvvvvvvvev*      vvvv* ##    ",
+            "wvvv          vvv*  vvvvvvvv* ##    ",
+            "w           ****** #   *v##v* ##  nw",
+            "w                *  #  *v##v* ##   w",
+            "w           **** * ##  *v##v* ##   w",
+            "w              * * ##  *v##v* ##   w",
+            "wvvv        vvv* *  #  *v#######   w",
+            "wvevvvvvvvvvvev*       *v#######   w",
+            "wvvvvvvvvvvvvvv*   #  n*vv         w",
+            "w           wwwwwwwwwwwwwwwwwwwwwwww",
+            "w                                  w",
+            "w                                  w",
+            "w                                  w",
+            "w                                  w",
+            "w                                  w",
+            "w                                  w",
+            "w                                  w",
+            "w                                  w",
+            "w                                  w",
+            "w                                  w",
+            "wwwwwwwwwwwwwwwwwwwwwwww           w",
+            "w                                  w",
+            "w                                  w",
+            "w                                  w",
+            "w                                  w",
+            "w                                  w",
+            "w?                                 w",
+            "wwwwwwww                           w",
+            "       w                           w",
+            "       wn                          w",
+            "       g                           w",
+            "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww",
+        ])
+            .setNPCs([
+            { type: MyGame.Assets.Images.Sign, position: MyGame.pof(8, 31), script: null, text: "Tuttle Village" },
+            { type: MyGame.Assets.Images.Sign, position: MyGame.pof(34, 4), script: null, text: "Lully Pond" },
+            { type: MyGame.Assets.Images.Book, position: MyGame.pof(22, 10), script: null, textKey: MyGame.Texts.PARK_BOOK }
+        ])
+            .setEnemies([
+            { type: MyGame.Assets.Sprites.Croller.key, position: MyGame.pof(26, 1), script: null },
+            { type: MyGame.Assets.Sprites.Croller.key, position: MyGame.pof(2, 2), script: null },
+            { type: MyGame.Assets.Sprites.Croller.key, position: MyGame.pof(15, 2), script: null },
+            { type: MyGame.Assets.Sprites.Croller.key, position: MyGame.pof(2, 9), script: null },
+            { type: MyGame.Assets.Sprites.Croller.key, position: MyGame.pof(13, 9), script: null }
+        ])
+            .setOutsideBoundsPortals([
+            { side: MyGame.Direction.Right, start: 0, end: 4, link: MyGame.Islands.BLISH, playerStart: MyGame.pof(1, 22) },
+            { side: MyGame.Direction.Left, start: 29, end: 33, link: MyGame.Islands.TOWN, playerStart: MyGame.pof(31, 24) }
+        ])
+            .setButtons([
+            { type: MyGame.Assets.Sprites.Button.key, x: 1, y: 28, direction: MyGame.Direction.Right, action: openGate, backgroundType: MyGame.IslandType.OUTSIDE }
         ])
             .build();
     };
@@ -3317,12 +3906,12 @@ var MyGame;
             var albert = main.groups.npcs.filter(function (n) { return n instanceof MyGame.Albert; })[0];
             albert.sprite.position.setTo(5 * MyGame.TILE_WIDTH, 2 * MyGame.TILE_HEIGHT);
             if (main.groups.enemies.filter(function (e) { return e instanceof MyGame.JamBot && e.alive; }).length === 0) {
-                main.stopPlayer();
+                main.startCinematic(albert.sprite);
                 main.player.position.setTo(5 * MyGame.TILE_WIDTH, 7 * MyGame.TILE_HEIGHT);
                 albert.setDialogState(0);
                 albert.doScript("d=lddddddddrrr;l=false", MyGame.pof(5, 2));
                 albert.movementManager.setOnComplete(function () {
-                    this.playerStopped = false;
+                    main.endCinematic();
                     main.groups.barriers.filter(function (b) { return b instanceof MyGame.Gate; })[0].sprite.destroy();
                     MyGame.WorldManager.getInstance().changeLayout(3, MyGame.pof(8, 11), " ");
                 }, main);
@@ -3333,12 +3922,12 @@ var MyGame;
             var albert = main.groups.npcs.filter(function (n) { return n instanceof MyGame.Albert; })[0];
             albert.sprite.position.setTo(7 * MyGame.TILE_WIDTH, 10 * MyGame.TILE_HEIGHT);
             if (main.groups.enemies.filter(function (e) { return e instanceof MyGame.JamBug && e.alive; }).length === 0) {
-                main.stopPlayer();
+                main.startCinematic(albert.sprite);
                 main.player.position.setTo(19 * MyGame.TILE_WIDTH, 10 * MyGame.TILE_HEIGHT);
                 albert.setDialogState(2);
-                albert.doScript("d=rrrrrru;l=false", MyGame.pof(19, 11));
+                albert.doScript("d=drrrrrrrrrrrrrrrrrru;l=false", MyGame.pof(7, 10));
                 albert.movementManager.setOnComplete(function () {
-                    this.playerStopped = false;
+                    main.endCinematic();
                     main.groups.barriers.filter(function (b) { return b instanceof MyGame.Gate; })[0].sprite.destroy();
                     MyGame.WorldManager.getInstance().changeLayout(3, MyGame.pof(26, 11), " ");
                 }, main);
@@ -3357,9 +3946,9 @@ var MyGame;
             "  w    ew                   **",
             "  w  *  w        *   *       *",
             "  we    wwwwwwwwww   wwwwwwwww",
-            "  w     w    e   *   * e  w  w",
+            "  w     w    e   *   * e  wppw",
             "  w     g      e          g  w",
-            "  w     w                 w  w",
+            "  w     ww                w  w",
             "  wwwwwwwwwwwwwwwwwwwwwwwww  w"
         ])
             .setPlayerStart(MyGame.pof(5, 0))
@@ -3417,43 +4006,50 @@ var MyGame;
             .setLayout([
             "             w     w             ",
             "**************     **************",
-            "*    h-------       h-------    *",
-            "*    --------       --------    *",
-            "*    --------       --------    *",
-            "*    --------       --------    *",
-            "*    --------       --------    *",
-            "*    --------       --------    *",
+            "*    h-------  ###  h-------    *",
+            "*    --------  ###  --------    *",
+            "*    --------  ###  --------    *",
+            "*    --------  ###  --------    *",
+            "*    --------  ###  --------    *",
+            "*    --------  ###  --------    *",
+            "*       ##     ###     ##       *",
+            "*       ## n   ###     ##       *",
+            "*       #################       *",
+            "*              #n#              *",
+            "*              ###              *",
+            "*              ###              *",
+            "*    h-------  ###  h-------    *",
+            "*    --------  ###  --------    *",
+            "*    --------  ###  --------    *",
+            "*    --------  ###  --------    *",
+            "*    --------  ###  --------    *",
+            "*    --------  ###  --------    *",
+            "*       ##     ###     ##       *",
+            "*       ################# n     *",
             "*                               *",
-            "*          n                    *",
-            "*                               *",
-            "*                               *",
-            "*                               *",
-            "*                               *",
-            "*    h-------       h-------    *",
-            "*    --------       --------    *",
-            "*    --------       --------    *",
-            "*    --------       --------    *",
-            "*    --------       --------    *",
-            "*    --------       --------    *",
-            "*                               *",
-            "*                               *",
-            "*                               *",
-            "*                               *",
-            "*                               *",
-            "*                               *",
-            "*                               *",
+            "**n                           n**",
+            "                                 ",
+            "                                 ",
+            "**                             **",
             "*                               *",
             "*                               *",
             "*********************************"
         ])
             .setOutsideBoundsPortals([
-            { side: MyGame.Direction.Up, start: 14, end: 20, playerStart: MyGame.pof(27, 12), link: MyGame.Islands.ALBERT }
+            { side: MyGame.Direction.Up, start: 14, end: 20, playerStart: MyGame.pof(27, 12), link: MyGame.Islands.ALBERT },
+            { side: MyGame.Direction.Left, start: 23, end: 26, playerStart: MyGame.pof(9, 4), link: MyGame.Islands.PLAYGROUND },
+            { side: MyGame.Direction.Right, start: 23, end: 26, playerStart: MyGame.pof(1, 31), link: MyGame.Islands.CORRIDOR }
         ])
             .setHouseLinks([
-            { pos: MyGame.pof(5, 2), playerStart: MyGame.pof(11, 4), link: MyGame.Islands.BROTHER }
+            { pos: MyGame.pof(5, 2), playerStart: MyGame.pof(11, 4), link: MyGame.Islands.BROTHER },
+            { pos: MyGame.pof(20, 14), playerStart: MyGame.pof(4, 6), link: MyGame.Islands.PROFESSOR }
         ])
             .setNPCs([
-            { position: MyGame.pof(11, 9), type: MyGame.Assets.Images.Sign, text: "The Sploofers", script: null }
+            { position: MyGame.pof(11, 9), type: MyGame.Assets.Images.Sign, text: "The Sploofers", script: null },
+            { position: MyGame.pof(16, 11), type: MyGame.Assets.Images.Sign, text: "If you pick something up, you can use it by pressing K or drop it by pressing SHIFT.", script: null },
+            { position: MyGame.pof(26, 21), type: MyGame.Assets.Images.Sign, text: "Edward Dorfusk II", script: null },
+            { position: MyGame.pof(2, 23), type: MyGame.Assets.Images.Sign, text: "Playground", script: null },
+            { position: MyGame.pof(30, 23), type: MyGame.Assets.Images.Sign, text: "Ghastlands", script: null }
         ])
             .setCustomBarriers([
             { x: 22, y: 4, type: MyGame.Assets.Images.FruitStand, playerCollides: true }
@@ -3464,49 +4060,185 @@ var MyGame;
 })(MyGame || (MyGame = {}));
 var MyGame;
 (function (MyGame) {
+    var pressed = -1;
+    var lastPressedY = -1;
+    var bottomBridgeAdded = false;
+    var lillypadsToLeft = false;
+    var innerGateOpen = false;
+    function checkOrder(main, button) {
+        if (pressed === -2)
+            return;
+        if (lastPressedY !== button.position.y) {
+            pressed++;
+            lastPressedY = button.position.y;
+        }
+        var correctOrder = [3, 5, 4, 2];
+        if (correctOrder[pressed] !== button.position.y) {
+            if (pressed > 0) {
+                main.sound.play(MyGame.Assets.Audio.Wrong.key);
+            }
+            pressed = -1;
+            lastPressedY = -1;
+            main.groups.buttons.forEach(function (b) {
+                if (b !== button) {
+                    b.turnOff();
+                }
+            });
+            return;
+        }
+        else {
+            button.keepOn();
+        }
+        if (pressed === 3) {
+            main.sound.play(MyGame.Assets.Audio.Right.key);
+            [MyGame.pof(19, 6), MyGame.pof(19, 7), MyGame.pof(18, 6), MyGame.pof(18, 7)].forEach(function (pos) {
+                main.groups.barriers.push(new MyGame.Water(main, pos));
+                MyGame.WorldManager.getInstance().changeLayout(MyGame.Islands.BLISH, pos, "o");
+            });
+            main.setDepths();
+            pressed = -2;
+        }
+    }
+    function swapThings(main, button) {
+        if ((lillypadsToLeft && button.position.y === 10) || (!lillypadsToLeft && button.position.y === 9)) {
+            return;
+        }
+        main.sound.play(MyGame.Assets.Audio.Right.key);
+        var worldManager = MyGame.WorldManager.getInstance();
+        var positions = [MyGame.pof(11, 8), MyGame.pof(11, 9), MyGame.pof(12, 12), MyGame.pof(13, 12)];
+        var lillypads = main.groups.barriers.filter(function (b) { return b instanceof MyGame.Lillypad; }).map(function (p) { return p; });
+        var bridges = main.groups.barriers.filter(function (b) { return b instanceof MyGame.Bridge; }).map(function (b) { return b; });
+        positions.forEach(function (pos) {
+            var lillypad = MyGame.Utils.firstOrDefault(lillypads, function (l) { return l.position.equals(pos); });
+            if (lillypad) {
+                main.groups.barriers = main.groups.barriers.filter(function (l) { return l !== lillypad; });
+                main.groups.barriers.push(new MyGame.Bridge(main, pos));
+                worldManager.changeLayout(MyGame.Islands.BLISH, pos, "|");
+            }
+            else {
+                var bridge_1 = MyGame.Utils.firstOrDefault(bridges, function (b) { return b.position.equals(pos); });
+                if (bridge_1) {
+                    main.groups.barriers = main.groups.barriers.filter(function (b) { return b !== bridge_1; });
+                    main.groups.barriers.push(new MyGame.Lillypad(main, pos));
+                    worldManager.changeLayout(MyGame.Islands.BLISH, pos, "p");
+                }
+            }
+        });
+        lillypadsToLeft = !lillypadsToLeft;
+        main.setDepths();
+        var waters = main.groups.barriers.filter(function (b) { return b instanceof MyGame.Water; }).map(function (w) { return w; });
+        waters.forEach(function (w) { return w.onStageBuilt(); });
+    }
+    function addBottomBridge(main, button) {
+        if (bottomBridgeAdded)
+            return;
+        bottomBridgeAdded = true;
+        main.sound.play(MyGame.Assets.Audio.Right.key);
+        var waters = main.groups.barriers.filter(function (b) { return b instanceof MyGame.Water; }).map(function (w) { return w; });
+        [MyGame.pof(15, 20), MyGame.pof(16, 20), MyGame.pof(15, 21), MyGame.pof(16, 21)].forEach(function (pos) {
+            var water = MyGame.Utils.firstOrDefault(waters, function (w) { return w.position.equals(pos); });
+            water.sprite.destroy();
+            main.groups.barriers = main.groups.barriers.filter(function (b) { return b !== water; });
+            main.groups.barriers.push(new MyGame.Bridge(main, pos));
+            MyGame.WorldManager.getInstance().changeLayout(MyGame.Islands.BLISH, pos, "|");
+        });
+        main.setDepths();
+    }
+    function openGates(main, button) {
+        var topY = 22;
+        var x = button.position.x === 16 ? 17 : 8;
+        if (x === 17 && (main.island.layout[topY][x] === "s" || main.island.layout[topY + 1][x] === "s")) {
+            return;
+        }
+        for (var i = 0; i < 2; i++) {
+            if (x === 17) {
+                var leftX = 12;
+                if (innerGateOpen) {
+                    main.removeBarrier(MyGame.pof(leftX, topY + i), MyGame.IslandType.OUTSIDE);
+                    main.addBarrier(new MyGame.Gate(main, MyGame.pof(x, topY + i)));
+                }
+                else {
+                    main.removeBarrier(MyGame.pof(x, topY + i), MyGame.IslandType.OUTSIDE);
+                    main.addBarrier(new MyGame.Gate(main, MyGame.pof(leftX, topY + i)));
+                }
+            }
+            else {
+                main.removeBarrier(MyGame.pof(x, topY + i), MyGame.IslandType.OUTSIDE);
+            }
+        }
+        if (x === 17) {
+            innerGateOpen = !innerGateOpen;
+        }
+    }
     MyGame.islandGetters[5] = function () {
         return new MyGame.IslandBuilder(5, MyGame.IslandType.OUTSIDE)
             .setLayout([
-            "*t t t t t t t t t t t t ",
-            "*                        ",
-            "*           s            ",
-            "*       oooooooo         ",
-            "**n    oooooooooo        ",
-            "        oooooooo         ",
-            "           oo            ",
-            "           oo            ",
-            "**         oo            ",
-            "*         oooo           ",
-            "*         oooo           ",
-            "w          oo            ",
-            "w          oo            ",
-            "w       oooooooooo       ",
-            "w      ooooooooooo       ",
-            "w     oooooooooooo       ",
-            "w     oooooooooooo       ",
-            "w     oooooooooooo       ",
-            "w     oocoooooooo        ",
-            "w     oooooooooo         ",
-            "w          s             ",
-            "w                        ",
-            "w                        ",
-            "w                        ",
-            "w                        ",
-            "w                        ",
-            "w                        "
+            "wt t t t t t t t t t t t ",
+            "w                       w",
+            "w xxxx         cooo?    w",
+            "w       x      ?oooo    w",
+            "wwww     xxx   oooo?    w",
+            "   wwn xx      ?oooo    w",
+            "   c             s      w",
+            "  nww                   w",
+            "wwww    ?oopoooooooo    w",
+            "w       ooopooo?oooo    w",
+            "w       w   ooo?oooo    w",
+            "w       w   oo s  oo    w",
+            "w       w   ||    ##    w",
+            "w       w   oo    ##    w",
+            "w       w   oo    oo****w",
+            "w       w   oo    oo    w",
+            "w       w   oooooooo    w",
+            "w       w   ooppppoo    w",
+            "w       w   oop ?poo    w",
+            "w       w   oop  pooooo?w",
+            "w*******w   oooooooooooow",
+            "        ws  oooooooooooow",
+            "        g        gs     w",
+            "        g        g      w",
+            "wwwwwwwwwwwwwwwwwwwwwwwww"
         ])
             .setOutsideBoundsPortals([
-            { side: MyGame.Direction.Left, start: 4, end: 7, link: 3, playerStart: MyGame.pof(28, 4) }
+            { side: MyGame.Direction.Left, start: 4, end: 7, link: MyGame.Islands.ALBERT, playerStart: MyGame.pof(28, 4) },
+            { side: MyGame.Direction.Left, start: 20, end: 23, link: MyGame.Islands.CORRIDOR, playerStart: MyGame.pof(33, 2) }
         ])
             .setCreatures([
-            { type: MyGame.Assets.Sprites.Blish.key, x: 8, y: 18 }
+            { type: MyGame.Assets.Sprites.Blish.key, x: 15, y: 2 },
+            { type: MyGame.Assets.Sprites.Blumpus.key, x: 3, y: 6 }
         ])
             .setSources([
-            { type: MyGame.Assets.Images.CrumbsSource, x: 12, y: 2 },
-            { type: MyGame.Assets.Images.CrumbsSource, x: 11, y: 20 }
+            { type: MyGame.Assets.Images.CrumbsSource, x: 17, y: 6 },
+            { type: MyGame.Assets.Images.CrumbsSource, x: 15, y: 11 },
+            { type: MyGame.Assets.Images.CrumbsSource, x: 9, y: 21 },
+            { type: MyGame.Assets.Sprites.Plorpus.key, x: 18, y: 22 }
         ])
             .setNPCs([
-            { position: MyGame.pof(2, 4), type: MyGame.Assets.Images.Sign, text: "Path to Tuttle Village", script: null }
+            { position: MyGame.pof(5, 5), type: MyGame.Assets.Images.Sign, text: "Path to Tuttle Village", script: null },
+            { position: MyGame.pof(2, 7), type: MyGame.Assets.Sprites.OldMan.key, textKey: MyGame.Texts.BLUMPUS, script: null }
+        ])
+            .setButtons([
+            { type: MyGame.Assets.Sprites.Button.key, x: 19, y: 2, action: checkOrder, direction: MyGame.Direction.Left, backgroundType: MyGame.IslandType.WATER, resetTime: 500 },
+            { type: MyGame.Assets.Sprites.Button.key, x: 15, y: 3, action: checkOrder, direction: MyGame.Direction.Right, backgroundType: MyGame.IslandType.WATER, resetTime: 500 },
+            { type: MyGame.Assets.Sprites.Button.key, x: 19, y: 4, action: checkOrder, direction: MyGame.Direction.Left, backgroundType: MyGame.IslandType.WATER, resetTime: 500 },
+            { type: MyGame.Assets.Sprites.Button.key, x: 15, y: 5, action: checkOrder, direction: MyGame.Direction.Right, backgroundType: MyGame.IslandType.WATER, resetTime: 500 },
+            { type: MyGame.Assets.Sprites.Button.key, x: 15, y: 9, action: swapThings, direction: MyGame.Direction.Right, backgroundType: MyGame.IslandType.WATER, resetTime: 2000 },
+            { type: MyGame.Assets.Sprites.Button.key, x: 15, y: 10, action: swapThings, direction: MyGame.Direction.Right, backgroundType: MyGame.IslandType.WATER, resetTime: 2000 },
+            { type: MyGame.Assets.Sprites.Button.key, x: 8, y: 8, action: addBottomBridge, direction: MyGame.Direction.Right, backgroundType: MyGame.IslandType.WATER },
+            { type: MyGame.Assets.Sprites.Button.key, x: 16, y: 18, action: openGates, direction: MyGame.Direction.Left, backgroundType: MyGame.IslandType.OUTSIDE, resetTime: 2000 },
+            { type: MyGame.Assets.Sprites.Button.key, x: 23, y: 19, action: openGates, direction: MyGame.Direction.Left, backgroundType: MyGame.IslandType.WATER }
+        ])
+            .setCustomBarriers([
+            { x: 2, y: 2, type: MyGame.Assets.Images.Fruit, playerCollides: true },
+            { x: 3, y: 2, type: MyGame.Assets.Images.Fruit, playerCollides: true },
+            { x: 4, y: 2, type: MyGame.Assets.Images.Fruit, playerCollides: true },
+            { x: 5, y: 2, type: MyGame.Assets.Images.Fruit, playerCollides: true },
+            { x: 8, y: 3, type: MyGame.Assets.Images.Fruit, playerCollides: true },
+            { x: 9, y: 4, type: MyGame.Assets.Images.Fruit, playerCollides: true },
+            { x: 10, y: 4, type: MyGame.Assets.Images.Fruit, playerCollides: true },
+            { x: 11, y: 4, type: MyGame.Assets.Images.Fruit, playerCollides: true },
+            { x: 7, y: 5, type: MyGame.Assets.Images.Fruit, playerCollides: true },
+            { x: 8, y: 5, type: MyGame.Assets.Images.Fruit, playerCollides: true }
         ])
             .build();
     };
@@ -3534,6 +4266,108 @@ var MyGame;
         ])
             .setLinks([
             { pos: MyGame.pof(11, 5), link: MyGame.Islands.TOWN, playerStart: MyGame.Utils.getHouseStart(5, 2) }
+        ])
+            .build();
+    };
+})(MyGame || (MyGame = {}));
+var MyGame;
+(function (MyGame) {
+    MyGame.islandGetters[MyGame.Islands.PROFESSOR] = function () {
+        return new MyGame.IslandBuilder(MyGame.Islands.PROFESSOR, MyGame.IslandType.INSIDE)
+            .setLayout([
+            "bbbbbbbbbbbbbb",
+            "b           nb",
+            "b  n         b",
+            "b            b",
+            "b            b",
+            "b            b",
+            "b            b",
+            "b   d        b",
+            "bbbbbbbbbbbbbb"
+        ])
+            .setLinks([
+            { pos: MyGame.pof(4, 7), link: MyGame.Islands.TOWN, playerStart: MyGame.Utils.getHouseStart(20, 14) }
+        ])
+            .setNPCs([
+            { position: MyGame.pof(12, 1), type: MyGame.Assets.Images.Book, script: null, textKey: MyGame.Texts.ANIMAL_BEHAVIOR },
+            { position: MyGame.pof(3, 2), type: MyGame.Assets.Sprites.OldMan.key, script: "rrll", textKey: MyGame.Texts.PROFESSOR }
+        ])
+            .build();
+    };
+})(MyGame || (MyGame = {}));
+var MyGame;
+(function (MyGame) {
+    MyGame.islandGetters[8] = function () {
+        return new MyGame.IslandBuilder(MyGame.Islands.PLAYGROUND, MyGame.IslandType.OUTSIDE)
+            .setLayout([
+            "wwwwwwwwww  ",
+            "w        w  ",
+            "w        w  ",
+            "w        ww*",
+            "w           ",
+            "w n         ",
+            "w        ww*",
+            "w        w  ",
+            "w     s  w  ",
+            "wwwwwwwwww  ",
+        ])
+            .setOutsideBoundsPortals([
+            { side: MyGame.Direction.Right, start: 4, end: 7, playerStart: MyGame.pof(1, 24), link: MyGame.Islands.TOWN }
+        ])
+            .setNPCs([
+            { position: MyGame.pof(2, 5), type: MyGame.Assets.Sprites.ChuFeng.key, script: "uu    r   dd   l  ", text: "hello there" }
+        ])
+            .setSources([
+            { type: MyGame.Assets.Sprites.Airhorn.key, x: 6, y: 8 }
+        ])
+            .build();
+    };
+})(MyGame || (MyGame = {}));
+var MyGame;
+(function (MyGame) {
+    MyGame.islandGetters[9] = function () {
+        function makeBridge(main, button) {
+            var adjusted1 = main.island.getAdjustedPosition(MyGame.pof(8, 4));
+            var adjusted2 = main.island.getAdjustedPosition(MyGame.pof(9, 4));
+            main.groups.barriers.filter(function (b) { return b.position.equals(adjusted1); })[0].sprite.destroy();
+            main.groups.barriers.filter(function (b) { return b.position.equals(adjusted2); })[0].sprite.destroy();
+            main.groups.barriers.push(new MyGame.Bridge(main, adjusted1));
+            MyGame.WorldManager.getInstance().changeLayout(9, adjusted1, "|");
+            main.groups.barriers.push(new MyGame.Bridge(main, adjusted2));
+            MyGame.WorldManager.getInstance().changeLayout(9, adjusted2, "|");
+            main.world.bringToTop(main.player);
+        }
+        return new MyGame.IslandBuilder(MyGame.Islands.TUTORIAL, MyGame.IslandType.WATER)
+            .setLayout([
+            "ooooooooooooooo",
+            "ooooooo n  oooo",
+            "oocoooo    oooo",
+            "ooooooo    oooo",
+            "ooooooooooooooo",
+            "           oooo",
+            "s         noooo",
+            "        ooooooo",
+            "oooog?ooooooooo",
+            "ooo  nooooooooo",
+            "oo    ooooooooo",
+            "oo    ooooooooo",
+            "oo   nooooooooo"
+        ])
+            .setPlayerStart(MyGame.pof(4, 12))
+            .setNPCs([
+            { position: MyGame.pof(5, 9), script: null, textKey: MyGame.Texts.TUTORIAL_PERSON, type: MyGame.Assets.Sprites.ChuFeng.key },
+            { position: MyGame.pof(5, 12), script: null, textKey: MyGame.Texts.TUTORIAL_SIGN, type: MyGame.Assets.Images.Sign },
+            { position: MyGame.pof(10, 6), script: null, text: "Press K to use something you are holding", type: MyGame.Assets.Images.Sign },
+            { position: MyGame.pof(8, 1), script: null, textKey: MyGame.Texts.MONSTER, type: MyGame.Assets.Sprites.Monster.key }
+        ])
+            .setCreatures([
+            { type: MyGame.Assets.Sprites.Blish.key, x: 2, y: 2 }
+        ])
+            .setSources([
+            { type: MyGame.Assets.Images.CrumbsSource, x: 0, y: 6 }
+        ])
+            .setButtons([
+            { type: MyGame.Assets.Sprites.Button.key, x: 5, y: 8, action: makeBridge, direction: MyGame.Direction.Right, backgroundType: MyGame.IslandType.WATER }
         ])
             .build();
     };
@@ -3577,6 +4411,16 @@ var MyGame;
         return StringPos;
     }());
     MyGame.StringPos = StringPos;
+    var MapButton = (function (_super) {
+        __extends(MapButton, _super);
+        function MapButton() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.resetTime = -1;
+            return _this;
+        }
+        return MapButton;
+    }(StringPos));
+    MyGame.MapButton = MapButton;
     var MapCustomBarrier = (function (_super) {
         __extends(MapCustomBarrier, _super);
         function MapCustomBarrier() {
@@ -3606,6 +4450,7 @@ var MyGame;
             this.otherLinks = [];
             this.houseLinks = [];
             this.creatures = [];
+            this.buttons = [];
         }
         IslandBuilder.prototype.setLayout = function (layout) {
             this.layout = layout;
@@ -3659,11 +4504,16 @@ var MyGame;
             this.customBarriers = customBarriers;
             return this;
         };
+        IslandBuilder.prototype.setButtons = function (buttons) {
+            this.buttons = buttons;
+            return this;
+        };
         IslandBuilder.prototype.build = function () {
             var island = new Island(this.num, this.type, this.layout, this.additions, this.enemies, this.npcs, this.playerStart, this.outsideBoundsPortals, this.links, this.triggers, this.otherLinks, this.creatures);
             island.sources = this.sources;
             island.houseLinks = this.houseLinks;
             island.customBarriers = this.customBarriers;
+            island.buttons = this.buttons;
             return island;
         };
         return IslandBuilder;
@@ -3707,6 +4557,7 @@ var MyGame;
                 enemies.forEach(function (e) { e.position.add(paddingOffset_1.x, paddingOffset_1.y); });
                 npcs.forEach(function (n) { n.position.add(paddingOffset_1.x, paddingOffset_1.y); });
                 links.forEach(function (l) { l.pos.add(paddingOffset_1.x, paddingOffset_1.y); });
+                creatures.forEach(function (c) { c.x += paddingOffset_1.x; c.y += paddingOffset_1.y; });
                 outsideBoundsPortals.forEach(function (o) {
                     if (o.side === MyGame.Direction.Up || o.side === MyGame.Direction.Down) {
                         o.start += paddingOffset_1.x;
@@ -3768,6 +4619,10 @@ var MyGame;
                     var jambug = new MyGame.JamBug(main, MyGame.pcop(enemy.position), MyGame.Utils.makeMovementScript(enemy.position, enemy.script));
                     jambug.afterDeath = enemy.afterDeath;
                     return jambug;
+                case MyGame.Assets.Sprites.Croller.key:
+                    var croller = new MyGame.Croller(main, MyGame.pcop(enemy.position));
+                    croller.afterDeath = enemy.afterDeath;
+                    return croller;
             }
             throw new Error(enemy.type + " is not a valid enemy type.");
         };
@@ -3783,17 +4638,26 @@ var MyGame;
                 case MyGame.Assets.Sprites.Albert.key:
                     npc = new MyGame.Albert(main, MyGame.pcop(mapNPC.position), textManager, MyGame.Utils.makeMovementScript(mapNPC.position, mapNPC.script));
                     break;
+                case MyGame.Assets.Sprites.ChuFeng.key:
+                    npc = new MyGame.ChuFeng(main, MyGame.pcop(mapNPC.position), textManager, MyGame.Utils.makeMovementScript(mapNPC.position, mapNPC.script));
+                    break;
                 case MyGame.Assets.Sprites.OldMan.key:
                     npc = new MyGame.OldMan(main, MyGame.pcop(mapNPC.position), textManager, MyGame.Utils.makeMovementScript(mapNPC.position, mapNPC.script));
                     break;
                 case MyGame.Assets.Images.Sign:
                     npc = new MyGame.Sign(main, MyGame.pcop(mapNPC.position), textManager);
                     break;
+                case MyGame.Assets.Images.Book:
+                    npc = new MyGame.Book(main, MyGame.pcop(mapNPC.position), textManager);
+                    break;
                 case MyGame.Assets.Sprites.Stanley.key:
                     npc = new MyGame.Stanley(main, MyGame.pcop(mapNPC.position), textManager, MyGame.Utils.makeMovementScript(mapNPC.position, mapNPC.script));
                     break;
                 case MyGame.Assets.Sprites.TheMeep.key:
                     npc = new MyGame.TheMeep(main, MyGame.pcop(mapNPC.position), textManager);
+                    break;
+                case MyGame.Assets.Sprites.Monster.key:
+                    npc = new MyGame.Monster(main, MyGame.pcop(mapNPC.position), textManager);
                     break;
                 default:
                     throw new Error(mapNPC.type + " is not a valid NPC type.");
@@ -3816,6 +4680,8 @@ var MyGame;
             switch (mapCreature.type) {
                 case MyGame.Assets.Sprites.Blish.key:
                     return new MyGame.Blish(main, MyGame.pof(x, y));
+                case MyGame.Assets.Sprites.Blumpus.key:
+                    return new MyGame.Blumpus(main, MyGame.pof(x, y));
                 default:
                     throw new Error(mapCreature.type + " is not a valid Creature type.");
             }
@@ -4007,7 +4873,7 @@ var MyGame;
             }
             this.isDisplaying = true;
             this.noteDisplays = [];
-            var numNotes = Math.floor(Math.random() + (this.maxNumNotes - this.minNumNotes)) + this.minNumNotes;
+            var numNotes = Math.floor(Math.random() * (this.maxNumNotes - this.minNumNotes)) + this.minNumNotes;
             this.currentPattern = this.generator.generate(numNotes);
             for (var i = 0; i < this.generator.length; i++) {
                 this.game.time.events.add(this.tempo * i, this.showNote, this, i);
@@ -4032,26 +4898,7 @@ var MyGame;
             });
             var noteOrNull = notes.length > 0 ? notes[0].key : null;
             this.noteDisplays.push(new NoteDisplay(this.game, noteOrNull, position % this.generator.beatLength === 0, true, position, this.generator.length));
-            switch (noteOrNull) {
-                case this.game.inputs.down.keyCode:
-                    this.game.enemyDisplay.moveDown();
-                    break;
-                case this.game.inputs.up.keyCode:
-                    this.game.enemyDisplay.moveUp();
-                    break;
-                case this.game.inputs.left.keyCode:
-                    this.game.enemyDisplay.moveLeft();
-                    break;
-                case this.game.inputs.right.keyCode:
-                    this.game.enemyDisplay.moveRight();
-                    break;
-                case this.game.inputs.O.keyCode:
-                    this.game.enemyDisplay.pressO();
-                    break;
-                case this.game.inputs.K.keyCode:
-                    this.game.enemyDisplay.pressK();
-            }
-            this.game.time.events.add(this.tempo / 2, this.game.enemyDisplay.reset, this.game.enemyDisplay);
+            this.game.enemy.onNoteDisplay(this.game, noteOrNull, position);
         };
         return PatternDisplayer;
     }());
@@ -4105,14 +4952,6 @@ var MyGame;
             this.active = false;
             this.inputAllowed = false;
             this.numMils = enemy.patternLength * this.tempo;
-            if (enemy.noteComparer) {
-                this.comparer = enemy.noteComparer;
-            }
-            else {
-                this.comparer = function (pattern, pressed, pressedCount) {
-                    return MyGame.PatternUtil.getNthNote(pattern, pressedCount) === pressed;
-                };
-            }
         }
         PatternMatcher.prototype.begin = function (pattern) {
             this.pressCount = 0;
@@ -4169,7 +5008,7 @@ var MyGame;
             else {
                 this.noteDisplays[position].updateFrame(keyCode, isBeat);
             }
-            if (!this.comparer(this.currentPattern, keyCode, this.pressCount)) {
+            if (this.game.enemy.noteComparer && !this.game.enemy.noteComparer(this.currentPattern, keyCode, this.pressCount, position)) {
                 this.inputAllowed = false;
                 this.noteDisplays[position].tint = 0xFF0000;
                 return;
@@ -4183,23 +5022,28 @@ var MyGame;
             switch (keyCode) {
                 case this.game.inputs.down.keyCode:
                     this.game.playerDisplay.moveDown();
+                    this.game.inputs.down.onUp.add(this.game.playerDisplay.reset, this.game.playerDisplay);
                     break;
                 case this.game.inputs.up.keyCode:
                     this.game.playerDisplay.moveUp();
+                    this.game.inputs.up.onUp.add(this.game.playerDisplay.reset, this.game.playerDisplay);
                     break;
                 case this.game.inputs.left.keyCode:
                     this.game.playerDisplay.moveLeft();
+                    this.game.inputs.left.onUp.add(this.game.playerDisplay.reset, this.game.playerDisplay);
                     break;
                 case this.game.inputs.right.keyCode:
                     this.game.playerDisplay.moveRight();
+                    this.game.inputs.right.onUp.add(this.game.playerDisplay.reset, this.game.playerDisplay);
                     break;
                 case this.game.inputs.O.keyCode:
                     this.game.playerDisplay.pressO();
+                    this.game.inputs.O.onUp.add(this.game.playerDisplay.reset, this.game.playerDisplay);
                     break;
                 case this.game.inputs.K.keyCode:
                     this.game.playerDisplay.pressK();
+                    this.game.inputs.K.onUp.add(this.game.playerDisplay.reset, this.game.playerDisplay);
             }
-            this.game.time.events.add(this.tempo / 2, this.game.playerDisplay.reset, this.game.playerDisplay);
         };
         PatternMatcher.prototype.getFirstNote = function () {
             this.nextNote = 0;
@@ -4290,50 +5134,935 @@ var MyGame;
 })(MyGame || (MyGame = {}));
 var MyGame;
 (function (MyGame) {
+    var Battle = (function (_super) {
+        __extends(Battle, _super);
+        function Battle() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        Battle.prototype.create = function () {
+            this.sound.stopAll();
+            this.inputs = new MyGame.Inputs(this);
+            this.sound.boot();
+            if (MyGame.DEVELOPER_MODE) {
+                this.inputs.spacebar.onUp.add(this.enemyDeath, this);
+            }
+            this.time.reset();
+            this.time.events.removeAll();
+            this.stage.backgroundColor = 0xEAEAEA;
+            var stateTransfer = MyGame.StateTransfer.getInstance();
+            this.playerHealth = stateTransfer.health === -1 ? 100 : stateTransfer.health;
+            var playerKey = MyGame.WorldManager.getInstance().getIsland(stateTransfer.island).type === MyGame.IslandType.INSIDE ? MyGame.Frames.PlayerBattle.INSIDE : MyGame.Frames.PlayerBattle.OUTSIDE;
+            this.playerDisplay = new CharacterDisplay(this, 10, MyGame.SCREEN_HEIGHT - 146, MyGame.Assets.Sprites.PlayerBattle.key, playerKey);
+            this.playerHealthDisplay = new HealthDisplay(this, 146, MyGame.SCREEN_HEIGHT - 50, "You", MyGame.Player.STARTING_HEALTH);
+            this.playerHealthDisplay.updateHitPoints(this.playerHealth);
+            if (!MyGame.Utils.isAThing(stateTransfer.enemy)) {
+                throw new Error("enemy is not set for battle.");
+            }
+            this.enemy = stateTransfer.enemy;
+            var topY = MyGame.Assets.Sprites.RhythmSymbols.height * 2 + 20;
+            this.enemyDisplay = new CharacterDisplay(this, MyGame.SCREEN_WIDTH - 146, topY, this.enemy.battleSpriteKey);
+            this.enemyHealthDisplay = new HealthDisplay(this, 10, topY, this.enemy.name, this.enemy.hitPoints);
+            this.patternDisplayer = new MyGame.PatternDisplayer(this, this.enemy);
+            this.patternChecker = new MyGame.PatternMatcher(this, this.enemy);
+            this.passedMeasures = -2;
+            this.music = this.sound.add(this.enemy.music.key);
+            MyGame.Utils.fadeInFromBlack(this, 500, this.startCountdown, this);
+        };
+        Battle.prototype.startCountdown = function () {
+            var _this = this;
+            this.music.play(null, 0);
+            var count = this.enemy.beatLength === 2 ? 3 : this.enemy.beatLength - 1;
+            var display = this.add.bitmapText(0, 22, MyGame.Assets.FontName, count.toString(), MyGame.Assets.FontSize);
+            this.updateCount(count, display);
+            var millis = MyGame.Utils.bpmToMilliseconds(this.enemy.tempo);
+            var introLength = ((count + 1) * millis) / 1000;
+            this.music.addMarker("hi", introLength, this.music.totalDuration - introLength);
+            var _loop_3 = function (i) {
+                this_1.time.events.add(millis * (count - i), function () {
+                    _this.updateCount(i, display);
+                    if (i === 3) {
+                        _this.playerDisplay.slideIn(true, millis);
+                    }
+                    else if (i === 2) {
+                        _this.enemyDisplay.slideIn(false, millis);
+                    }
+                }, this_1);
+            };
+            var this_1 = this;
+            for (var i = 0; i <= count; i++) {
+                _loop_3(i);
+            }
+            this.time.events.add(millis * (count + 1), function () {
+                _this.startBattle();
+                display.visible = false;
+            }, this);
+            this.time.events.start();
+        };
+        Battle.prototype.updateCount = function (count, display) {
+            display.text = count === 0 ? "GO!!!" : count.toString();
+            MyGame.Utils.centerInScreen(display);
+        };
+        Battle.prototype.startBattle = function () {
+            this.startPattern();
+            this.time.events.loop(this.patternDisplayer.tempo * this.enemy.patternLength * 2, this.startPattern, this);
+            this.time.events.start();
+        };
+        Battle.prototype.startChecker = function () {
+            this.patternChecker.begin(this.currentPattern);
+        };
+        Battle.prototype.startPattern = function () {
+            this.passedMeasures = (this.passedMeasures + 2) % this.enemy.music.measures;
+            if (this.passedMeasures === 0) {
+                this.music.play("hi");
+            }
+            if (MyGame.Utils.isAThing(this.patternChecker.notesPressed)) {
+                this.afterRound();
+            }
+            this.patternDisplayer.reset();
+            this.patternChecker.reset();
+            this.currentPattern = this.patternDisplayer.display();
+            this.time.events.add((this.enemy.patternLength - 1) * this.patternDisplayer.tempo, this.startChecker, this);
+        };
+        Battle.prototype.afterRound = function () {
+            var damage = this.enemy.calculateDamage(this.currentPattern, this.patternChecker.notesPressed);
+            if (damage === 0) {
+                var playerDamage = this.playerHealth - this.enemy.getAttackPoints(this.currentPattern);
+                this.playerHealth = Math.max(playerDamage, 0);
+                this.playerHealthDisplay.updateHitPoints(this.playerHealth);
+                if (this.playerHealth === 0) {
+                    this.sound.stopAll();
+                    var stateTransfer = MyGame.StateTransfer.getInstance();
+                    stateTransfer.reason = MyGame.TransferReason.DEATH;
+                    stateTransfer.health = -1;
+                    this.game.state.start(MyGame.States.Result);
+                }
+                return;
+            }
+            this.enemy.health = Math.max(this.enemy.health - damage, 0);
+            this.enemyHealthDisplay.updateHitPoints(this.enemy.health);
+            if (this.enemy.health === 0) {
+                this.enemyDeath();
+            }
+        };
+        Battle.prototype.enemyDeath = function () {
+            this.sound.stopAll();
+            this.game.time.events.stop(true);
+            var stateTransfer = MyGame.StateTransfer.getInstance();
+            stateTransfer.enemy = null;
+            this.enemy.die();
+            if (MyGame.Utils.isAThing(this.enemy.transferPosition)) {
+                stateTransfer.position = this.enemy.transferPosition;
+            }
+            else {
+                stateTransfer.position = new Phaser.Point(Math.floor(this.enemy.worldSprite.position.x / MyGame.TILE_WIDTH), Math.floor(this.enemy.worldSprite.position.y / MyGame.TILE_HEIGHT));
+            }
+            stateTransfer.funcs = this.enemy.afterDeath;
+            stateTransfer.reason = MyGame.TransferReason.VICTORY;
+            stateTransfer.health = this.playerHealth;
+            this.state.start(MyGame.States.Result);
+        };
+        return Battle;
+    }(Phaser.State));
+    MyGame.Battle = Battle;
+    var MOVEMENT_AMOUNT = 6;
+    var CharacterDisplay = (function () {
+        function CharacterDisplay(battle, x, y, key, frame) {
+            if (frame === void 0) { frame = 0; }
+            this.battle = battle;
+            this.image = battle.add.image(x, y, key, frame);
+            this.image.anchor.setTo(0.5, 0.5);
+            this.image.position.setTo(x + this.image.width / 2, y + this.image.height / 2);
+            this.startX = this.image.position.x;
+            this.startY = this.image.position.y;
+            this.image.visible = false;
+        }
+        CharacterDisplay.prototype.slideIn = function (fromLeft, millis) {
+            this.image.visible = true;
+            var startPos = fromLeft ? this.image.width * -1 : MyGame.SCREEN_WIDTH + this.image.width;
+            this.battle.add.tween(this.image.position).from({ x: startPos }, millis / 2, Phaser.Easing.Linear.None, true, millis / 2);
+        };
+        CharacterDisplay.prototype.reset = function () {
+            this.image.position.setTo(this.startX, this.startY);
+            this.image.scale.setTo(1, 1);
+        };
+        CharacterDisplay.prototype.moveUp = function () {
+            this.image.position.y -= MOVEMENT_AMOUNT;
+        };
+        CharacterDisplay.prototype.moveDown = function () {
+            this.image.position.y += MOVEMENT_AMOUNT;
+        };
+        CharacterDisplay.prototype.moveLeft = function () {
+            this.image.position.x -= MOVEMENT_AMOUNT;
+        };
+        CharacterDisplay.prototype.moveRight = function () {
+            this.image.position.x += MOVEMENT_AMOUNT;
+        };
+        CharacterDisplay.prototype.pressO = function () {
+            this.image.scale.setTo(1.1, 1.1);
+        };
+        CharacterDisplay.prototype.pressK = function () {
+            this.image.scale.setTo(0.9, 0.9);
+        };
+        CharacterDisplay.prototype.playAnim = function (name, frames, speed) {
+            if (!this.image.animations.getAnimation(name)) {
+                this.image.animations.add(name, frames, speed);
+            }
+            this.image.play(name);
+        };
+        return CharacterDisplay;
+    }());
+    var HealthDisplay = (function () {
+        function HealthDisplay(battle, x, y, name, hitPoints) {
+            this.battle = battle;
+            this.x = x;
+            this.y = y;
+            this.hitPoints = hitPoints;
+            this.text = battle.add.bitmapText(x, y, MyGame.Assets.FontName, name, MyGame.Assets.FontSize);
+            this.healthBarContainer = battle.add.image(x, y + 18, MyGame.Assets.Images.HealthBarContainer);
+            this.healthBar = null;
+            this.updateHitPoints(hitPoints);
+        }
+        HealthDisplay.prototype.updateHitPoints = function (hp) {
+            if (hp > this.hitPoints || hp < 0) {
+                throw new Error("Hit points not in valid range: " + hp + ".");
+            }
+            if (this.healthBar !== null) {
+                this.healthBar.destroy();
+                this.healthBar = null;
+            }
+            var width = Math.round((hp / this.hitPoints) * ((this.healthBarContainer.width - 4) / 2)) * 2;
+            var bmd = this.battle.add.bitmapData(width, this.healthBarContainer.height - 4);
+            bmd.ctx.beginPath();
+            bmd.ctx.rect(0, 0, width, this.healthBarContainer.height - 4);
+            bmd.ctx.fillStyle = "#606060";
+            bmd.ctx.fill();
+            this.healthBar = this.battle.add.sprite(this.healthBarContainer.x + 2, this.healthBarContainer.y + 2, bmd);
+        };
+        return HealthDisplay;
+    }());
+})(MyGame || (MyGame = {}));
+var MyGame;
+(function (MyGame) {
+    var Boot = (function (_super) {
+        __extends(Boot, _super);
+        function Boot() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        Boot.prototype.init = function () {
+            this.input.maxPointers = 0;
+            this.stage.disableVisibilityChange = false;
+            this.game.physics.startSystem(Phaser.Physics.ARCADE);
+            this.stage.setBackgroundColor(0x000000);
+            if (this.game.device.desktop) {
+                this.scale.pageAlignHorizontally = true;
+            }
+            else {
+                this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
+                this.scale.setMinMax(480, 260, 1024, 768);
+                this.scale.forceLandscape = true;
+                this.scale.pageAlignHorizontally = true;
+            }
+        };
+        Boot.prototype.preload = function () {
+            this.load.image("loadingBar", "assets/visual/" + MyGame.Assets.Images.LoadingBar + ".png");
+        };
+        Boot.prototype.create = function () {
+            this.game.state.start(MyGame.States.Preloader);
+        };
+        return Boot;
+    }(Phaser.State));
+    MyGame.Boot = Boot;
+})(MyGame || (MyGame = {}));
+var MyGame;
+(function (MyGame) {
+    var InterludeSpec = (function () {
+        function InterludeSpec() {
+        }
+        return InterludeSpec;
+    }());
+    MyGame.InterludeSpec = InterludeSpec;
+    var Interlude = (function (_super) {
+        __extends(Interlude, _super);
+        function Interlude() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        Interlude.prototype.create = function () {
+            var _this = this;
+            this.sound.stopAll();
+            var stateTransfer = MyGame.StateTransfer.getInstance();
+            var interlude = stateTransfer.interlude;
+            this.world.alpha = 1;
+            this.stage.backgroundColor = MyGame.Colors.BLACK;
+            this.sprite = this.add.sprite(0, 0, interlude.spriteKey);
+            MyGame.Utils.centerImage(this.sprite);
+            if (interlude.frames) {
+                this.sprite.animations.add("thing", interlude.frames, 10, true);
+                this.sprite.play("thing");
+            }
+            this.textDisplay = new MyGame.BottomTextDisplay(this, new MyGame.Inputs(this), null);
+            var encounter = MyGame.getDialog(interlude.text).getNext(null, null);
+            encounter.onFinish = function (main, parent, result) {
+                stateTransfer.island = interlude.nextIsland;
+                stateTransfer.position = MyGame.pof(interlude.startX, interlude.startY);
+                stateTransfer.reason = MyGame.TransferReason.INTERLUDE;
+                stateTransfer.interlude = null;
+                var tween = _this.add.tween(_this.world).to({ alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
+                tween.onComplete.add(function () { _this.state.start(MyGame.States.Main); }, _this);
+            };
+            this.textDisplay.start(encounter);
+        };
+        return Interlude;
+    }(Phaser.State));
+    MyGame.Interlude = Interlude;
+})(MyGame || (MyGame = {}));
+var MyGame;
+(function (MyGame) {
+    var Neighborhood = (function () {
+        function Neighborhood() {
+        }
+        return Neighborhood;
+    }());
+    MyGame.Neighborhood = Neighborhood;
+    var MainGroups = (function () {
+        function MainGroups() {
+            this.barriers = [];
+            this.creatures = [];
+            this.enemies = [];
+            this.grounds = [];
+            this.houses = [];
+            this.npcs = [];
+            this.portals = [];
+            this.projectiles = [];
+            this.signs = [];
+            this.frontOfPlayer = [];
+            this.buttons = [];
+        }
+        return MainGroups;
+    }());
+    var Main = (function (_super) {
+        __extends(Main, _super);
+        function Main() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        Main.prototype.create = function () {
+            var _this = this;
+            this.game.renderer.renderSession.roundPixels = true;
+            this.time.reset();
+            this.time.events.removeAll();
+            this.playerStopped = false;
+            var gameSaver = MyGame.GameSaver.getInstance();
+            var worldManager = MyGame.WorldManager.getInstance();
+            var stateTransfer = MyGame.StateTransfer.getInstance();
+            var saveState = gameSaver.loadGame();
+            if (stateTransfer.reason !== MyGame.TransferReason.LINK) {
+                this.sound.stopAll();
+                this.sound.play(MyGame.Assets.Audio.World.key, 1, true);
+            }
+            if (stateTransfer.interlude) {
+                this.state.start(MyGame.States.Interlude);
+            }
+            if (stateTransfer.flags["USE_SAVE"] && (stateTransfer.reason === MyGame.TransferReason.DEATH || stateTransfer.reason === MyGame.TransferReason.NONE) && saveState) {
+                stateTransfer.loadFromSave(saveState);
+                worldManager.importLayouts(saveState.layouts);
+                worldManager.importDialogs(this, saveState.dialogs);
+            }
+            this.world.alpha = 0;
+            var tween = this.add.tween(this.world).to({ alpha: 1 }, 500, Phaser.Easing.Linear.None, true);
+            tween.onComplete.add(function () { _this.unstopPlayer(); }, this);
+            this.inputs = new MyGame.Inputs(this);
+            this.groups = new MainGroups();
+            this.island = worldManager.getIsland(stateTransfer.island === -1 ? MyGame.Islands.TUTORIAL : stateTransfer.island);
+            if (MyGame.DEVELOPER_MODE && stateTransfer.island === -1) {
+                this.island = worldManager.getIsland(MyGame.START_ISLAND);
+            }
+            this.setupLevel(this.island, saveState);
+            this.groups.enemies.forEach(function (e) { e.onStageBuilt(); });
+            this.groups.npcs.forEach(function (n) { n.onStageBuilt(); });
+            this.groups.creatures.forEach(function (c) { c.onStageBuilt(); });
+            this.groups.buttons.forEach(function (b) { b.onStageBuilt(); });
+            this.groups.barriers.forEach(function (b) { b.onStageBuilt(); });
+            this.player.onStageBuilt();
+            this.game.camera.follow(this.player, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
+            this.inputs.spacebar.onDown.add(this.spacebarDown, this);
+            if (stateTransfer.funcs) {
+                stateTransfer.funcs(this);
+                stateTransfer.funcs = null;
+            }
+        };
+        Main.prototype.update = function () {
+            if (!this.playerStopped) {
+                this.triggers.forEach(function (t) { return t.checkPlayerOverlap(); });
+                var groupsToUpdate = [this.groups.enemies, this.groups.houses, this.groups.npcs, this.groups.portals, this.groups.creatures, this.groups.projectiles, this.groups.buttons];
+                for (var i = 0; i < groupsToUpdate.length; i++) {
+                    var grp = groupsToUpdate[i];
+                    for (var j = 0; j < grp.length; j++) {
+                        grp[j].update();
+                    }
+                }
+            }
+            else {
+                for (var _i = 0, _a = this.groups.npcs; _i < _a.length; _i++) {
+                    var npc = _a[_i];
+                    npc.playerStoppedUpdate();
+                }
+            }
+        };
+        Main.prototype.setupLevel = function (island, savedGame) {
+            var _this = this;
+            this.stage.backgroundColor = island.type === MyGame.IslandType.INSIDE ? MyGame.Colors.BLACK : MyGame.Colors.GRAY;
+            this.game.world.setBounds(0, 0, island.layout[0].length * MyGame.TILE_WIDTH, island.layout.length * MyGame.TILE_HEIGHT);
+            for (var y = 0; y < island.layout.length; y++) {
+                var line = island.layout[y];
+                for (var x = 0; x < line.length; x++) {
+                    switch (line.charAt(x)) {
+                        case " ":
+                        case "-":
+                            this.groups.grounds.push(MyGame.Ground.makeGround(this, island.type, MyGame.pof(x, y)));
+                            break;
+                        case "*":
+                            this.groups.barriers.push(new MyGame.Bush(this, MyGame.pof(x, y)));
+                            this.groups.grounds.push(MyGame.Ground.makeGround(this, island.type, MyGame.pof(x, y)));
+                            break;
+                        case "#":
+                            this.groups.barriers.push(new MyGame.Path(this, MyGame.pof(x, y)));
+                            break;
+                        case "|":
+                            this.groups.barriers.push(new MyGame.Bridge(this, MyGame.pof(x, y)));
+                            break;
+                        case "?":
+                            var mapButton = this.getThingAtPosition(island.buttons, x, y, "button");
+                            this.groups.buttons.push(new MyGame.Button(this, x, y, mapButton.direction, mapButton.action, mapButton.backgroundType, mapButton.resetTime));
+                            break;
+                        case "b":
+                            this.groups.barriers.push(new MyGame.Blackness(this, MyGame.pof(x, y)));
+                            break;
+                        case "c":
+                            this.groups.creatures.push(island.getCreature(this, x, y));
+                            break;
+                        case "d":
+                            this.groups.portals.push(island.makeDoorway(this, MyGame.pof(x, y)));
+                            this.groups.grounds.push(MyGame.Ground.makeGround(this, island.type, MyGame.pof(x, y)));
+                            break;
+                        case "e":
+                            this.groups.grounds.push(MyGame.Ground.makeGround(this, island.type, MyGame.pof(x, y)));
+                            this.groups.enemies.push(island.getEnemy(this, MyGame.pof(x, y)));
+                            break;
+                        case "g":
+                            this.groups.barriers.push(new MyGame.Gate(this, MyGame.pof(x, y)));
+                            this.groups.grounds.push(MyGame.Ground.makeGround(this, island.type, MyGame.pof(x, y)));
+                            break;
+                        case "h":
+                            var house = new MyGame.House(this, MyGame.pof(x, y));
+                            this.groups.houses.push(house);
+                            this.groups.grounds.push(MyGame.Ground.makeGround(this, island.type, MyGame.pof(x, y)));
+                            this.groups.frontOfPlayer.push(house);
+                            break;
+                        case "n":
+                            this.groups.grounds.push(MyGame.Ground.makeGround(this, island.type, MyGame.pof(x, y)));
+                            this.groups.npcs.push(island.getNPC(this, MyGame.pof(x, y)));
+                            break;
+                        case "o":
+                            this.groups.barriers.push(new MyGame.Water(this, MyGame.pof(x, y)));
+                            break;
+                        case "p":
+                            this.groups.barriers.push(new MyGame.Lillypad(this, MyGame.pof(x, y)));
+                            break;
+                        case "s":
+                            var type = this.getTypeOfThing(island.sources, x, y, "Source");
+                            this.groups.barriers.push(MyGame.Source.makeSource(this, x, y, type));
+                            break;
+                        case "t":
+                            var tree = new MyGame.Tree(this, MyGame.pof(x, y));
+                            this.groups.barriers.push(tree);
+                            this.groups.grounds.push(MyGame.Ground.makeGround(this, island.type, MyGame.pof(x, y)));
+                            this.groups.frontOfPlayer.push(tree);
+                            break;
+                        case "v":
+                            var tallGrass = new MyGame.TallGrass(this, MyGame.pof(x, y));
+                            this.groups.barriers.push(tallGrass);
+                            this.groups.frontOfPlayer.push(tallGrass);
+                            break;
+                        case "w":
+                            this.groups.barriers.push(new MyGame.StoneWall(this, MyGame.pof(x, y), island.getNeighborhood(MyGame.pof(x, y))));
+                            break;
+                        case "x":
+                            var customBarrier = this.getThingAtPosition(island.customBarriers, x, y, "Custom Barrier");
+                            var barrier = new MyGame.CustomBarrier(this, MyGame.pof(x, y), customBarrier.type, customBarrier.playerCollides);
+                            this.groups.barriers.push(barrier);
+                            this.groups.grounds.push(MyGame.Ground.makeGround(this, island.type, MyGame.pof(x, y)));
+                    }
+                }
+            }
+            this.groups.portals = this.groups.portals.concat(island.getPortals(this), island.makeOtherLinks(this));
+            this.triggers = island.makeTriggers(this);
+            var stateTransfer = MyGame.StateTransfer.getInstance();
+            if (stateTransfer.flags["USE_SAVE"]) {
+                var npcsToImport = savedGame ? savedGame.npcs : stateTransfer.npcs;
+                var _loop_4 = function (npc) {
+                    var matches = this_2.groups.npcs.filter(function (n) { return n.startX === npc.old.x && n.startY === npc.old.y; });
+                    if (matches.length === 0) {
+                        throw new Error("No matching npc found with start position " + npc.old.x + " " + npc.old.y);
+                    }
+                    var match = matches[0];
+                    if (npc.now) {
+                        match.setPosition(npc.now);
+                    }
+                    if (npc.script) {
+                        match.doScript(MyGame.Utils.reverseMovementScript(npc.script), npc.script.start, true);
+                    }
+                    if (npc.speed) {
+                        match.setSpeed(npc.speed);
+                    }
+                };
+                var this_2 = this;
+                for (var _i = 0, _a = npcsToImport.filter(function (t) { return t.old.island === island.num; }); _i < _a.length; _i++) {
+                    var npc = _a[_i];
+                    _loop_4(npc);
+                }
+                var triggersToImport = savedGame ? savedGame.triggers : stateTransfer.triggers;
+                var _loop_5 = function (saveTrigger) {
+                    for (var _i = 0, _a = this_3.triggers.filter(function (t) { return t.x === saveTrigger.x && t.y === saveTrigger.y; }); _i < _a.length; _i++) {
+                        var matchingTrigger = _a[_i];
+                        matchingTrigger.active = false;
+                    }
+                };
+                var this_3 = this;
+                for (var _b = 0, _c = triggersToImport.filter(function (t) { return t.island === island.num; }); _b < _c.length; _b++) {
+                    var saveTrigger = _c[_b];
+                    _loop_5(saveTrigger);
+                }
+            }
+            stateTransfer.addedItems.filter(function (i) { return i.location.island === _this.island.num; })
+                .forEach(function (i) {
+                var source = MyGame.Source.makeSource(_this, i.location.x, i.location.y, i.type);
+                _this.groups.barriers.push(source);
+            });
+            var playerPosition = null;
+            if (stateTransfer.position) {
+                if (stateTransfer.reason === MyGame.TransferReason.LINK || stateTransfer.reason === MyGame.TransferReason.DEATH || stateTransfer.reason === MyGame.TransferReason.VICTORY) {
+                    playerPosition = island.getAdjustedPosition(stateTransfer.position.clone());
+                }
+                else {
+                    playerPosition = stateTransfer.position.clone();
+                }
+            }
+            else {
+                playerPosition = island.getAdjustedPosition(island.playerStart.clone());
+            }
+            if (MyGame.DEVELOPER_MODE && !stateTransfer.position) {
+                playerPosition = island.getAdjustedPosition(MyGame.pof(MyGame.PLAYER_START_X, MyGame.PLAYER_START_Y));
+            }
+            this.player = new MyGame.Player(this, playerPosition, stateTransfer.health === -1 ? 100 : stateTransfer.health);
+            this.projectileDisplay = new MyGame.HoldableDisplay(this);
+            if (stateTransfer.heldItems) {
+                this.player.itemManager.changeItem(stateTransfer.heldItems.type, stateTransfer.heldItems.amount);
+                this.projectileDisplay.updateIcon(stateTransfer.heldItems.type + "_" + MyGame.ICON);
+                this.projectileDisplay.updateCount(stateTransfer.heldItems.amount);
+            }
+            this.healthBar = new MyGame.HealthBar(this, stateTransfer.health === -1 ? 100 : stateTransfer.health);
+            this.stopPlayer();
+            this.setDepths();
+        };
+        Main.prototype.setDepths = function () {
+            var _this = this;
+            this.groups.grounds.forEach(function (gr) { this.game.world.bringToTop(gr); }, this);
+            this.groups.portals.forEach(function (p) { this.game.world.bringToTop(p.sprite); }, this);
+            this.groups.barriers.forEach(function (b) {
+                if (b.sprite.key !== "blackness") {
+                    _this.game.world.bringToTop(b.sprite);
+                }
+            }, this);
+            this.groups.buttons.forEach(function (b) { _this.game.world.bringToTop(b.sprite); }, this);
+            this.groups.creatures.forEach(function (c) { _this.game.world.bringToTop(c.sprite); }, this);
+            this.groups.barriers.forEach(function (b) {
+                if (b.sprite.key === MyGame.Assets.Images.Bridge) {
+                    _this.game.world.bringToTop(b.sprite);
+                }
+            });
+            this.groups.houses.forEach(function (ho) { this.game.world.bringToTop(ho.sprite); }, this);
+            this.groups.npcs.forEach(function (n) { this.game.world.bringToTop(n.sprite); }, this);
+            this.groups.enemies.forEach(function (en) { this.game.world.bringToTop(en.worldSprite); }, this);
+            this.game.world.bringToTop(this.player);
+            this.groups.frontOfPlayer.forEach(function (f) { return _this.game.world.bringToTop(f.sprite); });
+            this.projectileDisplay.bringToTop();
+            this.healthBar.bringToTop();
+        };
+        Main.prototype.paused = function () {
+        };
+        Main.prototype.spacebarDown = function () {
+            if (this.playerStopped)
+                return;
+            this.game.paused = !this.game.paused;
+            if (!this.game.paused) {
+                this.pauseMenu.exit();
+                return;
+            }
+            this.pauseMenu = new MyGame.PauseMenu(this);
+            this.inputs.down.onDown.add(this.pauseMenu.changeSelection, this.pauseMenu);
+            this.inputs.up.onDown.add(this.pauseMenu.changeSelection, this.pauseMenu);
+            this.inputs.O.onDown.add(this.pauseMenu.select, this.pauseMenu);
+        };
+        Main.prototype.saveGame = function () {
+            var gameSaver = MyGame.GameSaver.getInstance();
+            gameSaver.saveGame(this, MyGame.WorldManager.getInstance());
+        };
+        Main.prototype.stopPlayer = function () {
+            this.playerStopped = true;
+            this.player.body.velocity.setTo(0, 0);
+            this.groups.enemies.forEach(function (e) {
+                if (e.movementManager) {
+                    e.movementManager.pause();
+                }
+            });
+        };
+        Main.prototype.unstopPlayer = function () {
+            if (MyGame.StateTransfer.getInstance().flags["LOCK_PLAYER"])
+                return;
+            this.playerStopped = false;
+            this.groups.enemies.forEach(function (e) {
+                if (e.movementManager) {
+                    e.movementManager.resume();
+                }
+            });
+        };
+        Main.prototype.getTypeOfThing = function (things, x, y, thingType) {
+            if (thingType === void 0) { thingType = "thing"; }
+            return this.getThingAtPosition(things, x, y, thingType).type;
+        };
+        Main.prototype.getThingAtPosition = function (things, x, y, thingType) {
+            var _this = this;
+            if (thingType === void 0) { thingType = "thing"; }
+            var matching = things.filter(function (t) {
+                var adjusted = _this.island.getAdjustedPosition(MyGame.pof(t.x, t.y));
+                return adjusted.x === x && adjusted.y === y;
+            });
+            if (matching.length === 0) {
+                throw new Error(thingType + " information could not be found at x: " + x + ", y: " + y + ".");
+            }
+            return matching[0];
+        };
+        Main.prototype.bringGroupToTop = function (group) {
+            var _this = this;
+            group.forEach(function (g) { _this.world.bringToTop(g.sprite); });
+            this.projectileDisplay.bringToTop();
+        };
+        Main.prototype.addItem = function (x, y, key) {
+            var source = MyGame.Source.makeSource(this, x, y, key);
+            this.groups.barriers.push(source);
+            MyGame.StateTransfer.getInstance().addedItems.push({
+                location: new MyGame.Location(this.island.num, x, y),
+                type: key
+            });
+        };
+        Main.prototype.startCinematic = function (follow) {
+            var bars = this.cinematicBars ? this.cinematicBars : (this.cinematicBars = new MyGame.CinematicBars(this));
+            bars.show();
+            bars.bringToTop();
+            this.camera.unfollow();
+            this.camera.follow(follow, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
+            MyGame.StateTransfer.getInstance().flags["LOCK_PLAYER"] = true;
+            this.stopPlayer();
+        };
+        Main.prototype.endCinematic = function () {
+            var _this = this;
+            MyGame.StateTransfer.getInstance().flags["LOCK_PLAYER"] = false;
+            this.camera.unfollow();
+            var tween = this.add.tween(this.camera).to({ x: this.player.x - (MyGame.SCREEN_WIDTH / 2), y: this.player.y - (MyGame.SCREEN_HEIGHT / 2) }, 1000, Phaser.Easing.Linear.None, true);
+            tween.onComplete.add(function () {
+                _this.cinematicBars.hide();
+                _this.camera.follow(_this.player, Phaser.Camera.FOLLOW_TOPDOWN_TIGHT);
+                _this.unstopPlayer();
+            }, this);
+        };
+        Main.prototype.removeBarrier = function (pos, backgroundType) {
+            var barrier = MyGame.Utils.firstOrDefault(this.groups.barriers, function (b) { return b.position.equals(pos); });
+            barrier.sprite.destroy();
+            this.groups.barriers = this.groups.barriers.filter(function (b) { return b !== barrier; });
+            switch (backgroundType) {
+                case MyGame.IslandType.INSIDE:
+                    this.groups.barriers.push(new MyGame.Blackness(this, pos));
+                    MyGame.WorldManager.getInstance().changeLayout(this.island.num, pos, "b");
+                    break;
+                case MyGame.IslandType.OUTSIDE:
+                    this.groups.grounds.push(new MyGame.Grass(this, pos));
+                    MyGame.WorldManager.getInstance().changeLayout(this.island.num, pos, " ");
+                    break;
+                case MyGame.IslandType.WATER:
+                    this.groups.barriers.push(new MyGame.Water(this, pos));
+                    MyGame.WorldManager.getInstance().changeLayout(this.island.num, pos, "o");
+                    break;
+            }
+            this.setDepths();
+        };
+        Main.prototype.addBarrier = function (barrier) {
+            this.groups.barriers.push(barrier);
+            MyGame.WorldManager.getInstance().changeLayout(this.island.num, barrier.position, barrier.char);
+        };
+        return Main;
+    }(Phaser.State));
+    MyGame.Main = Main;
+})(MyGame || (MyGame = {}));
+var MyGame;
+(function (MyGame) {
+    var MainMenu = (function (_super) {
+        __extends(MainMenu, _super);
+        function MainMenu() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        MainMenu.prototype.create = function () {
+            this.sound.stopAll();
+            this.stage.backgroundColor = MyGame.Colors.GRAY;
+            this.title = this.add.image(0, 50, MyGame.Assets.Images.Title);
+            MyGame.Utils.centerImage(this.title, true, false);
+            this.artwork = this.add.sprite(0, 0, MyGame.Assets.Sprites.Blumpus.key, 0);
+            MyGame.Utils.centerImage(this.artwork);
+            this.artwork.animations.add("sleep", [0, 1], 2, true);
+            this.artwork.animations.play("sleep");
+            if (MyGame.DEVELOPER_MODE && MyGame.CLEAR_SAVE) {
+                MyGame.GameSaver.getInstance().clearData();
+            }
+            var savedGame = MyGame.GameSaver.getInstance().loadGame();
+            var directionText = savedGame ? "SPACEBAR: new game\n   SHIFT: load game" : "SPACEBAR: new game";
+            this.directions = this.add.bitmapText(0, 0, MyGame.Assets.FontName, directionText, MyGame.Assets.FontSize);
+            MyGame.Utils.centerInScreen(this.directions);
+            this.directions.y = MyGame.SCREEN_HEIGHT - 100;
+            this.inputs = new MyGame.Inputs(this);
+            this.inputs.spacebar.onUp.add(this.startGame, this, 0, false);
+            if (savedGame) {
+                this.inputs.shift.onUp.add(this.startGame, this, 0, true);
+            }
+        };
+        MainMenu.prototype.startGame = function (key, useSave) {
+            MyGame.StateTransfer.getInstance().flags["USE_SAVE"] = useSave;
+            var tween = this.add.tween(this.world).to({ alpha: 0 }, 500, Phaser.Easing.Linear.None, true);
+            tween.onComplete.add(function () {
+                this.state.start(MyGame.States.Main);
+            }, this);
+        };
+        return MainMenu;
+    }(Phaser.State));
+    MyGame.MainMenu = MainMenu;
+})(MyGame || (MyGame = {}));
+var MyGame;
+(function (MyGame) {
+    var Preloader = (function (_super) {
+        __extends(Preloader, _super);
+        function Preloader() {
+            var _this = _super !== null && _super.apply(this, arguments) || this;
+            _this.ready = false;
+            return _this;
+        }
+        Preloader.prototype.preload = function () {
+            this.preloadBar = this.add.sprite(300, 400, "loadingBar");
+            this.load.setPreloadSprite(this.preloadBar);
+            var spriteAssets = Object.getOwnPropertyNames(MyGame.Assets.Sprites);
+            for (var i = 0; i < spriteAssets.length; i++) {
+                var a = MyGame.Assets.Sprites[spriteAssets[i]];
+                this.load.spritesheet(a.key, MyGame.VISUAL_ASSETS_PATH + "/" + a.key + "." + MyGame.PNG, a.width, a.height);
+            }
+            var imageAssets = Object.getOwnPropertyNames(MyGame.Assets.Images);
+            for (var i = 0; i < imageAssets.length; i++) {
+                var a = MyGame.Assets.Images[imageAssets[i]];
+                this.load.image(a, MyGame.VISUAL_ASSETS_PATH + "/" + a + "." + MyGame.PNG);
+            }
+            var audioAssets = Object.getOwnPropertyNames(MyGame.Assets.Audio);
+            for (var i = 0; i < audioAssets.length; i++) {
+                var a = MyGame.Assets.Audio[audioAssets[i]];
+                this.load.audio(a.key, MyGame.AUDIO_ASSETS_PATH + "/" + a.key + "." + MyGame.MP3);
+            }
+            this.load.bitmapFont("testbitmap", "assets/fonts/okeydokey_0.png", "assets/fonts/okeydokey.xml");
+        };
+        Preloader.prototype.create = function () {
+            this.game.state.start(MyGame.States.MainMenu);
+        };
+        return Preloader;
+    }(Phaser.State));
+    MyGame.Preloader = Preloader;
+})(MyGame || (MyGame = {}));
+var MyGame;
+(function (MyGame) {
+    var Result = (function (_super) {
+        __extends(Result, _super);
+        function Result() {
+            return _super !== null && _super.apply(this, arguments) || this;
+        }
+        Result.prototype.create = function () {
+            var _this = this;
+            this.sound.stopAll();
+            var stateTransfer = MyGame.StateTransfer.getInstance();
+            this.stage.backgroundColor = MyGame.Colors.GRAY;
+            this.sound.play(stateTransfer.reason === MyGame.TransferReason.DEATH ? MyGame.Assets.Audio.DeathJingle.key : MyGame.Assets.Audio.VictoryJingle.key);
+            var text = this.add.image(0, 0, MyGame.Assets.Sprites.ResultText.key, stateTransfer.reason === MyGame.TransferReason.DEATH ? 0 : 1);
+            text.scale.setTo(2, 2);
+            text.smoothed = false;
+            MyGame.Utils.centerImage(text, true, true);
+            var tween = this.add.tween(this.world).to({ alpha: 0 }, 500, Phaser.Easing.Linear.None, true, 2000);
+            tween.onComplete.add(function () { _this.state.start(MyGame.States.Main); }, this);
+        };
+        return Result;
+    }(Phaser.State));
+    MyGame.Result = Result;
+})(MyGame || (MyGame = {}));
+var MyGame;
+(function (MyGame) {
     var TILE_DISTANCE = 2;
     var Droppable = (function () {
         function Droppable(main, startPosition, worldKey) {
             this.main = main;
             this.startPosition = startPosition.clone();
             this.worldKey = worldKey;
+            this.inUse = false;
         }
-        Droppable.prototype.use = function () {
+        Droppable.prototype.drop = function () {
             var player = this.main.player;
             var rounded = MyGame.Utils.roundToClosestTile(player.position);
             var x = player.direction === MyGame.Direction.Left ? rounded.x - TILE_DISTANCE : player.direction === MyGame.Direction.Right ? rounded.x + TILE_DISTANCE : rounded.x;
+            var betweenX = player.direction === MyGame.Direction.Left ? rounded.x - 1 : player.direction === MyGame.Direction.Right ? rounded.x + 1 : rounded.x;
             var y = player.direction === MyGame.Direction.Up ? rounded.y - TILE_DISTANCE : player.direction === MyGame.Direction.Down ? rounded.y + TILE_DISTANCE : rounded.y;
-            if (MyGame.Utils.tileisClear(x, y, this.main)) {
+            var betweenY = player.direction === MyGame.Direction.Up ? rounded.y - 1 : player.direction === MyGame.Direction.Down ? rounded.y + 1 : rounded.y;
+            if (MyGame.Utils.tileisClear(x, y, this.main) && MyGame.Utils.tileisClear(betweenX, betweenY, this.main)) {
                 this.main.addItem(x, y, this.worldKey);
                 return 1;
             }
             return 0;
         };
+        Droppable.prototype.use = function (direction) {
+            return this.drop();
+        };
+        Droppable.prototype.update = function () { };
         return Droppable;
     }());
     MyGame.Droppable = Droppable;
     var Grodule = (function (_super) {
         __extends(Grodule, _super);
-        function Grodule(main, startPosition) {
-            var _this = _super.call(this, main, startPosition, MyGame.Assets.Sprites.Grodule.key) || this;
+        function Grodule(main, x, y) {
+            var _this = _super.call(this, main, MyGame.pof(x, y), MyGame.Assets.Sprites.Grodule.key) || this;
             _this.iconKey = MyGame.Assets.Images.GroduleIcon;
             return _this;
         }
         return Grodule;
     }(Droppable));
     MyGame.Grodule = Grodule;
+    var Plorpus = (function (_super) {
+        __extends(Plorpus, _super);
+        function Plorpus(main, x, y) {
+            var _this = _super.call(this, main, MyGame.pof(x, y), MyGame.Assets.Sprites.Plorpus.key) || this;
+            _this.iconKey = MyGame.Assets.Images.PlorpusIcon;
+            return _this;
+        }
+        return Plorpus;
+    }(Droppable));
+    MyGame.Plorpus = Plorpus;
+    var Airhorn = (function (_super) {
+        __extends(Airhorn, _super);
+        function Airhorn(main, x, y) {
+            var _this = _super.call(this, main, MyGame.pof(x, y), MyGame.Assets.Sprites.Airhorn.key) || this;
+            _this.iconKey = MyGame.Assets.Images.AirhornIcon;
+            _this.image = main.add.image(0, 0, _this.worldKey);
+            _this.image.animations.add("blow", MyGame.Utils.animationArray(1, 2), 10, true);
+            _this.image.visible = false;
+            return _this;
+        }
+        Airhorn.prototype.use = function (direction) {
+            var _this = this;
+            if (this.image.visible) {
+                return 0;
+            }
+            this.image.visible = true;
+            this.setPosition(this.main.player, direction);
+            this.main.sound.play(MyGame.Assets.Audio.Airhorn.key);
+            this.image.play("blow");
+            this.inUse = true;
+            this.main.time.events.add(1500, function () {
+                _this.image.visible = false;
+                _this.inUse = false;
+            });
+            this.main.time.events.start();
+            return 0;
+        };
+        Airhorn.prototype.update = function () {
+            this.setPosition(this.main.player, this.main.player.direction);
+        };
+        Airhorn.prototype.setPosition = function (player, direction) {
+            if (direction !== this.direction) {
+                this.xAdd = direction === MyGame.Direction.Right ? MyGame.TILE_WIDTH : 0;
+                this.yAdd = direction === MyGame.Direction.Down ? MyGame.TILE_HEIGHT : direction === MyGame.Direction.Up ? -MyGame.TILE_HEIGHT : 0;
+                this.image.scale.x = direction === MyGame.Direction.Left ? -1 : 1;
+            }
+            this.direction = direction;
+            this.image.position.setTo(player.x + this.xAdd, player.y + this.yAdd);
+        };
+        return Airhorn;
+    }(Droppable));
+    MyGame.Airhorn = Airhorn;
 })(MyGame || (MyGame = {}));
 var MyGame;
 (function (MyGame) {
-    MyGame.useItem = function (type, main, x, y, direction) {
-        switch (type) {
-            case MyGame.Crumbs.type:
-                return new MyGame.Crumbs(main, x, y, direction).use();
-            case MyGame.Assets.Sprites.Grodule.key:
-                return new MyGame.Grodule(main, MyGame.pof(x, y)).use();
-            default:
-                throw new Error("Item type " + type + " is invalid.");
+    var ItemManager = (function () {
+        function ItemManager() {
+            this.count = 0;
         }
-    };
+        ItemManager.prototype.getCount = function () {
+            return this.count;
+        };
+        ItemManager.prototype.changeItem = function (type, amount) {
+            this.count = amount;
+            this.currentType = type;
+            this.currentItem = null;
+        };
+        ItemManager.prototype.getItem = function (main, x, y, direction) {
+            if (this.count === 0) {
+                return null;
+            }
+            switch (this.currentType) {
+                case MyGame.Assets.Sprites.Airhorn.key:
+                    if (!this.currentItem) {
+                        this.currentItem = new MyGame.Airhorn(main, x, y);
+                    }
+                    break;
+                case MyGame.Crumbs.type:
+                    this.currentItem = new MyGame.Crumbs(main, x, y, direction);
+                    break;
+                case MyGame.Assets.Sprites.Grodule.key:
+                    this.currentItem = new MyGame.Grodule(main, x, y);
+                    break;
+                case MyGame.Assets.Sprites.Plorpus.key:
+                    this.currentItem = new MyGame.Plorpus(main, x, y);
+                    break;
+                default:
+                    throw new Error("Item type " + this.currentType + " is invalid.");
+            }
+            return this.currentItem;
+        };
+        ItemManager.prototype.useItem = function (main, x, y, direction) {
+            if (this.count === 0) {
+                return 0;
+            }
+            var amount = this.getItem(main, x, y, direction).use(direction);
+            this.count = Math.max(this.count - amount, 0);
+            return amount;
+        };
+        ItemManager.prototype.dropItems = function (main, x, y, direction) {
+            var item = this.getItem(main, x, y, direction);
+            if (item && item.drop() > 0) {
+                this.count = 0;
+                this.currentItem = null;
+            }
+        };
+        ItemManager.prototype.update = function () {
+            if (this.currentItem && this.currentItem.inUse) {
+                this.currentItem.update();
+            }
+        };
+        ItemManager.prototype.peekItem = function () {
+            return this.currentItem;
+        };
+        ItemManager.prototype.getCurrentType = function () {
+            return this.currentType;
+        };
+        return ItemManager;
+    }());
+    MyGame.ItemManager = ItemManager;
 })(MyGame || (MyGame = {}));
 var MyGame;
 (function (MyGame) {
@@ -4354,6 +6083,7 @@ var MyGame;
             };
             this.state = MyGame.ProjectileState.WAITING;
             this.main.groups.projectiles.push(this);
+            this.inUse = false;
         }
         Projectile.prototype.update = function () {
             switch (this.state) {
@@ -4370,13 +6100,16 @@ var MyGame;
                     this.remove();
             }
         };
-        Projectile.prototype.use = function () {
+        Projectile.prototype.drop = function () {
             MyGame.Utils.moveInDirection(this.sprite.body, this.direction, this.speed);
             if (this.animations.start) {
                 this.sprite.play(this.animations.start);
             }
             this.state = MyGame.ProjectileState.FLYING;
             return 1;
+        };
+        Projectile.prototype.use = function () {
+            return this.drop();
         };
         Projectile.prototype.fly = function () {
             if (this.sprite.position.distance(this.startPosition) > this.range) {
@@ -4398,14 +6131,14 @@ var MyGame;
     var Crumbs = (function (_super) {
         __extends(Crumbs, _super);
         function Crumbs(main, x, y, direction) {
-            var _this = _super.call(this, main, x, y, Crumbs.type, direction, 150, 3) || this;
+            var _this = _super.call(this, main, MyGame.Utils.roundToClosestTile(MyGame.pof(x, y)).x * MyGame.TILE_WIDTH, MyGame.Utils.roundToClosestTile(MyGame.pof(x, y)).y * MyGame.TILE_HEIGHT, Crumbs.type, direction, 150, 3) || this;
             _this.iconKey = MyGame.Assets.Images.CrumbsIcon;
             _this.sprite.animations.add("start", MyGame.Utils.animationArray(0, 3), 8, false);
             _this.animations.start = "start";
             _this.sprite.animations.add("end", MyGame.Utils.animationArray(4, 6), 2, false);
             _this.animations.end = "end";
             _this.main.bringGroupToTop(_this.main.groups.barriers.filter(function (b) {
-                return b instanceof MyGame.Tree || b instanceof MyGame.Bush || b instanceof MyGame.StoneWall;
+                return b instanceof MyGame.Tree || b instanceof MyGame.Bush || b instanceof MyGame.StoneWall || b instanceof MyGame.Button;
             }));
             _this.landed = false;
             _this.dissolved = false;
@@ -4426,7 +6159,7 @@ var MyGame;
             if (!this.landed) {
                 this.sprite.body.velocity.setTo(0, 0);
                 this.landed = true;
-                this.main.time.events.add(5000, this.dissolve, this);
+                this.main.time.events.add(10000, this.dissolve, this);
             }
         };
         Crumbs.type = MyGame.Assets.Sprites.Crumbs.key;

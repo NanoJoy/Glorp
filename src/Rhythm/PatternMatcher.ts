@@ -103,7 +103,7 @@ module MyGame {
             } else {
                 this.noteDisplays[position].updateFrame(keyCode, isBeat);
             }
-            if (!this.game.enemy.noteComparer(this.currentPattern, keyCode, this.pressCount, position)) {
+            if (this.game.enemy.noteComparer && !this.game.enemy.noteComparer(this.currentPattern, keyCode, this.pressCount, position)) {
                 this.inputAllowed = false;
                 this.noteDisplays[position].tint = 0xFF0000;
                 return;

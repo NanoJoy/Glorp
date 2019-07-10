@@ -100,7 +100,10 @@ module MyGame {
                 "If you are unlucky enough to wake a Blumpus, you will have to dance with it. Importantly, you must use the opposite directions that the Blumpus uses. For example, if the Blumpus goes " + 
                 "UP, you must press DOWN on the corresponding beat, or if the Blumpus goes LEFT, you must press RIGHT on the corresponding beat.");
             case Texts.PARK_BOOK:
-                return getBookText("yup yup yup yup");
+                return getBookText("Walking through the park here I encountered a new kind of creature I've never seen before. I couldn't quite figure out its rhythms and how to subdue it, so I was left with some bad shocks.",
+                "I also saw some motion over the hedges, and I believe there could be many more of them. Nevertheless I have to venture further in to try to turn on the recording technology that I set up with the professor yesterday.",
+                "In spite of my conscience I feel driven to pursue the excitement of science and discovery over my own well being. Oh well, I hope R & S will understand.",
+                "I am leaving this here. If you find this take it as a warning to not go any further than this unless you are as silly as me.");
             default:
                 throw new Error(`Cannot find dialog for key '${key}'.`);
         }

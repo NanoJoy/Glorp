@@ -94,9 +94,56 @@ module MyGame {
             }
             
             if (this.positions.indexOf(beatPos) > -1) {
-                game.enemyDisplay.playAnim("spark", [1, 2, 0], 12);
+                game.enemyDisplay.playAnim("spark", [2, 1, 0], 12);
             }
             this.noteCount += 1;
+        }
+    }
+
+    export class Foller extends Croller {
+        constructor(main: Main, position: Phaser.Point, movementScript: MovementScript) {
+            super(main, position);
+            this.movementManager = new MovementManager(main.game, movementScript, this);
+        }
+
+        update() {
+            
+        }
+
+        seesPlayer(): boolean {
+            let playerPos = this.main.player.position;
+            let pos = this.sprite.position;
+            let line = new Phaser.Line(pos.x, pos.y, playerPos.x, playerPos.y);
+            let slope = (playerPos.y - pos.y) / (playerPos.x - pos.x);
+            let startQuarter = 0;
+            switch (this.direction) {
+                case Direction.Left:
+                    startQuarter = 5;
+                    break;
+                case Direction.Right:
+                    startQuarter = 1;
+                    break;
+                case Direction.Down:
+                    startQuarter = 3;
+                    break;
+                case Direction.Up:
+                    startQuarter = -1;
+                    break;
+            }
+            let angle = line.angle > 7 * Math.PI / 4 ? line.angle - 2 * Math.PI : line.angle;
+            if (angle < startQuarter * Math.PI / 4 || angle > (startQuarter + 2) * Math.PI / 4) {
+                return false;
+            }
+            let playerCollides = this.main.groups.barriers.filter(b => b.playerCollides);
+            let switchDir = playerPos.x > pos.x ? 1 : -1;
+            for (let i = 0; i < Math.abs(playerPos.x - playerPos.y); i++) {
+                let checkX = switchDir * i;
+                let checkY = Math.floor(switchDir * i * slope);
+                if (playerCollides.some(b => b.position.equalsXY(checkX, checkY))) {
+                    return false;
+                }
+            }
+            return true;
         }
     }
 }
