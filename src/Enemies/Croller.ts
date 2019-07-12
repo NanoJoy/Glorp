@@ -100,14 +100,74 @@ module MyGame {
         }
     }
 
-    export class Foller extends Croller {
+    export class Foller extends Enemy implements Moveable {
+        sprite: Phaser.Sprite;
+        direction: Direction;
+        speed = 200;
+        main: Main;
+        position: Phaser.Point;
+        movementManager: IMovementManager;
+        blockers: Barrier[];
+        battleSpriteKey = Assets.Sprites.CrollerBattle.key;
+        music = Assets.Audio.Blumpus;
+        minNumNotes = 4;
+        maxNumNotes = 4;
+        patternLength = 8;
+        beatLength = 4;
+        tempo = 150;
+        hitPoints = 300;
+        health = 300;
+        name: "Croller";
+
+        private noteCount = 8;
+        private positions: number[];
+
+        afterDeath(main: Main): void { }
+
         constructor(main: Main, position: Phaser.Point, movementScript: MovementScript) {
-            super(main, position);
+            super();
+            this.main = main;
+            this.position = position;
+            this.sprite = main.add.sprite(position.x * TILE_WIDTH, position.y * TILE_HEIGHT, Assets.Sprites.Foller.key);
+            main.physics.arcade.enableBody(this.sprite);
+            this.worldSprite = this.sprite;
+
+            this.sprite.animations.add("walk_back", [0, 1], 5);
+            this.sprite.animations.add("walk_forward", [2, 3], 5);
+            this.sprite.animations.add("walk_right", [3, 4], 5);
+            this.sprite.animations.add("walk_left", [5, 6], 5);
             this.movementManager = new MovementManager(main.game, movementScript, this);
         }
 
+        onStageBuilt() {
+            (this.movementManager as MovementManager).start();
+        }
+    
+        calculateDamage(pattern: PatternNote[], notePresses: NotePress[]): number {
+            if (notePresses.length < this.minNumNotes) {
+                return 0;
+            }
+            return this.health / 4;
+        }
+
+        getAttackPoints(pattern: PatternNote[]): number {
+            return 34;
+        }
+
+        die(): void {
+            this.alive = false;
+            WorldManager.getInstance().changeLayout(StateTransfer.getInstance().island, this.position, "C");
+        }
+
+        noteComparer(pattern: Phaser.KeyCode[], pressed: number, pressedCount: number, beatPos: number): boolean {
+            let orderedPositions = this.positions.sort();
+            return orderedPositions[pressedCount] === beatPos && PatternUtil.getNthNote(pattern, pressedCount) === pressed;
+        }
+
         update() {
-            
+            if (this.seesPlayer()) {
+
+            }
         }
 
         seesPlayer(): boolean {
@@ -118,28 +178,30 @@ module MyGame {
             let startQuarter = 0;
             switch (this.direction) {
                 case Direction.Left:
-                    startQuarter = 5;
-                    break;
-                case Direction.Right:
-                    startQuarter = 1;
-                    break;
-                case Direction.Down:
                     startQuarter = 3;
                     break;
-                case Direction.Up:
+                case Direction.Right:
                     startQuarter = -1;
+                    break;
+                case Direction.Down:
+                    startQuarter = 1;
+                    break;
+                case Direction.Up:
+                    startQuarter = 5;
                     break;
             }
             let angle = line.angle > 7 * Math.PI / 4 ? line.angle - 2 * Math.PI : line.angle;
             if (angle < startQuarter * Math.PI / 4 || angle > (startQuarter + 2) * Math.PI / 4) {
                 return false;
             }
+            let roundedPos = Utils.roundToClosestTile(pos);
+            let roundedPlayerPos = Utils.roundToClosestTile(playerPos);
             let playerCollides = this.main.groups.barriers.filter(b => b.playerCollides);
             let switchDir = playerPos.x > pos.x ? 1 : -1;
-            for (let i = 0; i < Math.abs(playerPos.x - playerPos.y); i++) {
-                let checkX = switchDir * i;
-                let checkY = Math.floor(switchDir * i * slope);
-                if (playerCollides.some(b => b.position.equalsXY(checkX, checkY))) {
+            for (let i = 0; i < Math.abs(roundedPlayerPos.x - roundedPos.x); i++) {
+                let checkX = switchDir * i + roundedPos.x;
+                let checkY = Math.floor(switchDir * i * slope) + roundedPos.y;
+                if (playerCollides.some(b => b.position.x === checkX && b.position.y === checkY)) {
                     return false;
                 }
             }

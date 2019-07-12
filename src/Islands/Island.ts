@@ -53,7 +53,7 @@ module MyGame {
         action: (main: Main, button: Button) => void;
         direction: Direction;
         backgroundType: IslandType;
-        resetTime? = -1;
+        resetTime?= -1;
     }
 
     export class MapCustomBarrier extends StringPos {
@@ -315,6 +315,10 @@ module MyGame {
                     let croller = new Croller(main, pcop(enemy.position));
                     croller.afterDeath = enemy.afterDeath;
                     return croller;
+                case Assets.Sprites.Foller.key:
+                    let foller = new Foller(main, pcop(enemy.position), Utils.makeMovementScript(enemy.position, enemy.script));
+                    foller.afterDeath = enemy.afterDeath;
+                    return foller;
             }
             throw new Error(`${enemy.type} is not a valid enemy type.`);
         }

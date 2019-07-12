@@ -18,7 +18,7 @@ module MyGame {
                 "wvevvvvvvvvvvev*       *v#######   w",
                 "wvvvvvvvvvvvvvv*   #  n*vv         w",
                 "w           wwwwwwwwwwwwwwwwwwwwwwww",
-                "w           w                      w",
+                "w   e       w                      w",
                 "w  wwwwwww  w                      w",
                 "w           w                      w",
                 "w           w                      w",
@@ -51,7 +51,8 @@ module MyGame {
                 { type: Assets.Sprites.Croller.key, position: pof(2, 2), script: null },
                 { type: Assets.Sprites.Croller.key, position: pof(15, 2), script: null },
                 { type: Assets.Sprites.Croller.key, position: pof(2, 9), script: null },
-                { type: Assets.Sprites.Croller.key, position: pof(13, 9), script: null }
+                { type: Assets.Sprites.Croller.key, position: pof(13, 9), script: null },
+                { type: Assets.Sprites.Croller.key, position: pof(4, 12), script: "rrrrrrddlllllllluur"}
             ])
             .setOutsideBoundsPortals([
                 { side: Direction.Right, start: 0, end: 4, link: Islands.BLISH, playerStart: pof(1, 22) },
