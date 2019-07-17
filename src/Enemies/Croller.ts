@@ -58,7 +58,7 @@ module MyGame {
             this.movementManager = new TargetMover(this, this.blockers);
             (this.movementManager as TargetMover).followTarget(this.main.player);
         }
-    
+
         calculateDamage(pattern: PatternNote[], notePresses: NotePress[]): number {
             if (notePresses.length < this.minNumNotes) {
                 return 0;
@@ -92,7 +92,7 @@ module MyGame {
                 }
                 this.noteCount = 0;
             }
-            
+
             if (this.positions.indexOf(beatPos) > -1) {
                 game.enemyDisplay.playAnim("spark", [2, 1, 0], 12);
             }
@@ -103,7 +103,7 @@ module MyGame {
     export class Foller extends Enemy implements Moveable {
         sprite: Phaser.Sprite;
         direction: Direction;
-        speed = 200;
+        speed = 600;
         main: Main;
         position: Phaser.Point;
         movementManager: IMovementManager;
@@ -118,6 +118,9 @@ module MyGame {
         hitPoints = 300;
         health = 300;
         name: "Croller";
+        chasingPlayer = false;
+        targetMover: TargetMover;
+        leftOffPosition: Phaser.Sprite;
 
         private noteCount = 8;
         private positions: number[];
@@ -132,17 +135,20 @@ module MyGame {
             main.physics.arcade.enableBody(this.sprite);
             this.worldSprite = this.sprite;
 
-            this.sprite.animations.add("walk_back", [0, 1], 5);
-            this.sprite.animations.add("walk_forward", [2, 3], 5);
-            this.sprite.animations.add("walk_right", [3, 4], 5);
-            this.sprite.animations.add("walk_left", [5, 6], 5);
+            this.sprite.animations.add("walk_back", [0, 1], 5, true);
+            this.sprite.animations.add("walk_forward", [2, 3], 5, true);
+            this.sprite.animations.add("walk_right", [4, 5], 5, true);
+            this.sprite.animations.add("walk_left", [6, 7], 5, true);
             this.movementManager = new MovementManager(main.game, movementScript, this);
+            this.leftOffPosition = new Phaser.Sprite(main.game, -100, -100, "blah");
+            this.leftOffPosition.visible = false;
         }
 
         onStageBuilt() {
+            this.targetMover = new TargetMover(this, this.main.groups.barriers.filter(b => b.playerCollides));
             (this.movementManager as MovementManager).start();
         }
-    
+
         calculateDamage(pattern: PatternNote[], notePresses: NotePress[]): number {
             if (notePresses.length < this.minNumNotes) {
                 return 0;
@@ -165,8 +171,34 @@ module MyGame {
         }
 
         update() {
+            let animName = "walk_" + Utils.getDirectionName(this.direction);
+            if (this.sprite.animations.currentAnim.name !== animName) {
+                this.sprite.play(animName, 5, true);
+            }
             if (this.seesPlayer()) {
-
+                if (!this.chasingPlayer) {
+                    if (this.leftOffPosition.position.equals(pof(-100, -100))) {
+                        this.leftOffPosition.position.setTo(this.sprite.position.x, this.sprite.position.y);
+                    }
+                    this.movementManager.pause();
+                    this.speed = 200;
+                    this.targetMover.followTarget(this.main.player);
+                    this.chasingPlayer = true;
+                }
+                this.targetMover.update();
+            } else {
+                if (this.chasingPlayer) {
+                    this.chasingPlayer = false;
+                    this.targetMover.unfollowTarget();
+                    this.targetMover.followTarget(this.leftOffPosition);
+                    this.speed = 600;
+                }
+                this.targetMover.update();
+                this.main.physics.arcade.overlap(this.sprite, this.leftOffPosition, (sp1: Phaser.Sprite, sp2: Phaser.Sprite) => {
+                    this.targetMover.unfollowTarget();
+                    this.leftOffPosition.position.setTo(-100, -100);
+                    this.movementManager.resume();
+                }, (sp1: Phaser.Sprite, sp2: Phaser.Sprite) => { return (this.movementManager as MovementManager).paused; });
             }
         }
 
@@ -191,7 +223,7 @@ module MyGame {
                     break;
             }
             let angle = line.angle > 7 * Math.PI / 4 ? line.angle - 2 * Math.PI : line.angle;
-            if (angle < startQuarter * Math.PI / 4 || angle > (startQuarter + 2) * Math.PI / 4) {
+            if (!this.chasingPlayer && angle < startQuarter * Math.PI / 4 || angle > (startQuarter + 2) * Math.PI / 4) {
                 return false;
             }
             let roundedPos = Utils.roundToClosestTile(pos);

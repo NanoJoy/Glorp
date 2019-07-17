@@ -7,7 +7,7 @@ module MyGame {
     export const DEVELOPER_MODE = true;
     export const START_ISLAND = 10;
     export const CLEAR_SAVE = true;
-    export const PLAYER_START_X = 4;
+    export const PLAYER_START_X = 6;
     export const PLAYER_START_Y = 14;
 
     export var States = {
