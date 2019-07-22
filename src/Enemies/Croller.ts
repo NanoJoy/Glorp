@@ -2,18 +2,18 @@ module MyGame {
     export class Croller extends Enemy implements Moveable {
         sprite: Phaser.Sprite;
         direction: Direction;
-        speed = 200;
+        speed = 125;
         main: Main;
         position: Phaser.Point;
         movementManager: IMovementManager;
         blockers: Barrier[];
         battleSpriteKey = Assets.Sprites.CrollerBattle.key;
-        music = Assets.Audio.Blumpus;
+        music = Assets.Audio.Croller;
         minNumNotes = 4;
         maxNumNotes = 4;
         patternLength = 8;
         beatLength = 4;
-        tempo = 150;
+        tempo = 125;
         hitPoints = 300;
         health = 300;
         name: "Croller";
@@ -141,6 +141,7 @@ module MyGame {
             this.sprite.animations.add("walk_left", [6, 7], 5, true);
             this.movementManager = new MovementManager(main.game, movementScript, this);
             this.leftOffPosition = new Phaser.Sprite(main.game, -100, -100, "blah");
+            main.physics.arcade.enableBody(this.leftOffPosition);
             this.leftOffPosition.visible = false;
         }
 
@@ -190,15 +191,16 @@ module MyGame {
                 if (this.chasingPlayer) {
                     this.chasingPlayer = false;
                     this.targetMover.unfollowTarget();
+                    this.speed = 150;
                     this.targetMover.followTarget(this.leftOffPosition);
-                    this.speed = 600;
                 }
                 this.targetMover.update();
-                this.main.physics.arcade.overlap(this.sprite, this.leftOffPosition, (sp1: Phaser.Sprite, sp2: Phaser.Sprite) => {
+                if (this.sprite.body.velocity.equals(pof(0, 0))) {
+                    this.speed = 600;
                     this.targetMover.unfollowTarget();
                     this.leftOffPosition.position.setTo(-100, -100);
                     this.movementManager.resume();
-                }, (sp1: Phaser.Sprite, sp2: Phaser.Sprite) => { return (this.movementManager as MovementManager).paused; });
+                }
             }
         }
 

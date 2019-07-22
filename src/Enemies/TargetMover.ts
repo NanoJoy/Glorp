@@ -31,12 +31,16 @@ module MyGame {
                 && !this.blockerPos.some(p => p.x === roundedSubjectPos.x && this.betweenThings(p.y, roundedSubjectPos.y, roundedTargetPos.y))) {
 
                 if (roundedSubjectPos.x !== roundedTargetPos.x) {
-                    let multiplier = roundedTargetPos.x > roundedSubjectPos.x ? 1 : -1;
+                    let toTheRight = roundedTargetPos.x > roundedSubjectPos.x;
+                    let multiplier = toTheRight ? 1 : -1;
+                    this.subject.direction = toTheRight ? Direction.Right : Direction.Left;
                     this.getBody().velocity.setTo(this.subject.speed * multiplier, 0);
                     return;
                 }
                 if (roundedSubjectPos.y !== roundedTargetPos.y) {
-                    let multiplier = roundedTargetPos.y > roundedSubjectPos.y ? 1 : -1;
+                    let goingBack = roundedTargetPos.y > roundedSubjectPos.y;
+                    let multiplier = goingBack ? 1 : -1;
+                    this.subject.direction = goingBack ? Direction.Down : Direction.Up;
                     this.getBody().velocity.setTo(0, this.subject.speed * multiplier);
                     return;
                 }

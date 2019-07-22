@@ -6,7 +6,7 @@ module MyGame {
 
     export const DEVELOPER_MODE = true;
     export const START_ISLAND = 10;
-    export const CLEAR_SAVE = true;
+    export const CLEAR_SAVE = false;
     export const PLAYER_START_X = 6;
     export const PLAYER_START_Y = 14;
 
@@ -155,6 +155,7 @@ module MyGame {
         Beep = new AudioAsset("beep");
         Blumpus = new AudioAsset("blumpus", 8);
         Collide = new AudioAsset("collide");
+        Croller = new AudioAsset("croller", 8);
         DeathJingle = new AudioAsset("death_jingle");
         Doodle = new AudioAsset("doodle");
         JamBot = new AudioAsset("jambot", 8);
