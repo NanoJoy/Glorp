@@ -7,8 +7,8 @@ module MyGame {
     export const DEVELOPER_MODE = true;
     export const START_ISLAND = 10;
     export const CLEAR_SAVE = false;
-    export const PLAYER_START_X = 6;
-    export const PLAYER_START_Y = 14;
+    export const PLAYER_START_X = 33;
+    export const PLAYER_START_Y = 1;
 
     export var States = {
         Boot: "Boot",
@@ -90,6 +90,7 @@ module MyGame {
         JamBotWorld = new SpriteAsset("jambot_world");
         JamBugWorld = new SpriteAsset("jambug_world");
         Monster = new SpriteAsset("monster", 40, 46);
+        NoteStatus = new SpriteAsset("note_status", 24, 24);
         OldMan = new SpriteAsset("old_man");
         Player = new SpriteAsset("player");
         PlayerBattle = new SpriteAsset("player_battle", 136, 136);
@@ -108,6 +109,7 @@ module MyGame {
     class ImageAssets {
         [key: string]: string;
         AirhornIcon = "airhorn_icon";
+        Banner = "banner";
         Bar = "bar";
         BlackScreen = "black_screen";
         Book = "book";
@@ -155,7 +157,7 @@ module MyGame {
         Beep = new AudioAsset("beep");
         Blumpus = new AudioAsset("blumpus", 8);
         Collide = new AudioAsset("collide");
-        Croller = new AudioAsset("croller", 8);
+        Croller = new AudioAsset("croller", 12);
         DeathJingle = new AudioAsset("death_jingle");
         Doodle = new AudioAsset("doodle");
         JamBot = new AudioAsset("jambot", 8);

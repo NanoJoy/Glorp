@@ -10,6 +10,7 @@ module MyGame {
         enemy: Enemy;
         private music: Phaser.Sound;
         private passedMeasures: number;
+        private middleText: MiddleText;
         playerDisplay: CharacterDisplay;
         enemyDisplay: CharacterDisplay;
 
@@ -42,37 +43,27 @@ module MyGame {
             this.patternChecker = new PatternMatcher(this, this.enemy);
             this.passedMeasures = -2;
             this.music = this.sound.add(this.enemy.music.key);
+            this.middleText = new MiddleText(this.game, this.enemy.tempo);
             Utils.fadeInFromBlack(this, 500, this.startCountdown, this);
         }
 
         startCountdown() {
             this.music.play(null, 0);
             let count = this.enemy.beatLength === 2 ? 3 : this.enemy.beatLength - 1;
-            let display = this.add.bitmapText(0, 22, Assets.FontName, count.toString(), Assets.FontSize);
-            this.updateCount(count, display);
             let millis = Utils.bpmToMilliseconds(this.enemy.tempo);
             let introLength = ((count + 1) * millis) / 1000
             this.music.addMarker("hi", introLength, this.music.totalDuration - introLength);
-            for (let i = 0; i <= count; i++) {
-                this.time.events.add(millis * (count - i), () => {
-                    this.updateCount(i, display);
-                    if (i === 3) {
-                        this.playerDisplay.slideIn(true, millis);
-                    } else if (i === 2) {
-                        this.enemyDisplay.slideIn(false, millis);
-                    }
-                }, this);
-            }
+            this.time.events.add(millis * (count - 2), () => {
+                this.playerDisplay.slideIn(true, millis);
+            });
+            this.time.events.add(millis * (count - 1), () => {
+                this.enemyDisplay.slideIn(false, millis);
+            });
             this.time.events.add(millis * (count + 1), () => {
                 this.startBattle();
-                display.visible = false;
             }, this);
+            this.middleText.startCountdown(count, "WATCH!!!")
             this.time.events.start();
-        }
-
-        updateCount(count: number, display: Phaser.BitmapText) {
-            display.text = count === 0 ? "GO!!!" : count.toString();
-            Utils.centerInScreen(display);
         }
 
         startBattle() {
@@ -83,6 +74,10 @@ module MyGame {
 
         private startChecker() {
             this.patternChecker.begin(this.currentPattern);
+            let millis = Utils.bpmToMilliseconds(this.enemy.tempo);
+            this.time.events.add((this.enemy.patternLength - 1) * millis, () => {
+                this.middleText.showTextForOneBeat("WATCH!!!");
+            }, this);
         }
 
         private startPattern() {
@@ -98,6 +93,10 @@ module MyGame {
             this.patternChecker.reset();
             this.currentPattern = this.patternDisplayer.display();
             this.time.events.add((this.enemy.patternLength - 1) * this.patternDisplayer.tempo, this.startChecker, this);
+            let millis = Utils.bpmToMilliseconds(this.enemy.tempo);
+            this.time.events.add((this.enemy.patternLength - 1) * millis, () => {
+                this.middleText.showTextForOneBeat("GO!!!");
+            }, this);
         }
 
         private afterRound() {
@@ -236,6 +235,48 @@ module MyGame {
             bmd.ctx.fillStyle = "#606060";
             bmd.ctx.fill();
             this.healthBar = this.battle.add.sprite(this.healthBarContainer.x + 2, this.healthBarContainer.y + 2, bmd);
+        }
+    }
+
+    class MiddleText {
+        private group: Phaser.Group;
+        private text: Phaser.BitmapText;
+        private millis: number;
+
+        constructor(private game: Phaser.Game, tempo: number) {
+            this.millis = Utils.bpmToMilliseconds(tempo);
+            this.group = this.game.add.group(this.game.world, "middletext", true);
+            this.text = this.game.add.bitmapText(0, 0, Assets.FontName, "", Assets.FontSize);
+            this.text.tint = 0xff0000;
+            this.group.add(this.text);
+            let banner = this.game.add.sprite(0, 0, Assets.Images.Banner);
+            Utils.centerImage(banner);
+            this.group.add(banner);
+            this.group.bringToTop(this.text);
+        }
+
+        startCountdown(count: number, lastWord: string) {
+            for (let i = 0; i <= count; i++) {
+                this.game.time.events.add(this.millis * (count - i), () => {
+                    this.updateContent(i === 0 ? lastWord : i.toString());
+                }, this);
+            }
+            this.game.time.events.add(this.millis * (count + 1), () => {
+                this.group.visible = false;
+            }, this);
+        }
+
+        showTextForOneBeat(content: string) {
+            this.updateContent(content);
+            this.game.time.events.add(this.millis, () => {
+                this.group.visible = false;
+            }, this);
+        }
+
+        private updateContent(content: string) {
+            this.group.visible = true;
+            this.text.text = content;
+            Utils.centerInScreen(this.text);
         }
     }
 }
