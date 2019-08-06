@@ -30,6 +30,7 @@ module MyGame {
         noteDisplays: NoteDisplay[];
         notesPressed: NotePress[];
         pressCount: number;
+        private noteStatusManager: NoteStatusManager;
 
         constructor(game: Battle, enemy: Enemy) {
             this.game = game;
@@ -39,6 +40,7 @@ module MyGame {
             this.active = false;
             this.inputAllowed = false;
             this.numMils = enemy.patternLength * this.tempo;
+            this.noteStatusManager = new NoteStatusManager(game);
         }
 
         begin(pattern: PatternNote[]) {
@@ -106,13 +108,13 @@ module MyGame {
             if (this.game.enemy.noteComparer && !this.game.enemy.noteComparer(this.currentPattern, keyCode, this.pressCount, position)) {
                 this.inputAllowed = false;
                 this.noteDisplays[position].tint = 0xFF0000;
+                this.noteStatusManager.showStatus(position, NoteStatus.MISS);
                 return;
             }
             this.getNextNote();
 
             let distance = Math.round(Math.abs(timePressed - (position * this.tempo + this.startTime)));
-            distance = distance < 10 ? 0 : distance;
-            this.noteDisplays[position].alpha = (this.tempo / 2 - distance) / (this.tempo / 2);
+            distance = distance < this.tempo / 8 ? 0 : distance;
             this.notesPressed.push({note: keyCode, position: position, distance: distance});
             this.pressCount += 1;
             
@@ -141,6 +143,8 @@ module MyGame {
                     this.game.playerDisplay.pressK();
                     this.game.inputs.K.onUp.add(this.game.playerDisplay.reset, this.game.playerDisplay);
             }
+
+            this.noteStatusManager.showStatus(position, distance === 0 ? NoteStatus.GOOD : NoteStatus.OK);
         }
 
         private getFirstNote() {

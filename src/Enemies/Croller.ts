@@ -140,7 +140,7 @@ module MyGame {
             this.sprite.animations.add("walk_right", [4, 5], 5, true);
             this.sprite.animations.add("walk_left", [6, 7], 5, true);
             this.movementManager = new MovementManager(main.game, movementScript, this);
-            this.leftOffPosition = new Phaser.Sprite(main.game, -100, -100, "blah");
+            this.leftOffPosition = new Phaser.Sprite(main.game, -100, -100, null);
             main.physics.arcade.enableBody(this.leftOffPosition);
             this.leftOffPosition.visible = false;
         }

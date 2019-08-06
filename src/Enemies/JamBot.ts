@@ -20,8 +20,6 @@ module MyGame {
         transferPosition: Phaser.Point;
         afterDeath: (main: Main) => void;
         specificUpdate: () => void;
-        calculateDamage: (pattern: PatternNote[], notePresses: NotePress[]) => number;
-        noteComparer = null as (pattern: Phaser.KeyCode[], pressed: number, pressedCount: number) => boolean;
 
         constructor(main: Main, position: Phaser.Point, movementScript: MovementScript, hitPoints: number, worldSprite: string) {
             super();
@@ -83,25 +81,32 @@ module MyGame {
             this.hitPoints = 200;
             this.speed = 1000;
 
-            this.calculateDamage = (pattern: PatternNote[], notePresses: NotePress[]) => {
-                if (pattern.length !== notePresses.length) {
+            
+        }
+        
+        calculateDamage(pattern: PatternNote[], notePresses: NotePress[]): number {
+            if (pattern.length !== notePresses.length) {
+                return 0;
+            }
+            let sortedPattern = pattern.sort(function (a, b) { return a.position - b.position });
+            let sortedPresses = notePresses.sort(function (a, b) { return a.position - b.position });
+            let damage = 0;
+            for (let i = 0; i < sortedPattern.length; i++) {
+                if (sortedPattern[i].key !== sortedPresses[i].note) {
                     return 0;
                 }
-                let sortedPattern = pattern.sort(function (a, b) { return a.position - b.position });
-                let sortedPresses = notePresses.sort(function (a, b) { return a.position - b.position });
-                let damage = 0;
-                for (let i = 0; i < sortedPattern.length; i++) {
-                    if (sortedPattern[i].key !== sortedPresses[i].note) {
-                        return 0;
-                    }
-                    let amount = Math.max(Math.round((500 - sortedPresses[i].distance) / 60), 0);
-                    if (sortedPattern[i].position === sortedPresses[i].position) {
-                        amount = Math.floor(amount * 2);
-                    }
-                    damage += amount;
+                let amount = Math.max(Math.round((500 - sortedPresses[i].distance) / 60), 0);
+                if (sortedPattern[i].position === sortedPresses[i].position) {
+                    amount = Math.floor(amount * 2);
                 }
-                return damage;
+                damage += amount;
             }
+            return damage;
+        }
+
+        noteComparer(pattern: Phaser.KeyCode[], pressed: number, pressedCount: number, beatPos: number): boolean {
+            let notes = pattern.filter(n => n);
+            return notes[pressedCount] === pressed;
         }
     }
 
@@ -132,22 +137,27 @@ module MyGame {
                     this.sprite.rotation = Math.PI * 0.5;
                 }
             }
+        }
 
-            this.calculateDamage = (pattern: PatternNote[], notePresses: NotePress[]) => {
-                if (pattern.length !== notePresses.length) {
+        calculateDamage(pattern: PatternNote[], notePresses: NotePress[]): number {
+            if (pattern.length !== notePresses.length) {
+                return 0;
+            }
+            let sortedPattern = pattern.sort(function (a, b) { return a.position - b.position });
+            let sortedPresses = notePresses.sort(function (a, b) { return a.position - b.position });
+            let damage = 0;
+            for (let i = 0; i < sortedPattern.length; i++) {
+                if (sortedPattern[i].key !== sortedPresses[i].note || sortedPattern[i].position !== sortedPresses[i].position) {
                     return 0;
                 }
-                let sortedPattern = pattern.sort(function (a, b) { return a.position - b.position });
-                let sortedPresses = notePresses.sort(function (a, b) { return a.position - b.position });
-                let damage = 0;
-                for (let i = 0; i < sortedPattern.length; i++) {
-                    if (sortedPattern[i].key !== sortedPresses[i].note || sortedPattern[i].position !== sortedPresses[i].position) {
-                        return 0;
-                    }
-                    damage += Math.round((500 - sortedPresses[i].distance) / 33);
-                }
-                return damage;
+                damage += Math.round((500 - sortedPresses[i].distance) / 33);
             }
+            return damage;
+        }
+
+        noteComparer(pattern: Phaser.KeyCode[], pressed: number, pressedCount: number, beatPos: number): boolean {
+            let notes = pattern.filter(n => n);
+            return notes[pressedCount] === pressed;
         }
     }
 }
