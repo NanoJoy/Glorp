@@ -7,31 +7,17 @@ module MyGame {
     }
 
     class MainGroups {
-        barriers: Barrier[];
-        creatures: Creature[];
-        enemies: Enemy[];
-        grounds: Ground[];
-        houses: House[];
-        npcs: NPC[];
-        portals: Portal[];
-        projectiles: Projectile[];
-        signs: Sign[];
-        frontOfPlayer: Entity[];
-        buttons: Button[];
-
-        constructor() {
-            this.barriers = [];
-            this.creatures = [];
-            this.enemies = [];
-            this.grounds = [];
-            this.houses = [];
-            this.npcs = [];
-            this.portals = [];
-            this.projectiles = [];
-            this.signs = [];
-            this.frontOfPlayer = [];
-            this.buttons = [];
-        }
+        barriers: Barrier[] = [];
+        creatures: Creature[] = [];
+        enemies: Enemy[] = [];
+        grounds: Ground[] = [];
+        houses: House[] = [];
+        npcs: NPC[] = [];
+        portals: Portal[] = [];
+        projectiles: Projectile[] = [];
+        signs: Sign[] = [];
+        frontOfPlayer: Entity[] = [];
+        buttons: Button[] = [];
     }
 
     export class Main extends Phaser.State {
@@ -146,6 +132,9 @@ module MyGame {
                         case "?":
                             let mapButton = this.getThingAtPosition(island.buttons, x, y, "button") as MapButton;
                             this.groups.buttons.push(new Button(this, x, y, mapButton.direction, mapButton.action, mapButton.backgroundType, mapButton.resetTime));
+                            break;
+                        case "a":
+                            this.groups.barriers.push(new Bottle(this, pof(x, y)));
                             break;
                         case "b":
                             this.groups.barriers.push(new Blackness(this, pof(x, y)));

@@ -18,7 +18,6 @@ module MyGame {
     }
 
     export class PauseMenu implements IPauseMenu {
-        private main: Main;
         private background: Phaser.Image;
         private pointer: Phaser.Image;
         private options: Option[];
@@ -26,8 +25,7 @@ module MyGame {
         private infoText: Phaser.BitmapText;
         private cursor: number;
 
-        constructor(main: Main) {
-            this.main = main;
+        constructor(private main: Main) {
             this.background = this.main.add.image(main.camera.x, main.camera.y, Assets.Images.MenuBackground);
             this.background.fixedToCamera = true;
             this.pointer = this.main.add.image(main.camera.x + LEFT_PADDING, main.camera.y, Assets.Sprites.Arrow.key);
@@ -52,6 +50,7 @@ module MyGame {
         }
 
         changeSelection(key: Phaser.Key) {
+            this.main.sound.play(Assets.Audio.Beep.key);
             this.infoText.text = "";
             switch (key.keyCode) {
                 case Phaser.KeyCode.W:
@@ -73,6 +72,7 @@ module MyGame {
         }
 
         select() {
+            this.main.sound.play(Assets.Audio.Beep.key);
             switch (this.options[this.cursor].text) {
                 case "Exit":
                     this.exit();

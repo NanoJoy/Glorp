@@ -20,6 +20,10 @@ module MyGame {
             this.sound.boot();
             if (DEVELOPER_MODE) {
                 this.inputs.spacebar.onUp.add(this.enemyDeath, this);
+                this.inputs.shift.onUp.add(() => {
+                    this.playerHealth = 0;
+                    this.afterRound();
+                }, this);
             }
 
             this.time.reset();
@@ -247,9 +251,9 @@ module MyGame {
             this.millis = Utils.bpmToMilliseconds(tempo);
             this.group = this.game.add.group(this.game.world, "middletext", true);
             this.text = this.game.add.bitmapText(0, 0, Assets.FontName, "", Assets.FontSize);
-            this.text.tint = 0xff0000;
             this.group.add(this.text);
             let banner = this.game.add.sprite(0, 0, Assets.Images.Banner);
+            banner.alpha = 0.3;
             Utils.centerImage(banner);
             this.group.add(banner);
             this.group.bringToTop(this.text);

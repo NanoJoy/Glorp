@@ -21,7 +21,7 @@ module MyGame {
                 "w              * * ##  *v##v* ##   w",
                 "wvvv        vvv* *  #  *v#######   w",
                 "wvevvvvvvvvvvev*       *v#######   w",
-                "wvvvvvvvvvvvvvv*   #  n*vv         w",
+                "wvvvvvvvvvvvvvv*a  #  n*vv         w",
                 "w           wwwwwwwwwwwwwwwwwwwwwwww",
                 "w   e       w                      w",
                 "w  wwwwwww  w                      w",

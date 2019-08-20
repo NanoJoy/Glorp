@@ -44,7 +44,6 @@ module MyGame {
                 }
             });
             stateTransfer.health = main.player.health;
-            stateTransfer.flags["USE_SAVE"] = true;
             main.stopPlayer();
             Utils.fadeToBlack(main, 500, States.Battle);
         }

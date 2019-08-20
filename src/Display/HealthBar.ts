@@ -47,17 +47,18 @@ module MyGame {
                 return;
             }
             if (this.bar) {
-                this.bar.destroy;
-            }
+                this.bar.destroy();
+            } 
             let width = Math.round((health / 100) * ((this.container.width - 4) / 2)) * 2;
             let bmd = this.main.add.bitmapData(width, this.container.height - 4);
             bmd.ctx.beginPath();
             bmd.ctx.rect(0, 0, width, this.container.height - 4);
-            bmd.ctx.fillStyle = "#" + Colors.PURPLE.toString(16);
+            bmd.ctx.fillStyle = `#${Colors.PURPLE.toString(16)}`;
             bmd.ctx.fill();
-            this.bar = this.main.add.sprite(this.container.x + 2, this.container.y + 2, bmd);
+            this.bar = this.main.add.sprite(this.container.x - this.main.camera.x + 2, this.container.y - this.main.camera.y + 2, bmd);
             this.bar.fixedToCamera = true;
             this.group.add(this.bar);
+            this.bringToTop();
             this.health = health;
         }
     }

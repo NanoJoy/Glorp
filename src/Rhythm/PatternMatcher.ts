@@ -85,7 +85,7 @@ module MyGame {
         private checkOnSubBeat(position: number) {
             if (this.noteDisplays[position] === null) {
                 var isBeat = position % this.beatLength === 0;
-                var noteDisplay = new NoteDisplay(this.game, null, isBeat, false, position, this.patternLength);
+                var noteDisplay = new NoteDisplay(this.game, null, isBeat, false, position, this.patternLength, this.inputAllowed);
                 this.noteDisplays[position] = noteDisplay;
             }
         }
@@ -114,7 +114,7 @@ module MyGame {
             this.getNextNote();
 
             let distance = Math.round(Math.abs(timePressed - (position * this.tempo + this.startTime)));
-            distance = distance < this.tempo / 8 ? 0 : distance;
+            distance = distance < this.tempo / 6 ? 0 : distance;
             this.notesPressed.push({note: keyCode, position: position, distance: distance});
             this.pressCount += 1;
             

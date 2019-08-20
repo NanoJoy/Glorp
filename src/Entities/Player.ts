@@ -1,14 +1,12 @@
 module MyGame {
     export class Player extends Phaser.Sprite {
-
         static readonly WALKING_SPEED = 100;
         static readonly STARTING_HEALTH = 100;
         direction: Direction;
         inputs: Inputs;
-        state: Main;
         itemManager: IItemManager;
 
-        constructor(state: Main, position: Phaser.Point, health?: number) {
+        constructor(private state: Main, position: Phaser.Point, health?: number) {
             super(state.game, position.x * TILE_WIDTH, position.y * TILE_HEIGHT, Assets.Sprites.Player.key, 0);
             state.game.physics.arcade.enableBody(this);
             Utils.addPersonAnimations(this);

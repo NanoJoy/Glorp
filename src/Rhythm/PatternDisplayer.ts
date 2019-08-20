@@ -65,8 +65,8 @@ module MyGame {
 
     export class NoteDisplay extends Phaser.Image {
         constructor(state: Phaser.State, note: Phaser.KeyCode, isBeat: boolean, isTop: boolean
-            , position: number, patternLength: number) {
-            var frame = NoteDisplay.getKeyFrame(note, isBeat);
+            , position: number, patternLength: number, inputAllowed = true) {
+            var frame = NoteDisplay.getKeyFrame(note, isBeat, inputAllowed);
             //10 padding on each side plus 24 for sprite width.
             var width = SCREEN_WIDTH - 44;
             var xPosition = (width / (patternLength - 1)) * position + 22;
@@ -76,11 +76,14 @@ module MyGame {
             state.add.existing(this);
         }
 
-        updateFrame(key: Phaser.KeyCode, isBeat: boolean) {
-            this.frame = NoteDisplay.getKeyFrame(key, isBeat);
+        updateFrame(key: Phaser.KeyCode, isBeat: boolean, inputAllowed = true) {
+            this.frame = NoteDisplay.getKeyFrame(key, isBeat, inputAllowed);
         }
 
-        static getKeyFrame(key: Phaser.KeyCode, isBeat = false): number {
+        static getKeyFrame(key: Phaser.KeyCode, isBeat = false, inputAllowed = true): number {
+            if (!inputAllowed) {
+                return isBeat ? 8 : 9;
+            }
             switch (key) {
                 case Phaser.KeyCode.W:
                     return 0;

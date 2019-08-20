@@ -43,7 +43,7 @@ module MyGame {
                 throw new Error("Invalid position");
             }
             let width = SCREEN_WIDTH - 44;
-            let xPosition = (width / (this.battle.enemy.patternLength - 1)) * position + 22;
+            let xPosition = (width / (this.battle.enemy.patternLength - 1)) * position + 18;
             this.position.setTo(xPosition, 56);
             let tween = this.battle.add.tween(this.position).to({ y: 100 }, this.millis, Phaser.Easing.Quadratic.In, true);
             tween.onComplete.add(() => {

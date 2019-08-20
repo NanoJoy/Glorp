@@ -63,7 +63,7 @@ module MyGame {
             if (notePresses.length < this.minNumNotes) {
                 return 0;
             }
-            return this.health / 4;
+            return this.hitPoints / 4;
         }
 
         getAttackPoints(pattern: PatternNote[]): number {
@@ -145,6 +145,10 @@ module MyGame {
             this.leftOffPosition.visible = false;
         }
 
+        playerOverlap(sp1: Phaser.Sprite, sp2: Phaser.Sprite): void {
+            this.startBattle(this.main);
+        }
+
         onStageBuilt() {
             this.targetMover = new TargetMover(this, this.main.groups.barriers.filter(b => b.playerCollides));
             (this.movementManager as MovementManager).start();
@@ -154,7 +158,7 @@ module MyGame {
             if (notePresses.length < this.minNumNotes) {
                 return 0;
             }
-            return this.health / 4;
+            return this.hitPoints / 4;
         }
 
         getAttackPoints(pattern: PatternNote[]): number {

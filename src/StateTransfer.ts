@@ -44,9 +44,8 @@ module MyGame {
             this.health = saveState.health;
             this.addedItems = saveState.items;
             this.heldItems = saveState.heldItems;
-            var useSave = this.flags["USE_SAVE"];
             this.flags = saveState.flags;
-            this.flags["USE_SAVE"] = useSave;
+            this.flags["USE_SAVE"] = true;
         }
     }
 }

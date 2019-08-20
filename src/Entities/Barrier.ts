@@ -1,7 +1,5 @@
 module MyGame {
     export abstract class Barrier implements Entity {
-        main: Main;
-        position: Phaser.Point;
         sprite: Phaser.Sprite;
         hasBody: boolean;
         playerCollides: boolean;
@@ -12,9 +10,7 @@ module MyGame {
         checkCollision(playerSprite: Phaser.Sprite, barrierSprite: Phaser.Sprite): boolean { return true; }
         onStageBuilt(): void {}
 
-        constructor(main: Main, position: Phaser.Point, key: string, char: string, playerCollides = true) {
-            this.main = main;
-            this.position = position;
+        constructor(public main: Main, public position: Phaser.Point, key: string, char: string, playerCollides = true) {
             this.sprite = main.add.sprite(position.x * TILE_WIDTH, position.y * TILE_HEIGHT, key);
             if (!Utils.surroundedByChar(main.island.layout, position.x, position.y, char)) {
                 main.physics.arcade.enable(this.sprite);
@@ -137,6 +133,19 @@ module MyGame {
             frame = frame === 2 ? 4 : frame;
             this.sprite.frame = frame;
             this.bottomSprite = main.add.sprite(position.x * TILE_WIDTH, (position.y + 0.5) * TILE_HEIGHT, Assets.Sprites.TallGrass.key, frame + 2);
+        }
+    }
+
+    export class Bottle extends Barrier {
+        constructor(main: Main, position: Phaser.Point) {
+            super(main, position, Assets.Images.Bottle, "a", true);
+
+        }
+
+        onCollision(playerSprite: Phaser.Sprite, barrierSprite: Phaser.Sprite): void {
+            this.main.removeBarrier(this.position, this.main.island.type);
+            this.main.player.health = Math.min(100, this.main.player.health + 25);
+            this.main.healthBar.updateHealth(this.main.player.health);
         }
     }
 }
