@@ -109,12 +109,12 @@ module MyGame {
         movementManager: IMovementManager;
         blockers: Barrier[];
         battleSpriteKey = Assets.Sprites.CrollerBattle.key;
-        music = Assets.Audio.Blumpus;
+        music = Assets.Audio.Foller;
         minNumNotes = 4;
         maxNumNotes = 4;
         patternLength = 8;
         beatLength = 4;
-        tempo = 150;
+        tempo = 130;
         hitPoints = 300;
         health = 300;
         name: "Croller";
@@ -176,6 +176,7 @@ module MyGame {
         }
 
         update() {
+            this.main.physics.arcade.collide(this.sprite, this.main.player, this.playerOverlap, null, this);
             let animName = "walk_" + Utils.getDirectionName(this.direction);
             if (this.sprite.animations.currentAnim.name !== animName) {
                 this.sprite.play(animName, 5, true);

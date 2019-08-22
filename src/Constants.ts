@@ -157,8 +157,10 @@ module MyGame {
         Airhorn = new AudioAsset("airhorn");
         Beep = new AudioAsset("beep");
         Blumpus = new AudioAsset("blumpus", 8);
+        Bottle = new AudioAsset("bottle");
         Collide = new AudioAsset("collide");
         Croller = new AudioAsset("croller", 12);
+        Foller = new AudioAsset("foller", 8);
         DeathJingle = new AudioAsset("death_jingle");
         Doodle = new AudioAsset("doodle");
         JamBot = new AudioAsset("jambot", 8);

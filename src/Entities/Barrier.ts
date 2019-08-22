@@ -139,13 +139,12 @@ module MyGame {
     export class Bottle extends Barrier {
         constructor(main: Main, position: Phaser.Point) {
             super(main, position, Assets.Images.Bottle, "a", true);
-
         }
 
         onCollision(playerSprite: Phaser.Sprite, barrierSprite: Phaser.Sprite): void {
+            this.main.sound.play(Assets.Audio.Bottle.key);
             this.main.removeBarrier(this.position, this.main.island.type);
-            this.main.player.health = Math.min(100, this.main.player.health + 25);
-            this.main.healthBar.updateHealth(this.main.player.health);
+            this.main.updateHealth(25);
         }
     }
 }

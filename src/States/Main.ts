@@ -402,5 +402,12 @@ module MyGame {
             this.groups.barriers.push(barrier);
             WorldManager.getInstance().changeLayout(this.island.num, barrier.position, barrier.char);
         }
+
+        updateHealth(addedHealth: number) {
+            let health = Math.max(Math.min(100, this.player.health + addedHealth), 0);
+            this.player.health = health;
+            this.healthBar.updateHealth(health);
+            StateTransfer.getInstance().health = health;
+        }
     }
 }

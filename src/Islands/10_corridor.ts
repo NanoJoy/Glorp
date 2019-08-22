@@ -22,7 +22,7 @@ module MyGame {
                 "wvvv        vvv* *  #  *v#######   w",
                 "wvevvvvvvvvvvev*       *v#######   w",
                 "wvvvvvvvvvvvvvv*a  #  n*vv         w",
-                "w           wwwwwwwwwwwwwwwwwwwwwwww",
+                "w  wwwwwww  wwwwwwwwwwwwwwwwwwwwwwww",
                 "w   e       w                      w",
                 "w  wwwwwww  w                      w",
                 "w           g                      w",
