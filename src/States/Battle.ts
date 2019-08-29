@@ -111,6 +111,7 @@ module MyGame {
                 this.playerHealthDisplay.updateHitPoints(this.playerHealth);
                 if (this.playerHealth === 0) {
                     this.sound.stopAll();
+                    this.game.time.events.stop(true);
                     let stateTransfer = StateTransfer.getInstance();
                     stateTransfer.reason = TransferReason.DEATH;
                     stateTransfer.health = -1;
@@ -201,6 +202,10 @@ module MyGame {
                 this.image.animations.add(name, frames, speed);
             }
             this.image.play(name);
+        }
+
+        setFrame(frame: number) {
+            this.image.frame = frame;
         }
     }
 

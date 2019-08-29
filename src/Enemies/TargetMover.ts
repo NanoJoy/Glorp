@@ -3,12 +3,11 @@ module MyGame {
         private subject: Moveable;
         private blockerPos: Phaser.Point[];
         private target: Phaser.Sprite;
-        private paused: boolean;
+        private paused = false;
 
         constructor(subject: Moveable, blockers: Barrier[]) {
             this.subject = subject;
             this.blockerPos = blockers.map(b => b.position);
-            this.paused = false;
         }
 
         setBlockers(blockers: Barrier[]) {

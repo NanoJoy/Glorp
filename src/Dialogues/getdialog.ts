@@ -12,7 +12,8 @@ module MyGame {
         MONSTER,
         INTERLUDE,
         ANIMAL_BEHAVIOR,
-        PARK_BOOK
+        PARK_BOOK,
+        WARNING_BOOK
     }
 
     export function getSignText(info: string): ITextManager {
@@ -104,6 +105,10 @@ module MyGame {
                 "I also saw some motion over the hedges, and I believe there could be many more of them. Nevertheless I have to venture further in to try to turn on the recording technology that I set up with the professor yesterday.",
                 "In spite of my conscience I feel driven to pursue the excitement of science and discovery over my own well being. Oh well, I hope R & S will understand.",
                 "I am leaving this here. If you find this take it as a warning to not go any further than this unless you are as silly as me.");
+            case Texts.WARNING_BOOK:
+                return getBookText("There is another type of creature here as well. It is terrifying, with six legs and large, elaborate ears. During my face to face encounter with one I was not able to figure out how to defeat it, and this has left one of my legs badly injured.",
+                "However, I have found that despite these \"ears\" they can be snuck by easily if I am not in their field of vision. This shall be my strategy from now on.",
+                "I am now determined to go further in not only to set up the recording devices, but because I believe the appearance of these strange creates may be related to the coming of the Beasts. It could be a breakthrough.");
             default:
                 throw new Error(`Cannot find dialog for key '${key}'.`);
         }

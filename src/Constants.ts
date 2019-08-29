@@ -7,8 +7,8 @@ module MyGame {
     export const DEVELOPER_MODE = true;
     export const START_ISLAND = 10;
     export const CLEAR_SAVE = false;
-    export const PLAYER_START_X = 31;
-    export const PLAYER_START_Y = 1;
+    export const PLAYER_START_X = 11;
+    export const PLAYER_START_Y = 16;
 
     export var States = {
         Boot: "Boot",
@@ -82,6 +82,7 @@ module MyGame {
         Crumbs = new SpriteAsset("crumbs");
         DoorWay = new SpriteAsset("doorway", 36, 8);
         Foller = new SpriteAsset("foller");
+        FollerBattle = new SpriteAsset("foller_battle", 136, 136);
         Gate = new SpriteAsset("gate");
         Grodule = new SpriteAsset("grodule");
         Grounds = new SpriteAsset("grounds");
@@ -111,6 +112,8 @@ module MyGame {
         AirhornIcon = "airhorn_icon";
         Banner = "banner";
         Bar = "bar";
+        Batteries = "batteries";
+        BatteriesIcon = "batteries_icon";
         BlackScreen = "black_screen";
         Book = "book";
         Bottle = "bottle";

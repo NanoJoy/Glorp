@@ -108,7 +108,7 @@ module MyGame {
         position: Phaser.Point;
         movementManager: IMovementManager;
         blockers: Barrier[];
-        battleSpriteKey = Assets.Sprites.CrollerBattle.key;
+        battleSpriteKey = Assets.Sprites.FollerBattle.key;
         music = Assets.Audio.Foller;
         minNumNotes = 4;
         maxNumNotes = 4;
@@ -117,13 +117,12 @@ module MyGame {
         tempo = 130;
         hitPoints = 300;
         health = 300;
-        name: "Croller";
+        name: "Foller";
         chasingPlayer = false;
         targetMover: TargetMover;
         leftOffPosition: Phaser.Sprite;
 
-        private noteCount = 8;
-        private positions: number[];
+        private patternOffset: number;
 
         afterDeath(main: Main): void { }
 
@@ -143,15 +142,28 @@ module MyGame {
             this.leftOffPosition = new Phaser.Sprite(main.game, -100, -100, null);
             main.physics.arcade.enableBody(this.leftOffPosition);
             this.leftOffPosition.visible = false;
+
+            this.patternOffset = Math.floor(Math.random() * 3) + 1;
         }
 
         playerOverlap(sp1: Phaser.Sprite, sp2: Phaser.Sprite): void {
+            this.targetMover.pause();
             this.startBattle(this.main);
         }
 
         onStageBuilt() {
-            this.targetMover = new TargetMover(this, this.main.groups.barriers.filter(b => b.playerCollides));
+            this.blockers = this.main.groups.barriers.filter(b => b.playerCollides);
+            this.targetMover = new TargetMover(this, this.blockers);
             (this.movementManager as MovementManager).start();
+        }
+
+        noteComparer(pattern: Phaser.KeyCode[], pressed: number, pressedCount: number, beatPos: number): boolean {
+            let notes = pattern.filter(n => Utils.isAThing(n));
+            return notes[(pressedCount + this.patternOffset) % notes.length] === pressed;
+        }
+
+        onNoteDisplay(game: Battle, noteOrNull: Phaser.KeyCode, beatPos: number) {
+            game.enemyDisplay.setFrame(this.patternOffset - 1);
         }
 
         calculateDamage(pattern: PatternNote[], notePresses: NotePress[]): number {
@@ -170,12 +182,8 @@ module MyGame {
             WorldManager.getInstance().changeLayout(StateTransfer.getInstance().island, this.position, "C");
         }
 
-        noteComparer(pattern: Phaser.KeyCode[], pressed: number, pressedCount: number, beatPos: number): boolean {
-            let orderedPositions = this.positions.sort();
-            return orderedPositions[pressedCount] === beatPos && PatternUtil.getNthNote(pattern, pressedCount) === pressed;
-        }
-
         update() {
+            this.main.physics.arcade.collide(this.sprite, this.blockers.map(b => b.sprite));
             this.main.physics.arcade.collide(this.sprite, this.main.player, this.playerOverlap, null, this);
             let animName = "walk_" + Utils.getDirectionName(this.direction);
             if (this.sprite.animations.currentAnim.name !== animName) {
