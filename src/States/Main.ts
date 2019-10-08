@@ -31,6 +31,7 @@ module MyGame {
         projectileDisplay: HoldableDisplay;
         cinematicBars: CinematicBars;
         healthBar: HealthBar;
+        music: Phaser.Sound;
 
         create() {
             this.game.renderer.renderSession.roundPixels = true;
@@ -44,7 +45,7 @@ module MyGame {
             let saveState = gameSaver.loadGame();
             if (stateTransfer.reason !== TransferReason.LINK) {
                 this.sound.stopAll();
-                this.sound.play(Assets.Audio.World.key, 1, true);
+                this.music = this.sound.play(Assets.Audio.World.key, 1, true);
             }
             if (stateTransfer.interlude) {
                 this.state.start(States.Interlude);

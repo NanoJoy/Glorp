@@ -1,11 +1,33 @@
 module MyGame {
     const TILE_DISTANCE = 2;
 
+    function tileisClear(x: number, y: number, main: Main, allowedChars: string): boolean {
+        let layout = main.island.layout;
+        let width = layout[0].length;
+        if (layout.some(r => r.length !== width)) {
+            throw new Error("All rows of layout must have same length.");
+        }
+        if (x > width - 1 || y > layout.length) {
+            return false;
+        }
+        let tile = layout[y].charAt(x);
+        let chars = allowedChars + " #"
+        if (chars.indexOf(tile) !== -1) {
+            return true;
+        }
+        if (tile === "x") {
+            let matching = main.groups.barriers.filter(b => b.position.x === x && b.position.y === y)[0];
+            return !matching.playerCollides;
+        }
+        return false;
+    }
+
     export abstract class Droppable implements Holdable {
         main: Main;
         startPosition: Phaser.Point;
         worldKey: string;
         inUse: boolean;
+        allowedChars = "";
         abstract iconKey: string;
 
         constructor(main: Main, startPosition: Phaser.Point, worldKey: string) {
@@ -22,7 +44,7 @@ module MyGame {
             let betweenX = player.direction === Direction.Left ? rounded.x - 1 : player.direction === Direction.Right ? rounded.x + 1 : rounded.x;
             let y = player.direction === Direction.Up ? rounded.y - TILE_DISTANCE : player.direction === Direction.Down ? rounded.y + TILE_DISTANCE : rounded.y;
             let betweenY = player.direction === Direction.Up ? rounded.y - 1 : player.direction === Direction.Down ? rounded.y + 1 : rounded.y;
-            if (Utils.tileisClear(x, y, this.main) && Utils.tileisClear(betweenX, betweenY, this.main)) {
+            if (tileisClear(x, y, this.main, this.allowedChars) && tileisClear(betweenX, betweenY, this.main, this.allowedChars)) {
                 this.main.addItem(x, y, this.worldKey);
                 return 1;
             }
@@ -50,6 +72,15 @@ module MyGame {
 
         constructor(main: Main, x: number, y: number) {
             super(main, pof(x, y), Assets.Sprites.Plorpus.key);
+        }
+    }
+
+    export class Batteries extends Droppable {
+        iconKey = Assets.Images.BatteriesIcon;
+        allowedChars = "c";
+
+        constructor(main: Main, x: number, y: number) {
+            super(main, pof(x, y), Assets.Images.Batteries);
         }
     }
 

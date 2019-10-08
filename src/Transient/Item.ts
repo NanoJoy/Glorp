@@ -48,6 +48,9 @@ module MyGame {
                 case Assets.Sprites.Plorpus.key:
                     this.currentItem = new Plorpus(main, x, y);
                     break;
+                case Assets.Images.Batteries:
+                    this.currentItem = new Batteries(main, x, y);
+                    break;
                 default:
                     throw new Error(`Item type ${this.currentType} is invalid.`);
             }

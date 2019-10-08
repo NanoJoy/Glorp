@@ -49,9 +49,10 @@ module MyGame {
                 case Assets.Sprites.Airhorn.key:
                     return new SingleSource(main, x, y, type, false);
                 case Assets.Sprites.Grodule.key:
-                    return new SingleSource(main, x, y, type, true);
                 case Assets.Sprites.Plorpus.key:
                     return new SingleSource(main, x, y, type, true);
+                case Assets.Images.Batteries:
+                    return new BatteriesSource(main, x, y);
             }
             throw new Error(`Source type ${type} is invalid.`);
         }
@@ -69,6 +70,18 @@ module MyGame {
             if (animate) {
                 this.sprite.animations.add("anim", null, 5, true);
                 this.sprite.play("anim");
+            }
+        }
+    }
+
+    export class BatteriesSource extends SingleSource {
+        constructor(main: Main, x: number, y: number) {
+            super(main, x, y, Assets.Images.Batteries, false);
+            let instruments = this.main.groups.creatures.filter(c => c instanceof Instrument).map(c => c as Instrument);
+            for (let instrument of instruments) {
+                this.main.physics.arcade.collide(this.sprite, instrument.sprite, (sp1: Phaser.Sprite, sp2: Phaser.Sprite) => {
+                    instrument.receiveBatteries(this);
+                })
             }
         }
     }

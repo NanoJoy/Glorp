@@ -24,7 +24,7 @@ module MyGame {
                 "wvvvvvvvvvvvvvv*a  #  n*vv         w",
                 "w  wwwwwww  wwwwwwwwwwwwwwwwwwwwwwww",
                 "w   e       wa                     w",
-                "w  wwwwwww  w                      w",
+                "w  wwwwwww  w           c          w",
                 "w           g  ##  w               w",
                 "w    www    g  ##  w               w",
                 "w   e       w  ##  w               w",
@@ -43,7 +43,7 @@ module MyGame {
                 "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
             ])
             .setNPCs([
-                { type: Assets.Images.Sign, position: pof(8, 31), script: null, text: "Tuttle Village" },
+                { type: Assets.Images.Sign, position: pof(8, 27), script: null, text: "Tuttle Village" },
                 { type: Assets.Images.Sign, position: pof(34, 4), script: null, text: "Lully Pond" },
                 { type: Assets.Images.Book, position: pof(22, 10), script: null, textKey: Texts.PARK_BOOK },
                 { type: Assets.Images.Book, position: pof(14, 7), script: null, textKey: Texts.WARNING_BOOK }
@@ -66,7 +66,13 @@ module MyGame {
             ])
             .setButtons([
                 { type: Assets.Sprites.Button.key, x: 11, y: 20, direction: Direction.Left, action: openUpperGate, backgroundType: IslandType.OUTSIDE },
-                { type: Assets.Sprites.Button.key, x: 1, y: 28, direction: Direction.Right, action: openGate, backgroundType: IslandType.OUTSIDE }
+                { type: Assets.Sprites.Button.key, x: 1, y: 24, direction: Direction.Right, action: openGate, backgroundType: IslandType.OUTSIDE }
+            ])
+            .setSources([
+                { type: Assets.Images.Batteries, x: 17, y: 21 }
+            ])
+            .setCreatures([
+                { type: Assets.Sprites.Instrument.key, x: 24, y: 13 }
             ])
             .build();
     }
