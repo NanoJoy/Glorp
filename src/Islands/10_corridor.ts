@@ -23,27 +23,19 @@ module MyGame {
                 "wvevvvvvvvvvvev*       *v#######   w",
                 "wvvvvvvvvvvvvvv*a  #  n*vv         w",
                 "w  wwwwwww  wwwwwwwwwwwwwwwwwwwwwwww",
-                "w   e       wa                     w",
-                "w  wwwwwww  w           c          w",
-                "w           g  ##  w               w",
-                "w    www    g  ##  w               w",
-                "w   e       w  ##  w               w",
-                "w    ###    w  ##  w               w",
-                "w    ###e   w  ##  w               w",
+                "w   e       wa                evvvvw",
+                "w  wwwwwww  w           c      vvvsw",
+                "w           g  ##  w           vvvvw",
+                "w    www    g  ##  w  ######  *****w",
+                "w   e       w  ##  w    ###      esw",
+                "w    ###    w  ##  w         ******w",
+                "w    ###e   w  ##  w  ###          w",
                 "w****###****w  ##  w               w",
                 "we   ###   ?w  ##  w               w",
-                "w         e w    s w               w",
+                "w         e w    s wa              w",
                 "wwwwwwwwwwwwwwwwwwwwwwww           w",
-                "w                                  w",
-                "w?                                 w",
-                "wwwwwwww                           w",
-                "       w                           w",
-                "       wn                          w",
-                "       g                           w",
-                "wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwww"
             ])
             .setNPCs([
-                { type: Assets.Images.Sign, position: pof(8, 27), script: null, text: "Tuttle Village" },
                 { type: Assets.Images.Sign, position: pof(34, 4), script: null, text: "Lully Pond" },
                 { type: Assets.Images.Book, position: pof(22, 10), script: null, textKey: Texts.PARK_BOOK },
                 { type: Assets.Images.Book, position: pof(14, 7), script: null, textKey: Texts.WARNING_BOOK }
@@ -54,7 +46,9 @@ module MyGame {
                 { type: Assets.Sprites.Croller.key, position: pof(15, 2), script: null },
                 { type: Assets.Sprites.Croller.key, position: pof(2, 9), script: null },
                 { type: Assets.Sprites.Croller.key, position: pof(13, 9), script: null },
+                { type: Assets.Sprites.Croller.key, position: pof(33, 16), script: null },
                 { type: Assets.Sprites.Foller.key, position: pof(4, 12), script: "rrrrrrddlllllllluur"},
+                { type: Assets.Sprites.Foller.key, position: pof(30, 12), script: "dduu"},
                 { type: Assets.Sprites.Foller.key, position: pof(4, 16), script: "rrrrrr  lllllllll  rr"},
                 { type: Assets.Sprites.Foller.key, position: pof(8, 18), script: "llllll  rrrrrrrrr  ll"},
                 { type: Assets.Sprites.JamBugWorld.key, position: pof(1, 20), script: "rrrrrrrrrdlllllllllu"},
@@ -62,14 +56,17 @@ module MyGame {
             ])
             .setOutsideBoundsPortals([
                 { side: Direction.Right, start: 0, end: 4, link: Islands.BLISH, playerStart: pof(1, 22) },
-                { side: Direction.Left, start: 29, end: 33, link: Islands.TOWN, playerStart: pof(31, 24) }
+                { side: Direction.Left, start: 29, end: 33, link: Islands.TOWN, playerStart: pof(31, 24) },
+                { side: Direction.Down, start: 24, end: 36, link: Islands.DEATH, playerStart: pof(26, 1)}
             ])
             .setButtons([
                 { type: Assets.Sprites.Button.key, x: 11, y: 20, direction: Direction.Left, action: openUpperGate, backgroundType: IslandType.OUTSIDE },
                 { type: Assets.Sprites.Button.key, x: 1, y: 24, direction: Direction.Right, action: openGate, backgroundType: IslandType.OUTSIDE }
             ])
             .setSources([
-                { type: Assets.Images.Batteries, x: 17, y: 21 }
+                { type: Assets.Images.Batteries, x: 17, y: 21 },
+                { type: Assets.Images.Batteries, x: 34, y: 16 },
+                { type: Assets.Images.Batteries, x: 34, y: 13 }
             ])
             .setCreatures([
                 { type: Assets.Sprites.Instrument.key, x: 24, y: 13 }

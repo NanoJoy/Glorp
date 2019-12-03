@@ -1,7 +1,5 @@
 module MyGame {
     export abstract class Creature implements Entity {
-        readonly MOVE = "move";
-
         main: Main;
         position: Phaser.Point;
         sprite: Phaser.Sprite;
@@ -23,8 +21,10 @@ module MyGame {
         abstract uniqueOnStageBuilt(): void;
 
         onStageBuilt() {
-            this.sprite.animations.add(this.MOVE, this.idleFrames, this.animSpeed, true);
-            this.sprite.play(this.MOVE);
+            if (!this.sprite.animations.currentAnim) {
+                this.sprite.animations.add("move", this.idleFrames, this.animSpeed, true);
+                this.sprite.play("move");
+            }
             if (this.collidesWith !== undefined) {
                 this.barriers = this.main.groups.barriers
                     .filter(b => this.collidesWith.indexOf(b.sprite.key as string) !== -1)

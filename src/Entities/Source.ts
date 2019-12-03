@@ -79,7 +79,7 @@ module MyGame {
             super(main, x, y, Assets.Images.Batteries, false);
             let instruments = this.main.groups.creatures.filter(c => c instanceof Instrument).map(c => c as Instrument);
             for (let instrument of instruments) {
-                this.main.physics.arcade.collide(this.sprite, instrument.sprite, (sp1: Phaser.Sprite, sp2: Phaser.Sprite) => {
+                this.main.physics.arcade.overlap(this.sprite, instrument.sprite, (sp1: Phaser.Sprite, sp2: Phaser.Sprite) => {
                     instrument.receiveBatteries(this);
                 })
             }

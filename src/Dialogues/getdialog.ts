@@ -108,7 +108,7 @@ module MyGame {
             case Texts.WARNING_BOOK:
                 return getBookText("There is another type of creature here as well. It is terrifying, with six legs and large, elaborate ears. During my face to face encounter with one I was not able to figure out how to defeat it, and this has left one of my legs badly injured.",
                 "However, I have found that despite these \"ears\" they can be snuck by easily if I am not in their field of vision. This shall be my strategy from now on.",
-                "I am now determined to go further in not only to set up the recording devices, but because I believe the appearance of these strange creates may be related to the coming of the Beasts. It could be a breakthrough.");
+                "I am now determined to go further in not only to set up the recording devices, but because I believe the appearance of these strange creatures may be related to the coming of the Beasts. It could be a breakthrough.");
             default:
                 throw new Error(`Cannot find dialog for key '${key}'.`);
         }

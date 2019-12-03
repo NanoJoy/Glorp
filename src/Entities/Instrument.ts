@@ -2,17 +2,21 @@ module MyGame {
     export class Instrument extends Creature {
         private activated = false;
         private music: Phaser.Sound;
+        private charge = 0;
 
         constructor(main: Main, x: number, y: number) {
             super(main, pof(x, y), Assets.Sprites.Instrument.key);
             this.sprite.body.immovable = true;
             this.sprite.body.moves = false;
-            this.sprite.animations.add("sad", [2, 3], 3, false);
-            this.sprite.animations.add("happy", [4, 5], 3, false);
+            this.sprite.animations.add("sad", [3, 4], 3, false);
+            this.sprite.animations.add("happy", [5, 6], 3, false);
             if (!StateTransfer.getInstance().flags["INSTRUMENT_ACTIVATED"]) {
-                this.sprite.animations.add("low_battery", [0, 1], 1, true);
-                this.sprite.play("low_battery");
+                for (let i = 1; i < 4; i++) {
+                    this.sprite.animations.add(`low_battery_${i}`, [0, i], 1, true);
+                }
+                this.sprite.play("low_battery_1");
             } else {
+                this.music = this.main.sound.play(Assets.Audio.Instrument.key, 0, true);
                 this.activated = true;
                 this.playFace();
             }
@@ -20,7 +24,6 @@ module MyGame {
 
         uniqueUpdate(): void {
             let player = this.main.player;
-            //this.main.physics.arcade.collide(this.sprite, player);
 
             if (this.activated) {
                 if (this.sprite.inCamera) {
@@ -46,12 +49,16 @@ module MyGame {
          }
 
         receiveBatteries(batteries: BatteriesSource) {
-            StateTransfer.getInstance().flags["INSTRUMENT_ACTIVATED"] = true;
-            this.activated = true;
             batteries.remove();
-            this.sprite.animations.stop();
-            this.playFace();
-            this.music = this.main.sound.play(Assets.Audio.Instrument.key, 0, true);
+            if (++this.charge === 3) {
+                StateTransfer.getInstance().flags["INSTRUMENT_ACTIVATED"] = true;
+                this.activated = true;
+                this.sprite.animations.stop();
+                this.playFace();
+                this.music = this.main.sound.play(Assets.Audio.Instrument.key, 0, true);
+            } else {
+                this.sprite.play(`low_battery_${this.charge + 1}`);
+            }
         }
 
         private playFace() {

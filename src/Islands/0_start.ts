@@ -2,7 +2,7 @@ module MyGame {
     export var islandGetters = [] as { (): Island; }[];
 
     export enum Islands {
-        START, SADMAN, THEMEEP, ALBERT, TOWN, BLISH, BROTHER, PROFESSOR, PLAYGROUND, TUTORIAL, CORRIDOR
+        START, SADMAN, THEMEEP, ALBERT, TOWN, BLISH, BROTHER, PROFESSOR, PLAYGROUND, TUTORIAL, CORRIDOR, DEATH
     }
 
     islandGetters[0] = function () {
